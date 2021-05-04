@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5f78aaad02973b542bbec7833411f000
+guid: 597686790f31b5a459b55278a7d7ce02
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,9 +9,8 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Perceval
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: 66b0e2da6bfde5a42b8b596826cd1e56, type: 3}
+  - OfficinaSanMdOSITCTT
+  fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

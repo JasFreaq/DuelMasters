@@ -1,7 +1,0 @@
-Card Name: Perceval Bold
-Creature Race: Armada Bold
-Rules Text: Officina Sans Medium
-Flavor Text: Officina Sans Italics
-Power: Armada Bold
-Cost: Armada Bold
-Card Type: Armada Bold
