@@ -13,3 +13,4 @@ The following are the links to the assets/resources used for and during the proj
 - Image editing softwares used
   - [Krita](https://krita.org/en/) 
   - [Fotor](https://www.fotor.com/)
+  - [InPaint](https://theinpaint.com/)
