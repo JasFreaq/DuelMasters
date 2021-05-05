@@ -8,9 +8,11 @@ Feel free to reach out if this project has been of any assistance to you as a re
 
 The following are the links to the assets/resources used for and during the project,
 
-- [Card Information](https://github.com/naveed92/dm-ocg-octgn/tree/master/dm-ocg-octgn/game)
+- [Card Information](https://github.com/Latepate64/duel-masters-json)
 - [Card Images](https://drive.google.com/drive/folders/168Ut68mUqzgYhpj_kBQZZaF-eHrciL1d)
+  - [Card Image Ids](https://github.com/naveed92/dm-ocg-octgn/tree/master/dm-ocg-octgn/game)
 - Image editing softwares used
   - [Krita](https://krita.org/en/) 
   - [Fotor](https://www.fotor.com/)
   - [InPaint](https://theinpaint.com/)
+
