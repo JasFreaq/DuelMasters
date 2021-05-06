@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Legionnaire Lizard
+  m_EditorClassIdentifier: 
+  _name: Legionnaire Lizard
+  _set: 6
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 6
+  _artworkImage: {fileID: 21300000, guid: ccf8eb8c776b9b44b9d37373d85db939, type: 3}
+  _rulesText: 'Speed attacker (This creature doesn''t get summoning sickness.)
+
+    Instead
+    of having this creature attack, you may tap it to use its $tap ability.
+
+    $tap
+    One of your creatures in the battle zone gets "speed attacker" until the end
+    of the turn.'
+  _flavorText: 
+  _race: 11000000
+  _power: 4000

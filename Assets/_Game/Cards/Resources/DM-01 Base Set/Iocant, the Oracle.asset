@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Iocant, the Oracle
+  m_EditorClassIdentifier: 
+  _name: Iocant, the Oracle
+  _set: 1
+  _civilization: 04000000
+  _rarity: 2
+  _cardType: 2
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: cee24e18faa02934c8fe713842aaeb94, type: 3}
+  _rulesText: 'Blocker (When an opponent''s creature attacks, you may tap this creature
+    to stop the attack. Then the two creatures battle.)
+
+    While you have at least
+    1 Angel Command in the battle zone, this creature gets +2000 power.
+
+    This
+    creature can''t attack players.'
+  _flavorText: 
+  _race: 29000000
+  _power: 2000

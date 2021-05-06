@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Cruel Naga, Avatar of Fate
+  m_EditorClassIdentifier: 
+  _name: Cruel Naga, Avatar of Fate
+  _set: 12
+  _civilization: 0500000001000000
+  _rarity: 0
+  _cardType: 3
+  _cost: 6
+  _artworkImage: {fileID: 21300000, guid: 93128366d4a26fc4f8ea736013178088, type: 3}
+  _rulesText: "(This creature is put into your mana zone tapped.)\nVortex Evolution\u2014Put
+    on one of your Merfolks and one of your Chimeras.\nThis creature can't be blocked.\nDouble
+    breaker (This creature breaks 2 shields).\nWhen this creature leaves the battle
+    Zone, destroy all creatures in the battle Zone."
+  _flavorText: 
+  _race: 3a000000
+  _power: 9000

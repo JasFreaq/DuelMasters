@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Meloppe
+  m_EditorClassIdentifier: 
+  _name: Meloppe
+  _set: 12
+  _civilization: 05000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 3
+  _artworkImage: {fileID: 21300000, guid: 3aafb9e150fc94e41a58acd2d4d1516e, type: 3}
+  _rulesText: 'Whenever your opponent would choose one of your shields, you choose
+    instead.
+
+    Whenever you would choose one of your opponent''s shields, your
+    opponent chooses instead.'
+  _flavorText: '"That''s not a pacifier, it''s a brain stem interface. With a handle.
+    That I suck on."'
+  _race: 30000000
+  _power: 1000

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Dolmarks, the Shadow Warrior
+  m_EditorClassIdentifier: 
+  _name: Dolmarks, the Shadow Warrior
+  _set: 10
+  _civilization: 0100000002000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 3312f7491e7720a4694965b12a74337f, type: 3}
+  _rulesText: '(This creature is put into your mana zone tapped.)
+
+    When you put
+    this creature into the battle zone, destroy one of your creatures and put a card
+    from your mana zone into your graveyard. Then your opponent chooses and destroys
+    one of his creatures and chooses a card in his mana zone and puts it into his
+    graveyard.'
+  _flavorText: 
+  _race: 0700000013000000
+  _power: 4000

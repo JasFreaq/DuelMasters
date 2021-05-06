@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Billion-Degree Dragon
+  m_EditorClassIdentifier: 
+  _name: Billion-Degree Dragon
+  _set: 5
+  _civilization: 02000000
+  _rarity: 0
+  _cardType: 2
+  _cost: 10
+  _artworkImage: {fileID: 21300000, guid: 878a5220a8489794a9c5c57b7bc56df5, type: 3}
+  _rulesText: Triple breaker (This creature breaks 3 shields.)
+  _flavorText: The Megapocalypse woke it from its slumber deep within the molten
+    core of the planet. It is the avenger of the world. It is legendary. And it is
+    very, very cranky.
+  _race: 0d000000
+  _power: 15000

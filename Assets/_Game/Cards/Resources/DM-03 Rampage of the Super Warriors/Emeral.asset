@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Emeral
+  m_EditorClassIdentifier: 
+  _name: Emeral
+  _set: 3
+  _civilization: 05000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: 21c7844a2ff568f4ca3dda603231622b, type: 3}
+  _rulesText: When you put this creature into the battle zone, you may add a card
+    from your hand to your shields face down. If you do, choose one of your shields
+    and put it into your hand. You can't use the "shield trigger" ability of that
+    shield.
+  _flavorText: '"If you think I''m good at this, watch me play video games!"'
+  _race: 30000000
+  _power: 1000

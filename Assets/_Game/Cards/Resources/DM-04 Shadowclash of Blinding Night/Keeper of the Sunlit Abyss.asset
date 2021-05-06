@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Keeper of the Sunlit Abyss
+  m_EditorClassIdentifier: 
+  _name: Keeper of the Sunlit Abyss
+  _set: 4
+  _civilization: 05000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 4271a2f1e7e6f544ab36fd1e4d7284d2, type: 3}
+  _rulesText: Light creatures and darkness creatures in the battle zone each get
+    +1000 power.
+  _flavorText: Why do light and dark fight as they do? The more friends you have,
+    the more birthday presents you get!
+  _race: 32000000
+  _power: 2000

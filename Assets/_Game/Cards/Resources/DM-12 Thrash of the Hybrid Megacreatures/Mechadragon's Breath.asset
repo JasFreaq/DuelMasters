@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Mechadragon's Breath
+  m_EditorClassIdentifier: 
+  _name: Mechadragon's Breath
+  _set: 12
+  _civilization: 02000000
+  _rarity: 3
+  _cardType: 1
+  _cost: 6
+  _artworkImage: {fileID: 21300000, guid: b9301a09a6458ec4aa7173e5283c94d9, type: 3}
+  _rulesText: Choose a number less than or equal to 6000. Destroy all creatures that
+    have that power.
+  _flavorText: "\"Yes! After three long years of neverending work, my invention is
+    a complete success! Now we can finally start the barbecue!\" \u2014 Rikabu, the
+    Dismantler"

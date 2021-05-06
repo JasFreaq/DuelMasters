@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Gandaval's Stapler
+  m_EditorClassIdentifier: 
+  _name: Gandaval's Stapler
+  _set: 12
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: 0bcdcf8097ea2b64e865d259a541438a, type: 3}
+  _rulesText: Whenever another creature is put into the battle zone, tap this creature.
+  _flavorText: "\"It can staple trees, rocks, tanks, skyscrapers, diamonds, battleships,
+    missles, cows, bridges, mutant cows, other staplers, and mutant zombie cows.
+    Just about everything but paper, really.\" \u2014 Armored Raider Gandaval"
+  _race: 18000000
+  _power: 3000

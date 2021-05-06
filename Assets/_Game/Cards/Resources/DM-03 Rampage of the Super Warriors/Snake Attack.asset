@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Snake Attack
+  m_EditorClassIdentifier: 
+  _name: Snake Attack
+  _set: 3
+  _civilization: 01000000
+  _rarity: 1
+  _cardType: 1
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 45b3fc84b40da27409c6b9b59131f68e, type: 3}
+  _rulesText: 'Each of your creatures in the battle zone gets "double breaker" until
+    the end of the turn. (A creature that has "double breaker" breaks 2 shields.)
+
+    Choose
+    one of your shields and put it into your graveyard.'
+  _flavorText: Baraga unsuccessfully gave swords to his army of snakes.

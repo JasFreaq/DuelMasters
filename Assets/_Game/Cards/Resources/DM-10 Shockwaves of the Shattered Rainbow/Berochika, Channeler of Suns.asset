@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Berochika, Channeler of Suns
+  m_EditorClassIdentifier: 
+  _name: Berochika, Channeler of Suns
+  _set: 10
+  _civilization: 04000000
+  _rarity: 2
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: a8a2dc0f6e266714ab3465ec4c7ebbe3, type: 3}
+  _rulesText: When you put this creature into the battle zone, if you have 5 or more
+    shields, add the top card of your deck to your shields face down.
+  _flavorText: The Dragons quickly learned there were new challengers for the title
+    "Masters of the Sky."
+  _race: 00000000
+  _power: 5000

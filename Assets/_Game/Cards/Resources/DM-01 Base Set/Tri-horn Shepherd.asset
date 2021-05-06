@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Tri-horn Shepherd
+  m_EditorClassIdentifier: 
+  _name: Tri-horn Shepherd
+  _set: 1
+  _civilization: 03000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: 354abda668bb60a4cbb7c52b7e63f175, type: 3}
+  _rulesText: 
+  _flavorText: Sometimes weeks pass before it realizes it has a gored enemy stuck
+    to its horns.
+  _race: 1f000000
+  _power: 5000

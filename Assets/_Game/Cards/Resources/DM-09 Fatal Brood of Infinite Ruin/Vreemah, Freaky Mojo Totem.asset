@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Vreemah, Freaky Mojo Totem
+  m_EditorClassIdentifier: 
+  _name: Vreemah, Freaky Mojo Totem
+  _set: 9
+  _civilization: 03000000
+  _rarity: 0
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: df425dae2faabbf4fa34cacfcdcd97ee, type: 3}
+  _rulesText: Whenever you put another creature into the battle zone, each Beast
+    Folk in the battle zone gets +2000 power and "double breaker" until the end of
+    the turn. (A creature that has "double breaker" breaks 2 shields.)
+  _flavorText: It lays down savage jungle beats to help its friends lay down savage
+    jungle beatings.
+  _race: 20000000
+  _power: 4000

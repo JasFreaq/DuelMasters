@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Extreme Crawler
+  m_EditorClassIdentifier: 
+  _name: Extreme Crawler
+  _set: 12
+  _civilization: 05000000
+  _rarity: 0
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: a63584c9ed69245499b33b64b52865ae, type: 3}
+  _rulesText: 'When you put this creature into the battle zone, return all your other
+    creatures from the battle zone to your hand.
+
+    Double breaker (When this creature
+    breaks shield, it break 2 shields).'
+  _flavorText: "\"For thousands of years, our wisest scholars grappled with the question,
+    'How many tentacles is too many?' Turns out the answer is 5.\" \u2014 Uncanny
+    Turnip"
+  _race: 33000000
+  _power: 7000

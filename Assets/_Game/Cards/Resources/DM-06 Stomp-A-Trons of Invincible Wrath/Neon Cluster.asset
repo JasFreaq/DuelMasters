@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Neon Cluster
+  m_EditorClassIdentifier: 
+  _name: Neon Cluster
+  _set: 6
+  _civilization: 05000000
+  _rarity: 2
+  _cardType: 2
+  _cost: 7
+  _artworkImage: {fileID: 21300000, guid: 73462cd87aad31f408b472661c829840, type: 3}
+  _rulesText: 'Instead of having this creature attack, you may tap it to use its
+    $tap ability.
+
+    $tap Draw 2 cards.'
+  _flavorText: "\"You can win more wars by thinking than you can by fighting.\" \u2014Marinomancer"
+  _race: 2f000000
+  _power: 4000

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Dark Raven, Shadow of Grief
+  m_EditorClassIdentifier: 
+  _name: Dark Raven, Shadow of Grief
+  _set: 1
+  _civilization: 01000000
+  _rarity: 2
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 01b793d8d1ec91042bb6b636b44911e2, type: 3}
+  _rulesText: Blocker (When an opponent's creature attacks, you may tap this creature
+    to stop the attack. Then the two creatures battle.)
+  _flavorText: If you've ever thought there was something hiding in the dark, you
+    were right.
+  _race: 07000000
+  _power: 1000

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Galsaur
+  m_EditorClassIdentifier: 
+  _name: Galsaur
+  _set: 2
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: 77e0580e35185a940af774638a024a0e, type: 3}
+  _rulesText: While you have no other creatures in the battle zone, this creature
+    has "power attacker +4000" and "double breaker." (A creature that has "power
+    attacker +4000" and "double breaker" gets +4000 power while attacking and breaks
+    2 shields.)
+  _flavorText: The first Liquid People troops to land on the shore evaporated as
+    soon as they touched the ground.
+  _race: 16000000
+  _power: 4000

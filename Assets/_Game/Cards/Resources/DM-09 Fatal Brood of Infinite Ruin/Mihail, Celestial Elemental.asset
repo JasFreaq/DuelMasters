@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Mihail, Celestial Elemental
+  m_EditorClassIdentifier: 
+  _name: Mihail, Celestial Elemental
+  _set: 9
+  _civilization: 04000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 8
+  _artworkImage: {fileID: 21300000, guid: 95d30e2e34e131c4eb712bfbe134c67d, type: 3}
+  _rulesText: Whenever another creature would be destroyed, it stays in the battle
+    zone instead.
+  _flavorText: '"Time has stopped. Death is extinct. Forever is now. So I hope everyone
+    has a good book to read, because we''ll be here for a while."'
+  _race: 24000000
+  _power: 4000

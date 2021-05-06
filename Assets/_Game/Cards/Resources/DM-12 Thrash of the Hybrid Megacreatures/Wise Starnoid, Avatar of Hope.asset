@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Wise Starnoid, Avatar of Hope
+  m_EditorClassIdentifier: 
+  _name: Wise Starnoid, Avatar of Hope
+  _set: 12
+  _civilization: 0400000005000000
+  _rarity: 0
+  _cardType: 3
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: af33bd0a8e7a10340af064f6691174ff, type: 3}
+  _rulesText: "(This creature is put into your mana zone tapped.)\nVortex Evolution\u2014Put
+    on one of your Light Bringers and one of your Cyber Lords.\nWhenever this creature
+    attacks or leaves the battle zone, add the card on top of your deck to your shields
+    face-down.\nDouble breaker (This creature breaks 2 shields)."
+  _flavorText: 
+  _race: 3d000000
+  _power: 9000

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Deathliger, Lion of Chaos
+  m_EditorClassIdentifier: 
+  _name: Deathliger, Lion of Chaos
+  _set: 1
+  _civilization: 01000000
+  _rarity: 0
+  _cardType: 2
+  _cost: 7
+  _artworkImage: {fileID: 21300000, guid: 4ec5b351169e11e4295841a09ece0b4d, type: 3}
+  _rulesText: Double breaker (This creature breaks 2 shields.)
+  _flavorText: The world is deafened by the roar of the deathliger.
+  _race: 05000000
+  _power: 9000

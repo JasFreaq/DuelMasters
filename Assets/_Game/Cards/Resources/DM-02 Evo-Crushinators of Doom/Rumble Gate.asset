@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Rumble Gate
+  m_EditorClassIdentifier: 
+  _name: Rumble Gate
+  _set: 2
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 1
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: afb03c55ab78f4f4fb627567de377f39, type: 3}
+  _rulesText: 'Each of your creatures in the battle zone gets +1000 power until the
+    end of the turn.
+
+    Each of your creatures in the battle zone that can attack
+    creatures can attack untapped creatures this turn.'
+  _flavorText: It's too soon to let down your guard.

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Root Charger
+  m_EditorClassIdentifier: 
+  _name: Root Charger
+  _set: 8
+  _civilization: 03000000
+  _rarity: 3
+  _cardType: 1
+  _cost: 3
+  _artworkImage: {fileID: 21300000, guid: 3ee072fb1b2030a4cae0cdf2ea192767, type: 3}
+  _rulesText: 'Whenever any of your creatures would be destroyed this turn, put it
+    into your mana zone instead.
+
+    Charger (After you cast this spell, put it
+    into your mana zone instead of your graveyard.)'
+  _flavorText: Life is the building block of life.

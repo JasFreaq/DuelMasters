@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Crimson Hammer
+  m_EditorClassIdentifier: 
+  _name: Crimson Hammer
+  _set: 1
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 1
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: d8787f42168d7a340860174d7303730d, type: 3}
+  _rulesText: Destroy 1 of your opponent's creatures that has power 2000 or less.
+  _flavorText: There's nothing a Machine Eater enjoys more than a good game of Whack-a-Hulcus.

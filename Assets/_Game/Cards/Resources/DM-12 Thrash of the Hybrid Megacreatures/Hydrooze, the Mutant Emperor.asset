@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Hydrooze, the Mutant Emperor
+  m_EditorClassIdentifier: 
+  _name: Hydrooze, the Mutant Emperor
+  _set: 12
+  _civilization: 0500000001000000
+  _rarity: 3
+  _cardType: 3
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: c4ddadd8f1a40634b952da3771e17100, type: 3}
+  _rulesText: "(This creature is put into your mana zone tapped.)\nEvolution\u2014Put
+    on one of your Cyber Lords or Hedrians.\nEach of your other Cyber Lords and Hedrians
+    in the battle zone gets +2000 power.\nYour Cyber Lords or Hedrians can't be blocked."
+  _flavorText: 
+  _race: 3000000008000000
+  _power: 5000

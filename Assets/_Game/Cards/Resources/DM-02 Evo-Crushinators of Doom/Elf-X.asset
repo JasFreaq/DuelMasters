@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Elf-X
+  m_EditorClassIdentifier: 
+  _name: Elf-X
+  _set: 2
+  _civilization: 03000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 29f1e37e86d8ff24c804e9ad3cd087c0, type: 3}
+  _rulesText: Your creatures each cost 1 less to summon. They can't cost less than
+    1.
+  _flavorText: The first Chimeras to invade the Fiana Woods didn't expect an attack
+    from the forest itself.
+  _race: 22000000
+  _power: 2000

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Super Terradragon Bailas Gale
+  m_EditorClassIdentifier: 
+  _name: Super Terradragon Bailas Gale
+  _set: 8
+  _civilization: 03000000
+  _rarity: 0
+  _cardType: 3
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: d41899f66f3278e4896ba06ed979b5d7, type: 3}
+  _rulesText: "Evolution\u2014Put on one of your creatures that has Dragon in its
+    race.\nAfter you cast a spell by using its \"shield trigger\" ability, put it
+    into your hand instead of your graveyard.\nDouble breaker (This creature breaks
+    2 shields.)"
+  _flavorText: 
+  _race: 1c000000
+  _power: 9000
