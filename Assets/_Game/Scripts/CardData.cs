@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class CardList
+public class CardDataList
 {
-    public List<Card> cards;
+    public List<CardData> cards;
 }
 
 [System.Serializable]
-public class Card
+public class CardData
 {
     public string name, set, id, civilization, rarity, type, cost, text, flavor, illustrator, race, power;
     public string[] civilizations, races;
