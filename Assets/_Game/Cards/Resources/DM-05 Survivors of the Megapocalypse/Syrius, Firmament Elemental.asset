@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Syrius, Firmament Elemental
   _set: 5
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 11
   _artworkImage: {fileID: 21300000, guid: d6cd4becd2d8737419d30fc10205e1ac, type: 3}

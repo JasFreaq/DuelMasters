@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Death Phoenix, Avatar of Doom
   _set: 12
   _civilization: 0100000002000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 4
   _artworkImage: {fileID: 21300000, guid: decdce3f95ef67244812ab8b90e3b4d5, type: 3}

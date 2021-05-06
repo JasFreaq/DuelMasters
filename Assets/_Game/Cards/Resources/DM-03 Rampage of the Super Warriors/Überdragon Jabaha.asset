@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: "\xDCberdragon Jabaha"
   _set: 3
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 3
   _cost: 7
   _artworkImage: {fileID: 0}

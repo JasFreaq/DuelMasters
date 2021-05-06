@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Aqua Master
   _set: 9
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: e29d15c865230f1419d571213ce32dae, type: 3}

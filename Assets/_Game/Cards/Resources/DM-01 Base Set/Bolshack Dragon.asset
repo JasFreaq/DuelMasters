@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Bolshack Dragon
   _set: 1
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 302121cc5dceb2844ac35d062e4949d3, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Petrova, Channeler of Suns
   _set: 9
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: 3817c04a03c364d4282052985106a2c3, type: 3}

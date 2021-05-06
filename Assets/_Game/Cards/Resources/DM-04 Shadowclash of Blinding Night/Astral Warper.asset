@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Astral Warper
   _set: 4
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 0}

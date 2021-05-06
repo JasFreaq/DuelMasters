@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Armored Transport Galiacruse
   _set: 7
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 7fd82a66588896d4985415632411f485, type: 3}

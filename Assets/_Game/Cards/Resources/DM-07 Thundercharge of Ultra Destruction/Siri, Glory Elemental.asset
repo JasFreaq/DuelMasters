@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Siri, Glory Elemental
   _set: 7
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 1b8aba342dfddcb4ab1fa0900e39f905, type: 3}

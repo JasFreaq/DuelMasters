@@ -148,15 +148,32 @@ public static class CardParams
                 return Rarity.Uncommon;
             case "Rare":
                 return Rarity.Rare;
-            case "VeryRare":
+            case "Very Rare":
                 return Rarity.VeryRare;
-            case "SuperRare":
+            case "Super Rare":
                 return Rarity.SuperRare;
             default:
                 return 0;
         }
     }
-    
+
+    public static string StringFromRarity(Rarity rarity)
+    {
+        switch (rarity)
+        {
+            case Rarity.Common:
+            case Rarity.Uncommon:
+            case Rarity.Rare:
+                return rarity.ToString();
+            case Rarity.VeryRare:
+                return "Very Rare";
+            case Rarity.SuperRare:
+                return "Super Rare";
+            default:
+                return null;
+        }
+    }
+
     #endregion
 
     #region CardType

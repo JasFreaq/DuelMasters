@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Craze Valkyrie, the Drastic
   _set: 6
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 1e644fb8c3823a74e9567fafe62e20ca, type: 3}

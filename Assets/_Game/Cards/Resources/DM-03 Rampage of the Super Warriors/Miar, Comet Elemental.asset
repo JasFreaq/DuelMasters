@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Miar, Comet Elemental
   _set: 3
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: be67e0735a90f3e4598aa9ee1c724d9e, type: 3}

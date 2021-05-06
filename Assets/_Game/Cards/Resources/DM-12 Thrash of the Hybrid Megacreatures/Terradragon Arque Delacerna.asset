@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Terradragon Arque Delacerna
   _set: 12
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: 552727a75e44a0841a1c6510f75a9eb1, type: 3}

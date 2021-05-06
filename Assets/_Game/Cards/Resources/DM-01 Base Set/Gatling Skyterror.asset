@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Gatling Skyterror
   _set: 1
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 0f941c3c773b5714aa7bc0ce9fe42f04, type: 3}

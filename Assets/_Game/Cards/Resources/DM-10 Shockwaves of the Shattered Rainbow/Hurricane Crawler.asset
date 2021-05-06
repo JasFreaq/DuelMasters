@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Hurricane Crawler
   _set: 10
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: 9cde25d7664b7904d9d6dda419e129bc, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Garkago Dragon
   _set: 3
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 8eb38435352d70244b142fdf33e139e5, type: 3}

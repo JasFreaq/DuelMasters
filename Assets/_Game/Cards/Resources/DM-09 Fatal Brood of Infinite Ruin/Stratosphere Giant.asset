@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Stratosphere Giant
   _set: 9
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: 4a205d1ca9b6eac4394d80d536e8f599, type: 3}

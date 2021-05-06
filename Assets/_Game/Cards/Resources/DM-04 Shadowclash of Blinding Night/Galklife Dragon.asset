@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Galklife Dragon
   _set: 4
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 598de8e6e50bb1a42a4a70a5ecd14d8d, type: 3}

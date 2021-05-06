@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Giriel, Ghastly Warrior
   _set: 3
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: a60388b4bdc9e7c4c9cdc5b7f051843a, type: 3}

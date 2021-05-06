@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Scarlet Skyterror
   _set: 1
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: 66a7cd0242504cd4c9b02f2179a52d4d, type: 3}

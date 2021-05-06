@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Avalanche Giant
   _set: 5
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 4be66b62b7d000549a68043baf532759, type: 3}

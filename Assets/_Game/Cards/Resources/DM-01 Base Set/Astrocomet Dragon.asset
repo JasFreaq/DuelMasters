@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Astrocomet Dragon
   _set: 1
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 03f992b6f729244488c277712728ac0f, type: 3}

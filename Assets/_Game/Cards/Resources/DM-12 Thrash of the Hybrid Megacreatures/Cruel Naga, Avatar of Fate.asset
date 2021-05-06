@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Cruel Naga, Avatar of Fate
   _set: 12
   _civilization: 0500000001000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 93128366d4a26fc4f8ea736013178088, type: 3}

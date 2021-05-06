@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Diamondia, the Blizzard Rider
   _set: 11
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 3
   _cost: 3
   _artworkImage: {fileID: 21300000, guid: 50825cf1a490ecb4f98db3e6f670985c, type: 3}

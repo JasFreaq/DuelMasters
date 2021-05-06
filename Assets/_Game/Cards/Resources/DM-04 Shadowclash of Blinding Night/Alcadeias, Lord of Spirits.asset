@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Alcadeias, Lord of Spirits
   _set: 4
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 565db880f6fa19a42b05d6c1aa33b545, type: 3}

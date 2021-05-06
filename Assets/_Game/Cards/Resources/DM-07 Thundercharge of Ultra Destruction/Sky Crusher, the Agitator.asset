@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Sky Crusher, the Agitator
   _set: 7
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 8691f7e506f9b1e46b9bf68d1bccc15a, type: 3}

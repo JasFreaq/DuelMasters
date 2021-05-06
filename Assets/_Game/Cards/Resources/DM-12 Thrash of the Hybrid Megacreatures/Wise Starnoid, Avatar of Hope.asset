@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Wise Starnoid, Avatar of Hope
   _set: 12
   _civilization: 0400000005000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: af33bd0a8e7a10340af064f6691174ff, type: 3}

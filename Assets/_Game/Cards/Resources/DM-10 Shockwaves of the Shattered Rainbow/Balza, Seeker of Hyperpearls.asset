@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Balza, Seeker of Hyperpearls
   _set: 10
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: 7907dda7bd725c1448b0293832074b79, type: 3}

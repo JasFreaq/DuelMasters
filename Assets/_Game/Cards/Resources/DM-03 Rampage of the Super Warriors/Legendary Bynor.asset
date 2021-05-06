@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Legendary Bynor
   _set: 3
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 5f2ae9780925ef84e8341718ed221073, type: 3}

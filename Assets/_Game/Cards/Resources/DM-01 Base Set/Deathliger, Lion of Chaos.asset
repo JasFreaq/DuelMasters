@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Deathliger, Lion of Chaos
   _set: 1
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 4ec5b351169e11e4295841a09ece0b4d, type: 3}

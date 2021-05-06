@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Kuukai, Finder of Karma
   _set: 8
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 3
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: bd994f6878f89314489d616728780ec5, type: 3}

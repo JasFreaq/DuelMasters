@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Splinterclaw Wasp
   _set: 6
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: dbf4ff1076e476b4aa15789cf3b612f2, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Miraculous Plague
   _set: 11
   _civilization: 0500000001000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 1
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 518d8e5dfe5f6584784d96073295a6c2, type: 3}

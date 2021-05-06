@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Vampire Silphy
   _set: 1
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: 0daee60275ffb3449af27a669fc8ee51, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Kejila, the Hidden Horror
   _set: 10
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 4e4dd1c23d4c29a459aa8741eeb538a2, type: 3}

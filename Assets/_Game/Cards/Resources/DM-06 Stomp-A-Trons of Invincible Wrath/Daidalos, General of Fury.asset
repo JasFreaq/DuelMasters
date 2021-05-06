@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Daidalos, General of Fury
   _set: 6
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 4
   _artworkImage: {fileID: 21300000, guid: 9e5787e465fba634cbcbee075d131ef6, type: 3}

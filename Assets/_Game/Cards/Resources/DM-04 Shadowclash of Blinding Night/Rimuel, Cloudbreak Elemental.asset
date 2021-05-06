@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Rimuel, Cloudbreak Elemental
   _set: 4
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: deadc3013d58c5c4f995190cc5d9e87c, type: 3}

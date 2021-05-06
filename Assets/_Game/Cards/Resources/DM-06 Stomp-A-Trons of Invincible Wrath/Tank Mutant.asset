@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Tank Mutant
   _set: 6
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 9
   _artworkImage: {fileID: 21300000, guid: e7892d315964f584080ba01010216277, type: 3}

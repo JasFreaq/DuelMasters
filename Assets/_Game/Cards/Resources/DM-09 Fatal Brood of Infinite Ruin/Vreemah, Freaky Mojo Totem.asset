@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Vreemah, Freaky Mojo Totem
   _set: 9
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: df425dae2faabbf4fa34cacfcdcd97ee, type: 3}

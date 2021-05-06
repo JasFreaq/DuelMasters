@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Ladia Bale, the Inspirational
   _set: 2
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 0a2ccb6aef6dcad46a4e86e44629021b, type: 3}

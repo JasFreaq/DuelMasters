@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Obsidian Scarab
   _set: 5
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 860f943a43124644b832bfe5fd7a80d2, type: 3}

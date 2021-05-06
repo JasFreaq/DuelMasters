@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Invincible Cataclysm
   _set: 6
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 1
   _cost: 13
   _artworkImage: {fileID: 21300000, guid: 83a3fdec6ff8acf43bfc6333936c680b, type: 3}

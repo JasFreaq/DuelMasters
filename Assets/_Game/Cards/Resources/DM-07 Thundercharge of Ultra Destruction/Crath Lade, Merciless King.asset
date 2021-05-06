@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Crath Lade, Merciless King
   _set: 7
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: e4eeaeddbbfc989428280349d19031d7, type: 3}

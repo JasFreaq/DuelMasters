@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: King Aquakamui
   _set: 4
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 9305bacd54de903429447131d8deccc6, type: 3}

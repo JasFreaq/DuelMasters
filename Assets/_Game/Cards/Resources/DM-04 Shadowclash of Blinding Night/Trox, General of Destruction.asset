@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Trox, General of Destruction
   _set: 4
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 09fcd9ac764552047bd905c4d09f9180, type: 3}

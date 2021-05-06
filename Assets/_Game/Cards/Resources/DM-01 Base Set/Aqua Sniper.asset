@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Aqua Sniper
   _set: 1
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: b08092d34b3df254a8cb38ad70304905, type: 3}

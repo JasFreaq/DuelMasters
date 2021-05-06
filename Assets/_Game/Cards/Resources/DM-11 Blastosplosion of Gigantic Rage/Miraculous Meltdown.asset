@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Miraculous Meltdown
   _set: 11
   _civilization: 0100000002000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 1
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: caa6e71cd90652f488765a85c3a647af, type: 3}

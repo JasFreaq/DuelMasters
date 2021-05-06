@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Deklowaz, the Terminator
   _set: 10
   _civilization: 0100000002000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 846a690bb8d5ec9448d97f774918e83c, type: 3}

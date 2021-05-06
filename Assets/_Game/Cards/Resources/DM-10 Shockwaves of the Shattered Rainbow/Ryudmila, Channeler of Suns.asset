@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Ryudmila, Channeler of Suns
   _set: 10
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: a74b4611b617c4b4d9835ab884b7a180, type: 3}

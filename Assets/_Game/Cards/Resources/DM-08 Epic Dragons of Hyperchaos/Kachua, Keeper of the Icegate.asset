@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Kachua, Keeper of the Icegate
   _set: 8
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: c291676507fc8fa4393ef20ea1daad10, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: La Byle, Seeker of the Winds
   _set: 5
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 1803632acfe8f004686d1658ad9b4ffc, type: 3}

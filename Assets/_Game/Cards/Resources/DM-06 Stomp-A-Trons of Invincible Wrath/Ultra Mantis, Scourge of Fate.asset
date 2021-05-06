@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Ultra Mantis, Scourge of Fate
   _set: 6
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 14989bd94c865f74a972c50fc4dce590, type: 3}

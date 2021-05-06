@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class Tester : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    [SerializeField] private CreatureObject _creatureObject;
+    [SerializeField] private SpellObject _spellObject;
+    [SerializeField] private Creature _creature;
+    [SerializeField] private Spell _spell;
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _creatureObject.SetupCard(_creature);
+            _spellObject.SetupCard(_spell);
+        }
     }
 }

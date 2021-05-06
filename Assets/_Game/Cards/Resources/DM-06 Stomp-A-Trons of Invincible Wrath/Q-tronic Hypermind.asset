@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Q-tronic Hypermind
   _set: 6
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 8
   _artworkImage: {fileID: 21300000, guid: 77d5c346e1b4c3e41998d8bb9c55b8c0, type: 3}

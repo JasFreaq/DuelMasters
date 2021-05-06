@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Terradragon Dakma Balgarow
   _set: 10
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 36b2515cff8c1aa47a91c4835aa7e4cd, type: 3}

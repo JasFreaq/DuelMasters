@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Magmadragon Ogrist Vhal
   _set: 9
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: a651256fa4c279542ac0aef3085f128e, type: 3}

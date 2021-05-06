@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Core-Crash Lizard
   _set: 10
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: a6e7c63b2222de442bc9fd2a8f3d55de, type: 3}

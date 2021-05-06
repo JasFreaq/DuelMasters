@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Tanzanyte, the Awakener
   _set: 10
   _civilization: 0500000001000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: c2617be779dd0424590657d0b874a209, type: 3}

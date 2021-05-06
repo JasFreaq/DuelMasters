@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Aura Pegasus, Avatar of Life
   _set: 12
   _civilization: 0400000003000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: f3c5c7e4584d11b4a907027c98d8e45b, type: 3}

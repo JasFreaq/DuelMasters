@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Punch Trooper Bronks
   _set: 12
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 4
   _artworkImage: {fileID: 21300000, guid: a34d8f1cd95ab11428dcd876f94bd627, type: 3}

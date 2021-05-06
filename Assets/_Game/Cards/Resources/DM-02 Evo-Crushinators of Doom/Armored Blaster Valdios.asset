@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Armored Blaster Valdios
   _set: 2
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 4
   _artworkImage: {fileID: 21300000, guid: bdae0de94337b574ea7e4b3746289676, type: 3}

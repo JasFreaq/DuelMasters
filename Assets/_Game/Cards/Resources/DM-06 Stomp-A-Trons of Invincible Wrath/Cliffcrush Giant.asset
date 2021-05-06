@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Cliffcrush Giant
   _set: 6
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: 6e8e0916d3c79a4419b8fbc47ad03c54, type: 3}

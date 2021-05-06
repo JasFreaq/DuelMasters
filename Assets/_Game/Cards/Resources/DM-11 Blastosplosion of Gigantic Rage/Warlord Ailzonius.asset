@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Warlord Ailzonius
   _set: 11
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 5
   _artworkImage: {fileID: 21300000, guid: 659c64e24e2304345af0fb068083f653, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Miraculous Snare
   _set: 11
   _civilization: 0400000005000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 1
   _cost: 3
   _artworkImage: {fileID: 21300000, guid: 057714710503182478668de5799ba388, type: 3}

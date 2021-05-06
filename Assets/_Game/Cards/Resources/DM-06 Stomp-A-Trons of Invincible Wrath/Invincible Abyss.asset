@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Invincible Abyss
   _set: 6
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 1
   _cost: 13
   _artworkImage: {fileID: 21300000, guid: 8338c249e1589d444a6c5989141a4861, type: 3}

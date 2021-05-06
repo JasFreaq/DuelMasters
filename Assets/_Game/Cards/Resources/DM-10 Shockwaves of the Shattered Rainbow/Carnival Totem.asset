@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Carnival Totem
   _set: 10
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: 86788d19f81cd26468b7046683be6088, type: 3}

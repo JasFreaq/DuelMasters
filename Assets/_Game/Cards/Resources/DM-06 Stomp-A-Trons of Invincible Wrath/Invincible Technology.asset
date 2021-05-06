@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Invincible Technology
   _set: 6
   _civilization: 05000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 1
   _cost: 13
   _artworkImage: {fileID: 21300000, guid: 9e51967363ae979409df8c5d2a2eec90, type: 3}

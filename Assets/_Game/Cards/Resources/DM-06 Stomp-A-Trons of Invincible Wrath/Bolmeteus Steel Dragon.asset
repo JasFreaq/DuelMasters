@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Bolmeteus Steel Dragon
   _set: 6
   _civilization: 02000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 7
   _artworkImage: {fileID: 21300000, guid: 21e5f2bbb243bf141b9436d56c7a4516, type: 3}

@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Sinister General Damudo
   _set: 5
   _civilization: 01000000
-  _rarity: 0
+  _rarity: 4
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: edb019056d01f5444b289b39173038a8, type: 3}

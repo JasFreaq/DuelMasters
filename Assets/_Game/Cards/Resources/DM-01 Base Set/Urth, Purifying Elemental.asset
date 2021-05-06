@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Urth, Purifying Elemental
   _set: 1
   _civilization: 04000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 2
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: d7c3885af409d574fa3bc5650db429f7, type: 3}

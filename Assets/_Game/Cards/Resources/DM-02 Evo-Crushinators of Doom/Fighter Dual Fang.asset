@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Fighter Dual Fang
   _set: 2
   _civilization: 03000000
-  _rarity: 0
+  _rarity: 5
   _cardType: 3
   _cost: 6
   _artworkImage: {fileID: 21300000, guid: a178d54ceafad604c85723a5e9a81e22, type: 3}
