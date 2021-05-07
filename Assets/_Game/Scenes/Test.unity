@@ -222,8 +222,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _creatureObject: {fileID: 198533302}
   _spellObject: {fileID: 2037169335}
-  _creature: {fileID: 11400000, guid: 5082e729aecf4b14391d9f677fe8e88d, type: 2}
-  _spell: {fileID: 11400000, guid: 8a321099e1d697a48af56813614730af, type: 2}
+  _creature: {fileID: 11400000, guid: 99eb68dc7d933aa4f9010544e1b673ab, type: 2}
+  _spell: {fileID: 11400000, guid: d01445279d282a744be930355c9ad6f0, type: 2}
 --- !u!4 &702056072
 Transform:
   m_ObjectHideFlags: 0

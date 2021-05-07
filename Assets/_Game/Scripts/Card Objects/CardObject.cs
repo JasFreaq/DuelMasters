@@ -12,6 +12,7 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _costText;
+    [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
     [SerializeField] private FlavorTextObject _flavorTextPrefab;
 
@@ -25,9 +26,11 @@ public abstract class CardObject : MonoBehaviour
     public virtual void SetupCard(Card card)
     {
         _artworkImage.sprite = card.ArtworkImage;
-        _frameImage.sprite = _frameDatabase.GetFrame(card.Civilization);
+        FrameData frameData = _frameDatabase.GetFrame(card.Civilization);
+        _frameImage.sprite = frameData.frameImage;
         _nameText.text = card.Name;
         _costText.text = card.Cost.ToString();
+        _cardTypeTextTransform.position = new Vector2(_cardTypeTextTransform.position.x, frameData.cardTypePosY);
 
         SetupRules(card.RulesText);
 

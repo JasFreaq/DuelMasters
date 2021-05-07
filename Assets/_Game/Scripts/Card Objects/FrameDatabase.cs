@@ -7,8 +7,8 @@ using UnityEngine;
 public class FrameDatabase : MonoBehaviour
 {
     [SerializeField] private FrameData[] _frames = new FrameData[10];
-    
-    public Sprite GetFrame(CardParams.Civilization[] civilization)
+
+    public FrameData GetFrame(CardParams.Civilization[] civilization)
     {
         foreach (FrameData frameData in _frames)
         {
@@ -28,9 +28,9 @@ public class FrameDatabase : MonoBehaviour
                 isCivilization = false;
 
             if (isCivilization)
-                return frameData.frameImage;
+                return frameData;
         }
 
-        return null;
+        return new FrameData();
     }
 }

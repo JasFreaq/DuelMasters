@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-struct FrameData
+public struct FrameData
 {
     public CardParams.Civilization[] civilization;
+    public float cardTypePosY;
     public Sprite frameImage;
 }
