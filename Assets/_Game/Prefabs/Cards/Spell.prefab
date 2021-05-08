@@ -33,34 +33,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _frames:
   - civilization: 01000000
-    cardTypePosY: 0
+    cardTypePosY: -84.5
     frameImage: {fileID: 21300000, guid: 5c726d5dc04e593419a3698c4d8c54a7, type: 3}
   - civilization: 0100000002000000
-    cardTypePosY: 0
+    cardTypePosY: -85.75
     frameImage: {fileID: 21300000, guid: 1f3714fc4009d1a4ebe5b96fd1eea463, type: 3}
   - civilization: 02000000
-    cardTypePosY: 0
+    cardTypePosY: -83.5
     frameImage: {fileID: 21300000, guid: bf24454af2d359a4cbbc6b77aa416612, type: 3}
   - civilization: 0200000003000000
-    cardTypePosY: 0
+    cardTypePosY: -84
     frameImage: {fileID: 21300000, guid: 4601055ac6b26cd4d95cc08432e2baa8, type: 3}
   - civilization: 04000000
-    cardTypePosY: 0
+    cardTypePosY: -84.5
     frameImage: {fileID: 21300000, guid: ea41fedc64f1a6c42a422d76b48341f3, type: 3}
   - civilization: 0400000003000000
-    cardTypePosY: 0
+    cardTypePosY: -84.5
     frameImage: {fileID: 21300000, guid: 304bbdc290a8c14438fe2c120e75a43e, type: 3}
   - civilization: 0400000005000000
-    cardTypePosY: 0
+    cardTypePosY: -83.5
     frameImage: {fileID: 21300000, guid: 2d89a57074bab464b93f425e72d002c0, type: 3}
   - civilization: 03000000
-    cardTypePosY: 0
+    cardTypePosY: -84.75
     frameImage: {fileID: 21300000, guid: ea2a635ce417e304583f5af642192a73, type: 3}
   - civilization: 05000000
-    cardTypePosY: 0
+    cardTypePosY: -85.75
     frameImage: {fileID: 21300000, guid: ecd082c2cc071044997a0f179a2b158d, type: 3}
   - civilization: 0500000001000000
-    cardTypePosY: 0
+    cardTypePosY: -84.5
     frameImage: {fileID: 21300000, guid: bd8ddac60a1cfbe46b92fdd600002a7c, type: 3}
 --- !u!1001 &2595183003087082162
 PrefabInstance:
@@ -84,10 +84,6 @@ PrefabInstance:
     - target: {fileID: 593525566642237523, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -111.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 593525566642237523, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -84
       objectReference: {fileID: 0}
     - target: {fileID: 593525566642237524, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
       propertyPath: m_Name

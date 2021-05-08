@@ -30,7 +30,7 @@ public abstract class CardObject : MonoBehaviour
         _frameImage.sprite = frameData.frameImage;
         _nameText.text = card.Name;
         _costText.text = card.Cost.ToString();
-        _cardTypeTextTransform.position = new Vector2(_cardTypeTextTransform.position.x, frameData.cardTypePosY);
+        _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, frameData.cardTypePosY);
 
         SetupRules(card.RulesText);
 
