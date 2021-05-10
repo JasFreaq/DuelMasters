@@ -1,16 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class FrameDatabase : MonoBehaviour
+public class CompactCardFrameDatabase : MonoBehaviour
 {
-    [SerializeField] private FrameData[] _frames = new FrameData[10];
+    [SerializeField] private CompactCardFrameData[] _frames = new CompactCardFrameData[10];
 
-    public FrameData GetFrame(CardParams.Civilization[] civilization)
+    public CompactCardFrameData GetFrame(CardParams.Civilization[] civilization)
     {
-        foreach (FrameData frameData in _frames)
+        foreach (CompactCardFrameData frameData in _frames)
         {
             bool isCivilization = true;
             if (frameData.civilization.Length == civilization.Length)
@@ -31,6 +29,6 @@ public class FrameDatabase : MonoBehaviour
                 return frameData;
         }
 
-        return new FrameData();
+        return new CompactCardFrameData();
     }
 }

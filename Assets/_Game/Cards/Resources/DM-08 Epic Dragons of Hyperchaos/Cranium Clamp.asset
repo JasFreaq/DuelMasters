@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 3
   _cardType: 1
   _cost: 4
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 5dc6d20cbeaac3b4fa728490e035a366, type: 3}
   _rulesText: Your opponent chooses and discards 2 cards from his hand.
   _flavorText: '"Hold still! This is the only headache remedy I know. I promise,
     soon you won''t be able to feel your head at all!"'

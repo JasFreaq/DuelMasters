@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SpellObject : CardObject
 {
-    public override void SetupCard(Card card)
+    public override void SetupCard(CardData cardData)
     {
-        base.SetupCard(card);
+        base.SetupCard(cardData);
     }
 
     protected override void SetupRules(string rulesText)

@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 1
   _cardType: 1
   _cost: 2
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: d2e58032eda83a44aa98f8bdec48d6f9, type: 3}
   _rulesText: 'Shield trigger (When this spell is put into your hand from your shield
     zone, you may cast it immediately for no cost.)
 

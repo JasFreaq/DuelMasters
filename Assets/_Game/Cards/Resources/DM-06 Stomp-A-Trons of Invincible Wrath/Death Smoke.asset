@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 1
   _cardType: 1
   _cost: 4
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 26cdd962268914e428ead42ccd523704, type: 3}
   _rulesText: Destroy one of your opponent's untapped creatures.
   _flavorText: "\"Life is like this joke. It's very, very funny, and now it's over.\"
     \u2014Trixo, Wicked Doll"

@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 1
   _cardType: 2
   _cost: 4
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: a125d2131cd2dd947a02b413fe22a0d4, type: 3}
   _rulesText: 'This creature can attack untapped water creatures.
 
     This creature

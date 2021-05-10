@@ -28,11 +28,11 @@ public class CardGenerator : EditorWindow
                 string database = File.ReadAllText(CardsDatabasePath);
                 if (!string.IsNullOrWhiteSpace(database))
                 {
-                    CardDataList cardDataList = JsonUtility.FromJson<CardDataList>(database);
+                    CardReadDataList cardReadDataList = JsonUtility.FromJson<CardReadDataList>(database);
                     
                     string setName = "";
 
-                    foreach (CardData cardData in cardDataList.cards)
+                    foreach (CardReadDataFormat cardData in cardReadDataList.cards)
                     {
                         if (cardData.set != setName)
                         {
@@ -48,15 +48,15 @@ public class CardGenerator : EditorWindow
                         switch (cardData.type)
                         {
                             case "Spell":
-                                Spell spell = ScriptableObject.CreateInstance<Spell>();
-                                spell = (Spell) SetupCard(spell, cardData, setName);
-                                AssetDatabase.CreateAsset(spell, CardObjectsPath + $"{setName}/{cardData.name}.asset");
+                                SpellData spellData = ScriptableObject.CreateInstance<SpellData>();
+                                spellData = (SpellData) SetupCard(spellData, cardData, setName);
+                                AssetDatabase.CreateAsset(spellData, CardObjectsPath + $"{setName}/{cardData.name}.asset");
                                 break;
                             case "Creature":
                             case "Evolution Creature":
-                                Creature creature = ScriptableObject.CreateInstance<Creature>();
-                                creature = SetupCreatureCard(creature, cardData, setName);
-                                AssetDatabase.CreateAsset(creature, CardObjectsPath + $"{setName}/{cardData.name}.asset");
+                                CreatureData creatureData = ScriptableObject.CreateInstance<CreatureData>();
+                                creatureData = SetupCreatureCard(creatureData, cardData, setName);
+                                AssetDatabase.CreateAsset(creatureData, CardObjectsPath + $"{setName}/{cardData.name}.asset");
                                 break;
                         }
                     }
@@ -69,70 +69,70 @@ public class CardGenerator : EditorWindow
         }
     }
 
-    private static Card SetupCard(Card card, CardData cardData, string setName)
+    private static CardData SetupCard(CardData cardData, CardReadDataFormat cardReadDataFormat, string setName)
     {
-        card.Name = cardData.name;
+        cardData.Name = cardReadDataFormat.name;
         
-        card.Set = CardParams.SetFromString(cardData.set);
+        cardData.Set = CardParams.SetFromString(cardReadDataFormat.set);
         
         CardParams.Civilization[] civilization;
-        if (!String.IsNullOrWhiteSpace(cardData.civilization))
+        if (!String.IsNullOrWhiteSpace(cardReadDataFormat.civilization))
         {
             civilization = new CardParams.Civilization[1];
-            civilization[0] = CardParams.CivilizationFromString(cardData.civilization);
+            civilization[0] = CardParams.CivilizationFromString(cardReadDataFormat.civilization);
         }
         else
         {
             civilization = new CardParams.Civilization[2];
             for (int i = 0; i < 2; i++)
             {
-                civilization[i] = CardParams.CivilizationFromString(cardData.civilizations[i]);
+                civilization[i] = CardParams.CivilizationFromString(cardReadDataFormat.civilizations[i]);
             }
         }
-        card.Civilization = civilization;
+        cardData.Civilization = civilization;
 
-        card.Rarity = CardParams.RarityFromString(cardData.rarity);
+        cardData.Rarity = CardParams.RarityFromString(cardReadDataFormat.rarity);
 
-        card.CardType = CardParams.CardTypeFromString(cardData.type);
+        cardData.CardType = CardParams.CardTypeFromString(cardReadDataFormat.type);
 
-        card.Cost = int.Parse(cardData.cost);
+        cardData.Cost = int.Parse(cardReadDataFormat.cost);
         
-        card.ArtworkImage = Resources.Load<Sprite>($"{setName}/{cardData.id}");
+        cardData.ArtworkImage = Resources.Load<Sprite>($"{setName}/{cardReadDataFormat.id}");
 
-        card.RulesText = cardData.text;
+        cardData.RulesText = cardReadDataFormat.text;
 
-        card.FlavorText = cardData.flavor;
+        cardData.FlavorText = cardReadDataFormat.flavor;
 
-        return card;
+        return cardData;
     }
     
-    private static Creature SetupCreatureCard(Creature creature, CardData cardData, string setName)
+    private static CreatureData SetupCreatureCard(CreatureData creatureData, CardReadDataFormat cardReadDataFormat, string setName)
     {
-        creature = (Creature) SetupCard(creature, cardData, setName);
+        creatureData = (CreatureData) SetupCard(creatureData, cardReadDataFormat, setName);
 
         CardParams.Race[] race;
-        if (!String.IsNullOrWhiteSpace(cardData.race))
+        if (!String.IsNullOrWhiteSpace(cardReadDataFormat.race))
         {
             race = new CardParams.Race[1];
-            race[0] = CardParams.RaceFromString(cardData.race);
+            race[0] = CardParams.RaceFromString(cardReadDataFormat.race);
         }
         else
         {
             race = new CardParams.Race[2];
             for (int i = 0; i < 2; i++)
             {
-                race[i] = CardParams.RaceFromString(cardData.races[i]);
+                race[i] = CardParams.RaceFromString(cardReadDataFormat.races[i]);
             }
         }
-        creature.Race = race;
+        creatureData.Race = race;
 
-        string power = cardData.power;
+        string power = cardReadDataFormat.power;
         if (power[power.Length - 1] == '+')
         {
             power = power.Substring(0, power.Length - 1);
         }
-        creature.Power = int.Parse(power);
+        creatureData.Power = int.Parse(power);
 
-        return creature;
+        return creatureData;
     }
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 1
   _cardType: 1
   _cost: 2
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 35d5ff1e09b449943ba6d84090f80128, type: 3}
   _rulesText: Look at up to 3 of your opponent's shields. Then put them back where
     they were.
   _flavorText: A little bit psychic. A little bit psychotic.

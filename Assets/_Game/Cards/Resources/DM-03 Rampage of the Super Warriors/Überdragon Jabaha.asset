@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 4
   _cardType: 3
   _cost: 7
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 3891e9fe3adf73f439fb9acd25f62f92, type: 3}
   _rulesText: "Evolution\u2014Put on one of your Armored Dragons. Each of your other
     fire creatures in the battle zone has \"power attacker +2000.\" (While attacking,
     a creature that has \"power attacker +2000\" gets +2000 power.)\nDouble breaker

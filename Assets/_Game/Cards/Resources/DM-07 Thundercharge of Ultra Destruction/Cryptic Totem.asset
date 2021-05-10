@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 3
   _cardType: 2
   _cost: 6
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 1d683a0ec07bfd84bade00e93ab9ef21, type: 3}
   _rulesText: 'Double breaker (This creature breaks 2 shields.)
 
     While this creature

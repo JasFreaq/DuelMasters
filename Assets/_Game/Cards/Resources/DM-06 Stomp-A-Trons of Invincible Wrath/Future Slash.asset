@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 2
   _cardType: 1
   _cost: 7
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 573d33ac3cff4014eb38f8b5c70876f1, type: 3}
   _rulesText: Search your opponent's deck. Take up to 2 cards from his deck and put
     them into his graveyard. Then your opponent shuffles his deck.
   _flavorText: "\"Look on the bright side. Next time a fortune-teller predicts your

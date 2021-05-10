@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(FrameDatabase))] [DisallowMultipleComponent]
+[RequireComponent(typeof(CardFrameDatabase))] [DisallowMultipleComponent]
 public abstract class CardObject : MonoBehaviour
 {
     [SerializeField] private Image _artworkImage;
@@ -16,28 +16,28 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] protected Transform _rulesPanel;
     [SerializeField] private FlavorTextObject _flavorTextPrefab;
 
-    private FrameDatabase _frameDatabase;
+    private CardFrameDatabase _cardFrameDatabase;
 
     private void Awake()
     {
-        _frameDatabase = GetComponent<FrameDatabase>();
+        _cardFrameDatabase = GetComponent<CardFrameDatabase>();
     }
 
-    public virtual void SetupCard(Card card)
+    public virtual void SetupCard(CardData cardData)
     {
-        _artworkImage.sprite = card.ArtworkImage;
-        FrameData frameData = _frameDatabase.GetFrame(card.Civilization);
-        _frameImage.sprite = frameData.frameImage;
-        _nameText.text = card.Name;
-        _costText.text = card.Cost.ToString();
-        _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, frameData.cardTypePosY);
+        _artworkImage.sprite = cardData.ArtworkImage;
+        CardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
+        _frameImage.sprite = cardFrameData.frameImage;
+        _nameText.text = cardData.Name;
+        _costText.text = cardData.Cost.ToString();
+        _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, cardFrameData.cardTypePosY);
 
-        SetupRules(card.RulesText);
+        SetupRules(cardData.RulesText);
 
-        if (!String.IsNullOrWhiteSpace(card.FlavorText)) 
+        if (!String.IsNullOrWhiteSpace(cardData.FlavorText)) 
         {
             FlavorTextObject flavorText = Instantiate(_flavorTextPrefab, _rulesPanel);
-            flavorText.SetupFlavorText(card.FlavorText);
+            flavorText.SetupFlavorText(cardData.FlavorText);
         }
     }
 

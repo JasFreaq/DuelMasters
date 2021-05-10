@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 1
   _cardType: 1
   _cost: 4
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: bad7dcfd529011046a1e7e1b4278d9cd, type: 3}
   _rulesText: Destroy one of your opponent's untapped creatures.
   _flavorText: '"Tune in next week for more of the exciting adventures of Quixotic
     Hero Swine Snou-Oh, Never mind."'

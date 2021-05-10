@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 3
   _cardType: 2
   _cost: 5
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: f1a7049c465174e48ab58cafef50a44d, type: 3}
   _rulesText: When you put this creature into the battle zone, you may reveal the
     top 3 cards of your deck. Put all light cards and all darkness cards from the
     revealed cards into your hand, and put the rest into your graveyard.

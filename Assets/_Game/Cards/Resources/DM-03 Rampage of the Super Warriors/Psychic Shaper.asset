@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 3
   _cardType: 1
   _cost: 6
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 50dfa868d5b6caa4bbca74f0e9b3c305, type: 3}
   _rulesText: Reveal the top 4 cards of your deck. Put all water cards from among
     them into your hand and the rest into your graveyard.
   _flavorText: Think. Think harder. No, not that hard.

@@ -18,7 +18,7 @@ MonoBehaviour:
   _rarity: 4
   _cardType: 3
   _cost: 6
-  _artworkImage: {fileID: 0}
+  _artworkImage: {fileID: 21300000, guid: 144fc2538c055ae499532467d9568b4e, type: 3}
   _rulesText: "Evolution\u2014Put on one of your Cyber Viruses.\nWhen you put this
     creature into the battle zone, draw up to 3 cards."
   _flavorText: Can you even comprehend the overwhelming intellectual advantage I
