@@ -12,6 +12,7 @@ public abstract class CompactCardObject : MonoBehaviour
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private Renderer _bgRenderer;
+    [SerializeField] private GameObject _glowFrame;
     [SerializeField] private GameObject _tappedOverlay;
 
     private CompactCardFrameDatabase _cardFrameDatabase;

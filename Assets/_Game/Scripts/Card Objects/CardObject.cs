@@ -15,6 +15,7 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
     [SerializeField] private FlavorTextObject _flavorTextPrefab;
+    [SerializeField] private GameObject _glowFrame;
 
     private CardFrameDatabase _cardFrameDatabase;
 
