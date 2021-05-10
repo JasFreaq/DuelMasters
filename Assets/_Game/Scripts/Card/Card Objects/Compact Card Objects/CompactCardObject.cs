@@ -8,6 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CompactCardFrameDatabase))] [DisallowMultipleComponent]
 public abstract class CompactCardObject : MonoBehaviour
 {
+    [SerializeField] private CardObject _previewCard;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
@@ -29,5 +30,6 @@ public abstract class CompactCardObject : MonoBehaviour
         _frameImage.sprite = cardFrameData.frameImage;
         _nameText.text = cardData.Name;
         _bgRenderer.material = cardFrameData.frameBGMaterial;
+        _previewCard.SetupCard(cardData);
     }
 }

@@ -5,27 +5,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(CardFrameDatabase))] [DisallowMultipleComponent]
+[DisallowMultipleComponent]
 public abstract class CardObject : MonoBehaviour
 {
+    [SerializeField] private CardObject _previewCard;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _costText;
     [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
-    [SerializeField] private Transform _previewHolder;
     [SerializeField] private FlavorTextObject _flavorTextPrefab;
-    [SerializeField] private GameObject _canvas;
     [SerializeField] protected GameObject _glowFrame;
-
-    private CardFrameDatabase _cardFrameDatabase;
-
-    private void Awake()
-    {
-        _cardFrameDatabase = GetComponent<CardFrameDatabase>();
-    }
-
+    [SerializeField] CardFrameDatabase _cardFrameDatabase;
+    
     public virtual void SetupCard(CardData cardData)
     {
         _artworkImage.sprite = cardData.ArtworkImage;
@@ -43,7 +36,10 @@ public abstract class CardObject : MonoBehaviour
             flavorText.SetupFlavorText(cardData.FlavorText);
         }
 
-        GameObject previewDuplicate = Instantiate(_canvas, _previewHolder);
+        if (_previewCard)
+        {
+            _previewCard.SetupCard(cardData);
+        }
     }
 
     protected virtual void SetupRules(string rulesText)
