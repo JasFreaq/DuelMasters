@@ -18,7 +18,9 @@ MonoBehaviour:
   _costText: {fileID: 3188356580040942076}
   _cardTypeTextTransform: {fileID: 3188356579979272929}
   _rulesPanel: {fileID: 3188356580271285339}
+  _previewHolder: {fileID: 6256046735039589079}
   _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  _canvas: {fileID: 3188356580417783654}
   _glowFrame: {fileID: 6897636837242769606}
 --- !u!114 &7477107595161916680
 MonoBehaviour:
@@ -145,6 +147,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 593525566928670040, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
   m_PrefabInstance: {fileID: 2595183003087082162}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3188356580417783654 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 593525567152182740, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
+  m_PrefabInstance: {fileID: 2595183003087082162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6897636837242769606 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8915619941334516340, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
@@ -202,5 +209,10 @@ RectTransform:
 --- !u!224 &3188356580271285339 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 593525567005554409, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
+  m_PrefabInstance: {fileID: 2595183003087082162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6256046735039589079 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8273675933826021477, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
   m_PrefabInstance: {fileID: 2595183003087082162}
   m_PrefabAsset: {fileID: 0}

@@ -14,8 +14,10 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _costText;
     [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
+    [SerializeField] private Transform _previewHolder;
     [SerializeField] private FlavorTextObject _flavorTextPrefab;
-    [SerializeField] private GameObject _glowFrame;
+    [SerializeField] private GameObject _canvas;
+    [SerializeField] protected GameObject _glowFrame;
 
     private CardFrameDatabase _cardFrameDatabase;
 
@@ -40,6 +42,8 @@ public abstract class CardObject : MonoBehaviour
             FlavorTextObject flavorText = Instantiate(_flavorTextPrefab, _rulesPanel);
             flavorText.SetupFlavorText(cardData.FlavorText);
         }
+
+        GameObject previewDuplicate = Instantiate(_canvas, _previewHolder);
     }
 
     protected virtual void SetupRules(string rulesText)

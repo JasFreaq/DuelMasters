@@ -16,12 +16,17 @@ public class Tester : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _creatureObject.SetupCard(creatureData);
-            _spellObject.SetupCard(spellData);
+            if (_creatureObject)
+                _creatureObject.SetupCard(creatureData);
+            if (_spellObject)
+                _spellObject.SetupCard(spellData);
 
-            _battleCardObject.SetupCard(creatureData);
-            _creatureManaObject.SetupCard(creatureData);
-            _spellManaObject.SetupCard(spellData);
+            if (_battleCardObject)
+                _battleCardObject.SetupCard(creatureData);
+            if (_creatureManaObject)
+                _creatureManaObject.SetupCard(creatureData);
+            if (_spellManaObject)
+                _spellManaObject.SetupCard(spellData);
         }
     }
 }
