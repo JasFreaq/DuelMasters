@@ -123,6 +123,139 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &556558877
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 147282955940401490, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: _activateOnStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035471790995383254, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: m_Name
+      value: Creature Mana Card
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+--- !u!1001 &582704838
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2260420816629508752, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: _activateOnStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515412, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_Name
+      value: Spell Mana Card
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3996320499539515627, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+--- !u!114 &602761396 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1699759774, guid: c10e63babd2678045b07ed27e6441fdf, type: 3}
+  m_PrefabInstance: {fileID: 582704838}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fc992c344cd4c84aaad1a8f7d7adcdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &702056070
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,8 +288,8 @@ MonoBehaviour:
   _creatureObject: {fileID: 0}
   _spellObject: {fileID: 0}
   _battleCardObject: {fileID: 0}
-  _creatureManaObject: {fileID: 0}
-  _spellManaObject: {fileID: 0}
+  _creatureManaObject: {fileID: 770162282}
+  _spellManaObject: {fileID: 602761396}
   creatureData: {fileID: 11400000, guid: 6e36d3b61c88aac4988f17c4ba9534e1, type: 2}
   spellData: {fileID: 11400000, guid: 8a321099e1d697a48af56813614730af, type: 2}
 --- !u!4 &702056072
@@ -266,6 +399,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &770162282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2914370039657263117, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+  m_PrefabInstance: {fileID: 556558877}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e77c8fc398a80f45a59629dcc467f46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
