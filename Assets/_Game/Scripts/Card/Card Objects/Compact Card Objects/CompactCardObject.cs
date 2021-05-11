@@ -45,6 +45,10 @@ public abstract class CompactCardObject : MonoBehaviour
         _frameImage.sprite = cardFrameData.frameImage;
         _nameText.text = cardData.Name;
         _bgRenderer.material = cardFrameData.frameBGMaterial;
-        _previewCard.SetupCard(cardData);
+        
+        if (_previewCard)
+        {
+            _previewCard.SetupCard(cardData);
+        }
     }
 }

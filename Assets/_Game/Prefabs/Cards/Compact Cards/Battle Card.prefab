@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _previewCard: {fileID: 0}
-  _canvas: {fileID: 0}
+  _canvas: {fileID: 1356728644533995485}
   _artworkImage: {fileID: 1356728646195387205}
   _frameImage: {fileID: 1356728644571985065}
   _nameText: {fileID: 1356728644741094819}
@@ -2470,9 +2470,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7332533856093001765}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.0184625, y: 0.018035, z: 1}
+  m_LocalScale: {x: 0.024924375, y: 0.024347253, z: 1.35}
   m_Children:
   - {fileID: 2571458785844038893}
   - {fileID: 7332533855625959892}
@@ -2864,8 +2864,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7332533856434192646}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.01, z: 1.65}
-  m_LocalScale: {x: 7.25, y: 6.75, z: 1}
+  m_LocalPosition: {x: 0, y: -0.013500449, z: 2.2275}
+  m_LocalScale: {x: 9.7875, y: 9.1125, z: 1.35}
   m_Children: []
   m_Father: {fileID: 7332533856487998462}
   m_RootOrder: 0
@@ -2886,8 +2886,8 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7332533856434192646}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -2995,8 +2995,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad188e2605060d428947cd593661eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetPosition: {x: 0, y: 5}
-  _targetScale: 2
+  _targetPosition: {x: 0, y: 0, z: 5}
+  _targetScale: 1.5
   _previewGameObject: {fileID: 1356728644312588117}
   _activateOnStart: 0
   _objectsToHide:
@@ -3058,6 +3058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _previewCard: {fileID: 2365136879288154501}
+  _canvas: {fileID: 7332533856093001760}
   _artworkImage: {fileID: 7332533856325740186}
   _frameImage: {fileID: 7332533855401942186}
   _nameText: {fileID: 7332533854852668786}
