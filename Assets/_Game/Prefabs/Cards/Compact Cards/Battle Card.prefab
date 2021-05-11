@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _previewCard: {fileID: 0}
+  _canvas: {fileID: 0}
   _artworkImage: {fileID: 1356728646195387205}
   _frameImage: {fileID: 1356728644571985065}
   _nameText: {fileID: 1356728644741094819}
@@ -2998,6 +2999,9 @@ MonoBehaviour:
   _targetScale: 2
   _previewGameObject: {fileID: 1356728644312588117}
   _activateOnStart: 0
+  _objectsToHide:
+  - {fileID: 7332533856434192646}
+  - {fileID: 7332533856093001765}
 --- !u!114 &6209920204957078683
 MonoBehaviour:
   m_ObjectHideFlags: 0

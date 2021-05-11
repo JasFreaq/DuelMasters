@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 
 public class HoverPreview: MonoBehaviour
 {
-    [SerializeField] private Vector2 _targetPosition;
+    [SerializeField] private Vector3 _targetPosition;
     [SerializeField] private float _targetScale;
     [SerializeField] private GameObject _previewGameObject;
     [SerializeField] private bool _activateOnStart = false;
+    [SerializeField] private List<GameObject> _objectsToHide = new List<GameObject>();
     
     public bool OverCollider { get; set; }
 
@@ -80,6 +82,12 @@ public class HoverPreview: MonoBehaviour
         // enable Preview game object
         _previewGameObject.SetActive(true);
 
+        // disable
+        foreach (GameObject @object in _objectsToHide)
+        {
+            @object.SetActive(false);
+        }
+
         // tween to target position
         _previewGameObject.transform.localPosition = Vector3.zero;
         _previewGameObject.transform.localScale = Vector3.one;
@@ -93,6 +101,10 @@ public class HoverPreview: MonoBehaviour
         _previewGameObject.SetActive(false);
         _previewGameObject.transform.localScale = Vector3.one;
         _previewGameObject.transform.localPosition = Vector3.zero;
+        foreach (GameObject @object in _objectsToHide)
+        {
+            @object.SetActive(true);
+        }
     }
 
     #region Static Methods
@@ -104,6 +116,10 @@ public class HoverPreview: MonoBehaviour
             _CurrentlyViewing._previewGameObject.SetActive(false);
             _CurrentlyViewing._previewGameObject.transform.localScale = Vector3.one;
             _CurrentlyViewing._previewGameObject.transform.localPosition = Vector3.zero;
+            foreach (GameObject @object in _CurrentlyViewing._objectsToHide)
+            {
+                @object.SetActive(true);
+            }
         }
     }
 

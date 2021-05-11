@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public abstract class CardObject : MonoBehaviour
 {
     [SerializeField] private CardObject _previewCard;
+    [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
@@ -45,5 +46,10 @@ public abstract class CardObject : MonoBehaviour
     protected virtual void SetupRules(string rulesText)
     {
 
+    }
+
+    public void SetCanvasSortingOrder(int order)
+    {
+        _canvas.sortingOrder = order;
     }
 }

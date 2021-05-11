@@ -529,10 +529,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad188e2605060d428947cd593661eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetPosition: {x: 0, y: 5}
-  _targetScale: 2
+  _targetPosition: {x: 0, y: 0, z: 5}
+  _targetScale: 1.5
   _previewGameObject: {fileID: 0}
   _activateOnStart: 0
+  _objectsToHide:
+  - {fileID: 593525566904413098}
+  - {fileID: 593525567152182740}
 --- !u!1 &593525567005554410
 GameObject:
   m_ObjectHideFlags: 0
