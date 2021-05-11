@@ -19,9 +19,23 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] private FlavorTextObject _flavorTextPrefab;
     [SerializeField] protected GameObject _glowFrame;
     [SerializeField] CardFrameDatabase _cardFrameDatabase;
-    
+
+    private CardData _cardData;
+
+    public Canvas Canvas
+    {
+        get { return _canvas; }
+    }
+
+    public CardData CardData
+    {
+        get { return _cardData; }
+    }
+
     public virtual void SetupCard(CardData cardData)
     {
+        _cardData = cardData;
+
         _artworkImage.sprite = cardData.ArtworkImage;
         CardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
         _frameImage.sprite = cardFrameData.frameImage;
@@ -46,10 +60,5 @@ public abstract class CardObject : MonoBehaviour
     protected virtual void SetupRules(string rulesText)
     {
 
-    }
-
-    public void SetCanvasSortingOrder(int order)
-    {
-        _canvas.sortingOrder = order;
     }
 }

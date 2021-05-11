@@ -285,8 +285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad188e2605060d428947cd593661eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetPosition: {x: 0, y: 5}
-  _targetScale: 2
+  _targetPosition: {x: 0, y: 0, z: 5}
+  _targetScale: 1.5
   _previewGameObject: {fileID: 0}
   _activateOnStart: 0
   _objectsToHide:
@@ -341,8 +341,8 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5089061093778810245}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1

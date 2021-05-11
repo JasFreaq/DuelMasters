@@ -10,23 +10,10 @@ public class CompactCardFrameDatabase : MonoBehaviour
     {
         foreach (CompactCardFrameData frameData in _frames)
         {
-            bool isCivilization = true;
-            if (frameData.civilization.Length == civilization.Length)
+            if (CardParams.IsCivilizationEqual(frameData.civilization, civilization)) 
             {
-                for (int i = 0, n = civilization.Length; i < n; i++)
-                {
-                    if (frameData.civilization[i] != civilization[i])
-                    {
-                        isCivilization = false;
-                        break;
-                    }
-                }
-            }
-            else
-                isCivilization = false;
-
-            if (isCivilization)
                 return frameData;
+            }
         }
 
         return new CompactCardFrameData();

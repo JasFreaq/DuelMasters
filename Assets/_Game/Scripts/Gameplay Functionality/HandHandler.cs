@@ -8,8 +8,8 @@ public class HandHandler : MonoBehaviour
     [SerializeField] private float _circleRadius = 100;
     [SerializeField] private float _cardAreaWidth = 24;
     [SerializeField] private float _maxCardWidth = 8;
-    
-    private float _cardWidth;
+    [SerializeField] private int _handSortingLayerFloor;
+
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
@@ -39,17 +39,17 @@ public class HandHandler : MonoBehaviour
     void ArrangeCards()
     {
         int n = transform.childCount;
-        _cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
-        float startOffset = (n % 2) * _cardWidth;
+        float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
+        float startOffset = (n % 2) * cardWidth;
         if (n % 2 == 0)
-            startOffset += _cardWidth / 2;
+            startOffset += cardWidth / 2;
         Vector2 startPos = new Vector2(transform.position.x - startOffset, transform.position.y);
 
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = transform.GetChild(i);
-            _cardsInHand[cardTransform.GetInstanceID()].SetCanvasSortingOrder(i);
-            Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * _cardWidth, startPos.y);
+            _cardsInHand[cardTransform.GetInstanceID()].Canvas.sortingOrder = _handSortingLayerFloor + i;
+            Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y);
             
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();

@@ -124,6 +124,24 @@ public static class CardParams
         }
     }
 
+    public static bool IsCivilizationEqual(Civilization[] civilizationA, Civilization[] civilizationB)
+    {
+        if (civilizationA.Length == civilizationB.Length)
+        {
+            for (int i = 0, n = civilizationA.Length; i < n; i++)
+            {
+                if (civilizationA[i] != civilizationB[i])
+                {
+                    return false;
+                }
+            }
+        }
+        else
+            return false;
+
+        return true;
+    }
+
     #endregion
 
     #region Rarity

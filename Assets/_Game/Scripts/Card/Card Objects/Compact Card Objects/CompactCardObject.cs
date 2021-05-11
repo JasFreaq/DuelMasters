@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public abstract class CompactCardObject : MonoBehaviour
 {
     [SerializeField] private CardObject _previewCard;
+    [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
@@ -18,6 +19,18 @@ public abstract class CompactCardObject : MonoBehaviour
 
     private CompactCardFrameDatabase _cardFrameDatabase;
 
+    private CardData _cardData;
+
+    public Canvas Canvas
+    {
+        get { return _canvas; }
+    }
+
+    public CardData CardData
+    {
+        get { return _cardData; }
+    }
+
     private void Awake()
     {
         _cardFrameDatabase = GetComponent<CompactCardFrameDatabase>();
@@ -25,6 +38,8 @@ public abstract class CompactCardObject : MonoBehaviour
 
     public virtual void SetupCard(CardData cardData)
     {
+        _cardData = cardData;
+
         _artworkImage.sprite = cardData.ArtworkImage;
         CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
         _frameImage.sprite = cardFrameData.frameImage;
