@@ -21,6 +21,7 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] CardFrameDatabase _cardFrameDatabase;
 
     private CardData _cardData;
+    private HoverPreview _hoverPreview;
 
     public Canvas Canvas
     {
@@ -30,6 +31,16 @@ public abstract class CardObject : MonoBehaviour
     public CardData CardData
     {
         get { return _cardData; }
+    }
+
+    public HoverPreview HoverPreview
+    {
+        get { return _hoverPreview; }
+    }
+
+    private void Awake()
+    {
+        _hoverPreview = GetComponent<HoverPreview>();
     }
 
     public virtual void SetupCard(CardData cardData)

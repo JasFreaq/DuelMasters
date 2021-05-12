@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandHandler : MonoBehaviour
+public class HandLayoutHandler : MonoBehaviour
 {
     [SerializeField] private float _circleRadius = 100;
     [SerializeField] private float _cardAreaWidth = 24;
     [SerializeField] private float _maxCardWidth = 8;
     [SerializeField] private int _handSortingLayerFloor;
+    [SerializeField] private Transform _holderTransform;
+    [SerializeField] private Transform _tempCard;
 
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
@@ -17,8 +19,8 @@ public class HandHandler : MonoBehaviour
 
     private void Start()
     {
-        _circleCenter = new Vector3(transform.position.x, transform.position.y - _circleRadius);
-        _circleCentralAxis = new Vector3(transform.position.x, transform.position.y) - _circleCenter;
+        _circleCenter = new Vector3(_holderTransform.position.x, _holderTransform.position.y - _circleRadius);
+        _circleCentralAxis = new Vector3(_holderTransform.position.x, _holderTransform.position.y) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
 
@@ -26,10 +28,10 @@ public class HandHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int i = 0, n = transform.childCount; i < n; i++)
+            for (int i = 0, n = _holderTransform.childCount; i < n; i++)
             {
-                CardObject card = transform.GetChild(i).GetComponent<CardObject>();
-                _cardsInHand.Add(transform.GetChild(i).GetInstanceID(), card);
+                CardObject card = _holderTransform.GetChild(i).GetComponent<CardObject>();
+                _cardsInHand.Add(_holderTransform.GetChild(i).GetInstanceID(), card);
             }
 
             ArrangeCards();
@@ -38,16 +40,16 @@ public class HandHandler : MonoBehaviour
 
     void ArrangeCards()
     {
-        int n = transform.childCount;
+        int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
         float startOffset = (n % 2) * cardWidth;
         if (n % 2 == 0)
             startOffset += cardWidth / 2;
-        Vector2 startPos = new Vector2(transform.position.x - startOffset, transform.position.y);
+        Vector2 startPos = new Vector2(_holderTransform.position.x - startOffset, _holderTransform.position.y);
 
         for (int i = 0; i < n; i++)
         {
-            Transform cardTransform = transform.GetChild(i);
+            Transform cardTransform = _holderTransform.GetChild(i);
             _cardsInHand[cardTransform.GetInstanceID()].Canvas.sortingOrder = _handSortingLayerFloor + i;
             Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y);
             
@@ -59,7 +61,7 @@ public class HandHandler : MonoBehaviour
 
             cardPos = relativeVector * _circleRadius;
             cardPos.y -= _circleRadius;
-            cardPos += transform.position;
+            cardPos += _holderTransform.position;
             cardTransform.position = cardPos;
         }
     }

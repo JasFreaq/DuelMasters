@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManaZoneHandler : MonoBehaviour
+public class ManaZoneLayoutHandler : MonoBehaviour
 {
     struct TransformValuePair
     {
@@ -21,18 +21,20 @@ public class ManaZoneHandler : MonoBehaviour
     [SerializeField] private float _maxCardWidth = 8;
     [SerializeField] private float _maxSameCivWidth = 2;
     [SerializeField] private int _manaZoneSortingLayerFloor;
-    
+    [SerializeField] private Transform _holderTransform;
+    [SerializeField] private Transform _tempCard;
+
     private Dictionary<int, CompactCardObject> _cardsInManaZone = new Dictionary<int, CompactCardObject>();
     
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int i = 0, n = transform.childCount; i < n; i++)
+            for (int i = 0, n = _holderTransform.childCount; i < n; i++)
             {
-                CompactCardObject card = transform.GetChild(i).GetComponent<CompactCardObject>();
-                if (!_cardsInManaZone.ContainsKey(transform.GetChild(i).GetInstanceID()))
-                    _cardsInManaZone.Add(transform.GetChild(i).GetInstanceID(), card);
+                CompactCardObject card = _holderTransform.GetChild(i).GetComponent<CompactCardObject>();
+                if (!_cardsInManaZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
+                    _cardsInManaZone.Add(_holderTransform.GetChild(i).GetInstanceID(), card);
             }
 
             ArrangeCards();
@@ -43,16 +45,16 @@ public class ManaZoneHandler : MonoBehaviour
     {
         RearrangeCardOrder();
 
-        int n = transform.childCount;
+        int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min(_cardAreaWidth / n, _maxCardWidth);
         float sameCivWidth = Mathf.Min(cardWidth / _maxCardWidth) * _maxSameCivWidth;
-        Vector3 pos = transform.position;
+        Vector3 pos = _holderTransform.position;
 
         CompactCardObject lastCard = null;
 
         for (int i = 0; i < n; i++)
         {
-            Transform cardTransform = transform.GetChild(i);
+            Transform cardTransform = _holderTransform.GetChild(i);
             CompactCardObject currentCard =  _cardsInManaZone[cardTransform.GetInstanceID()];
             currentCard.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
 
@@ -75,18 +77,18 @@ public class ManaZoneHandler : MonoBehaviour
 
     void RearrangeCardOrder()
     {
-        int n = transform.childCount;
+        int n = _holderTransform.childCount;
         TransformValuePair[] transformValuePairs = new TransformValuePair[n];
         for (int i = 0; i < n; i++)
         {
             int value = 0;
-            CompactCardObject card = _cardsInManaZone[transform.GetChild(i).GetInstanceID()];
+            CompactCardObject card = _cardsInManaZone[_holderTransform.GetChild(i).GetInstanceID()];
             foreach (CardParams.Civilization civilization in card.CardData.Civilization)
             {
                 value += (int) civilization;
             }
 
-            transformValuePairs[i] = new TransformValuePair(transform.GetChild(i), value);
+            transformValuePairs[i] = new TransformValuePair(_holderTransform.GetChild(i), value);
         }
 
         Array.Sort(transformValuePairs, delegate(TransformValuePair a, TransformValuePair b)

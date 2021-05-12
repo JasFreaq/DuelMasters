@@ -8,12 +8,14 @@ public class HoverPreview: MonoBehaviour
     [SerializeField] private Vector3 _targetPosition;
     [SerializeField] private float _targetScale;
     [SerializeField] private GameObject _previewGameObject;
-    [SerializeField] private bool _activateOnStart = false;
+    [SerializeField] private float _hoverTimeBeforePreview = 0.75f;
+    [SerializeField] private bool _previewEnabled = false;
     [SerializeField] private List<GameObject> _objectsToHide = new List<GameObject>();
-    
+
+    private Coroutine _previewRoutine = null;
+
     public bool OverCollider { get; set; }
 
-    private bool _previewEnabled = false;
     public bool PreviewEnabled
     {
         get { return _previewEnabled; }
@@ -49,7 +51,6 @@ public class HoverPreview: MonoBehaviour
     
     void Start()
     {
-        PreviewEnabled = _activateOnStart;
         if (_AllHoverPreviews == null)
         {
             _AllHoverPreviews = GameObject.FindObjectsOfType<HoverPreview>();
@@ -60,15 +61,32 @@ public class HoverPreview: MonoBehaviour
     {
         OverCollider = true;
         if (PreviewsAllowed && PreviewEnabled)
-            PreviewThisObject();
+        {
+            _previewRoutine = StartCoroutine(StartPreviewRoutine());
+        }
     }
         
     void OnMouseExit()
     {
         OverCollider = false;
 
+        if (_previewRoutine != null)
+        {
+            StopCoroutine(_previewRoutine);
+            _previewRoutine = null;
+        }
+
         if (!PreviewingSomeCard())
+        {
             StopAllPreviews();
+        }
+    }
+
+    IEnumerator StartPreviewRoutine()
+    {
+        yield return new WaitForSeconds(_hoverTimeBeforePreview);
+        PreviewThisObject();
+        _previewRoutine = null;
     }
 
     void PreviewThisObject()

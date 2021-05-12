@@ -325,7 +325,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 24
   m_TargetDisplay: 0
 --- !u!114 &1356728644533995484
 MonoBehaviour:
@@ -2996,7 +2996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetPosition: {x: 0, y: 0, z: 5}
-  _targetScale: 1.5
+  _targetScale: 2
   _previewGameObject: {fileID: 1356728644312588117}
   _activateOnStart: 0
   _objectsToHide:

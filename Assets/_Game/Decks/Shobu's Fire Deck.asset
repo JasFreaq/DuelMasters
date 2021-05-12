@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eab241dd3ce96c42ad772c49f8e55a9, type: 3}
+  m_Name: Shobu's Fire Deck
+  m_EditorClassIdentifier: 
+  _cardList:
+  - card: {fileID: 11400000, guid: 717a466f4aaadb44684fdc74b98a5ed9, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: 1c735471a63cf0848b824efa44e85213, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: 503c63d2a0c34b444b50c1da309c768c, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: dd8208b84ac604a4998c88b20d691664, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: be3a7035924ed2445ad6e02f21aac218, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: 37517c81b0c91114b9468bb461210a91, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: a39ac05b9e6721a418b6f72fffc74202, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 6321825f90db439468803cd8ee9c60d2, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 9000ddbdac34caa45928b8ce91a5e8f2, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: 9cd621425f053664bbd6d73acd2a2920, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: d178a1771aa8b894cad479de09c93662, type: 2}
+    number: 3
+  - card: {fileID: 11400000, guid: 9d30eda67eb703f4ebb64a2d3d06554f, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 7dc58721c210ab945b9c4aaebfb0781e, type: 2}
+    number: 1
+  - card: {fileID: 11400000, guid: 4b6ad94f4d78f844f892690a40bb8ff9, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 39ff428587ab3fd408aa59015abeb474, type: 2}
+    number: 4
+  - card: {fileID: 11400000, guid: bfeedc746d387254a8aacf62be5f55e4, type: 2}
+    number: 4
+  - card: {fileID: 11400000, guid: 6af9d33fa28c3464abc81e5be410d211, type: 2}
+    number: 3
+  - card: {fileID: 11400000, guid: 85a8391ab86866246a36ef9a9ec48ed0, type: 2}
+    number: 3
+  - card: {fileID: 11400000, guid: e7db3e4a4f2718a43b6d7a34441c478f, type: 2}
+    number: 4
