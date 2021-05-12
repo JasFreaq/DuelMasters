@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CompactCardFrameDatabase))] [DisallowMultipleComponent]
 public abstract class CompactCardLayoutHandler : MonoBehaviour
 {
-    [SerializeField] private CardLayoutHandler _previewCard;
+    [SerializeField] private CardLayoutHandler _previewLayoutHandler;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
@@ -18,8 +18,9 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     [SerializeField] private GameObject _tappedOverlay;
 
     private CompactCardFrameDatabase _cardFrameDatabase;
-
     private CardData _cardData;
+
+    private HoverPreview _hoverPreview;
 
     public Canvas Canvas
     {
@@ -31,9 +32,15 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         get { return _cardData; }
     }
 
+    public HoverPreview HoverPreview
+    {
+        get { return _hoverPreview; }
+    }
+
     private void Awake()
     {
         _cardFrameDatabase = GetComponent<CompactCardFrameDatabase>();
+        _hoverPreview = GetComponent<HoverPreview>();
     }
 
     public virtual void SetupCard(CardData cardData)
@@ -46,9 +53,9 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         _nameText.text = cardData.Name;
         _bgRenderer.material = cardFrameData.frameBGMaterial;
         
-        if (_previewCard)
+        if (_previewLayoutHandler)
         {
-            _previewCard.SetupCard(cardData);
+            _previewLayoutHandler.SetupCard(cardData);
         }
     }
 }

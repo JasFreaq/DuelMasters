@@ -20,25 +20,37 @@ public class ManaZoneLayoutHandler : MonoBehaviour
     [SerializeField] private float _cardAreaWidth = 16;
     [SerializeField] private float _maxCardWidth = 8;
     [SerializeField] private float _maxSameCivWidth = 2;
+    [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private int _manaZoneSortingLayerFloor;
+    [SerializeField] private Vector3 _previewTargetPosition;
+    [SerializeField] private Vector3 _previewTargetScale;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
     private Dictionary<int, CompactCardLayoutHandler> _cardsInManaZone = new Dictionary<int, CompactCardLayoutHandler>();
-    
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             for (int i = 0, n = _holderTransform.childCount; i < n; i++)
             {
-                CompactCardLayoutHandler card = _holderTransform.GetChild(i).GetComponent<CompactCardLayoutHandler>();
                 if (!_cardsInManaZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
-                    _cardsInManaZone.Add(_holderTransform.GetChild(i).GetInstanceID(), card);
+                {
+                    AddCard(_holderTransform.GetChild(i));
+                }
             }
 
             ArrangeCards();
         }
+    }
+
+    void AddCard(Transform cardTransform)
+    {
+        CompactCardLayoutHandler card = cardTransform.GetComponent<CompactCardLayoutHandler>();
+        card.HoverPreview.TargetPosition = _previewTargetPosition;
+        card.HoverPreview.TargetScale = _previewTargetScale;
+        _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
     }
 
     void ArrangeCards()
@@ -68,7 +80,7 @@ public class ManaZoneLayoutHandler : MonoBehaviour
             }
 
             if (i > 0)
-                pos.x += currentWidth;
+                pos.x += _arrangeLeftToRight ? currentWidth : -currentWidth;
             cardTransform.localPosition = pos;
             pos = cardTransform.localPosition;
             lastCard = currentCard;

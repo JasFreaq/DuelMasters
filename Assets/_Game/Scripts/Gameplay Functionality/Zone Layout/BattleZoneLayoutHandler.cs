@@ -7,24 +7,35 @@ public class BattleZoneLayoutHandler : MonoBehaviour
     [SerializeField] private float _cardAreaWidth = 24;
     [SerializeField] private float _maxCardWidth = 8;
     [SerializeField] private int _battleZoneSortingLayerFloor;
+    [SerializeField] private Vector3 _previewTargetPosition;
+    [SerializeField] private Vector3 _previewTargetScale;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
     private Dictionary<int, CompactCardLayoutHandler> _cardsInBattleZone = new Dictionary<int, CompactCardLayoutHandler>();
-    
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             for (int i = 0, n = _holderTransform.childCount; i < n; i++)
             {
-                CompactCardLayoutHandler card = _holderTransform.GetChild(i).GetComponent<CompactCardLayoutHandler>();
                 if (!_cardsInBattleZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
-                    _cardsInBattleZone.Add(_holderTransform.GetChild(i).GetInstanceID(), card);
+                {
+                    AddCard(_holderTransform.GetChild(i));
+                }
             }
 
             ArrangeCards();
         }
+    }
+
+    void AddCard(Transform cardTransform)
+    {
+        CompactCardLayoutHandler card = cardTransform.GetComponent<CompactCardLayoutHandler>();
+        card.HoverPreview.TargetPosition = _previewTargetPosition;
+        card.HoverPreview.TargetScale = _previewTargetScale;
+        _cardsInBattleZone.Add(cardTransform.GetInstanceID(), card);
     }
 
     void ArrangeCards()

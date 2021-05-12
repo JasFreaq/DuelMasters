@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4b5f561bb22464a8a3fef06bf8fb16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _previewCard: {fileID: 4890010802725547787}
+  _previewLayoutHandler: {fileID: 4890010802725547787}
   _canvas: {fileID: 3188356580417783650}
   _artworkImage: {fileID: 3188356579964328954}
   _frameImage: {fileID: 3188356580522357782}
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4b5f561bb22464a8a3fef06bf8fb16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _previewCard: {fileID: 0}
+  _previewLayoutHandler: {fileID: 0}
   _canvas: {fileID: 4951960070657628976}
   _artworkImage: {fileID: 4951960072351516584}
   _frameImage: {fileID: 4951960070753871940}

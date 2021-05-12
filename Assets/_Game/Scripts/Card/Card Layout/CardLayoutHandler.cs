@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public abstract class CardLayoutHandler : MonoBehaviour
 {
-    [SerializeField] private CardLayoutHandler _previewCard;
+    [SerializeField] private CardLayoutHandler _previewLayoutHandler;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
@@ -21,6 +21,7 @@ public abstract class CardLayoutHandler : MonoBehaviour
     [SerializeField] CardFrameDatabase _cardFrameDatabase;
 
     private CardData _cardData;
+
     private HoverPreview _hoverPreview;
 
     public Canvas Canvas
@@ -62,9 +63,9 @@ public abstract class CardLayoutHandler : MonoBehaviour
             flavorTextLayout.SetupFlavorText(cardData.FlavorText);
         }
 
-        if (_previewCard)
+        if (_previewLayoutHandler)
         {
-            _previewCard.SetupCard(cardData);
+            _previewLayoutHandler.SetupCard(cardData);
         }
     }
 

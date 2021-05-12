@@ -6,7 +6,7 @@ using DG.Tweening;
 public class HoverPreview: MonoBehaviour
 {
     [SerializeField] private Vector3 _targetPosition;
-    [SerializeField] private float _targetScale;
+    [SerializeField] private Vector3 _targetScale;
     [SerializeField] private GameObject _previewGameObject;
     [SerializeField] private float _hoverTimeBeforePreview = 0.75f;
     [SerializeField] private bool _previewEnabled = false;
@@ -15,6 +15,16 @@ public class HoverPreview: MonoBehaviour
     private Coroutine _previewRoutine = null;
 
     public bool OverCollider { get; set; }
+
+    public Vector3 TargetPosition
+    {
+        set { _targetPosition = value; }
+    }
+
+    public Vector3 TargetScale
+    {
+        set { _targetScale = value; }
+    }
 
     public bool PreviewEnabled
     {
