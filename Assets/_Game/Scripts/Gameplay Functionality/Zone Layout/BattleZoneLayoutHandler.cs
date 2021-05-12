@@ -10,7 +10,7 @@ public class BattleZoneLayoutHandler : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
-    private Dictionary<int, CompactCardObject> _cardsInBattleZone = new Dictionary<int, CompactCardObject>();
+    private Dictionary<int, CompactCardLayoutHandler> _cardsInBattleZone = new Dictionary<int, CompactCardLayoutHandler>();
     
     void Update()
     {
@@ -18,7 +18,7 @@ public class BattleZoneLayoutHandler : MonoBehaviour
         {
             for (int i = 0, n = _holderTransform.childCount; i < n; i++)
             {
-                CompactCardObject card = _holderTransform.GetChild(i).GetComponent<CompactCardObject>();
+                CompactCardLayoutHandler card = _holderTransform.GetChild(i).GetComponent<CompactCardLayoutHandler>();
                 if (!_cardsInBattleZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
                     _cardsInBattleZone.Add(_holderTransform.GetChild(i).GetInstanceID(), card);
             }
@@ -36,7 +36,7 @@ public class BattleZoneLayoutHandler : MonoBehaviour
         float startOffset = (n % 2) * cardWidth;
         if (n % 2 == 0)
             startOffset += cardWidth / 2;
-        Vector3 startPos = new Vector3(_holderTransform.position.x - startOffset, _holderTransform.position.y, _holderTransform.position.z);
+        Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset, _holderTransform.localPosition.y, _holderTransform.localPosition.z);
 
         for (int i = 0; i < n; i++)
         {
@@ -44,7 +44,7 @@ public class BattleZoneLayoutHandler : MonoBehaviour
             _cardsInBattleZone[cardTransform.GetInstanceID()].Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
             Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y, startPos.z);
 
-            cardTransform.position = cardPos;
+            cardTransform.localPosition = cardPos;
             cardTransform.localScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
         }
     }

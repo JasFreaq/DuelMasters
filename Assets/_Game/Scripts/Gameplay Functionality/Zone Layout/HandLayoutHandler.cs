@@ -15,7 +15,7 @@ public class HandLayoutHandler : MonoBehaviour
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
-    private Dictionary<int, CardObject> _cardsInHand = new Dictionary<int, CardObject>();
+    private Dictionary<int, CardLayoutHandler> _cardsInHand = new Dictionary<int, CardLayoutHandler>();
 
     private void Start()
     {
@@ -30,7 +30,7 @@ public class HandLayoutHandler : MonoBehaviour
         {
             for (int i = 0, n = _holderTransform.childCount; i < n; i++)
             {
-                CardObject card = _holderTransform.GetChild(i).GetComponent<CardObject>();
+                CardLayoutHandler card = _holderTransform.GetChild(i).GetComponent<CardLayoutHandler>();
                 _cardsInHand.Add(_holderTransform.GetChild(i).GetInstanceID(), card);
             }
 

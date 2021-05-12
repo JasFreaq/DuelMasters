@@ -848,7 +848,7 @@ MonoBehaviour:
   _costText: {fileID: 1098125201123930510}
   _cardTypeTextTransform: {fileID: 1098125201319293587}
   _rulesPanel: {fileID: 1098125199735436329}
-  _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 8987872380143190196}
   _cardFrameDatabase: {fileID: 4572038751214096210}
   _creatureText: {fileID: 1098125201319293588}
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   _costText: {fileID: 3066916610602583761}
   _cardTypeTextTransform: {fileID: 3066916610537768396}
   _rulesPanel: {fileID: 3066916608685474678}
-  _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 6415911113819027435}
   _cardFrameDatabase: {fileID: 4572038751214096210}
   _creatureText: {fileID: 3066916610537768395}

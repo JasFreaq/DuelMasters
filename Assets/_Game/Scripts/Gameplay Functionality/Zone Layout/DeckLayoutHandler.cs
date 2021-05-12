@@ -8,10 +8,10 @@ public class DeckLayoutHandler : MonoBehaviour
 {
     [SerializeField] private Deck _deck;
     [SerializeField] private float _cardWidth = 0.1f;
-    [SerializeField] private CreatureObject _creaturePrefab;
-    [SerializeField] private SpellObject _spellPrefab;
+    [SerializeField] private CreatureLayoutHandler _creaturePrefab;
+    [SerializeField] private SpellLayoutHandler _spellPrefab;
 
-    private List<CardObject> _cards = new List<CardObject>();
+    private List<CardLayoutHandler> _cards = new List<CardLayoutHandler>();
 
     void Start()
     {
@@ -25,7 +25,7 @@ public class DeckLayoutHandler : MonoBehaviour
 
         foreach (CardData cardData in _cardList)
         {
-            CardObject card = null;
+            CardLayoutHandler card = null;
             if (cardData is CreatureData)
             {
                 card = Instantiate(_creaturePrefab, transform);
@@ -56,13 +56,13 @@ public class DeckLayoutHandler : MonoBehaviour
         while (n > 1)
         {
             int k = rNG.Next(n--);
-            CardObject tempCard = _cards[n];
+            CardLayoutHandler tempCard = _cards[n];
             _cards[n] = _cards[k];
             _cards[k] = tempCard;
         }
 
         float lastYPos = 0;
-        foreach (CardObject card in _cards)
+        foreach (CardLayoutHandler card in _cards)
         {
             card.transform.localPosition = new Vector3(card.transform.localPosition.x,
                 lastYPos -= _cardWidth, card.transform.localPosition.z);

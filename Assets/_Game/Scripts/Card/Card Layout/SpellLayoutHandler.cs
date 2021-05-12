@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellObject : CardObject
+public class SpellLayoutHandler : CardLayoutHandler
 {
     public override void SetupCard(CardData cardData)
     {

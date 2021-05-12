@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CompactCardFrameDatabase))] [DisallowMultipleComponent]
-public abstract class CompactCardObject : MonoBehaviour
+public abstract class CompactCardLayoutHandler : MonoBehaviour
 {
-    [SerializeField] private CardObject _previewCard;
+    [SerializeField] private CardLayoutHandler _previewCard;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;

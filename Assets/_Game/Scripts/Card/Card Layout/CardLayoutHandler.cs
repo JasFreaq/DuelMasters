@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [DisallowMultipleComponent]
-public abstract class CardObject : MonoBehaviour
+public abstract class CardLayoutHandler : MonoBehaviour
 {
-    [SerializeField] private CardObject _previewCard;
+    [SerializeField] private CardLayoutHandler _previewCard;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
@@ -16,7 +16,7 @@ public abstract class CardObject : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _costText;
     [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
-    [SerializeField] private FlavorTextObject _flavorTextPrefab;
+    [SerializeField] private FlavorTextLayoutHandler flavorTextLayoutPrefab;
     [SerializeField] protected GameObject _glowFrame;
     [SerializeField] CardFrameDatabase _cardFrameDatabase;
 
@@ -58,8 +58,8 @@ public abstract class CardObject : MonoBehaviour
 
         if (!String.IsNullOrWhiteSpace(cardData.FlavorText)) 
         {
-            FlavorTextObject flavorText = Instantiate(_flavorTextPrefab, _rulesPanel);
-            flavorText.SetupFlavorText(cardData.FlavorText);
+            FlavorTextLayoutHandler flavorTextLayout = Instantiate(flavorTextLayoutPrefab, _rulesPanel);
+            flavorTextLayout.SetupFlavorText(cardData.FlavorText);
         }
 
         if (_previewCard)

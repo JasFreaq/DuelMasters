@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FlavorTextObject : MonoBehaviour
+public class FlavorTextLayoutHandler : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
 

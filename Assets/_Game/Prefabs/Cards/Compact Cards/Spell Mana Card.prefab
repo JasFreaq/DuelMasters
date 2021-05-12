@@ -53,7 +53,7 @@ MonoBehaviour:
   _costText: {fileID: 2986397855370551337}
   _cardTypeTextTransform: {fileID: 2986397855166931764}
   _rulesPanel: {fileID: 2986397854536197518}
-  _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 6554941175013708051}
   _cardFrameDatabase: {fileID: 7100634901250528477}
 --- !u!114 &7100634901250528477

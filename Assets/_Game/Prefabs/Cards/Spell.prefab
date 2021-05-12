@@ -20,7 +20,7 @@ MonoBehaviour:
   _costText: {fileID: 3188356580040942076}
   _cardTypeTextTransform: {fileID: 3188356579979272929}
   _rulesPanel: {fileID: 3188356580271285339}
-  _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 6897636837242769606}
   _cardFrameDatabase: {fileID: 7477107595161916680}
 --- !u!114 &7477107595161916680
@@ -264,7 +264,7 @@ MonoBehaviour:
   _costText: {fileID: 4951960072159575470}
   _cardTypeTextTransform: {fileID: 4951960072353889971}
   _rulesPanel: {fileID: 4951960070234241033}
-  _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 3980865620792216724}
   _cardFrameDatabase: {fileID: 7477107595161916680}
 --- !u!1 &4951960070584746304

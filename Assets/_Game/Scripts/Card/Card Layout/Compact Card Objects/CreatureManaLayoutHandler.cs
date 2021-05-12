@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class BattleCardObject : CompactCardObject
+public class CreatureManaLayoutHandler : ManaCardLayoutHandler
 {
     [SerializeField] private TextMeshProUGUI _creatureRaceText;
-    [SerializeField] private TextMeshProUGUI _powerText;
 
     public override void SetupCard(CardData cardData)
     {
@@ -18,7 +17,5 @@ public class BattleCardObject : CompactCardObject
         if (creatureData.Race.Length == 2)
             raceStr += $" \" {CardParams.StringFromRace(creatureData.Race[1])}";
         _creatureRaceText.text = raceStr;
-
-        _powerText.text = creatureData.Power.ToString();
     }
 }

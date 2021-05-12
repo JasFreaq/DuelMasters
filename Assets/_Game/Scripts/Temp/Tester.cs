@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Tester : MonoBehaviour
 {
-    [SerializeField] private CreatureObject _creatureObject;
-    [SerializeField] private SpellObject _spellObject;
-    [SerializeField] private BattleCardObject _battleCardObject;
-    [SerializeField] private CreatureManaCardObject _creatureManaObject;
-    [SerializeField] private SpellManaCardObject _spellManaObject;
+    [SerializeField] private CreatureLayoutHandler creatureLayoutHandler;
+    [SerializeField] private SpellLayoutHandler spellLayoutHandler;
+    [SerializeField] private BattleCardLayoutHandler battleCardLayoutHandler;
+    [SerializeField] private CreatureManaLayoutHandler creatureManaLayoutHandler;
+    [SerializeField] private SpellManaLayoutHandler spellManaSpellManaObject;
     [SerializeField] private CreatureData creatureData;
     [SerializeField] private SpellData spellData;
 
@@ -16,17 +16,17 @@ public class Tester : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (_creatureObject)
-                _creatureObject.SetupCard(creatureData);
-            if (_spellObject)
-                _spellObject.SetupCard(spellData);
+            if (creatureLayoutHandler)
+                creatureLayoutHandler.SetupCard(creatureData);
+            if (spellLayoutHandler)
+                spellLayoutHandler.SetupCard(spellData);
 
-            if (_battleCardObject)
-                _battleCardObject.SetupCard(creatureData);
-            if (_creatureManaObject)
-                _creatureManaObject.SetupCard(creatureData);
-            if (_spellManaObject)
-                _spellManaObject.SetupCard(spellData);
+            if (battleCardLayoutHandler)
+                battleCardLayoutHandler.SetupCard(creatureData);
+            if (creatureManaLayoutHandler)
+                creatureManaLayoutHandler.SetupCard(creatureData);
+            if (spellManaSpellManaObject)
+                spellManaSpellManaObject.SetupCard(spellData);
         }
     }
 }

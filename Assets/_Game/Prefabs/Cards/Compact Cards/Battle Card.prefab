@@ -128,7 +128,7 @@ MonoBehaviour:
   _costText: {fileID: 1356728646269772099}
   _cardTypeTextTransform: {fileID: 1356728646209806942}
   _rulesPanel: {fileID: 1356728644420396260}
-  _flavorTextPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  flavorTextLayoutPrefab: {fileID: 0}
   _glowFrame: {fileID: 7012690392195666041}
   _cardFrameDatabase: {fileID: 515896279261784256}
   _creatureText: {fileID: 1356728646209806937}
@@ -2996,9 +2996,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetPosition: {x: 0, y: 0, z: 5}
-  _targetScale: 2
+  _targetScale: 1.5
   _previewGameObject: {fileID: 1356728644312588117}
-  _activateOnStart: 0
+  _hoverTimeBeforePreview: 0.75
+  _previewEnabled: 0
   _objectsToHide:
   - {fileID: 7332533856434192646}
   - {fileID: 7332533856093001765}
