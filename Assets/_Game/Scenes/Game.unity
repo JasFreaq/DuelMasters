@@ -1441,8 +1441,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardWidth: 0.05
   _cardScale: 0.5
-  _creaturePrefab: {fileID: 9664778576590571, guid: 66433e636b134ac4ea79bcd3369e25e0, type: 3}
-  _spellPrefab: {fileID: 5845490761390090027, guid: b7618febc89389e4f9304f707c76e6e9, type: 3}
+  _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
+  _spellPrefab: {fileID: 343298941492645285, guid: 4a63c9421e696484eb767328f2d8cdd0, type: 3}
 --- !u!114 &574495386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1602,8 +1602,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardWidth: 0.05
   _cardScale: 0.5
-  _creaturePrefab: {fileID: 9664778576590571, guid: 66433e636b134ac4ea79bcd3369e25e0, type: 3}
-  _spellPrefab: {fileID: 5845490761390090027, guid: b7618febc89389e4f9304f707c76e6e9, type: 3}
+  _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
+  _spellPrefab: {fileID: 343298941492645285, guid: 4a63c9421e696484eb767328f2d8cdd0, type: 3}
 --- !u!114 &712870840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2208,8 +2208,8 @@ MonoBehaviour:
   _maxSameCivWidth: 6
   _arrangeLeftToRight: 1
   _manaZoneSortingLayerFloor: 25
-  _previewTargetPosition: {x: 0, y: 1, z: 5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
+  _previewTargetPosition: {x: 0, y: 5, z: 5}
+  _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
   _holderTransform: {fileID: 232627277}
   _tempCard: {fileID: 2017681614}
 --- !u!114 &965673510
@@ -3262,13 +3262,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795273315}
-  m_LocalRotation: {x: 0, y: 0, z: -0.008726465, w: 0.999962}
+  m_LocalRotation: {x: 0, y: 0, z: 0.008726558, w: 0.999962}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1667101610}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 1}
 --- !u!1001 &1829732319
 PrefabInstance:
   m_ObjectHideFlags: 0

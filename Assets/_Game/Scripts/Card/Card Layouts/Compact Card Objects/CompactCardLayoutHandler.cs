@@ -32,11 +32,6 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         set { _cardData = value; }
     }
 
-    public HoverPreview HoverPreview
-    {
-        get { return _hoverPreview; }
-    }
-
     private void Awake()
     {
         _cardFrameDatabase = GetComponent<CompactCardFrameDatabase>();

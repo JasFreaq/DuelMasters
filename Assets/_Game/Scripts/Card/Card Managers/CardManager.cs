@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class CardManager : MonoBehaviour
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
 
+    private HoverPreview _hoverPreview;
+
     public CardLayoutHandler CardLayout
     {
         get { return _cardLayoutHandler; }
@@ -20,6 +23,16 @@ public class CardManager : MonoBehaviour
     {
         get { return _manaCardLayoutHandler; }
         set { _manaCardLayoutHandler = value; }
+    }
+
+    public HoverPreview HoverPreview
+    {
+        get { return _hoverPreview; }
+    }
+
+    private void Awake()
+    {
+        _hoverPreview = GetComponent<HoverPreview>();
     }
 
     public virtual void SetupCard(CardData cardData)

@@ -33,11 +33,6 @@ public abstract class CardLayoutHandler : MonoBehaviour
         get { return _cardData; }
     }
 
-    public HoverPreview HoverPreview
-    {
-        get { return _hoverPreview; }
-    }
-
     private void Awake()
     {
         _hoverPreview = GetComponent<HoverPreview>();

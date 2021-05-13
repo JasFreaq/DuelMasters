@@ -34,8 +34,8 @@ public class BattleZoneLayoutHandler : MonoBehaviour
     void AddCard(Transform cardTransform)
     {
         CompactCardLayoutHandler card = cardTransform.GetComponent<CompactCardLayoutHandler>();
-        card.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.HoverPreview.TargetScale = _previewTargetScale;
+        //card.HoverPreview.TargetPosition = _previewTargetPosition;
+        //card.HoverPreview.TargetScale = _previewTargetScale;
         _cardsInBattleZone.Add(cardTransform.GetInstanceID(), card);
     }
 

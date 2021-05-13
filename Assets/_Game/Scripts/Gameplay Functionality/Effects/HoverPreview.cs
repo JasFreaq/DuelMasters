@@ -5,13 +5,13 @@ using DG.Tweening;
 
 public class HoverPreview: MonoBehaviour
 {
-    [SerializeField] private Vector3 _targetPosition;
-    [SerializeField] private Vector3 _targetScale;
     [SerializeField] private GameObject _previewGameObject;
-    [SerializeField] private float _hoverTimeBeforePreview = 0.75f;
-    [SerializeField] private bool _previewEnabled = false;
+    [SerializeField] private float _hoverTimeBeforePreview = 0.5f;
     [SerializeField] private List<GameObject> _objectsToHide = new List<GameObject>();
-
+    
+    private Vector3 _targetPosition;
+    private Vector3 _targetScale;
+    private bool _previewEnabled = false;
     private Coroutine _previewRoutine = null;
 
     public bool OverCollider { get; set; }
@@ -120,8 +120,8 @@ public class HoverPreview: MonoBehaviour
         _previewGameObject.transform.localPosition = Vector3.zero;
         _previewGameObject.transform.localScale = Vector3.one;
 
-        _previewGameObject.transform.DOLocalMove(_targetPosition, 1f).SetEase(Ease.OutQuint);
-        _previewGameObject.transform.DOScale(_targetScale, 1f).SetEase(Ease.OutQuint);
+        _previewGameObject.transform.DOLocalMove(_targetPosition, 0.75f).SetEase(Ease.OutQuint);
+        _previewGameObject.transform.DOScale(_targetScale, 0.75f).SetEase(Ease.OutQuint);
     }
 
     void StopThisPreview()

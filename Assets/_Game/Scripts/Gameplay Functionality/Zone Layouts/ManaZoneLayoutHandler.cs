@@ -38,35 +38,15 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         _cardsInManaZone.Add(_tempCard.GetInstanceID(), card);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            for (int i = 0, n = _holderTransform.childCount; i < n; i++)
-            {
-                if (!_cardsInManaZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
-                {
-                    Transform cardTransform = _holderTransform.GetChild(i);
-                    CardManager card = cardTransform.GetComponent<CardManager>();
-                    card.ManaLayout.HoverPreview.TargetPosition = _previewTargetPosition;
-                    card.ManaLayout.HoverPreview.TargetScale = _previewTargetScale;
-                    card.ActivateManaLayout();
-                    _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
-                }
-            }
-
-            ArrangeCards();
-        }
-    }
-
     public void AddCard(Transform cardTransform)
     {
         _tempCard.parent = transform;
         cardTransform.parent = _holderTransform;
 
         CardManager card = cardTransform.GetComponent<CardManager>();
-        card.ManaLayout.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.ManaLayout.HoverPreview.TargetScale = _previewTargetScale;
+        card.HoverPreview.TargetPosition = _previewTargetPosition;
+        card.HoverPreview.TargetScale = _previewTargetScale;
+        card.HoverPreview.PreviewEnabled = true;
         card.ActivateManaLayout();
         _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
 
