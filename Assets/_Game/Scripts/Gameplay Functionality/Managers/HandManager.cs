@@ -23,12 +23,12 @@ public class HandManager : MonoBehaviour
         _handLayoutHandler.AddCard(cardTransform);
     }
 
-    public CardLayoutHandler GetCardLayoutAtIndex(int index)
+    public CardManager GetCardLayoutAtIndex(int index)
     {
         return _handLayoutHandler.GetCardLayoutAtIndex(index);
     }
 
-    public CardLayoutHandler RemoveCardLayoutAtIndex(int index)
+    public CardManager RemoveCardLayoutAtIndex(int index)
     {
         return _handLayoutHandler.RemoveCardLayoutAtIndex(index);
     }

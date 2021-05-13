@@ -20,14 +20,14 @@ public class DeckManager : MonoBehaviour
         _deckLayoutHandler.SetupDeck(_deck.GetCards());
     }
 
-    public CardLayoutHandler GetTopCard()
+    public CardManager GetTopCard()
     {
-        return _deckLayoutHandler.GetTopCardLayout();
+        return _deckLayoutHandler.GetTopCard();
     }
 
-    public CardLayoutHandler RemoveTopCard()
+    public CardManager RemoveTopCard()
     {
-        CardLayoutHandler cardLayout = _deckLayoutHandler.RemoveTopCardLayout();
-        return cardLayout;
+        CardManager card = _deckLayoutHandler.RemoveTopCardLayout();
+        return card;
     }
 }

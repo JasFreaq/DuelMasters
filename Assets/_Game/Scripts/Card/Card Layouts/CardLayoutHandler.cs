@@ -8,7 +8,6 @@ using UnityEngine.UI;
 [DisallowMultipleComponent]
 public abstract class CardLayoutHandler : MonoBehaviour
 {
-    [SerializeField] private CardLayoutHandler _previewLayoutHandler;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private Image _artworkImage;
     [SerializeField] private Image _frameImage;
@@ -61,11 +60,6 @@ public abstract class CardLayoutHandler : MonoBehaviour
         {
             FlavorTextLayoutHandler flavorTextLayout = Instantiate(flavorTextLayoutPrefab, _rulesPanel);
             flavorTextLayout.SetupFlavorText(cardData.FlavorText);
-        }
-
-        if (_previewLayoutHandler)
-        {
-            _previewLayoutHandler.SetupCard(cardData);
         }
     }
 

@@ -19,7 +19,7 @@ public class HandLayoutHandler : MonoBehaviour
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
-    private Dictionary<int, CardLayoutHandler> _cardsInHand = new Dictionary<int, CardLayoutHandler>();
+    private Dictionary<int, CardManager> _cardsInHand = new Dictionary<int, CardManager>();
 
     private void Start()
     {
@@ -30,15 +30,18 @@ public class HandLayoutHandler : MonoBehaviour
         _circleCentralAxis.Normalize();
     }
 
-    public CardLayoutHandler GetCardLayoutAtIndex(int index)
+    public CardManager GetCardLayoutAtIndex(int index)
     {
-        return _cardsInHand[transform.GetChild(index).GetInstanceID()];
+        return _cardsInHand[_holderTransform.GetChild(index).GetInstanceID()];
     }
 
-    public CardLayoutHandler RemoveCardLayoutAtIndex(int index)
+    public CardManager RemoveCardLayoutAtIndex(int index)
     {
-        _cardsInHand.Remove(transform.GetChild(index).GetInstanceID());
-        return GetCardLayoutAtIndex(index);
+        CardManager card = GetCardLayoutAtIndex(index);
+        _cardsInHand.Remove(_holderTransform.GetChild(index).GetInstanceID());
+        card.transform.parent = transform;
+        ArrangeCards();
+        return card;
     }
 
     public void AddCard(Transform cardTransform)
@@ -46,9 +49,9 @@ public class HandLayoutHandler : MonoBehaviour
         _tempCard.parent = transform;
         cardTransform.parent = _holderTransform;
 
-        CardLayoutHandler card = cardTransform.GetComponent<CardLayoutHandler>();
-        card.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.HoverPreview.TargetScale = _previewTargetScale;
+        CardManager card = cardTransform.GetComponent<CardManager>();
+        card.CardLayout.HoverPreview.TargetPosition = _previewTargetPosition;
+        card.CardLayout.HoverPreview.TargetScale = _previewTargetScale;
         _cardsInHand.Add(cardTransform.GetInstanceID(), card);
 
         ArrangeCards();
@@ -77,7 +80,7 @@ public class HandLayoutHandler : MonoBehaviour
         {
             Transform cardTransform = _holderTransform.GetChild(i);
             if (_cardsInHand.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
-                _cardsInHand[cardTransform.GetInstanceID()].Canvas.sortingOrder = _handSortingLayerFloor + i;
+                _cardsInHand[cardTransform.GetInstanceID()].CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
             
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);

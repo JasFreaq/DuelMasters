@@ -28,12 +28,14 @@ public class ManaZoneLayoutHandler : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
-    private Dictionary<int, CompactCardLayoutHandler> _cardsInManaZone = new Dictionary<int, CompactCardLayoutHandler>();
+    private Dictionary<int, CardManager> _cardsInManaZone = new Dictionary<int, CardManager>();
 
     private void Start()
     {
+        CardManager card = _tempCard.gameObject.AddComponent<CardManager>();
         ManaCardLayoutHandler manaCardLayout = _tempCard.gameObject.AddComponent<ManaCardLayoutHandler>();
-        _cardsInManaZone.Add(_tempCard.GetInstanceID(), manaCardLayout);
+        card.ManaLayout = manaCardLayout;
+        _cardsInManaZone.Add(_tempCard.GetInstanceID(), card);
     }
 
     void Update()
@@ -44,7 +46,12 @@ public class ManaZoneLayoutHandler : MonoBehaviour
             {
                 if (!_cardsInManaZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
                 {
-                    AddCard(_holderTransform.GetChild(i));
+                    Transform cardTransform = _holderTransform.GetChild(i);
+                    CardManager card = cardTransform.GetComponent<CardManager>();
+                    card.ManaLayout.HoverPreview.TargetPosition = _previewTargetPosition;
+                    card.ManaLayout.HoverPreview.TargetScale = _previewTargetScale;
+                    card.ActivateManaLayout();
+                    _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
                 }
             }
 
@@ -52,18 +59,24 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         }
     }
 
-    void AddCard(Transform cardTransform)
+    public void AddCard(Transform cardTransform)
     {
-        CompactCardLayoutHandler card = cardTransform.GetComponent<CompactCardLayoutHandler>();
-        card.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.HoverPreview.TargetScale = _previewTargetScale;
+        _tempCard.parent = transform;
+        cardTransform.parent = _holderTransform;
+
+        CardManager card = cardTransform.GetComponent<CardManager>();
+        card.ManaLayout.HoverPreview.TargetPosition = _previewTargetPosition;
+        card.ManaLayout.HoverPreview.TargetScale = _previewTargetScale;
+        card.ActivateManaLayout();
         _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
+
+        ArrangeCards();
     }
 
     public Transform AssignTempCard(CardData cardData)
     {
         _tempCard.parent = _holderTransform;
-        _cardsInManaZone[_tempCard.GetInstanceID()].CardData = cardData;
+        _cardsInManaZone[_tempCard.GetInstanceID()].ManaLayout.CardData = cardData;
         ArrangeCards();
         return _tempCard;
     }
@@ -77,18 +90,19 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         float sameCivWidth = Mathf.Min(cardWidth / _maxCardWidth) * _maxSameCivWidth;
         Vector3 pos = _holderTransform.localPosition;
 
-        CompactCardLayoutHandler lastCard = null;
+        CardManager lastCard = null;
 
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
-            CompactCardLayoutHandler currentCard =  _cardsInManaZone[cardTransform.GetInstanceID()];
-            currentCard.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
+            CardManager currentCard =  _cardsInManaZone[cardTransform.GetInstanceID()];
+            if (currentCard.ManaLayout.Canvas)
+                currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
 
             float currentWidth = cardWidth;
             if (lastCard != null)
             {
-                if (CardParams.IsCivilizationEqual(currentCard.CardData.Civilization, lastCard.CardData.Civilization))
+                if (CardParams.IsCivilizationEqual(currentCard.ManaLayout.CardData.Civilization, lastCard.ManaLayout.CardData.Civilization))
                 {
                     currentWidth = sameCivWidth;
                 }
@@ -109,8 +123,8 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             int value = 0;
-            CompactCardLayoutHandler card = _cardsInManaZone[_holderTransform.GetChild(i).GetInstanceID()];
-            foreach (CardParams.Civilization civilization in card.CardData.Civilization)
+            CardManager card = _cardsInManaZone[_holderTransform.GetChild(i).GetInstanceID()];
+            foreach (CardParams.Civilization civilization in card.ManaLayout.CardData.Civilization)
             {
                 value += (int) civilization;
             }
