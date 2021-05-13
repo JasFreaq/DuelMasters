@@ -56,7 +56,7 @@ public class ManaZoneLayoutHandler : MonoBehaviour
     public Transform AssignTempCard(CardData cardData)
     {
         _tempCard.parent = _holderTransform;
-        _cardsInManaZone[_tempCard.GetInstanceID()].ManaLayout.CardData = cardData;
+        _cardsInManaZone[_tempCard.GetInstanceID()].SetupCard(cardData, true);
         ArrangeCards();
         return _tempCard;
     }
@@ -82,7 +82,7 @@ public class ManaZoneLayoutHandler : MonoBehaviour
             float currentWidth = cardWidth;
             if (lastCard != null)
             {
-                if (CardParams.IsCivilizationEqual(currentCard.ManaLayout.CardData.Civilization, lastCard.ManaLayout.CardData.Civilization))
+                if (CardParams.IsCivilizationEqual(currentCard.CardData.Civilization, lastCard.CardData.Civilization))
                 {
                     currentWidth = sameCivWidth;
                 }
@@ -104,7 +104,7 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         {
             int value = 0;
             CardManager card = _cardsInManaZone[_holderTransform.GetChild(i).GetInstanceID()];
-            foreach (CardParams.Civilization civilization in card.ManaLayout.CardData.Civilization)
+            foreach (CardParams.Civilization civilization in card.CardData.Civilization)
             {
                 value += (int) civilization;
             }

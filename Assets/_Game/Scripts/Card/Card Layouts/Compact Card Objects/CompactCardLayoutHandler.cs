@@ -17,31 +17,19 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     [SerializeField] private GameObject _tappedOverlay;
 
     private CompactCardFrameDatabase _cardFrameDatabase;
-    private CardData _cardData;
-
-    private HoverPreview _hoverPreview;
 
     public Canvas Canvas
     {
         get { return _canvas; }
     }
 
-    public CardData CardData
-    {
-        get { return _cardData; }
-        set { _cardData = value; }
-    }
-
     private void Awake()
     {
         _cardFrameDatabase = GetComponent<CompactCardFrameDatabase>();
-        _hoverPreview = GetComponent<HoverPreview>();
     }
 
     public virtual void SetupCard(CardData cardData)
     {
-        _cardData = cardData;
-
         _artworkImage.sprite = cardData.ArtworkImage;
         CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
         _frameImage.sprite = cardFrameData.frameImage;

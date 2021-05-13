@@ -12,6 +12,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
 
+    private CardData _cardData;
     private HoverPreview _hoverPreview;
 
     public CardLayoutHandler CardLayout
@@ -25,6 +26,11 @@ public class CardManager : MonoBehaviour
         set { _manaCardLayoutHandler = value; }
     }
 
+    public CardData CardData
+    {
+        get { return _cardData; }
+    }
+
     public HoverPreview HoverPreview
     {
         get { return _hoverPreview; }
@@ -35,12 +41,17 @@ public class CardManager : MonoBehaviour
         _hoverPreview = GetComponent<HoverPreview>();
     }
 
-    public virtual void SetupCard(CardData cardData)
+    public virtual void SetupCard(CardData cardData, bool considerAsDataObject = false)
     {
-        _cardLayoutHandler.SetupCard(cardData);
-        _manaCardLayoutHandler.SetupCard(cardData);
+        _cardData = cardData;
 
-        _previewCardLayout.SetupCard(cardData);
+        if (!considerAsDataObject) 
+        {
+            _cardLayoutHandler.SetupCard(cardData);
+            _manaCardLayoutHandler.SetupCard(cardData);
+
+            _previewCardLayout.SetupCard(cardData);
+        }
     }
 
     public virtual void ActivateCardLayout()

@@ -49,7 +49,7 @@ public class EffectsManager : MonoBehaviour
         CardManager card = _handManager.RemoveCardLayoutAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
 
-        StartCoroutine(AddManaRoutine(card, card.CardLayout.CardData));
+        StartCoroutine(AddManaRoutine(card, card.CardData));
     }
 
     private IEnumerator DrawCardRoutine(CardManager card)

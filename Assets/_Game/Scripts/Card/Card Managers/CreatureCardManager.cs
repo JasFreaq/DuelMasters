@@ -11,11 +11,14 @@ public class CreatureCardManager : CardManager
         get { return _battleCardLayoutHandler; }
     }
 
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(CardData cardData, bool considerAsDataObject = false)
     {
         base.SetupCard(cardData);
 
-        _battleCardLayoutHandler.SetupCard(cardData);
+        if (!considerAsDataObject) 
+        {
+            _battleCardLayoutHandler.SetupCard(cardData);
+        }
     }
 
     public override void ActivateCardLayout()
