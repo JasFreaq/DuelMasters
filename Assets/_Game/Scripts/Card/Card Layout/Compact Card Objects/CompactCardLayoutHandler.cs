@@ -30,6 +30,7 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     public CardData CardData
     {
         get { return _cardData; }
+        set { _cardData = value; }
     }
 
     public HoverPreview HoverPreview

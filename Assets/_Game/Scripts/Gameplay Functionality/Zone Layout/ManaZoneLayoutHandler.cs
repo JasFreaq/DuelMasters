@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class ManaZoneLayoutHandler : MonoBehaviour
 {
     struct TransformValuePair
@@ -29,6 +30,12 @@ public class ManaZoneLayoutHandler : MonoBehaviour
 
     private Dictionary<int, CompactCardLayoutHandler> _cardsInManaZone = new Dictionary<int, CompactCardLayoutHandler>();
 
+    private void Start()
+    {
+        ManaCardLayoutHandler manaCardLayout = _tempCard.gameObject.AddComponent<ManaCardLayoutHandler>();
+        _cardsInManaZone.Add(_tempCard.GetInstanceID(), manaCardLayout);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -51,6 +58,14 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         card.HoverPreview.TargetPosition = _previewTargetPosition;
         card.HoverPreview.TargetScale = _previewTargetScale;
         _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
+    }
+
+    public Transform AssignTempCard(CardData cardData)
+    {
+        _tempCard.parent = _holderTransform;
+        _cardsInManaZone[_tempCard.GetInstanceID()].CardData = cardData;
+        ArrangeCards();
+        return _tempCard;
     }
 
     void ArrangeCards()

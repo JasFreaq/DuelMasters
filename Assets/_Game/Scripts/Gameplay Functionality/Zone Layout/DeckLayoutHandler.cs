@@ -6,24 +6,18 @@ using Random = UnityEngine.Random;
 
 public class DeckLayoutHandler : MonoBehaviour
 {
-    [SerializeField] private Deck _deck;
-    [SerializeField] private float _cardWidth = 0.1f;
+    [SerializeField] private float _cardWidth = 0.05f;
+    [SerializeField] [Range(0f, 1f)] private float _cardScale = 0.5f;
     [SerializeField] private CreatureLayoutHandler _creaturePrefab;
     [SerializeField] private SpellLayoutHandler _spellPrefab;
 
-    private List<CardLayoutHandler> _cards = new List<CardLayoutHandler>();
+    private List<CardLayoutHandler> _cardLayouts = new List<CardLayoutHandler>();
 
-    void Start()
-    {
-        SetupDeck();
-    }
-
-    private void SetupDeck()
+    public void SetupDeck(List<CardData> cardList)
     {
         float lastYPos = 0;
-        List<CardData> _cardList = _deck.GetCards();
 
-        foreach (CardData cardData in _cardList)
+        foreach (CardData cardData in cardList)
         {
             CardLayoutHandler card = null;
             if (cardData is CreatureData)
@@ -37,35 +31,48 @@ public class DeckLayoutHandler : MonoBehaviour
 
             card.SetupCard(cardData);
             card.transform.localPosition = new Vector3(card.transform.localPosition.x,
-                lastYPos -= _cardWidth, card.transform.localPosition.z);
+                lastYPos -= _cardWidth * _cardScale, card.transform.localPosition.z);
+            card.transform.localScale = Vector3.one * _cardScale;
             card.Canvas.gameObject.SetActive(false);
             card.name = cardData.Name;
 
-            _cards.Add(card);
+            _cardLayouts.Add(card);
         }
 
-        Shuffle();
+        ShuffleCards();
     }
 
-    public void Shuffle()
+    public CardLayoutHandler GetTopCardLayout()
     {
-        int n = _cards.Count;
+        return _cardLayouts[_cardLayouts.Count - 1];
+    }
+
+    public CardLayoutHandler RemoveTopCardLayout()
+    {
+        CardLayoutHandler cardLayout = GetTopCardLayout();
+        _cardLayouts.Remove(cardLayout);
+        return cardLayout;
+    }
+
+    public void ShuffleCards()
+    {
+        int n = _cardLayouts.Count;
         int seed = System.DateTime.Now.Second + System.DateTime.Now.Minute + System.DateTime.Now.Hour +
                    Random.Range(0, 360);
         System.Random rNG = new System.Random(seed);
         while (n > 1)
         {
             int k = rNG.Next(n--);
-            CardLayoutHandler tempCard = _cards[n];
-            _cards[n] = _cards[k];
-            _cards[k] = tempCard;
+            CardLayoutHandler tempCard = _cardLayouts[n];
+            _cardLayouts[n] = _cardLayouts[k];
+            _cardLayouts[k] = tempCard;
         }
 
         float lastYPos = 0;
-        foreach (CardLayoutHandler card in _cards)
+        foreach (CardLayoutHandler card in _cardLayouts)
         {
             card.transform.localPosition = new Vector3(card.transform.localPosition.x,
-                lastYPos -= _cardWidth, card.transform.localPosition.z);
+                lastYPos -= _cardWidth * _cardScale, card.transform.localPosition.z);
         }
     }
 }
