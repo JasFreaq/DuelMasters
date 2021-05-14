@@ -8,6 +8,7 @@ public class CardManager : MonoBehaviour
 {
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
+    [SerializeField] private GameObject _visibleEyeIcon;
     [SerializeField] protected CardLayoutHandler _previewCardLayout;
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
@@ -52,6 +53,12 @@ public class CardManager : MonoBehaviour
 
             _previewCardLayout.SetupCard(cardData);
         }
+    }
+
+    public void SetCardVisible()
+    {
+
+        //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
     }
 
     public virtual void ActivateCardLayout()

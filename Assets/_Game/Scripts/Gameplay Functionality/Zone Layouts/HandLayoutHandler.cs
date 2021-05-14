@@ -30,14 +30,14 @@ public class HandLayoutHandler : MonoBehaviour
         _circleCentralAxis.Normalize();
     }
 
-    public CardManager GetCardLayoutAtIndex(int index)
+    public CardManager GetCardAtIndex(int index)
     {
         return _cardsInHand[_holderTransform.GetChild(index).GetInstanceID()];
     }
 
-    public CardManager RemoveCardLayoutAtIndex(int index)
+    public CardManager RemoveCardAtIndex(int index)
     {
-        CardManager card = GetCardLayoutAtIndex(index);
+        CardManager card = GetCardAtIndex(index);
         _cardsInHand.Remove(_holderTransform.GetChild(index).GetInstanceID());
         card.transform.parent = transform;
         ArrangeCards();
@@ -52,7 +52,6 @@ public class HandLayoutHandler : MonoBehaviour
         CardManager card = cardTransform.GetComponent<CardManager>();
         card.HoverPreview.TargetPosition = _previewTargetPosition;
         card.HoverPreview.TargetScale = _previewTargetScale;
-        card.HoverPreview.PreviewEnabled = true;
         _cardsInHand.Add(cardTransform.GetInstanceID(), card);
 
         ArrangeCards();

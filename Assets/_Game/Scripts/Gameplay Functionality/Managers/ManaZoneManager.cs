@@ -21,4 +21,14 @@ public class ManaZoneManager : MonoBehaviour
     {
         _manaZoneLayoutHandler.AddCard(cardTransform);
     }
+
+    public CardManager GetCardAtIndex(int index)
+    {
+        return _manaZoneLayoutHandler.GetCardAtIndex(index);
+    }
+
+    public CardManager RemoveCardAtIndex(int index)
+    {
+        return _manaZoneLayoutHandler.RemoveCardAtIndex(index);
+    }
 }

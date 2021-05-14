@@ -48,7 +48,7 @@ public class DeckLayoutHandler : MonoBehaviour
         return _cards[_cards.Count - 1];
     }
 
-    public CardManager RemoveTopCardLayout()
+    public CardManager RemoveTopCard()
     {
         CardManager card = GetTopCard();
         _cards.Remove(card);

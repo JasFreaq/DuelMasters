@@ -2282,7 +2282,7 @@ MonoBehaviour:
   _fromDeckTransitionTime: 2
   _fromHandTransitionTime: 2
   _toHandTransitionTime: 2
-  _toManaTransitionTime: 2
+  _toManaTransitionTime: 1
 --- !u!1001 &1165461682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3481,7 +3481,7 @@ MonoBehaviour:
   _fromDeckTransitionTime: 2
   _fromHandTransitionTime: 2
   _toHandTransitionTime: 2
-  _toManaTransitionTime: 2
+  _toManaTransitionTime: 1
 --- !u!1 &1986497835
 GameObject:
   m_ObjectHideFlags: 0

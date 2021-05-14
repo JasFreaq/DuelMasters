@@ -27,7 +27,7 @@ public class DeckManager : MonoBehaviour
 
     public CardManager RemoveTopCard()
     {
-        CardManager card = _deckLayoutHandler.RemoveTopCardLayout();
+        CardManager card = _deckLayoutHandler.RemoveTopCard();
         return card;
     }
 }

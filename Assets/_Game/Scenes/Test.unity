@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 702056072}
-  - component: {fileID: 702056071}
   m_Layer: 0
   m_Name: Tester
   m_TagString: Untagged
@@ -140,25 +139,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &702056071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 702056070}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 837f39dd3da741f4faddc080b5cd42f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  creatureLayoutHandler: {fileID: 0}
-  spellLayoutHandler: {fileID: 0}
-  battleCardLayoutHandler: {fileID: 0}
-  creatureManaLayoutHandler: {fileID: 0}
-  spellManaSpellManaObject: {fileID: 0}
-  creatureData: {fileID: 11400000, guid: 6e36d3b61c88aac4988f17c4ba9534e1, type: 2}
-  spellData: {fileID: 11400000, guid: 8a321099e1d697a48af56813614730af, type: 2}
 --- !u!4 &702056072
 Transform:
   m_ObjectHideFlags: 0
