@@ -1249,6 +1249,92 @@ MonoBehaviour:
   _cardLayoutHandler: {fileID: 1119139094425481684}
   _manaCardLayoutHandler: {fileID: 5722507618441204830}
   _battleCardLayoutHandler: {fileID: 1327950062867778693}
+--- !u!114 &2206084188606242702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9135805864581426303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: 704a13580e426f34ebf82e30b650e8bf, type: 3}
+  - civilization: 0100000002000000
+    cardTypePosY: -85.5
+    frameImage: {fileID: 21300000, guid: b197053852a59134da5e7b1f50f35af8, type: 3}
+  - civilization: 02000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: fb196f1d3e8273d46a3190ef49c1820a, type: 3}
+  - civilization: 0200000003000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: 7e1206da62b0fbb4e8d847de843d61e9, type: 3}
+  - civilization: 04000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 754a65d107b6235499b3b54c243ffc9b, type: 3}
+  - civilization: 0400000003000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 0d3b597b078e88b488cbe17d5866f66e, type: 3}
+  - civilization: 0400000005000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 4847a78e76a5dcb4d97fac1956c65f42, type: 3}
+  - civilization: 03000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: 15d63c232814e40418acf5d8ebd54feb, type: 3}
+  - civilization: 05000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: b2f5ff381f031894ba2076c608163128, type: 3}
+  - civilization: 0500000001000000
+    cardTypePosY: -85.5
+    frameImage: {fileID: 21300000, guid: 1c6bf56866f4bef4d91844e639fc42c4, type: 3}
+--- !u!114 &5065912116969744862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9135805864581426303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c6a7f59c332e3f458cae1da88eaa599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    frameImage: {fileID: 21300000, guid: e7e0128313c2876479e3abfa4c8b71da, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: d4b6ec4acaeb52949a587083a3dd3647, type: 2}
+  - civilization: 0100000002000000
+    frameImage: {fileID: 21300000, guid: 9b64e5833d5d7c34dbe12e1398ec5b14, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: bedab55a212b61b4791db792b782e457, type: 2}
+  - civilization: 02000000
+    frameImage: {fileID: 21300000, guid: a75b5db15ab8e8742bbdd2ba8fbb027b, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: f79d7737c6c60bf4c82791a866952fcb, type: 2}
+  - civilization: 0200000003000000
+    frameImage: {fileID: 21300000, guid: 21e3ab97be35712488a2dbf2df927b87, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 8c0c36c415d0af64d9595510facc0c52, type: 2}
+  - civilization: 04000000
+    frameImage: {fileID: 21300000, guid: cad80ab02f4d38749bdf1a52223d3b48, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 2fbd27980afab2e4a91c9d96e02f15ac, type: 2}
+  - civilization: 0400000003000000
+    frameImage: {fileID: 21300000, guid: a5e6967a1e0694c44a0e56b60b21b3c7, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 619178f5e7268a34d9ca5392b5c140cf, type: 2}
+  - civilization: 0400000005000000
+    frameImage: {fileID: 21300000, guid: 9db8cf45a5517614587fffe9d3c0752f, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 7e009e1c042438f4084d108f9efc0fe8, type: 2}
+  - civilization: 03000000
+    frameImage: {fileID: 21300000, guid: 1818381ca7f12b143b35cd47912e75ca, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 53dc37889dbac4e43b66d79019f5dd7e, type: 2}
+  - civilization: 05000000
+    frameImage: {fileID: 21300000, guid: 67f274699da1a7a4e824cdd7f7ad7ab3, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 2c0ad2e192071af4d9658fccae52dbe3, type: 2}
+  - civilization: 0500000001000000
+    frameImage: {fileID: 21300000, guid: 67f274699da1a7a4e824cdd7f7ad7ab3, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: bfc2891d1f62323438e956db693f172d, type: 2}
 --- !u!114 &1970672085865319466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1270,7 +1356,7 @@ MonoBehaviour:
   _rulesPanel: {fileID: -951726423393356814}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 6285302622507674964}
-  _cardFrameDatabase: {fileID: 2917638253920575633}
+  _cardFrameDatabase: {fileID: 2206084188606242702}
   _creatureText: {fileID: -951726409332857532}
   _creatureRaceText: {fileID: -6448260732537902794}
   _powerText: {fileID: 205449182222643707}
@@ -1837,9 +1923,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
+--- !u!4 &5607311099907076541 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5547265585425964472, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
+  m_PrefabInstance: {fileID: 84146811509451781}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9135805864888689335 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9214949861950901938, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
+  m_PrefabInstance: {fileID: 84146811509451781}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9135805864888689334 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9214949861950901939, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
   m_PrefabInstance: {fileID: 84146811509451781}
   m_PrefabAsset: {fileID: 0}
 --- !u!65 &9135805864581426301 stripped
@@ -1847,24 +1943,14 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 9214949863522746488, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
   m_PrefabInstance: {fileID: 84146811509451781}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &5607311099907076541 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5547265585425964472, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
-  m_PrefabInstance: {fileID: 84146811509451781}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &9135805864581426303 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9214949863522746490, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
-  m_PrefabInstance: {fileID: 84146811509451781}
-  m_PrefabAsset: {fileID: 0}
 --- !u!65 &9135805864581426300 stripped
 BoxCollider:
   m_CorrespondingSourceObject: {fileID: 9214949863522746489, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
   m_PrefabInstance: {fileID: 84146811509451781}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &9135805864888689334 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9214949861950901939, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
+--- !u!1 &9135805864581426303 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9214949863522746490, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
   m_PrefabInstance: {fileID: 84146811509451781}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1661456137362943939
@@ -1874,6 +1960,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5607311099907076541}
     m_Modifications:
+    - target: {fileID: 1768039567137611287, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
+      propertyPath: _cardFrameDatabase
+      value: 
+      objectReference: {fileID: 2206084188606242702}
     - target: {fileID: 3066916608676903096, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1922,19 +2012,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Creature Layout
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4572038751214096210, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
---- !u!114 &2917638253920575633 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4572038751214096210, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
-  m_PrefabInstance: {fileID: 1661456137362943939}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4431909157680254863 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3066916608832970828, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
@@ -1958,6 +2038,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5607311099907076541}
     m_Modifications:
+    - target: {fileID: 4688838676551152808, guid: 07282ee0aa385a34798042a2cc1c4174, type: 3}
+      propertyPath: _cardFrameDatabase
+      value: 
+      objectReference: {fileID: 5065912116969744862}
     - target: {fileID: 7332533856487998209, guid: 07282ee0aa385a34798042a2cc1c4174, type: 3}
       propertyPath: m_Name
       value: Battle Card
@@ -2026,6 +2110,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5607311099907076541}
     m_Modifications:
+    - target: {fileID: 2914370039657263117, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
+      propertyPath: _cardFrameDatabase
+      value: 
+      objectReference: {fileID: 5065912116969744862}
     - target: {fileID: 3035471790995383081, guid: 14924d38fb9925f469fb0c6d52bbe3e6, type: 3}
       propertyPath: m_RootOrder
       value: 1

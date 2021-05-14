@@ -46,7 +46,6 @@ public class ManaZoneLayoutHandler : MonoBehaviour
         CardManager card = cardTransform.GetComponent<CardManager>();
         card.HoverPreview.TargetPosition = _previewTargetPosition;
         card.HoverPreview.TargetScale = _previewTargetScale;
-        card.ActivateManaLayout();
         _cardsInManaZone.Add(cardTransform.GetInstanceID(), card);
 
         ArrangeCards();

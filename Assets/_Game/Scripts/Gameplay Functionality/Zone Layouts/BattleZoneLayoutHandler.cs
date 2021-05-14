@@ -13,7 +13,7 @@ public class BattleZoneLayoutHandler : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
-    private Dictionary<int, CompactCardLayoutHandler> _cardsInBattleZone = new Dictionary<int, CompactCardLayoutHandler>();
+    private Dictionary<int, CreatureCardManager> _cardsInBattleZone = new Dictionary<int, CreatureCardManager>();
 
     void Update()
     {
@@ -31,12 +31,39 @@ public class BattleZoneLayoutHandler : MonoBehaviour
         }
     }
 
-    void AddCard(Transform cardTransform)
+    public void AddCard(Transform cardTransform)
     {
-        CompactCardLayoutHandler card = cardTransform.GetComponent<CompactCardLayoutHandler>();
-        //card.HoverPreview.TargetPosition = _previewTargetPosition;
-        //card.HoverPreview.TargetScale = _previewTargetScale;
+        _tempCard.parent = transform;
+        _tempCard.localScale = Vector3.one;
+        cardTransform.parent = _holderTransform;
+
+        CreatureCardManager card = cardTransform.GetComponent<CreatureCardManager>();
+        card.HoverPreview.TargetPosition = _previewTargetPosition;
+        card.HoverPreview.TargetScale = _previewTargetScale;
         _cardsInBattleZone.Add(cardTransform.GetInstanceID(), card);
+
+        ArrangeCards();
+    }
+
+    public Transform AssignTempCard()
+    {
+        _tempCard.parent = _holderTransform;
+        ArrangeCards();
+        return _tempCard;
+    }
+
+    public CreatureCardManager GetCardAtIndex(int index)
+    {
+        return _cardsInBattleZone[_holderTransform.GetChild(index).GetInstanceID()];
+    }
+
+    public CreatureCardManager RemoveCardAtIndex(int index)
+    {
+        CreatureCardManager card = GetCardAtIndex(index);
+        _cardsInBattleZone.Remove(_holderTransform.GetChild(index).GetInstanceID());
+        card.transform.parent = transform;
+        ArrangeCards();
+        return card;
     }
 
     void ArrangeCards()
@@ -53,7 +80,8 @@ public class BattleZoneLayoutHandler : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
-            _cardsInBattleZone[cardTransform.GetInstanceID()].Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
+            if (_cardsInBattleZone.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
+                _cardsInBattleZone[cardTransform.GetInstanceID()].BattleLayout.Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
             Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y, startPos.z);
 
             cardTransform.localPosition = cardPos;

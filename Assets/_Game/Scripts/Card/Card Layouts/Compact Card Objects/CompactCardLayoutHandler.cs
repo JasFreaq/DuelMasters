@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(CompactCardFrameDatabase))] [DisallowMultipleComponent]
+[DisallowMultipleComponent]
 public abstract class CompactCardLayoutHandler : MonoBehaviour
 {
     [SerializeField] private Canvas _canvas;
@@ -15,19 +15,13 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     [SerializeField] private Renderer _bgRenderer;
     [SerializeField] private GameObject _glowFrame;
     [SerializeField] private GameObject _tappedOverlay;
-
-    private CompactCardFrameDatabase _cardFrameDatabase;
+    [SerializeField] private CompactCardFrameDatabase _cardFrameDatabase;
 
     public Canvas Canvas
     {
         get { return _canvas; }
     }
-
-    private void Awake()
-    {
-        _cardFrameDatabase = GetComponent<CompactCardFrameDatabase>();
-    }
-
+    
     public virtual void SetupCard(CardData cardData)
     {
         _artworkImage.sprite = cardData.ArtworkImage;

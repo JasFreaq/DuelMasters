@@ -153,50 +153,8 @@ MonoBehaviour:
   _bgRenderer: {fileID: 3035471790941446610}
   _glowFrame: {fileID: 5054084400101613148}
   _tappedOverlay: {fileID: 3035471791012246661}
+  _cardFrameDatabase: {fileID: 0}
   _creatureRaceText: {fileID: 2807924182032197603}
---- !u!114 &2963843323821042668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3035471790995383254}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c6a7f59c332e3f458cae1da88eaa599, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _frames:
-  - civilization: 01000000
-    frameImage: {fileID: 21300000, guid: e7e0128313c2876479e3abfa4c8b71da, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: d4b6ec4acaeb52949a587083a3dd3647, type: 2}
-  - civilization: 0100000002000000
-    frameImage: {fileID: 21300000, guid: 9b64e5833d5d7c34dbe12e1398ec5b14, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: bedab55a212b61b4791db792b782e457, type: 2}
-  - civilization: 02000000
-    frameImage: {fileID: 21300000, guid: a75b5db15ab8e8742bbdd2ba8fbb027b, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: f79d7737c6c60bf4c82791a866952fcb, type: 2}
-  - civilization: 0200000003000000
-    frameImage: {fileID: 21300000, guid: 21e3ab97be35712488a2dbf2df927b87, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: 8c0c36c415d0af64d9595510facc0c52, type: 2}
-  - civilization: 04000000
-    frameImage: {fileID: 21300000, guid: cad80ab02f4d38749bdf1a52223d3b48, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: 2fbd27980afab2e4a91c9d96e02f15ac, type: 2}
-  - civilization: 0400000003000000
-    frameImage: {fileID: 21300000, guid: a5e6967a1e0694c44a0e56b60b21b3c7, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: 619178f5e7268a34d9ca5392b5c140cf, type: 2}
-  - civilization: 0400000005000000
-    frameImage: {fileID: 21300000, guid: 9db8cf45a5517614587fffe9d3c0752f, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: 7e009e1c042438f4084d108f9efc0fe8, type: 2}
-  - civilization: 03000000
-    frameImage: {fileID: 21300000, guid: 1818381ca7f12b143b35cd47912e75ca, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: 53dc37889dbac4e43b66d79019f5dd7e, type: 2}
-  - civilization: 05000000
-    frameImage: {fileID: 21300000, guid: 67f274699da1a7a4e824cdd7f7ad7ab3, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: 2c0ad2e192071af4d9658fccae52dbe3, type: 2}
-  - civilization: 0500000001000000
-    frameImage: {fileID: 21300000, guid: 67f274699da1a7a4e824cdd7f7ad7ab3, type: 3}
-    frameBGMaterial: {fileID: 2100000, guid: bfc2891d1f62323438e956db693f172d, type: 2}
 --- !u!1001 &7836214530433270868
 PrefabInstance:
   m_ObjectHideFlags: 0

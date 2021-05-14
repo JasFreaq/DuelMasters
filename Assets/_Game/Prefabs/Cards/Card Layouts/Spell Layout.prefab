@@ -21,50 +21,7 @@ MonoBehaviour:
   _rulesPanel: {fileID: 3188356580271285339}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _glowFrame: {fileID: 6897636837242769606}
-  _cardFrameDatabase: {fileID: 7477107595161916680}
---- !u!114 &7477107595161916680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3188356580261650410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _frames:
-  - civilization: 01000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: 5c726d5dc04e593419a3698c4d8c54a7, type: 3}
-  - civilization: 0100000002000000
-    cardTypePosY: -85.75
-    frameImage: {fileID: 21300000, guid: 1f3714fc4009d1a4ebe5b96fd1eea463, type: 3}
-  - civilization: 02000000
-    cardTypePosY: -83.5
-    frameImage: {fileID: 21300000, guid: bf24454af2d359a4cbbc6b77aa416612, type: 3}
-  - civilization: 0200000003000000
-    cardTypePosY: -84
-    frameImage: {fileID: 21300000, guid: 4601055ac6b26cd4d95cc08432e2baa8, type: 3}
-  - civilization: 04000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: ea41fedc64f1a6c42a422d76b48341f3, type: 3}
-  - civilization: 0400000003000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: 304bbdc290a8c14438fe2c120e75a43e, type: 3}
-  - civilization: 0400000005000000
-    cardTypePosY: -83.5
-    frameImage: {fileID: 21300000, guid: 2d89a57074bab464b93f425e72d002c0, type: 3}
-  - civilization: 03000000
-    cardTypePosY: -84.75
-    frameImage: {fileID: 21300000, guid: ea2a635ce417e304583f5af642192a73, type: 3}
-  - civilization: 05000000
-    cardTypePosY: -85.75
-    frameImage: {fileID: 21300000, guid: ecd082c2cc071044997a0f179a2b158d, type: 3}
-  - civilization: 0500000001000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: bd8ddac60a1cfbe46b92fdd600002a7c, type: 3}
+  _cardFrameDatabase: {fileID: 0}
 --- !u!1001 &2595183003087082162
 PrefabInstance:
   m_ObjectHideFlags: 0

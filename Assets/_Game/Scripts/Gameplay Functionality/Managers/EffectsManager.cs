@@ -11,6 +11,7 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private DeckManager _deckManager;
     [SerializeField] private HandManager _handManager;
     [SerializeField] private ManaZoneManager _manaZoneManager;
+    [SerializeField] private BattleZoneManager _battleZoneManager;
 
     [Header("Position Markers")]
     [SerializeField] private Transform _drawIntermediateTransform;
@@ -22,6 +23,7 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private float _toHandTransitionTime = 2f;
     [SerializeField] private float _fromManaTransitionTime = 1f;
     [SerializeField] private float _toManaTransitionTime = 1f;
+    [SerializeField] private float _toBattleTransitionTime = 1f;
 
     private void Update()
     {
@@ -39,8 +41,13 @@ public class EffectsManager : MonoBehaviour
         {
             ReturnFromMana(0);
         }
-    }
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PlayCard(0);
+        }
+    }
+    
     public void DrawCard()
     {
         CardManager card = _deckManager.RemoveTopCard();
@@ -53,9 +60,18 @@ public class EffectsManager : MonoBehaviour
     public void AddMana(int index)
     {
         CardManager card = _handManager.RemoveCardAtIndex(index);
-        card.CardLayout.Canvas.sortingOrder = 100;
+        card.ManaLayout.Canvas.sortingOrder = 100;
 
         StartCoroutine(AddManaRoutine(card, card.CardData));
+    }
+
+    public void PlayCard(int index)
+    {
+        CardManager card = _handManager.RemoveCardAtIndex(index);
+        if (card is CreatureCardManager creatureCard)
+            StartCoroutine(SummonCreatureRoutine(creatureCard));
+        else if (card is SpellCardManager spellCard)
+            StartCoroutine(CastSpellRoutine(spellCard));
     }
 
     public void ReturnFromMana(int index)
@@ -81,7 +97,21 @@ public class EffectsManager : MonoBehaviour
         yield return MoveToManaZoneRoutine(card.transform, cardData);
         card.HoverPreview.PreviewEnabled = true;
     }
-    
+
+    private IEnumerator SummonCreatureRoutine(CreatureCardManager creatureCard)
+    {
+        creatureCard.HoverPreview.PreviewEnabled = false;
+        yield return MoveFromHandRoutine(creatureCard.transform);
+        creatureCard.ActicateBattleLayout();
+        yield return MoveToBattleZoneRoutine(creatureCard.transform);
+        creatureCard.HoverPreview.PreviewEnabled = true;
+    }
+
+    private IEnumerator CastSpellRoutine(SpellCardManager spellCard)
+    {
+        yield break;
+    }
+
     private IEnumerator ReturnFromManaRoutine(CardManager card)
     {
         card.HoverPreview.PreviewEnabled = false;
@@ -90,6 +120,8 @@ public class EffectsManager : MonoBehaviour
         yield return MoveToHandRoutine(card.transform, true);
         card.HoverPreview.PreviewEnabled = true;
     }
+
+    #region Move Methods
 
     private IEnumerator MoveFromDeckRoutine(Transform cardTransform)
     {
@@ -138,17 +170,30 @@ public class EffectsManager : MonoBehaviour
 
         yield return new WaitForSeconds(_fromManaTransitionTime);
     }
-    
+
     private IEnumerator MoveToManaZoneRoutine(Transform cardTransform, CardData cardData)
     {
         Transform tempCard = _manaZoneManager.AssignTempCard(cardData);
         cardTransform.DOMove(tempCard.position, _toManaTransitionTime).SetEase(Ease.OutQuint);
         cardTransform.DORotate(tempCard.rotation.eulerAngles, _toManaTransitionTime).SetEase(Ease.OutQuint);
-        if (!_isPlayer)
-            cardTransform.DOScale(_manaZoneManager.transform.localScale, _fromDeckTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(_manaZoneManager.transform.localScale, _toManaTransitionTime).SetEase(Ease.OutQuint);
 
-        yield return new WaitForSeconds(_toHandTransitionTime);
+        yield return new WaitForSeconds(_toManaTransitionTime);
 
         _manaZoneManager.AddCard(cardTransform);
     }
+
+    private IEnumerator MoveToBattleZoneRoutine(Transform cardTransform)
+    {
+        Transform tempCard = _battleZoneManager.AssignTempCard();
+        cardTransform.DOMove(tempCard.position, _toBattleTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DORotate(tempCard.rotation.eulerAngles, _toBattleTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(tempCard.lossyScale, _toBattleTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_toBattleTransitionTime);
+
+        _battleZoneManager.AddCard(cardTransform);
+    }
+
+    #endregion
 }
