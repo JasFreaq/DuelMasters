@@ -33,7 +33,7 @@ public class CreatureCardManager : CardManager
         _battleCardLayoutHandler.gameObject.SetActive(false);
     }
 
-    public void ActicateBattleLayout()
+    public void ActivateBattleLayout()
     {
         _cardLayoutHandler.gameObject.SetActive(false);
         _manaCardLayoutHandler.gameObject.SetActive(false);

@@ -9,6 +9,7 @@ public class EffectsManager : MonoBehaviour
 {
     [Header("Manager Caches")] 
     [SerializeField] private DeckManager _deckManager;
+    [SerializeField] private ShieldsManager _shieldsManager;
     [SerializeField] private HandManager _handManager;
     [SerializeField] private ManaZoneManager _manaZoneManager;
     [SerializeField] private BattleZoneManager _battleZoneManager;
@@ -18,91 +19,85 @@ public class EffectsManager : MonoBehaviour
 
     [Header("Tween Parameters")] 
     [SerializeField] private bool _isPlayer = true;
+    [SerializeField] private float _makeShieldTransitionTime = 2f;
+    [SerializeField] private float _makeShieldPauseTime = 0.5f;
+    [SerializeField] private float _fromShieldsTransitionTime = 2f;
     [SerializeField] private float _fromDeckTransitionTime = 2f;
     [SerializeField] private float _fromHandTransitionTime = 2f;
     [SerializeField] private float _toHandTransitionTime = 2f;
     [SerializeField] private float _fromManaTransitionTime = 1f;
     [SerializeField] private float _toManaTransitionTime = 1f;
     [SerializeField] private float _toBattleTransitionTime = 1f;
-
+    private int counter = 0;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            DrawCard();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            AddMana(0);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            ReturnFromMana(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            PlayCard(0);
+            StartCoroutine(BreakShieldRoutine(counter++));
         }
     }
     
-    public void DrawCard()
+    public IEnumerator SetupShieldsRoutine()
+    {
+        CardManager[] _cards = new CardManager[5];
+        for (int i = 0; i < 5; i++)
+        {
+            _cards[i] = _deckManager.RemoveTopCard();
+            Transform cardHolderTransform = _shieldsManager.GetCardHolderTransform(i);
+            _cards[i].transform.DOMove(cardHolderTransform.position, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
+            _cards[i].transform.DORotate(cardHolderTransform.eulerAngles, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
+            _cards[i].transform.DOScale(cardHolderTransform.lossyScale, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
+            _cards[i].transform.parent = cardHolderTransform;
+
+            yield return new WaitForSeconds(_makeShieldPauseTime);
+        }
+
+        yield return new WaitForSeconds(_makeShieldTransitionTime);
+
+        for (int i = 0; i < 4; i++)
+        {
+            StartCoroutine(_shieldsManager.AddShieldRoutine(i, _cards[i]));
+        }
+        yield return StartCoroutine(_shieldsManager.AddShieldRoutine(4, _cards[4]));
+    }
+
+    public IEnumerator DrawCardRoutine()
     {
         CardManager card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
 
-        StartCoroutine(DrawCardRoutine(card));
-    }
-
-    public void AddMana(int index)
-    {
-        CardManager card = _handManager.RemoveCardAtIndex(index);
-        card.ManaLayout.Canvas.sortingOrder = 100;
-
-        StartCoroutine(AddManaRoutine(card, card.CardData));
-    }
-
-    public void PlayCard(int index)
-    {
-        CardManager card = _handManager.RemoveCardAtIndex(index);
-        if (card is CreatureCardManager creatureCard)
-            StartCoroutine(SummonCreatureRoutine(creatureCard));
-        else if (card is SpellCardManager spellCard)
-            StartCoroutine(CastSpellRoutine(spellCard));
-    }
-
-    public void ReturnFromMana(int index)
-    {
-        CardManager card = _manaZoneManager.RemoveCardAtIndex(index);
-        card.CardLayout.Canvas.sortingOrder = 100;
-
-        StartCoroutine(ReturnFromManaRoutine(card));
-    }
-
-    private IEnumerator DrawCardRoutine(CardManager card)
-    {
         yield return StartCoroutine(MoveFromDeckRoutine(card.transform));
         yield return StartCoroutine(MoveToHandRoutine(card.transform));
         card.HoverPreview.PreviewEnabled = true;
     }
 
-    private IEnumerator AddManaRoutine(CardManager card, CardData cardData)
+    public IEnumerator AddManaRoutine(int index)
     {
+        CardManager card = _handManager.RemoveCardAtIndex(index);
+        card.ManaLayout.Canvas.sortingOrder = 100;
+
         card.HoverPreview.PreviewEnabled = false;
         yield return MoveFromHandRoutine(card.transform);
         card.ActivateManaLayout();
-        yield return MoveToManaZoneRoutine(card.transform, cardData);
+        yield return MoveToManaZoneRoutine(card.transform, card.CardData);
         card.HoverPreview.PreviewEnabled = true;
+    }
+
+    public IEnumerator PlayCardRoutine(int index)
+    {
+        CardManager card = _handManager.RemoveCardAtIndex(index);
+        if (card is CreatureCardManager creatureCard)
+            yield return StartCoroutine(SummonCreatureRoutine(creatureCard));
+        else if (card is SpellCardManager spellCard)
+            yield return StartCoroutine(CastSpellRoutine(spellCard));
     }
 
     private IEnumerator SummonCreatureRoutine(CreatureCardManager creatureCard)
     {
         creatureCard.HoverPreview.PreviewEnabled = false;
         yield return MoveFromHandRoutine(creatureCard.transform);
-        creatureCard.ActicateBattleLayout();
+        creatureCard.ActivateBattleLayout();
         yield return MoveToBattleZoneRoutine(creatureCard.transform);
         creatureCard.HoverPreview.PreviewEnabled = true;
     }
@@ -112,8 +107,27 @@ public class EffectsManager : MonoBehaviour
         yield break;
     }
 
-    private IEnumerator ReturnFromManaRoutine(CardManager card)
+    public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
+        yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
+
+        CardManager card = _shieldsManager.RemoveCardAtIndex(shieldIndex);
+        card.CardLayout.Canvas.sortingOrder = 100;
+        if (_isPlayer)
+            card.CardLayout.Canvas.gameObject.SetActive(true);
+
+        yield return StartCoroutine(MoveFromShieldsRoutine(card.transform));
+        if (!_isPlayer)
+            card.CardLayout.Canvas.gameObject.SetActive(true);
+        yield return StartCoroutine(MoveToHandRoutine(card.transform));
+        card.HoverPreview.PreviewEnabled = true;
+    }
+
+    public IEnumerator ReturnFromManaRoutine(int index)
+    {
+        CardManager card = _manaZoneManager.RemoveCardAtIndex(index);
+        card.CardLayout.Canvas.sortingOrder = 100;
+
         card.HoverPreview.PreviewEnabled = false;
         yield return MoveFromManaZoneRoutine(card.transform);
         card.ActivateCardLayout();
@@ -129,6 +143,18 @@ public class EffectsManager : MonoBehaviour
         if (_isPlayer)
             cardTransform.DORotate(_drawIntermediateTransform.rotation.eulerAngles, _fromDeckTransitionTime).SetEase(Ease.OutQuint);
         cardTransform.DOScale(Vector3.one, _fromDeckTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_fromDeckTransitionTime);
+    }
+
+    private IEnumerator MoveFromShieldsRoutine(Transform cardTransform)
+    {
+        cardTransform.DOMove(_drawIntermediateTransform.position, _fromShieldsTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = _drawIntermediateTransform.rotation.eulerAngles;
+        if (!_isPlayer)
+            rotation += new Vector3(0, 0, 180);
+        cardTransform.DORotate(rotation, _fromShieldsTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(Vector3.one, _fromShieldsTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromDeckTransitionTime);
     }
