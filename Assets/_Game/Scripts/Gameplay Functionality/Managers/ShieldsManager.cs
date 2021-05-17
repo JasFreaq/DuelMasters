@@ -13,16 +13,16 @@ public class ShieldsManager : MonoBehaviour
     private int _shieldBreakTriggerHash;
     private int _shieldUnbreakTriggerHash;
 
-    private ShieldsLayoutHandler _shieldsLayoutHandler;
+    private bool _isPlayer = true;
+    private float _pauseTime;
+    private float _fromTransitionTime;
+    private float _toTransitionTime;
 
     private List<Shield> _shields = new List<Shield>();
     private List<CardManager> _cards = new List<CardManager>();
-
-    public List<Shield> Shields
-    {
-        get { return _shields; }
-    }
-
+    
+    private ShieldsLayoutHandler _shieldsLayoutHandler;
+    
     private void Awake()
     {
         _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
@@ -33,44 +33,96 @@ public class ShieldsManager : MonoBehaviour
 
     private void Start()
     {
-        _shieldsLayoutHandler.Initialize(this);
+        _shields = _shieldsLayoutHandler.Initialize(_shields);
     }
 
-    public Transform GetCardHolderTransform(int shieldIndex)
+    public void Initialize(bool isPlayer, float pauseTime, float fromTransitionTime, float toTransitionTime)
     {
-        return _shields[shieldIndex].CardHolder;
+        _isPlayer = isPlayer;
+        _pauseTime = pauseTime;
+        _fromTransitionTime = fromTransitionTime;
+        _toTransitionTime = toTransitionTime;
     }
 
-    public void AddShield(int shieldIndex, CardManager card)
+    public IEnumerator SetupShieldsRoutine(CardManager[] cards)
     {
-        if (_cards.Count > shieldIndex)
+        for (int i = 0; i < 5; i++)
         {
-            _cards[shieldIndex] = card;
+            MoveToShields(cards[i].transform, _shields[i].CardHolder);
+            yield return new WaitForSeconds(_pauseTime);
         }
-        else
+
+        yield return new WaitForSeconds(_toTransitionTime);
+
+        for (int i = 0; i < 4; i++)
         {
-            _cards.Add(card);
-            if (_cards.Count > 5)
-                _shieldsLayoutHandler.AddShield();
+            AddShield(i, cards[i]);
+            StartCoroutine(PlayMakeShieldAnimationRoutine(i));
         }
+        AddShield(4, cards[4]);
+        yield return StartCoroutine(PlayMakeShieldAnimationRoutine(4));
     }
 
-    public IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)
+    private IEnumerator MoveFromShieldsRoutine(Transform cardTransform, Transform holder)
     {
-        _shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
-        _shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
+        cardTransform.DOMove(holder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = holder.rotation.eulerAngles;
+        if (!_isPlayer)
+            rotation += new Vector3(0, 0, 180);
+        cardTransform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
-        yield return new WaitForSeconds(_animationTime);
+        yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator BreakShieldRoutine(int shieldIndex)
+    private void MoveToShields(Transform cardTransform, Transform holderTransform, bool fromDeck = true)
+    {
+        cardTransform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = holderTransform.eulerAngles;
+        if (!_isPlayer)
+        {
+            if (fromDeck)
+                rotation += new Vector3(30, 180, 0);
+            else
+                rotation = new Vector3(0, 0, 0);
+        }
+
+        cardTransform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.parent = holderTransform;
+    }
+
+    public IEnumerator BreakShieldRoutine(int shieldIndex, Transform holder)
     {
         _shields[shieldIndex].SetAnimatorTrigger(_shieldBreakTriggerHash);
         _shields[shieldIndex].CardHolder.DOScale(_shields[shieldIndex].HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
+
+        CardManager card = RemoveCardAtIndex(shieldIndex);
+        card.CardLayout.Canvas.sortingOrder = 100;
+        if (_isPlayer)
+            card.CardLayout.Canvas.gameObject.SetActive(true);
+
+        yield return StartCoroutine(MoveFromShieldsRoutine(card.transform, holder));
+        if (!_isPlayer)
+            card.CardLayout.Canvas.gameObject.SetActive(true);
     }
-    
+
+    public IEnumerator MakeShieldRoutine(CardManager card)
+    {
+        int emptyIndex = GetEmptyIndex();
+        AddShield(emptyIndex, card);
+        MoveToShields(card.transform, _shields[emptyIndex].CardHolder, false);
+        yield return new WaitForSeconds(_toTransitionTime);
+        yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
+    }
+
+    public CardManager GetCardAtIndex(int shieldIndex)
+    {
+        return _cards[shieldIndex];
+    }
+
     public CardManager RemoveCardAtIndex(int shieldIndex)
     {
         int n = _cards.Count;
@@ -84,13 +136,35 @@ public class ShieldsManager : MonoBehaviour
             _cards.RemoveAt(shieldIndex);
             _shields.RemoveAt(shieldIndex);
         }
-        
+
         card.transform.parent = transform;
         _shieldsLayoutHandler.RemoveShield(shieldIndex);
         return card;
     }
 
-    public int GetEmptyIndex()
+    private void AddShield(int shieldIndex, CardManager card)
+    {
+        if (_cards.Count > shieldIndex)
+        {
+            _cards[shieldIndex] = card;
+        }
+        else
+        {
+            _cards.Add(card);
+            if (_cards.Count > 5)
+                _shields = _shieldsLayoutHandler.AddShield(_shields);
+        }
+    }
+
+    private IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)
+    {
+        _shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
+        _shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_animationTime);
+    }
+    
+    private int GetEmptyIndex()
     {
         int n = _cards.Count;
         for (int i = 0; i < n; i++)

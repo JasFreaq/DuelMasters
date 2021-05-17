@@ -1214,11 +1214,11 @@ MonoBehaviour:
   _handManager: {fileID: 2064906456}
   _manaZoneManager: {fileID: 965673510}
   _battleZoneManager: {fileID: 362037422}
-  _drawIntermediateTransform: {fileID: 893572538}
+  _intermediateTransform: {fileID: 893572538}
   _isPlayer: 1
-  _makeShieldTransitionTime: 2
   _makeShieldPauseTime: 0.5
   _fromShieldsTransitionTime: 2
+  _toShieldsTransitionTime: 2
   _fromDeckTransitionTime: 2
   _fromHandTransitionTime: 2
   _toHandTransitionTime: 2
@@ -1883,11 +1883,11 @@ MonoBehaviour:
   _handManager: {fileID: 759882950}
   _manaZoneManager: {fileID: 1667101612}
   _battleZoneManager: {fileID: 1774565250}
-  _drawIntermediateTransform: {fileID: 127403156}
+  _intermediateTransform: {fileID: 127403156}
   _isPlayer: 0
-  _makeShieldTransitionTime: 2
   _makeShieldPauseTime: 0.75
   _fromShieldsTransitionTime: 2
+  _toShieldsTransitionTime: 2
   _fromDeckTransitionTime: 2
   _fromHandTransitionTime: 2
   _toHandTransitionTime: 2

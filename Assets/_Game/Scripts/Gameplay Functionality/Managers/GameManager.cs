@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartGameRoutine()
     {
-        StartCoroutine(_playerEffectsManager.SetupShieldsRoutine());
-        yield return StartCoroutine(_opponentEffectsManager.SetupShieldsRoutine());
+        _playerEffectsManager.SetupShields();
+        yield return _opponentEffectsManager.SetupShields();
         
         StartCoroutine(DrawStartingHandRoutine(_playerEffectsManager));
         yield return StartCoroutine(DrawStartingHandRoutine(_opponentEffectsManager));

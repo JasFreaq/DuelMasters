@@ -10,20 +10,17 @@ public class ShieldsLayoutHandler : MonoBehaviour
     [SerializeField] private float _maxShieldWidth = 10;
     [SerializeField] private float _shieldScale = 12.5f;
     [SerializeField] private Transform _holderTransform;
-
-    private ShieldsManager _shieldsManager;
-
-    public void Initialize(ShieldsManager shieldsManager)
+    
+    public List<Shield> Initialize(List<Shield> shields)
     {
-        _shieldsManager = shieldsManager;
-
         for (int i = 0; i < 5; i++)
         {
             Shield shield = Instantiate(_shieldPrefab, _holderTransform);
-            shieldsManager.Shields.Add(shield);
+            shields.Add(shield);
         }
 
         ArrangeShields();
+        return shields;
     }
 
     private void ArrangeShields()
@@ -48,11 +45,12 @@ public class ShieldsLayoutHandler : MonoBehaviour
         }
     }
 
-    public void AddShield()
+    public List<Shield> AddShield(List<Shield> shields)
     {
         Shield shield = Instantiate(_shieldPrefab, _holderTransform);
-        _shieldsManager.Shields.Add(shield);
+        shields.Add(shield);
         ArrangeShields();
+        return shields;
     }
 
     public void RemoveShield(int shieldIndex)
