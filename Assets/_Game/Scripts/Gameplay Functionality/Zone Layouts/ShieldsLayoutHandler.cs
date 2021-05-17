@@ -62,7 +62,7 @@ public class ShieldsLayoutHandler : MonoBehaviour
     public void RemoveShield(int shieldIndex)
     {
         int n = _holderTransform.childCount;
-        if (n >= 5 && shieldIndex < n) 
+        if (n > 5 && shieldIndex < n) 
         {
             Destroy(_holderTransform.GetChild(shieldIndex).gameObject);
         }

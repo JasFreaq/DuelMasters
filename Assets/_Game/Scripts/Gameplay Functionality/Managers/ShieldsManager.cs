@@ -16,7 +16,7 @@ public class ShieldsManager : MonoBehaviour
     private ShieldsLayoutHandler _shieldsLayoutHandler;
 
     private List<Shield> _shields = new List<Shield>();
-    private CardManager[] _cards = new CardManager[5];
+    private List<CardManager> _cards = new List<CardManager>();
 
     public List<Shield> Shields
     {
@@ -48,7 +48,14 @@ public class ShieldsManager : MonoBehaviour
 
         yield return new WaitForSeconds(_animationTime);
 
-        _cards[shieldIndex] = card;
+        if (_cards.Count > shieldIndex)
+            _cards[shieldIndex] = card;
+        else
+        {
+            _cards.Add(card);
+            if (_cards.Count > 5)
+                _shieldsLayoutHandler.AddShield();
+        }
     }
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
@@ -57,12 +64,37 @@ public class ShieldsManager : MonoBehaviour
         _shields[shieldIndex].CardHolder.DOScale(_shields[shieldIndex].HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
+
+        _shieldsLayoutHandler.RemoveShield(shieldIndex);
     }
-    
+
+    public IEnumerator MakeShieldRoutine(CardManager card)
+    {
+        int n = _cards.Count;
+        for (int i = 0; i < n; i++)
+        {
+            if (_cards[i] == null)
+            {
+                yield return StartCoroutine(AddShieldRoutine(i, card));
+                yield break;
+            }
+        }
+
+        yield return StartCoroutine(AddShieldRoutine(n, card));
+    }
+
     public CardManager RemoveCardAtIndex(int shieldIndex)
     {
+        int n = _cards.Count;
         CardManager card = _cards[shieldIndex];
-        _cards[shieldIndex] = null;
+        if (n <= 5) 
+        {
+            _cards[shieldIndex] = null;
+        }
+        else
+        {
+            _cards.RemoveAt(shieldIndex);
+        }
         return card;
     }
 }

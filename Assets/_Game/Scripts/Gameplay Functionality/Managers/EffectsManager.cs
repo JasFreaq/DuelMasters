@@ -28,10 +28,13 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private float _fromManaTransitionTime = 1f;
     [SerializeField] private float _toManaTransitionTime = 1f;
     [SerializeField] private float _toBattleTransitionTime = 1f;
-
+    private int counter = 0;
     private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            StartCoroutine(BreakShieldRoutine(counter++));
+        }
     }
     
     public IEnumerator SetupShieldsRoutine()
