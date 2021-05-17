@@ -16,11 +16,10 @@ public class GameManager : MonoBehaviour
     private IEnumerator StartGameRoutine()
     {
         StartCoroutine(_playerEffectsManager.SetupShieldsRoutine());
-        yield break;
-        //yield return StartCoroutine(_opponentEffectsManager.SetupShieldsRoutine());
+        yield return StartCoroutine(_opponentEffectsManager.SetupShieldsRoutine());
         
-        //StartCoroutine(DrawStartingHandRoutine(_playerEffectsManager));
-        //yield return StartCoroutine(DrawStartingHandRoutine(_opponentEffectsManager));
+        StartCoroutine(DrawStartingHandRoutine(_playerEffectsManager));
+        yield return StartCoroutine(DrawStartingHandRoutine(_opponentEffectsManager));
     }
 
     private IEnumerator DrawStartingHandRoutine(EffectsManager effectsManager)

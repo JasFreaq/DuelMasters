@@ -24,15 +24,11 @@ public class Shield : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _holderScale = _cardHolderTransform.localScale;
     }
 
     public void SetAnimatorTrigger(int hash)
     {
         _animator.SetTrigger(hash);
-    }
-
-    public void UpdateHolderScale()
-    {
-        _holderScale = _cardHolderTransform.localScale;
     }
 }

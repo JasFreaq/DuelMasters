@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEngine;
 using DG.Tweening;
 
@@ -35,6 +36,21 @@ public class EffectsManager : MonoBehaviour
         {
             StartCoroutine(BreakShieldRoutine(counter++));
         }
+        
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            StartCoroutine(MakeShieldFromHandRoutine(0));
+        }
+        
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            StartCoroutine(DrawCardRoutine());
+        }
+        
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            StartCoroutine(ChargeManaRoutine(0));
+        }
     }
     
     public IEnumerator SetupShieldsRoutine()
@@ -44,7 +60,6 @@ public class EffectsManager : MonoBehaviour
         {
             _cards[i] = _deckManager.RemoveTopCard();
             MoveToShields(_cards[i].transform, _shieldsManager.GetCardHolderTransform(i));
-
             yield return new WaitForSeconds(_makeShieldPauseTime);
         }
 
@@ -52,9 +67,11 @@ public class EffectsManager : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            StartCoroutine(_shieldsManager.AddShieldRoutine(i, _cards[i]));
+            _shieldsManager.AddShield(i, _cards[i]);
+            StartCoroutine(_shieldsManager.PlayMakeShieldAnimationRoutine(i));
         }
-        yield return StartCoroutine(_shieldsManager.AddShieldRoutine(4, _cards[4]));
+        _shieldsManager.AddShield(4, _cards[4]);
+        yield return StartCoroutine(_shieldsManager.PlayMakeShieldAnimationRoutine(4));
     }
 
     public IEnumerator DrawCardRoutine()
@@ -68,7 +85,7 @@ public class EffectsManager : MonoBehaviour
         card.HoverPreview.PreviewEnabled = true;
     }
 
-    public IEnumerator AddManaRoutine(int index)
+    public IEnumerator ChargeManaRoutine(int index)
     {
         CardManager card = _handManager.RemoveCardAtIndex(index);
         card.ManaLayout.Canvas.sortingOrder = 100;
@@ -119,14 +136,20 @@ public class EffectsManager : MonoBehaviour
         card.HoverPreview.PreviewEnabled = true;
     }
     
-    public IEnumerator MakeShieldRoutine(int index)
+    public IEnumerator MakeShieldFromHandRoutine(int index)
     {
         CardManager card = _handManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
         
         card.HoverPreview.PreviewEnabled = false;
-        yield return MoveFromHandRoutine(card.transform);
-        yield return StartCoroutine(MoveToHandRoutine(card.transform));
+        yield return MoveFromHandRoutine(card.transform, true);
+        card.CardLayout.Canvas.gameObject.SetActive(false);
+
+        int emptyIndex = _shieldsManager.GetEmptyIndex();
+        _shieldsManager.AddShield(emptyIndex, card);
+        MoveToShields(card.transform, _shieldsManager.GetCardHolderTransform(emptyIndex), false);
+        yield return new WaitForSeconds(_makeShieldTransitionTime);
+        yield return StartCoroutine(_shieldsManager.PlayMakeShieldAnimationRoutine(emptyIndex));
     }
 
     public IEnumerator ReturnFromManaRoutine(int index)
@@ -165,22 +188,30 @@ public class EffectsManager : MonoBehaviour
         yield return new WaitForSeconds(_fromDeckTransitionTime);
     }
 
-    private void MoveToShields(Transform cardTransform, Transform holderTransform)
+    private void MoveToShields(Transform cardTransform, Transform holderTransform, bool fromDeck = true)
     {
         cardTransform.transform.DOMove(holderTransform.position, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
         Vector3 rotation = holderTransform.eulerAngles;
         if (!_isPlayer)
-            rotation += new Vector3(30, 180, 0);
+        {
+            if (fromDeck)
+                rotation += new Vector3(30, 180, 0);
+            else
+                rotation = new Vector3(0, 0, 0);
+        }
         cardTransform.transform.DORotate(rotation, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
         cardTransform.transform.DOScale(holderTransform.lossyScale, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
         cardTransform.transform.parent = holderTransform;
     }
 
-    private IEnumerator MoveFromHandRoutine(Transform cardTransform)
+    private IEnumerator MoveFromHandRoutine(Transform cardTransform, bool forShield = false)
     {
         cardTransform.DOMove(_drawIntermediateTransform.position, _fromHandTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(new Vector3(-90, 0, 0), _fromHandTransitionTime).SetEase(Ease.OutQuint);
-
+        Vector3 rotation = new Vector3(-90, 0, 0);
+        if (forShield && !_isPlayer)
+            rotation = new Vector3(90, 0, 0);
+        cardTransform.DORotate(rotation, _fromHandTransitionTime).SetEase(Ease.OutQuint);
+        
         yield return new WaitForSeconds(_fromHandTransitionTime);
     }
 
