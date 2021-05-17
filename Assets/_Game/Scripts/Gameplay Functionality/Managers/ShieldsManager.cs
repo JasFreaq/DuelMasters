@@ -6,7 +6,6 @@ using DG.Tweening;
 
 public class ShieldsManager : MonoBehaviour
 {
-    [SerializeField] private Transform[] _cardHolders = new Transform[5];
     [SerializeField] private string _shieldBreakTriggerName = "BreakShield";
     [SerializeField] private string _shieldUnbreakTriggerName = "UnbreakShield";
     [SerializeField] private float _animationTime = 1f;
@@ -14,47 +13,56 @@ public class ShieldsManager : MonoBehaviour
     private int _shieldBreakTriggerHash;
     private int _shieldUnbreakTriggerHash;
 
-    private Animator[] _shieldAnimators;
-    private CardManager[] _shields = new CardManager[5];
-    private Vector3 _holderScale;
-    
+    private ShieldsLayoutHandler _shieldsLayoutHandler;
+
+    private List<Shield> _shields = new List<Shield>();
+    private CardManager[] _cards = new CardManager[5];
+
+    public List<Shield> Shields
+    {
+        get { return _shields; }
+    }
+
     private void Awake()
     {
-        _shieldAnimators = GetComponentsInChildren<Animator>();
-
         _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
         _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
 
-        _holderScale = _cardHolders[0].localScale;
+        _shieldsLayoutHandler = GetComponent<ShieldsLayoutHandler>();
+    }
+
+    private void Start()
+    {
+        _shieldsLayoutHandler.Initialize(this);
     }
 
     public Transform GetCardHolderTransform(int shieldIndex)
     {
-        return _cardHolders[shieldIndex];
+        return _shields[shieldIndex].CardHolder;
     }
 
     public IEnumerator AddShieldRoutine(int shieldIndex, CardManager card)
     {
-        _shieldAnimators[shieldIndex].SetTrigger(_shieldUnbreakTriggerHash);
-        _cardHolders[shieldIndex].DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
+        _shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
+        _shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
 
-        _shields[shieldIndex] = card;
+        _cards[shieldIndex] = card;
     }
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
-        _shieldAnimators[shieldIndex].SetTrigger(_shieldBreakTriggerHash);
-        _cardHolders[shieldIndex].DOScale(_holderScale, _animationTime).SetEase(Ease.OutQuint);
+        _shields[shieldIndex].SetAnimatorTrigger(_shieldBreakTriggerHash);
+        _shields[shieldIndex].CardHolder.DOScale(_shields[shieldIndex].HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
     }
-
+    
     public CardManager RemoveCardAtIndex(int shieldIndex)
     {
-        CardManager card = _shields[shieldIndex];
-        _shields[shieldIndex] = null;
+        CardManager card = _cards[shieldIndex];
+        _cards[shieldIndex] = null;
         return card;
     }
 }

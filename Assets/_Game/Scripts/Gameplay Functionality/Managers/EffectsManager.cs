@@ -28,13 +28,10 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private float _fromManaTransitionTime = 1f;
     [SerializeField] private float _toManaTransitionTime = 1f;
     [SerializeField] private float _toBattleTransitionTime = 1f;
-    private int counter = 0;
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            StartCoroutine(BreakShieldRoutine(counter++));
-        }
+        
     }
     
     public IEnumerator SetupShieldsRoutine()
@@ -43,11 +40,7 @@ public class EffectsManager : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             _cards[i] = _deckManager.RemoveTopCard();
-            Transform cardHolderTransform = _shieldsManager.GetCardHolderTransform(i);
-            _cards[i].transform.DOMove(cardHolderTransform.position, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
-            _cards[i].transform.DORotate(cardHolderTransform.eulerAngles, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
-            _cards[i].transform.DOScale(cardHolderTransform.lossyScale, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
-            _cards[i].transform.parent = cardHolderTransform;
+            MoveToShields(_cards[i].transform, _shieldsManager.GetCardHolderTransform(i));
 
             yield return new WaitForSeconds(_makeShieldPauseTime);
         }
@@ -122,6 +115,16 @@ public class EffectsManager : MonoBehaviour
         yield return StartCoroutine(MoveToHandRoutine(card.transform));
         card.HoverPreview.PreviewEnabled = true;
     }
+    
+    public IEnumerator MakeShieldRoutine(int index)
+    {
+        CardManager card = _handManager.RemoveCardAtIndex(index);
+        card.CardLayout.Canvas.sortingOrder = 100;
+        
+        card.HoverPreview.PreviewEnabled = false;
+        yield return MoveFromHandRoutine(card.transform);
+        yield return StartCoroutine(MoveToHandRoutine(card.transform));
+    }
 
     public IEnumerator ReturnFromManaRoutine(int index)
     {
@@ -157,6 +160,17 @@ public class EffectsManager : MonoBehaviour
         cardTransform.DOScale(Vector3.one, _fromShieldsTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromDeckTransitionTime);
+    }
+
+    private void MoveToShields(Transform cardTransform, Transform holderTransform)
+    {
+        cardTransform.transform.DOMove(holderTransform.position, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = holderTransform.eulerAngles;
+        if (!_isPlayer)
+            rotation += new Vector3(30, 180, 0);
+        cardTransform.transform.DORotate(rotation, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.transform.DOScale(holderTransform.lossyScale, _makeShieldTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.transform.parent = holderTransform;
     }
 
     private IEnumerator MoveFromHandRoutine(Transform cardTransform)
