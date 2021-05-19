@@ -4,29 +4,38 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private EffectsManager _playerEffectsManager;
-    [SerializeField] private EffectsManager _opponentEffectsManager;
-    
+    [SerializeField] private PlayerManager _playerManager;
+    [SerializeField] private PlayerManager _opponentManager;
+
+    [SerializeField] private Deck _playerDeck;
+    [SerializeField] private Deck _opponentDeck;
+
+    public void Start()
+    {
+        _playerManager.Initialize(_playerDeck);
+        _opponentManager.Initialize(_opponentDeck);
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameRoutine());
     }
-
+    
     private IEnumerator StartGameRoutine()
     {
-        _playerEffectsManager.SetupShields();
-        yield return _opponentEffectsManager.SetupShields();
+        _playerManager.SetupShields();
+        yield return _opponentManager.SetupShields();
         
-        StartCoroutine(DrawStartingHandRoutine(_playerEffectsManager));
-        yield return StartCoroutine(DrawStartingHandRoutine(_opponentEffectsManager));
+        StartCoroutine(DrawStartingHandRoutine(_playerManager));
+        yield return StartCoroutine(DrawStartingHandRoutine(_opponentManager));
     }
 
-    private IEnumerator DrawStartingHandRoutine(EffectsManager effectsManager)
+    private IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
     {
         for (int i = 0; i < 5; i++)
         {
-            yield return StartCoroutine(effectsManager.DrawCardRoutine());
+            yield return StartCoroutine(playerManager.DrawCardRoutine());
         }
     }
 }

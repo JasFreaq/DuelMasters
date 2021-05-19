@@ -6,7 +6,7 @@ using UnityEngine;
 using DG.Tweening;
 
 [DisallowMultipleComponent]
-public class EffectsManager : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     [Header("Manager Caches")] 
     [SerializeField] private DeckManager _deckManager;
@@ -29,12 +29,7 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private float _fromManaTransitionTime = 1f;
     [SerializeField] private float _toManaTransitionTime = 1f;
     [SerializeField] private float _toBattleTransitionTime = 1f;
-
-    private void Awake()
-    {
-        _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime, _toShieldsTransitionTime);
-    }
-
+    
     private int counter = 0;
     private void Update()
     {
@@ -59,6 +54,13 @@ public class EffectsManager : MonoBehaviour
         //}
     }
 
+    public void Initialize(Deck deck)
+    {
+        _deckManager.Initialize(deck, _isPlayer, _fromDeckTransitionTime, _intermediateTransform);
+        _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
+            _toShieldsTransitionTime, _intermediateTransform);
+
+    }
 
     public Coroutine SetupShields()
     {
@@ -77,7 +79,7 @@ public class EffectsManager : MonoBehaviour
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
 
-        yield return StartCoroutine(MoveFromDeckRoutine(card.transform));
+        yield return StartCoroutine(_deckManager.MoveFromDeckRoutine(card.transform));
         yield return StartCoroutine(MoveToHandRoutine(card.transform));
         card.HoverPreview.PreviewEnabled = true;
     }
@@ -120,7 +122,7 @@ public class EffectsManager : MonoBehaviour
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
         CardManager card = _shieldsManager.GetCardAtIndex(shieldIndex);
-        yield return _shieldsManager.BreakShieldRoutine(shieldIndex, _intermediateTransform);
+        yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
         yield return StartCoroutine(MoveToHandRoutine(card.transform));
         card.HoverPreview.PreviewEnabled = true;
     }
@@ -151,16 +153,6 @@ public class EffectsManager : MonoBehaviour
     }
 
     #region Move Methods
-
-    private IEnumerator MoveFromDeckRoutine(Transform cardTransform)
-    {
-        cardTransform.DOMove(_intermediateTransform.position, _fromDeckTransitionTime).SetEase(Ease.OutQuint);
-        if (_isPlayer)
-            cardTransform.DORotate(_intermediateTransform.rotation.eulerAngles, _fromDeckTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(Vector3.one, _fromDeckTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_fromDeckTransitionTime);
-    }
     
     private IEnumerator MoveFromHandRoutine(Transform cardTransform, bool forShield = false)
     {

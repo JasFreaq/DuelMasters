@@ -17,6 +17,7 @@ public class ShieldsManager : MonoBehaviour
     private float _pauseTime;
     private float _fromTransitionTime;
     private float _toTransitionTime;
+    private Transform _intermediateHolder;
 
     private List<CardManager> _cards = new List<CardManager>();
     
@@ -35,12 +36,13 @@ public class ShieldsManager : MonoBehaviour
         _shieldsLayoutHandler.Initialize();
     }
 
-    public void Initialize(bool isPlayer, float pauseTime, float fromTransitionTime, float toTransitionTime)
+    public void Initialize(bool isPlayer, float pauseTime, float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
     {
         _isPlayer = isPlayer;
         _pauseTime = pauseTime;
         _fromTransitionTime = fromTransitionTime;
         _toTransitionTime = toTransitionTime;
+        _intermediateHolder = intermediateTransform;
     }
 
     public IEnumerator SetupShieldsRoutine(CardManager[] cards)
@@ -62,10 +64,10 @@ public class ShieldsManager : MonoBehaviour
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(4));
     }
 
-    private IEnumerator MoveFromShieldsRoutine(Transform cardTransform, Transform holder)
+    private IEnumerator MoveFromShieldsRoutine(Transform cardTransform)
     {
-        cardTransform.DOMove(holder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = holder.rotation.eulerAngles;
+        cardTransform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = _intermediateHolder.rotation.eulerAngles;
         if (!_isPlayer)
             rotation += new Vector3(0, 0, 180);
         cardTransform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
@@ -91,7 +93,7 @@ public class ShieldsManager : MonoBehaviour
         cardTransform.parent = holderTransform;
     }
 
-    public IEnumerator BreakShieldRoutine(int shieldIndex, Transform holder)
+    public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
         Shield shield = _shieldsLayoutHandler.Shields[shieldIndex];
         shield.SetAnimatorTrigger(_shieldBreakTriggerHash);
@@ -104,7 +106,7 @@ public class ShieldsManager : MonoBehaviour
         if (_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(true);
 
-        yield return StartCoroutine(MoveFromShieldsRoutine(card.transform, holder));
+        yield return StartCoroutine(MoveFromShieldsRoutine(card.transform));
         if (!_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(true);
     }
