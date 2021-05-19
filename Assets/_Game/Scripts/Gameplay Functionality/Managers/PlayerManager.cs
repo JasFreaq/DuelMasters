@@ -59,7 +59,7 @@ public class PlayerManager : MonoBehaviour
         _deckManager.Initialize(deck, _isPlayer, _fromDeckTransitionTime, _intermediateTransform);
         _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
             _toShieldsTransitionTime, _intermediateTransform);
-
+        _handManager.Initialize(_isPlayer, _fromHandTransitionTime, _toHandTransitionTime, _intermediateTransform);
     }
 
     public Coroutine SetupShields()
@@ -79,8 +79,8 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
 
-        yield return StartCoroutine(_deckManager.MoveFromDeckRoutine(card.transform));
-        yield return StartCoroutine(MoveToHandRoutine(card.transform));
+        yield return _deckManager.MoveFromDeckRoutine(card.transform);
+        yield return _handManager.MoveToHandRoutine(card.transform);
         card.HoverPreview.PreviewEnabled = true;
     }
 
@@ -90,7 +90,7 @@ public class PlayerManager : MonoBehaviour
         card.ManaLayout.Canvas.sortingOrder = 100;
 
         card.HoverPreview.PreviewEnabled = false;
-        yield return MoveFromHandRoutine(card.transform);
+        yield return _handManager.MoveFromHandRoutine(card.transform);
         card.ActivateManaLayout();
         yield return MoveToManaZoneRoutine(card.transform, card.CardData);
         card.HoverPreview.PreviewEnabled = true;
@@ -108,7 +108,7 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator SummonCreatureRoutine(CreatureCardManager creatureCard)
     {
         creatureCard.HoverPreview.PreviewEnabled = false;
-        yield return MoveFromHandRoutine(creatureCard.transform);
+        yield return _handManager.MoveFromHandRoutine(creatureCard.transform);
         creatureCard.ActivateBattleLayout();
         yield return MoveToBattleZoneRoutine(creatureCard.transform);
         creatureCard.HoverPreview.PreviewEnabled = true;
@@ -123,7 +123,7 @@ public class PlayerManager : MonoBehaviour
     {
         CardManager card = _shieldsManager.GetCardAtIndex(shieldIndex);
         yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
-        yield return StartCoroutine(MoveToHandRoutine(card.transform));
+        yield return _handManager.MoveToHandRoutine(card.transform);
         card.HoverPreview.PreviewEnabled = true;
     }
     
@@ -133,7 +133,7 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.sortingOrder = 100;
         
         card.HoverPreview.PreviewEnabled = false;
-        yield return MoveFromHandRoutine(card.transform, true);
+        yield return _handManager.MoveFromHandRoutine(card.transform, true);
         if (!_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(false);
         
@@ -148,45 +148,12 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreview.PreviewEnabled = false;
         yield return MoveFromManaZoneRoutine(card.transform);
         card.ActivateCardLayout();
-        yield return MoveToHandRoutine(card.transform, true);
+        yield return _handManager.MoveToHandRoutine(card.transform, true);
         card.HoverPreview.PreviewEnabled = true;
     }
 
     #region Move Methods
     
-    private IEnumerator MoveFromHandRoutine(Transform cardTransform, bool forShield = false)
-    {
-        cardTransform.DOMove(_intermediateTransform.position, _fromHandTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = new Vector3(-90, 0, 0);
-        if (forShield && !_isPlayer)
-            rotation = new Vector3(90, 0, 0);
-        cardTransform.DORotate(rotation, _fromHandTransitionTime).SetEase(Ease.OutQuint);
-        
-        yield return new WaitForSeconds(_fromHandTransitionTime);
-    }
-
-    private IEnumerator MoveToHandRoutine(Transform cardTransform, bool opponentVisible = false)
-    {
-        Transform tempCard = _handManager.AssignTempCard();
-        cardTransform.DOMove(tempCard.position, _toHandTransitionTime).SetEase(Ease.OutQuint);
-
-        Vector3 rotation = tempCard.rotation.eulerAngles;
-        if (!_isPlayer && opponentVisible)
-        {
-            rotation -= new Vector3(0, 0, 180);
-        }
-        cardTransform.DORotate(rotation, _toHandTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_toHandTransitionTime);
-
-        if (!_isPlayer && opponentVisible)
-        {
-            //TODO: Call Visible Icon Code
-        }
-
-        _handManager.AddCard(cardTransform);
-    }
-
     private IEnumerator MoveFromManaZoneRoutine(Transform cardTransform)
     {
         cardTransform.DOMove(_intermediateTransform.position, _fromManaTransitionTime).SetEase(Ease.OutQuint);

@@ -778,7 +778,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b8b223a8337bc458ec9f3c61c6b24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!1 &642158335
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,7 +868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b8b223a8337bc458ec9f3c61c6b24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
 --- !u!1 &759882947
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,8 +1780,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2366ac9692326a9488480a977ef3a045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerEffectsManager: {fileID: 1042105413}
-  _opponentEffectsManager: {fileID: 1962481310}
+  _playerManager: {fileID: 1042105413}
+  _opponentManager: {fileID: 1962481310}
+  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
+  _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!4 &1854645698
 Transform:
   m_ObjectHideFlags: 0

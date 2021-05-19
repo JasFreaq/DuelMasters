@@ -8,7 +8,7 @@ using UnityEngine;
 public class DeckManager : MonoBehaviour
 {
     private bool _isPlayer = true;
-    private float _fromTransitionTime = 2f;
+    private float _fromTransitionTime;
     private Transform _intermediateHolder;
 
     private DeckLayoutHandler _deckLayoutHandler;
