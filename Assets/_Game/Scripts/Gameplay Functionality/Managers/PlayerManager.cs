@@ -28,39 +28,35 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float _toHandTransitionTime = 2f;
     [SerializeField] private float _fromManaTransitionTime = 1f;
     [SerializeField] private float _toManaTransitionTime = 1f;
+    [SerializeField] private float _fromBattleTransitionTime = 1f;
     [SerializeField] private float _toBattleTransitionTime = 1f;
     
-    private int counter = 0;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            StartCoroutine(BreakShieldRoutine(counter++));
+            StartCoroutine(PlayCardRoutine(0));
         }
 
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            StartCoroutine(MakeShieldFromHandRoutine(0));
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            StartCoroutine(DrawCardRoutine());
-        }
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            StartCoroutine(ChargeManaRoutine(0));
+            StartCoroutine(ReturnFromBattleRoutine(0));
         }
     }
 
     public void Initialize(Deck deck)
     {
         _deckManager.Initialize(deck, _isPlayer, _fromDeckTransitionTime, _intermediateTransform);
+        
         _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
             _toShieldsTransitionTime, _intermediateTransform);
+        
         _handManager.Initialize(_isPlayer, _fromHandTransitionTime, _toHandTransitionTime, _intermediateTransform);
-        _manaZoneManager.Initialize(_isPlayer, _fromHandTransitionTime, _toHandTransitionTime, _intermediateTransform);
+        
+        _manaZoneManager.Initialize(_isPlayer, _fromManaTransitionTime, _toManaTransitionTime, _intermediateTransform);
+        
+        _battleZoneManager.Initialize(_isPlayer, _fromBattleTransitionTime, _toBattleTransitionTime,
+            _intermediateTransform);
     }
 
     public Coroutine SetupShields()
@@ -111,7 +107,7 @@ public class PlayerManager : MonoBehaviour
         creatureCard.HoverPreview.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(creatureCard.transform);
         creatureCard.ActivateBattleLayout();
-        yield return MoveToBattleZoneRoutine(creatureCard.transform);
+        yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard.transform);
         creatureCard.HoverPreview.PreviewEnabled = true;
     }
 
@@ -152,22 +148,16 @@ public class PlayerManager : MonoBehaviour
         yield return _handManager.MoveToHandRoutine(card.transform, true);
         card.HoverPreview.PreviewEnabled = true;
     }
-
-    #region Move Methods
     
-    
-
-    private IEnumerator MoveToBattleZoneRoutine(Transform cardTransform)
+    public IEnumerator ReturnFromBattleRoutine(int index)
     {
-        Transform tempCard = _battleZoneManager.AssignTempCard();
-        cardTransform.DOMove(tempCard.position, _toBattleTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(tempCard.rotation.eulerAngles, _toBattleTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(tempCard.lossyScale, _toBattleTransitionTime).SetEase(Ease.OutQuint);
+        CardManager card = _battleZoneManager.RemoveCardAtIndex(index);
+        card.CardLayout.Canvas.sortingOrder = 100;
 
-        yield return new WaitForSeconds(_toBattleTransitionTime);
-
-        _battleZoneManager.AddCard(cardTransform);
+        card.HoverPreview.PreviewEnabled = false;
+        yield return _battleZoneManager.MoveFromBattleZoneRoutine(card.transform);
+        card.ActivateCardLayout();
+        yield return _handManager.MoveToHandRoutine(card.transform, true);
+        card.HoverPreview.PreviewEnabled = true;
     }
-
-    #endregion
 }

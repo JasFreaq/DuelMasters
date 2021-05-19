@@ -1,9 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class BattleZoneManager : MonoBehaviour
 {
+    private bool _isPlayer = true;
+    private float _fromTransitionTime;
+    private float _toTransitionTime;
+    private Transform _intermediateHolder;
+
     private BattleZoneLayoutHandler _battleZoneLayoutHandler;
 
     private void Awake()
@@ -11,16 +17,36 @@ public class BattleZoneManager : MonoBehaviour
         _battleZoneLayoutHandler = GetComponent<BattleZoneLayoutHandler>();
     }
 
-    public Transform AssignTempCard()
+    public void Initialize(bool isPlayer, float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
     {
-        return _battleZoneLayoutHandler.AssignTempCard();
+        _isPlayer = isPlayer;
+        _fromTransitionTime = fromTransitionTime;
+        _toTransitionTime = toTransitionTime;
+        _intermediateHolder = intermediateTransform;
     }
 
-    public void AddCard(Transform cardTransform)
+    public IEnumerator MoveFromBattleZoneRoutine(Transform cardTransform)
     {
+        cardTransform.parent = _intermediateHolder;
+        cardTransform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_fromTransitionTime);
+    }
+
+    public IEnumerator MoveToBattleZoneRoutine(Transform cardTransform)
+    {
+        Transform tempCard = _battleZoneLayoutHandler.AssignTempCard();
+        cardTransform.DOMove(tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DORotate(tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardTransform.DOScale(tempCard.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_toTransitionTime);
+
         _battleZoneLayoutHandler.AddCard(cardTransform);
     }
-
+    
     public CreatureCardManager GetCardAtIndex(int index)
     {
         return _battleZoneLayoutHandler.GetCardAtIndex(index);
