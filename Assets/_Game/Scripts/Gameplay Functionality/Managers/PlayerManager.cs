@@ -48,10 +48,10 @@ public class PlayerManager : MonoBehaviour
             StartCoroutine(DrawCardRoutine());
         }
 
-        //if (Input.GetKeyDown(KeyCode.M))
-        //{
-        //    StartCoroutine(ChargeManaRoutine(0));
-        //}
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            StartCoroutine(ChargeManaRoutine(0));
+        }
     }
 
     public void Initialize(Deck deck)
@@ -60,6 +60,7 @@ public class PlayerManager : MonoBehaviour
         _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
             _toShieldsTransitionTime, _intermediateTransform);
         _handManager.Initialize(_isPlayer, _fromHandTransitionTime, _toHandTransitionTime, _intermediateTransform);
+        _manaZoneManager.Initialize(_isPlayer, _fromHandTransitionTime, _toHandTransitionTime, _intermediateTransform);
     }
 
     public Coroutine SetupShields()
@@ -92,7 +93,7 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreview.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card.transform);
         card.ActivateManaLayout();
-        yield return MoveToManaZoneRoutine(card.transform, card.CardData);
+        yield return _manaZoneManager.MoveToManaZoneRoutine(card.transform, card.CardData);
         card.HoverPreview.PreviewEnabled = true;
     }
 
@@ -146,7 +147,7 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.sortingOrder = 100;
 
         card.HoverPreview.PreviewEnabled = false;
-        yield return MoveFromManaZoneRoutine(card.transform);
+        yield return _manaZoneManager.MoveFromManaZoneRoutine(card.transform);
         card.ActivateCardLayout();
         yield return _handManager.MoveToHandRoutine(card.transform, true);
         card.HoverPreview.PreviewEnabled = true;
@@ -154,25 +155,7 @@ public class PlayerManager : MonoBehaviour
 
     #region Move Methods
     
-    private IEnumerator MoveFromManaZoneRoutine(Transform cardTransform)
-    {
-        cardTransform.DOMove(_intermediateTransform.position, _fromManaTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(_intermediateTransform.rotation.eulerAngles, _fromManaTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_fromManaTransitionTime);
-    }
-
-    private IEnumerator MoveToManaZoneRoutine(Transform cardTransform, CardData cardData)
-    {
-        Transform tempCard = _manaZoneManager.AssignTempCard(cardData);
-        cardTransform.DOMove(tempCard.position, _toManaTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(tempCard.rotation.eulerAngles, _toManaTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(_manaZoneManager.transform.localScale, _toManaTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_toManaTransitionTime);
-
-        _manaZoneManager.AddCard(cardTransform);
-    }
+    
 
     private IEnumerator MoveToBattleZoneRoutine(Transform cardTransform)
     {
