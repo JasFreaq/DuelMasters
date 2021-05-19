@@ -10,17 +10,23 @@ public class ShieldsLayoutHandler : MonoBehaviour
     [SerializeField] private float _maxShieldWidth = 10;
     [SerializeField] private float _shieldScale = 12.5f;
     [SerializeField] private Transform _holderTransform;
-    
-    public List<Shield> Initialize(List<Shield> shields)
+
+    private List<Shield> _shields = new List<Shield>();
+
+    public IReadOnlyList<Shield> Shields
+    {
+        get { return _shields; }
+    }
+
+    public void Initialize()
     {
         for (int i = 0; i < 5; i++)
         {
             Shield shield = Instantiate(_shieldPrefab, _holderTransform);
-            shields.Add(shield);
+            _shields.Add(shield);
         }
 
         ArrangeShields();
-        return shields;
     }
 
     private void ArrangeShields()
@@ -45,12 +51,11 @@ public class ShieldsLayoutHandler : MonoBehaviour
         }
     }
 
-    public List<Shield> AddShield(List<Shield> shields)
+    public void AddShield()
     {
         Shield shield = Instantiate(_shieldPrefab, _holderTransform);
-        shields.Add(shield);
+        _shields.Add(shield);
         ArrangeShields();
-        return shields;
     }
 
     public void RemoveShield(int shieldIndex)
@@ -58,6 +63,7 @@ public class ShieldsLayoutHandler : MonoBehaviour
         int n = _holderTransform.childCount;
         if (n > 5 && shieldIndex < n)
         {
+            _shields.RemoveAt(shieldIndex);
             Transform shieldTransform = _holderTransform.GetChild(shieldIndex);
             shieldTransform.parent = transform;
             Destroy(shieldTransform.gameObject);
