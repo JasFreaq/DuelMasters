@@ -198,6 +198,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 68126871}
+  - component: {fileID: 68126873}
+  - component: {fileID: 68126872}
   m_Layer: 0
   m_Name: Graveyard
   m_TagString: Untagged
@@ -219,6 +221,34 @@ Transform:
   m_Father: {fileID: 1042105412}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &68126872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68126870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f2b2d8ac15a76469bb92d2b6fedeae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &68126873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68126870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e77005b4389a6840b0e80518292310a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardWidth: 0.05
+  _cardScale: 0.5
+  _previewTargetPosition: {x: 25, y: 20, z: 15}
+  _previewTargetScale: {x: 2, y: 2, z: 2}
 --- !u!1 &85316046
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,6 +384,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 171994569}
+  - component: {fileID: 171994571}
+  - component: {fileID: 171994570}
   m_Layer: 0
   m_Name: Graveyard
   m_TagString: Untagged
@@ -368,13 +400,41 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 171994568}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -62, y: -17.5, z: 25}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: -30, y: -5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1962481309}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
+--- !u!114 &171994570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171994568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f2b2d8ac15a76469bb92d2b6fedeae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &171994571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171994568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e77005b4389a6840b0e80518292310a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardWidth: 0.05
+  _cardScale: 0.5
+  _previewTargetPosition: {x: -15, y: 20, z: -25}
+  _previewTargetScale: {x: 2, y: 2, z: 2}
 --- !u!1 &206433197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,6 +1272,7 @@ MonoBehaviour:
   _handManager: {fileID: 2064906456}
   _manaZoneManager: {fileID: 965673510}
   _battleZoneManager: {fileID: 362037422}
+  _graveyardManager: {fileID: 68126872}
   _intermediateTransform: {fileID: 893572538}
   _isPlayer: 1
   _makeShieldPauseTime: 0.5
@@ -1222,6 +1283,7 @@ MonoBehaviour:
   _toHandTransitionTime: 2
   _fromManaTransitionTime: 1
   _toManaTransitionTime: 1
+  _fromBattleTransitionTime: 1
   _toBattleTransitionTime: 1
 --- !u!1 &1102408664
 GameObject:
@@ -1762,7 +1824,7 @@ GameObject:
   - component: {fileID: 1854645698}
   - component: {fileID: 1854645697}
   m_Layer: 0
-  m_Name: Game Manager
+  m_Name: Client Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1883,6 +1945,7 @@ MonoBehaviour:
   _handManager: {fileID: 759882950}
   _manaZoneManager: {fileID: 1667101612}
   _battleZoneManager: {fileID: 1774565250}
+  _graveyardManager: {fileID: 171994570}
   _intermediateTransform: {fileID: 127403156}
   _isPlayer: 0
   _makeShieldPauseTime: 0.75
@@ -1893,6 +1956,7 @@ MonoBehaviour:
   _toHandTransitionTime: 2
   _fromManaTransitionTime: 1
   _toManaTransitionTime: 1
+  _fromBattleTransitionTime: 1
   _toBattleTransitionTime: 1
 --- !u!1 &1986497835
 GameObject:

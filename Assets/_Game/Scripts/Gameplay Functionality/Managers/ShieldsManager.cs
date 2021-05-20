@@ -76,16 +76,13 @@ public class ShieldsManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    private void MoveToShields(Transform cardTransform, Transform holderTransform, bool fromDeck = true)
+    private void MoveToShields(Transform cardTransform, Transform holderTransform)
     {
         cardTransform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
         Vector3 rotation = holderTransform.eulerAngles;
         if (!_isPlayer)
         {
-            if (fromDeck)
-                rotation += new Vector3(30, 180, 0);
-            else
-                rotation = new Vector3(0, 0, 0);
+            rotation = new Vector3(0, 0, 0);
         }
 
         cardTransform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
@@ -115,7 +112,7 @@ public class ShieldsManager : MonoBehaviour
     {
         int emptyIndex = GetEmptyIndex();
         AddShield(emptyIndex, card);
-        MoveToShields(card.transform, _shieldsLayoutHandler.Shields[emptyIndex].CardHolder, false);
+        MoveToShields(card.transform, _shieldsLayoutHandler.Shields[emptyIndex].CardHolder);
         yield return new WaitForSeconds(_toTransitionTime);
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
     }

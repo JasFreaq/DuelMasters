@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private HandManager _handManager;
     [SerializeField] private ManaZoneManager _manaZoneManager;
     [SerializeField] private BattleZoneManager _battleZoneManager;
+    [SerializeField] private GraveyardManager _graveyardManager;
 
     [Header("Position Markers")]
     [SerializeField] private Transform _intermediateTransform;
@@ -38,9 +39,9 @@ public class PlayerManager : MonoBehaviour
             StartCoroutine(PlayCardRoutine(0));
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            StartCoroutine(ReturnFromBattleRoutine(0));
+            StartCoroutine(DrawCardRoutine());
         }
     }
 
@@ -53,10 +54,9 @@ public class PlayerManager : MonoBehaviour
         
         _handManager.Initialize(_isPlayer, _fromHandTransitionTime, _toHandTransitionTime, _intermediateTransform);
         
-        _manaZoneManager.Initialize(_isPlayer, _fromManaTransitionTime, _toManaTransitionTime, _intermediateTransform);
+        _manaZoneManager.Initialize(_fromManaTransitionTime, _toManaTransitionTime, _intermediateTransform);
         
-        _battleZoneManager.Initialize(_isPlayer, _fromBattleTransitionTime, _toBattleTransitionTime,
-            _intermediateTransform);
+        _battleZoneManager.Initialize(_fromBattleTransitionTime, _toBattleTransitionTime, _intermediateTransform);
     }
 
     public Coroutine SetupShields()
@@ -96,6 +96,9 @@ public class PlayerManager : MonoBehaviour
     public IEnumerator PlayCardRoutine(int index)
     {
         CardManager card = _handManager.RemoveCardAtIndex(index);
+        card.HoverPreview.PreviewEnabled = false;
+        yield return _handManager.MoveFromHandRoutine(card.transform);
+
         if (card is CreatureCardManager creatureCard)
             yield return StartCoroutine(SummonCreatureRoutine(creatureCard));
         else if (card is SpellCardManager spellCard)
@@ -104,8 +107,6 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator SummonCreatureRoutine(CreatureCardManager creatureCard)
     {
-        creatureCard.HoverPreview.PreviewEnabled = false;
-        yield return _handManager.MoveFromHandRoutine(creatureCard.transform);
         creatureCard.ActivateBattleLayout();
         yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard.transform);
         creatureCard.HoverPreview.PreviewEnabled = true;
@@ -113,6 +114,10 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator CastSpellRoutine(SpellCardManager spellCard)
     {
+        spellCard.gameObject.SetActive(false);
+        _graveyardManager.AddCard(spellCard.transform);
+        spellCard.gameObject.SetActive(true);
+
         yield break;
     }
 

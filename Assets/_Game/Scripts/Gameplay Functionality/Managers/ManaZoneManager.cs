@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ManaZoneManager : MonoBehaviour
 {
-    private bool _isPlayer = true;
     private float _fromTransitionTime;
     private float _toTransitionTime;
     private Transform _intermediateHolder;
@@ -18,9 +17,8 @@ public class ManaZoneManager : MonoBehaviour
         _manaZoneLayoutHandler = GetComponent<ManaZoneLayoutHandler>();
     }
 
-    public void Initialize(bool isPlayer, float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
+    public void Initialize(float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
     {
-        _isPlayer = isPlayer;
         _fromTransitionTime = fromTransitionTime;
         _toTransitionTime = toTransitionTime;
         _intermediateHolder = intermediateTransform;

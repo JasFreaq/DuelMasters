@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BattleZoneManager : MonoBehaviour
 {
-    private bool _isPlayer = true;
     private float _fromTransitionTime;
     private float _toTransitionTime;
     private Transform _intermediateHolder;
@@ -17,9 +16,8 @@ public class BattleZoneManager : MonoBehaviour
         _battleZoneLayoutHandler = GetComponent<BattleZoneLayoutHandler>();
     }
 
-    public void Initialize(bool isPlayer, float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
+    public void Initialize(float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
     {
-        _isPlayer = isPlayer;
         _fromTransitionTime = fromTransitionTime;
         _toTransitionTime = toTransitionTime;
         _intermediateHolder = intermediateTransform;
