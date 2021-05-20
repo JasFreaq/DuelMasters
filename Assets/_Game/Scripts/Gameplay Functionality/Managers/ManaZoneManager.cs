@@ -32,9 +32,9 @@ public class ManaZoneManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToManaZoneRoutine(Transform cardTransform, CardData cardData)
+    public IEnumerator MoveToManaZoneRoutine(Transform cardTransform, Card card)
     {
-        Transform tempCard = _manaZoneLayoutHandler.AssignTempCard(cardData);
+        Transform tempCard = _manaZoneLayoutHandler.AssignTempCard(card);
         cardTransform.DOMove(tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
         cardTransform.DORotate(tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
         cardTransform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);

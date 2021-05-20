@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SpellLayoutHandler : CardLayoutHandler
 {
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(Card card)
     {
-        base.SetupCard(cardData);
+        base.SetupCard(card);
     }
 
     protected override void SetupRules(string rulesText)

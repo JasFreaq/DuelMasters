@@ -22,12 +22,12 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         get { return _canvas; }
     }
     
-    public virtual void SetupCard(CardData cardData)
+    public virtual void SetupCard(Card card)
     {
-        _artworkImage.sprite = cardData.ArtworkImage;
-        CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
+        _artworkImage.sprite = card.ArtworkImage;
+        CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(card.Civilization);
         _frameImage.sprite = cardFrameData.frameImage;
-        _nameText.text = cardData.Name;
+        _nameText.text = card.Name;
         _bgRenderer.material = cardFrameData.frameBGMaterial;
     }
 }

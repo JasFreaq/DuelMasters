@@ -89,7 +89,7 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreview.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card.transform);
         card.ActivateManaLayout();
-        yield return _manaZoneManager.MoveToManaZoneRoutine(card.transform, card.CardData);
+        yield return _manaZoneManager.MoveToManaZoneRoutine(card.transform, card.Card);
         card.HoverPreview.PreviewEnabled = true;
     }
 

@@ -24,21 +24,21 @@ public abstract class CardLayoutHandler : MonoBehaviour
         get { return _canvas; }
     }
     
-    public virtual void SetupCard(CardData cardData)
+    public virtual void SetupCard(Card card)
     {
-        _artworkImage.sprite = cardData.ArtworkImage;
-        CardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
+        _artworkImage.sprite = card.ArtworkImage;
+        CardFrameData cardFrameData = _cardFrameDatabase.GetFrame(card.Civilization);
         _frameImage.sprite = cardFrameData.frameImage;
-        _nameText.text = cardData.Name;
-        _costText.text = cardData.Cost.ToString();
+        _nameText.text = card.Name;
+        _costText.text = card.Cost.ToString();
         _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, cardFrameData.cardTypePosY);
 
-        SetupRules(cardData.RulesText);
+        SetupRules(card.RulesText);
 
-        if (!String.IsNullOrWhiteSpace(cardData.FlavorText)) 
+        if (!String.IsNullOrWhiteSpace(card.FlavorText)) 
         {
             FlavorTextLayoutHandler flavorTextLayout = Instantiate(flavorTextLayoutPrefab, _rulesPanel);
-            flavorTextLayout.SetupFlavorText(cardData.FlavorText);
+            flavorTextLayout.SetupFlavorText(card.FlavorText);
         }
     }
 

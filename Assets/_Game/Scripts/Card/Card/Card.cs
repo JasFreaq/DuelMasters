@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardData : ScriptableObject
+public class Card : ScriptableObject
 {
     [SerializeField] private string _name;
     [SerializeField] private CardParams.Set _set;

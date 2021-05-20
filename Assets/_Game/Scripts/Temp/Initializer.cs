@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Initializer : MonoBehaviour
 {
-    [SerializeField] private CardData _cardData;
+    [SerializeField] private Card card;
 
     private CardManager _cardManager;
 
@@ -17,7 +17,7 @@ public class Initializer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            _cardManager.SetupCard(_cardData);
+            _cardManager.SetupCard(card);
             _cardManager.ActivateManaLayout();
         }
     }

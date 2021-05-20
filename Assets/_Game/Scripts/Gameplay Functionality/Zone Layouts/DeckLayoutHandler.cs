@@ -13,18 +13,18 @@ public class DeckLayoutHandler : MonoBehaviour
 
     private List<CardManager> _cards = new List<CardManager>();
 
-    public void SetupDeck(List<CardData> cardList)
+    public void SetupDeck(List<Card> cardList)
     {
         float lastYPos = 0;
 
-        foreach (CardData cardData in cardList)
+        foreach (Card cardData in cardList)
         {
             CardManager card = null;
-            if (cardData is CreatureData)
+            if (cardData is Creature)
             {
                 card = Instantiate(_creaturePrefab, transform);
             }
-            else if (cardData is SpellData)
+            else if (cardData is Spell)
             {
                 card = Instantiate(_spellPrefab, transform);
             }

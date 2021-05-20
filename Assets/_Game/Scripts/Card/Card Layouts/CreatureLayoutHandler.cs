@@ -15,18 +15,18 @@ public class CreatureLayoutHandler : CardLayoutHandler
     [SerializeField] private GameObject _survivorIconImage;
     [SerializeField] private GameObject _waveStrikerIconImage;
 
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(Card card)
     {
-        base.SetupCard(cardData);
+        base.SetupCard(card);
 
-        CreatureData creatureData = (CreatureData) cardData;
+        Creature creature = (Creature) card;
 
-        string raceStr = CardParams.StringFromRace(creatureData.Race[0]);
-        if (creatureData.Race.Length == 2)
-            raceStr += $" \" {CardParams.StringFromRace(creatureData.Race[1])}";
+        string raceStr = CardParams.StringFromRace(creature.Race[0]);
+        if (creature.Race.Length == 2)
+            raceStr += $" \" {CardParams.StringFromRace(creature.Race[1])}";
         _creatureRaceText.text = raceStr;
 
-        _powerText.text = creatureData.Power.ToString();
+        _powerText.text = creature.Power.ToString();
     }
 
     protected override void SetupRules(string rulesText)

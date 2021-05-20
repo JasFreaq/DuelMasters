@@ -8,15 +8,15 @@ public class Deck : ScriptableObject
     [System.Serializable]
     struct CardComposition
     {
-        public CardData card;
+        public Card card;
         [Range(1, 4)] public int number;
     }
 
     [SerializeField] private List<CardComposition> _cardList = new List<CardComposition>();
 
-    public List<CardData> GetCards()
+    public List<Card> GetCards()
     {
-        List<CardData> cards = new List<CardData>();
+        List<Card> cards = new List<Card>();
         foreach (CardComposition cardComposition in _cardList)
         {
             for (int i = 0; i < cardComposition.number; i++)
