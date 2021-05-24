@@ -30,4 +30,9 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         _nameText.text = card.Name;
         _bgRenderer.material = cardFrameData.frameBGMaterial;
     }
+
+    public void SetGlow(bool enableGlow)
+    {
+        _glowFrame.SetActive(enableGlow);
+    }
 }

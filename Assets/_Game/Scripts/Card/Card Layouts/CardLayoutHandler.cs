@@ -46,4 +46,9 @@ public abstract class CardLayoutHandler : MonoBehaviour
     {
 
     }
+
+    public void SetGlow(bool enableGlow)
+    {
+        _glowFrame.SetActive(enableGlow);
+    }
 }

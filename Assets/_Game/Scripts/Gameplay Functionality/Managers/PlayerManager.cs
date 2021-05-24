@@ -77,7 +77,7 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.gameObject.SetActive(true);
 
         yield return _deckManager.MoveFromDeckRoutine(card.transform);
-        yield return _handManager.MoveToHandRoutine(card.transform);
+        yield return _handManager.MoveToHandRoutine(card);
         card.HoverPreviewHandler.PreviewEnabled = true;
         card.DragHandler.CanDrag = true;
     }
@@ -126,7 +126,7 @@ public class PlayerManager : MonoBehaviour
     {
         CardManager card = _shieldsManager.GetCardAtIndex(shieldIndex);
         yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
-        yield return _handManager.MoveToHandRoutine(card.transform);
+        yield return _handManager.MoveToHandRoutine(card);
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
@@ -151,7 +151,7 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _manaZoneManager.MoveFromManaZoneRoutine(card.transform);
         card.ActivateCardLayout();
-        yield return _handManager.MoveToHandRoutine(card.transform, true);
+        yield return _handManager.MoveToHandRoutine(card, true);
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
@@ -163,7 +163,7 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _battleZoneManager.MoveFromBattleZoneRoutine(card.transform);
         card.ActivateCardLayout();
-        yield return _handManager.MoveToHandRoutine(card.transform, true);
+        yield return _handManager.MoveToHandRoutine(card, true);
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
 }

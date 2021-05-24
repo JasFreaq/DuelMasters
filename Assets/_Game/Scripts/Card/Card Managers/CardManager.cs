@@ -49,6 +49,8 @@ public class CardManager : MonoBehaviour
         _dragHandler = GetComponent<DragHandler>();
     }
 
+    #region Setup Methods
+
     public virtual void SetupCard(Card card, bool considerAsDataObject = false)
     {
         _card = card;
@@ -61,13 +63,7 @@ public class CardManager : MonoBehaviour
             _previewCardLayout.SetupCard(card);
         }
     }
-
-    public void SetCardVisible()
-    {
-
-        //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
-    }
-
+    
     public virtual void ActivateCardLayout()
     {
         _cardLayoutHandler.gameObject.SetActive(true);
@@ -95,4 +91,28 @@ public class CardManager : MonoBehaviour
         _cardLayoutCollider.enabled = false;
         _compactCardLayoutCollider.enabled = true;
     }
+
+    #endregion
+
+    #region State Methods
+
+    public void SetCardVisible()
+    {
+        //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
+    }
+
+    public virtual void SetGlow(bool enableGlow)
+    {
+        if (_cardLayoutHandler.gameObject.activeInHierarchy)
+        {
+            _cardLayoutHandler.SetGlow(enableGlow);
+        }
+        
+        if (_manaCardLayoutHandler.gameObject.activeInHierarchy)
+        {
+            _manaCardLayoutHandler.SetGlow(enableGlow);
+        }
+    }
+
+    #endregion
 }

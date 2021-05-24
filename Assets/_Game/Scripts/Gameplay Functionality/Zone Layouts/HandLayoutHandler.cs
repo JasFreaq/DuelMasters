@@ -9,9 +9,7 @@ public class HandLayoutHandler : MonoBehaviour
     [SerializeField] private float _circleRadius = 100;
     [SerializeField] private float _cardAreaWidth = 24;
     [SerializeField] private float _maxCardWidth = 8;
-    [SerializeField] private float _dragArrangeYLimit = -7.5f;
     [SerializeField] private bool _arrangeLeftToRight = true;
-    [SerializeField] private int _handSortingLayerFloor;
     [SerializeField] private Vector3 _previewTargetPosition;
     [SerializeField] private Vector3 _previewTargetScale;
     [SerializeField] private Transform _holderTransform;
@@ -20,7 +18,12 @@ public class HandLayoutHandler : MonoBehaviour
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
-    private Dictionary<int, CardManager> _cardsInHand = new Dictionary<int, CardManager>();
+    private Action _onArrange;
+
+    public Transform HolderTransform
+    {
+        get { return _holderTransform; }
+    }
 
     private void Start()
     {
@@ -30,33 +33,22 @@ public class HandLayoutHandler : MonoBehaviour
             _holderTransform.localPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
-
-    public CardManager GetCardAtIndex(int index)
+    
+    public CardManager RemoveCardAtIndex(CardManager card)
     {
-        return _cardsInHand[_holderTransform.GetChild(index).GetInstanceID()];
-    }
-
-    public CardManager RemoveCardAtIndex(int index)
-    {
-        CardManager card = GetCardAtIndex(index);
-        card.DragHandler.DeregisterOnDrag(HandleCardDrag);
-        _cardsInHand.Remove(_holderTransform.GetChild(index).GetInstanceID());
         card.transform.parent = transform;
         ArrangeCards();
         return card;
     }
 
-    public void AddCard(Transform cardTransform)
+    public void AddCard(CardManager card)
     {
         _tempCard.parent = transform;
-        cardTransform.parent = _holderTransform;
+        card.transform.parent = _holderTransform;
 
-        CardManager card = cardTransform.GetComponent<CardManager>();
         card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
         card.HoverPreviewHandler.TargetScale = _previewTargetScale;
-        card.DragHandler.RegisterOnDrag(HandleCardDrag);
-        _cardsInHand.Add(cardTransform.GetInstanceID(), card);
-
+        
         ArrangeCards();
     }
 
@@ -65,6 +57,16 @@ public class HandLayoutHandler : MonoBehaviour
         _tempCard.parent = _holderTransform;
         ArrangeCards();
         return _tempCard;
+    }
+
+    public void RegisterOnArrange(Action action)
+    {
+        _onArrange += action;
+    }
+    
+    public void DeregisterOnArrange(Action action)
+    {
+        _onArrange -= action;
     }
 
     private Vector3 ArrangeCards(int index = -1)
@@ -84,8 +86,6 @@ public class HandLayoutHandler : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
-            if (_cardsInHand.ContainsKey(_holderTransform.GetChild(i).GetInstanceID()))
-                _cardsInHand[cardTransform.GetInstanceID()].CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
             
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
@@ -105,38 +105,39 @@ public class HandLayoutHandler : MonoBehaviour
                 cardTransform.localPosition = cardPos;
         }
 
+        _onArrange.Invoke();
+
         return indexCardPos;
     }
     
-    private void HandleCardDrag(Transform draggedTransform)
+    public void DragRearrange(CardManager card)
     {
-        if (draggedTransform.position.y < _dragArrangeYLimit) 
+        int index = card.transform.GetSiblingIndex();
+        int siblingIndex = -1;
+
+        if (index > 0)
         {
-            int index = draggedTransform.GetSiblingIndex();
-
-            if (index > 0)
+            Transform sibling = _holderTransform.GetChild(index - 1);
+            if (card.transform.position.x < sibling.position.x)
             {
-                Transform sibling = _holderTransform.GetChild(index - 1);
-                if (draggedTransform.position.x < sibling.position.x)
-                {
-                    draggedTransform.SetSiblingIndex(index - 1);
-                    sibling.SetSiblingIndex(index);
-                    _cardsInHand[draggedTransform.GetInstanceID()].DragHandler.OriginalPosition =
-                        ArrangeCards(index - 1);
-                }
+                siblingIndex = index - 1;
             }
+        }
 
-            if (index < _holderTransform.childCount - 1)
+        if (index < _holderTransform.childCount - 1)
+        {
+            Transform sibling = _holderTransform.GetChild(index + 1);
+            if (card.transform.position.x > sibling.position.x)
             {
-                Transform sibling = _holderTransform.GetChild(index + 1);
-                if (draggedTransform.position.x > sibling.position.x)
-                {
-                    draggedTransform.SetSiblingIndex(index + 1);
-                    sibling.SetSiblingIndex(index);
-                    _cardsInHand[draggedTransform.GetInstanceID()].DragHandler.OriginalPosition =
-                        ArrangeCards(index + 1);
-                }
+                siblingIndex = index + 1;
             }
+        }
+
+        if (siblingIndex != -1)
+        {
+            _holderTransform.GetChild(siblingIndex).SetSiblingIndex(index);
+            card.transform.SetSiblingIndex(siblingIndex);
+            card.DragHandler.OriginalPosition = ArrangeCards(siblingIndex);
         }
     }
 }
