@@ -50,8 +50,8 @@ public class HandLayoutHandler : MonoBehaviour
         cardTransform.parent = _holderTransform;
 
         CardManager card = cardTransform.GetComponent<CardManager>();
-        card.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.HoverPreview.TargetScale = _previewTargetScale;
+        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
+        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
         _cardsInHand.Add(cardTransform.GetInstanceID(), card);
 
         ArrangeCards();

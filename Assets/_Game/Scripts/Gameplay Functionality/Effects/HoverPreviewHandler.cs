@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class HoverPreview: MonoBehaviour
+public class HoverPreviewHandler: MonoBehaviour
 {
     [SerializeField] private GameObject _previewGameObject;
     [SerializeField] private float _hoverTimeBeforePreview = 0.5f;
@@ -40,8 +40,8 @@ public class HoverPreview: MonoBehaviour
 
     #region Static Data Members
 
-    private static HoverPreview _CurrentlyViewing = null;
-    private static HoverPreview[] _AllHoverPreviews = null;
+    private static HoverPreviewHandler _CurrentlyViewing = null;
+    private static HoverPreviewHandler[] _AllHoverPreviews = null;
 
     private static bool _PreviewsAllowed = true;
     public static bool PreviewsAllowed
@@ -50,7 +50,6 @@ public class HoverPreview: MonoBehaviour
 
         set 
         { 
-            //Debug.Log("Hover Previews Allowed is now: " + value);
             _PreviewsAllowed = value;
             if (!_PreviewsAllowed)
                 StopAllPreviews();
@@ -63,7 +62,7 @@ public class HoverPreview: MonoBehaviour
     {
         if (_AllHoverPreviews == null)
         {
-            _AllHoverPreviews = GameObject.FindObjectsOfType<HoverPreview>();
+            _AllHoverPreviews = GameObject.FindObjectsOfType<HoverPreviewHandler>();
         }
     }
             
@@ -94,6 +93,9 @@ public class HoverPreview: MonoBehaviour
 
     IEnumerator StartPreviewRoutine()
     {
+        // save this HoverPreview as current
+        _CurrentlyViewing = this;
+
         yield return new WaitForSeconds(_hoverTimeBeforePreview);
         PreviewThisObject();
         _previewRoutine = null;
@@ -103,9 +105,6 @@ public class HoverPreview: MonoBehaviour
     {
         // first disable the previous preview if there is one already
         StopAllPreviews();
-
-        // save this HoverPreview as curent
-        _CurrentlyViewing = this;
 
         // enable Preview game object
         _previewGameObject.SetActive(true);
@@ -141,6 +140,8 @@ public class HoverPreview: MonoBehaviour
     {
         if (_CurrentlyViewing != null)
         {
+            if (_CurrentlyViewing._previewRoutine != null)
+                _CurrentlyViewing.StopCoroutine(_CurrentlyViewing._previewRoutine);
             _CurrentlyViewing._previewGameObject.SetActive(false);
             _CurrentlyViewing._previewGameObject.transform.localScale = Vector3.one;
             _CurrentlyViewing._previewGameObject.transform.localPosition = Vector3.zero;
@@ -156,7 +157,7 @@ public class HoverPreview: MonoBehaviour
         if (!PreviewsAllowed)
             return false;
         
-        foreach (HoverPreview hoverPreview in _AllHoverPreviews)
+        foreach (HoverPreviewHandler hoverPreview in _AllHoverPreviews)
         {
             if (hoverPreview.OverCollider && hoverPreview.PreviewEnabled)
                 return true;

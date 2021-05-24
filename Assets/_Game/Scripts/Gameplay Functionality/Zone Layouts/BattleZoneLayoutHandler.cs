@@ -38,8 +38,8 @@ public class BattleZoneLayoutHandler : MonoBehaviour
         cardTransform.parent = _holderTransform;
 
         CreatureCardManager card = cardTransform.GetComponent<CreatureCardManager>();
-        card.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.HoverPreview.TargetScale = _previewTargetScale;
+        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
+        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
         _cardsInBattleZone.Add(cardTransform.GetInstanceID(), card);
 
         ArrangeCards();

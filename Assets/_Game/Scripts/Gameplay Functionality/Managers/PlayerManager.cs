@@ -78,7 +78,8 @@ public class PlayerManager : MonoBehaviour
 
         yield return _deckManager.MoveFromDeckRoutine(card.transform);
         yield return _handManager.MoveToHandRoutine(card.transform);
-        card.HoverPreview.PreviewEnabled = true;
+        card.HoverPreviewHandler.PreviewEnabled = true;
+        card.DragHandler.CanDrag = true;
     }
 
     public IEnumerator ChargeManaRoutine(int index)
@@ -86,17 +87,17 @@ public class PlayerManager : MonoBehaviour
         CardManager card = _handManager.RemoveCardAtIndex(index);
         card.ManaLayout.Canvas.sortingOrder = 100;
 
-        card.HoverPreview.PreviewEnabled = false;
+        card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card.transform);
         card.ActivateManaLayout();
         yield return _manaZoneManager.MoveToManaZoneRoutine(card.transform, card.Card);
-        card.HoverPreview.PreviewEnabled = true;
+        card.HoverPreviewHandler.PreviewEnabled = true;
     }
 
     public IEnumerator PlayCardRoutine(int index)
     {
         CardManager card = _handManager.RemoveCardAtIndex(index);
-        card.HoverPreview.PreviewEnabled = false;
+        card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card.transform);
 
         if (card is CreatureCardManager creatureCard)
@@ -109,7 +110,7 @@ public class PlayerManager : MonoBehaviour
     {
         creatureCard.ActivateBattleLayout();
         yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard.transform);
-        creatureCard.HoverPreview.PreviewEnabled = true;
+        creatureCard.HoverPreviewHandler.PreviewEnabled = true;
     }
 
     private IEnumerator CastSpellRoutine(SpellCardManager spellCard)
@@ -126,7 +127,7 @@ public class PlayerManager : MonoBehaviour
         CardManager card = _shieldsManager.GetCardAtIndex(shieldIndex);
         yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
         yield return _handManager.MoveToHandRoutine(card.transform);
-        card.HoverPreview.PreviewEnabled = true;
+        card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
     public IEnumerator MakeShieldFromHandRoutine(int index)
@@ -134,7 +135,7 @@ public class PlayerManager : MonoBehaviour
         CardManager card = _handManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
         
-        card.HoverPreview.PreviewEnabled = false;
+        card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card.transform, true);
         if (!_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(false);
@@ -147,11 +148,11 @@ public class PlayerManager : MonoBehaviour
         CardManager card = _manaZoneManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
 
-        card.HoverPreview.PreviewEnabled = false;
+        card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _manaZoneManager.MoveFromManaZoneRoutine(card.transform);
         card.ActivateCardLayout();
         yield return _handManager.MoveToHandRoutine(card.transform, true);
-        card.HoverPreview.PreviewEnabled = true;
+        card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
     public IEnumerator ReturnFromBattleRoutine(int index)
@@ -159,10 +160,10 @@ public class PlayerManager : MonoBehaviour
         CardManager card = _battleZoneManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
 
-        card.HoverPreview.PreviewEnabled = false;
+        card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _battleZoneManager.MoveFromBattleZoneRoutine(card.transform);
         card.ActivateCardLayout();
         yield return _handManager.MoveToHandRoutine(card.transform, true);
-        card.HoverPreview.PreviewEnabled = true;
+        card.HoverPreviewHandler.PreviewEnabled = true;
     }
 }

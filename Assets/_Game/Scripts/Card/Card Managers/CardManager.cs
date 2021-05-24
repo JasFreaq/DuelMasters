@@ -14,7 +14,8 @@ public class CardManager : MonoBehaviour
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
 
     private Card _card;
-    private HoverPreview _hoverPreview;
+    private HoverPreviewHandler _hoverPreviewHandler;
+    private DragHandler _dragHandler;
 
     public CardLayoutHandler CardLayout
     {
@@ -32,14 +33,20 @@ public class CardManager : MonoBehaviour
         get { return _card; }
     }
 
-    public HoverPreview HoverPreview
+    public HoverPreviewHandler HoverPreviewHandler
     {
-        get { return _hoverPreview; }
+        get { return _hoverPreviewHandler; }
+    }
+
+    public DragHandler DragHandler
+    {
+        get { return _dragHandler; }
     }
 
     private void Awake()
     {
-        _hoverPreview = GetComponent<HoverPreview>();
+        _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
+        _dragHandler = GetComponent<DragHandler>();
     }
 
     public virtual void SetupCard(Card card, bool considerAsDataObject = false)

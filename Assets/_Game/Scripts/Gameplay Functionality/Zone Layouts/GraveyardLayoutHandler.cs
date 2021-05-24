@@ -22,11 +22,11 @@ public class GraveyardLayoutHandler : MonoBehaviour
 
         if (_cards.Count > 0)
         {
-            _cards[_cards.Count - 1].HoverPreview.PreviewEnabled = false;
+            _cards[_cards.Count - 1].HoverPreviewHandler.PreviewEnabled = false;
         }
-        card.HoverPreview.TargetPosition = _previewTargetPosition;
-        card.HoverPreview.TargetScale = _previewTargetScale;
-        card.HoverPreview.PreviewEnabled = true;
+        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
+        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+        card.HoverPreviewHandler.PreviewEnabled = true;
         _cards.Add(card);
     }
 
@@ -34,10 +34,10 @@ public class GraveyardLayoutHandler : MonoBehaviour
     {
         if (index == _cards.Count - 1) 
         {
-            _cards[index].HoverPreview.PreviewEnabled = false;
+            _cards[index].HoverPreviewHandler.PreviewEnabled = false;
             if (_cards.Count > 1)
             {
-                _cards[index - 1].HoverPreview.PreviewEnabled = true;
+                _cards[index - 1].HoverPreviewHandler.PreviewEnabled = true;
             }
         }
 
