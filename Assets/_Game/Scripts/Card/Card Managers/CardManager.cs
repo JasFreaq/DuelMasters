@@ -17,6 +17,10 @@ public class CardManager : MonoBehaviour
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
+    private Action<CardManager> _onDragRelease;
+
+    private bool _isGlowing = false;
+
     public CardLayoutHandler CardLayout
     {
         get { return _cardLayoutHandler; }
@@ -43,10 +47,43 @@ public class CardManager : MonoBehaviour
         get { return _dragHandler; }
     }
 
+    public bool IsGlowing
+    {
+        set
+        {
+            _isGlowing = value;
+            SetGlow(_isGlowing);
+        }
+    }
+
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
         _dragHandler = GetComponent<DragHandler>();
+    }
+
+    private void OnEnable()
+    {
+        if (_dragHandler)
+            _dragHandler.RegisterOnDragRelease(OnDragRelease);
+    }
+
+    private void OnMouseEnter()
+    {
+        if (!_isGlowing)
+            SetGlow(true);
+    }
+
+    private void OnMouseExit()
+    {
+        if (!_isGlowing)
+            SetGlow(false);
+    }
+
+    private void OnDisable()
+    {
+        if (_dragHandler)
+            _dragHandler.DeregisterOnDragRelease(OnDragRelease);
     }
 
     #region Setup Methods
@@ -101,18 +138,26 @@ public class CardManager : MonoBehaviour
         //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
     }
 
-    public virtual void SetGlow(bool enableGlow)
+    protected virtual void SetGlow(bool enableGlow)
     {
-        if (_cardLayoutHandler.gameObject.activeInHierarchy)
-        {
-            _cardLayoutHandler.SetGlow(enableGlow);
-        }
-        
-        if (_manaCardLayoutHandler.gameObject.activeInHierarchy)
-        {
-            _manaCardLayoutHandler.SetGlow(enableGlow);
-        }
+        _cardLayoutHandler.SetGlow(enableGlow);
+        _manaCardLayoutHandler.SetGlow(enableGlow);
+    }
+    
+    #endregion
+
+    private void OnDragRelease()
+    {
+        _onDragRelease.Invoke(this);
     }
 
-    #endregion
+    public void RegisterOnDragRelease(Action<CardManager> action)
+    {
+        _onDragRelease += action;
+    }
+
+    public void DeregisterOnDragRelease(Action<CardManager> action)
+    {
+        _onDragRelease -= action;
+    }
 }

@@ -14,6 +14,7 @@ public class DragHandler : MonoBehaviour
     private float _zDisplacement;
 
     private Action<Transform> _onDrag;
+    private Action _onDragRelease;
 
     public bool CanDrag
     {
@@ -22,6 +23,7 @@ public class DragHandler : MonoBehaviour
 
     public bool ReturnToPosition
     {
+        get { return _returnToPosition;}
         set { _returnToPosition = value; }
     }
 
@@ -77,6 +79,10 @@ public class DragHandler : MonoBehaviour
             {
                 transform.DOMove(_originalPosition, 0.8f).SetEase(Ease.OutQuint);
             }
+            else
+            {
+                _onDragRelease.Invoke();
+            }
         }
     }
 
@@ -88,6 +94,16 @@ public class DragHandler : MonoBehaviour
     public void DeregisterOnDrag(Action<Transform> action)
     {
         _onDrag -= action;
+    }
+    
+    public void RegisterOnDragRelease(Action action)
+    {
+        _onDragRelease += action;
+    }
+    
+    public void DeregisterOnDragRelease(Action action)
+    {
+        _onDragRelease -= action;
     }
 
     private Vector3 MouseInWorldCoords()

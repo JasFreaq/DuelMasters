@@ -19,23 +19,28 @@ public class ClientManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
-            StartCoroutine(StartGameRoutine());
+            StartCoroutine(GameStartRoutine());
     }
     
-    private IEnumerator StartGameRoutine()
+    private IEnumerator GameStartRoutine()
     {
         _playerManager.SetupShields();
         yield return _opponentManager.SetupShields();
-        
+
         StartCoroutine(DrawStartingHandRoutine(_playerManager));
-        yield return StartCoroutine(DrawStartingHandRoutine(_opponentManager));
+        yield return DrawStartingHandRoutine(_opponentManager);
     }
 
     private IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
     {
         for (int i = 0; i < 5; i++)
         {
-            yield return StartCoroutine(playerManager.DrawCardRoutine());
+            yield return StartCoroutine(playerManager.DrawCardRoutine(ProcessGameActions));
         }
+    }
+    
+    private void ProcessGameActions(CardManager card)
+    {
+        _playerManager.StartCoroutine(_playerManager.ChargeManaRoutine(card.transform.GetSiblingIndex()));
     }
 }

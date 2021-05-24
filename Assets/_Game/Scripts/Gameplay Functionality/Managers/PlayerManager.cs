@@ -38,11 +38,6 @@ public class PlayerManager : MonoBehaviour
         {
             StartCoroutine(PlayCardRoutine(0));
         }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            StartCoroutine(DrawCardRoutine());
-        }
     }
 
     public void Initialize(Deck deck)
@@ -70,11 +65,12 @@ public class PlayerManager : MonoBehaviour
         return StartCoroutine(_shieldsManager.SetupShieldsRoutine(cards));
     }
 
-    public IEnumerator DrawCardRoutine()
+    public IEnumerator DrawCardRoutine(Action<CardManager> action)
     {
         CardManager card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
+        card.RegisterOnDragRelease(action);
 
         yield return _deckManager.MoveFromDeckRoutine(card.transform);
         yield return _handManager.MoveToHandRoutine(card);
@@ -86,12 +82,14 @@ public class PlayerManager : MonoBehaviour
     {
         CardManager card = _handManager.RemoveCardAtIndex(index);
         card.ManaLayout.Canvas.sortingOrder = 100;
-
+        
+        card.IsGlowing = true;
         card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card.transform);
         card.ActivateManaLayout();
         yield return _manaZoneManager.MoveToManaZoneRoutine(card.transform, card.Card);
         card.HoverPreviewHandler.PreviewEnabled = true;
+        card.IsGlowing = false;
     }
 
     public IEnumerator PlayCardRoutine(int index)

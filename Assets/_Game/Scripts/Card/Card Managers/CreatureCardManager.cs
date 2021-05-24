@@ -42,13 +42,10 @@ public class CreatureCardManager : CardManager
         ActivateCompactCardCollider();
     }
 
-    public override void SetGlow(bool enableGlow)
+    protected override void SetGlow(bool enableGlow)
     {
         base.SetGlow(enableGlow);
 
-        if (_battleCardLayoutHandler.gameObject.activeInHierarchy)
-        {
-            _battleCardLayoutHandler.SetGlow(enableGlow);
-        }
+        _battleCardLayoutHandler.SetGlow(enableGlow);
     }
 }

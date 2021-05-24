@@ -18,6 +18,11 @@ public class HandManager : MonoBehaviour
     private HandLayoutHandler _handLayoutHandler;
     private Dictionary<int, CardManager> _cardsInHand = new Dictionary<int, CardManager>();
 
+    public IReadOnlyDictionary<int, CardManager> CardsInHand
+    {
+        get { return _cardsInHand; }
+    }
+
     private void Awake()
     {
         _handLayoutHandler = GetComponent<HandLayoutHandler>();
@@ -107,12 +112,15 @@ public class HandManager : MonoBehaviour
         CardManager card = _cardsInHand[draggedTransform.GetInstanceID()];
         if (draggedTransform.position.y < _dragArrangeYLimit)
         {
-            card.SetGlow(false);
+            if (!card.DragHandler.ReturnToPosition)
+                card.DragHandler.ReturnToPosition = true;
+
             _handLayoutHandler.DragRearrange(card);
         }
         else
         {
-            card.SetGlow(true);
+            if (card.DragHandler.ReturnToPosition)
+                card.DragHandler.ReturnToPosition = false;
         }
     }
 }
