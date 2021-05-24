@@ -70,7 +70,7 @@ public class PlayerManager : MonoBehaviour
         CardManager card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
-        card.RegisterOnDragRelease(action);
+        card.RegisterOnProcessAction(action);
 
         yield return _deckManager.MoveFromDeckRoutine(card.transform);
         yield return _handManager.MoveToHandRoutine(card);

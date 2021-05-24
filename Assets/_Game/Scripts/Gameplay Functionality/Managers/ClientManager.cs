@@ -33,7 +33,7 @@ public class ClientManager : MonoBehaviour
 
     private IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 15; i++)
         {
             yield return StartCoroutine(playerManager.DrawCardRoutine(ProcessGameActions));
         }

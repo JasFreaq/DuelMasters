@@ -17,7 +17,7 @@ public class CardManager : MonoBehaviour
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
-    private Action<CardManager> _onDragRelease;
+    private Action<CardManager> _onProcessAction;
 
     private bool _isGlowing = false;
 
@@ -56,6 +56,17 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    #region Static Data Members
+
+    private static CardManager _CurrentlySelected;
+
+    public static CardManager CurrentlySelected
+    {
+        get { return _CurrentlySelected; }
+    }
+
+    #endregion
+
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
@@ -65,25 +76,38 @@ public class CardManager : MonoBehaviour
     private void OnEnable()
     {
         if (_dragHandler)
-            _dragHandler.RegisterOnDragRelease(OnDragRelease);
+            _dragHandler.RegisterOnDragRelease(ProcessAction);
     }
 
     private void OnMouseEnter()
     {
-        if (!_isGlowing)
+        if (!(_isGlowing || _CurrentlySelected))
             SetGlow(true);
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        if (_CurrentlySelected != this) 
+        {
+            _isGlowing = true;
+            if (_CurrentlySelected)
+                DeselectCurrentSelection();
+            _CurrentlySelected = this;
+        }
+        else if (_CurrentlySelected)
+            DeselectCurrentSelection();
     }
 
     private void OnMouseExit()
     {
-        if (!_isGlowing)
+        if (!(_isGlowing || _CurrentlySelected))
             SetGlow(false);
     }
-
+    
     private void OnDisable()
     {
         if (_dragHandler)
-            _dragHandler.DeregisterOnDragRelease(OnDragRelease);
+            _dragHandler.DeregisterOnDragRelease(ProcessAction);
     }
 
     #region Setup Methods
@@ -146,18 +170,28 @@ public class CardManager : MonoBehaviour
     
     #endregion
 
-    private void OnDragRelease()
+    private void ProcessAction()
     {
-        _onDragRelease.Invoke(this);
+        _onProcessAction.Invoke(this);
     }
 
-    public void RegisterOnDragRelease(Action<CardManager> action)
+    public void RegisterOnProcessAction(Action<CardManager> action)
     {
-        _onDragRelease += action;
+        _onProcessAction += action;
     }
 
-    public void DeregisterOnDragRelease(Action<CardManager> action)
+    public void DeregisterOnProcessAction(Action<CardManager> action)
     {
-        _onDragRelease -= action;
+        _onProcessAction -= action;
     }
+
+    #region Static Methods
+
+    private static void DeselectCurrentSelection()
+    {
+        _CurrentlySelected.IsGlowing = false;
+        _CurrentlySelected = null;
+    }
+
+    #endregion
 }
