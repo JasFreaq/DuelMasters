@@ -25,6 +25,11 @@ public class DragHandler : MonoBehaviour
         set { _returnToPosition = value; }
     }
 
+    public Vector3 OriginalPosition
+    {
+        set { _originalPosition = value; }
+    }
+
     #region Static Data Members
 
     private static DragHandler _CurrentlyDragging;
