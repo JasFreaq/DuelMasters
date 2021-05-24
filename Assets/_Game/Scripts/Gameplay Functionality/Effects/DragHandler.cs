@@ -13,7 +13,7 @@ public class DragHandler : MonoBehaviour
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
 
-    private Action _onDrag;
+    private Action<Transform> _onDrag;
 
     public bool CanDrag
     {
@@ -42,6 +42,7 @@ public class DragHandler : MonoBehaviour
         {
             Vector3 mousePos = MouseInWorldCoords();
             transform.position = new Vector3(mousePos.x - _pointerDisplacement.x, mousePos.y - _pointerDisplacement.y, transform.position.z);
+            _onDrag.Invoke(transform);
         }
     }
 
@@ -74,12 +75,12 @@ public class DragHandler : MonoBehaviour
         }
     }
 
-    public void RegisterOnDrag(Action action)
+    public void RegisterOnDrag(Action<Transform> action)
     {
         _onDrag += action;
     }
     
-    public void DeregisterOnDrag(Action action)
+    public void DeregisterOnDrag(Action<Transform> action)
     {
         _onDrag -= action;
     }
