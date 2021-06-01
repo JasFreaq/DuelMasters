@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7eab241dd3ce96c42ad772c49f8e55a9, type: 3}
-  m_Name: Test Rainbow
+  m_Name: Test Deck
   m_EditorClassIdentifier: 
   _cardList:
-  - card: {fileID: 11400000, guid: 7da1f6e07e0736144a4c5d54a881fc32, type: 2}
-    number: 4
-  - card: {fileID: 11400000, guid: 6516e9b06ca4a9c4d9c104676faf68fb, type: 2}
+  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
     number: 4
   - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 1772d733b0b9453438234c0dfb0bc757, type: 2}
+  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 2c17871a82781d547b11b7c1861ee9a1, type: 2}
+  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 8a321099e1d697a48af56813614730af, type: 2}
+  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 2bf15e3c3a7932247888319f2ef503c0, type: 2}
+  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: afbe7a780ca90ba488d1c37d038f63ad, type: 2}
+  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 6cacd32341e5d9f439a43b4cf97c5337, type: 2}
+  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 4974a597f085f5946b5a8f7144253893, type: 2}
+  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
+    number: 4
+  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
     number: 4

@@ -25,8 +25,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float _fromShieldsTransitionTime = 2f;
     [SerializeField] private float _toShieldsTransitionTime = 2f;
     [SerializeField] private float _fromDeckTransitionTime = 2f;
-    [SerializeField] private float _fromManaTransitionTime = 1f;
-    [SerializeField] private float _toManaTransitionTime = 1f;
     [SerializeField] private float _fromBattleTransitionTime = 1f;
     [SerializeField] private float _toBattleTransitionTime = 1f;
     
@@ -54,8 +52,6 @@ public class PlayerManager : MonoBehaviour
         
         _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
             _toShieldsTransitionTime, _intermediateTransform);
-        
-        _battleZoneManager.Initialize(_fromBattleTransitionTime, _toBattleTransitionTime, _intermediateTransform);
     }
 
     public Coroutine SetupShields()

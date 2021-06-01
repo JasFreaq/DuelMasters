@@ -722,7 +722,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 362037420}
-  - component: {fileID: 362037421}
   - component: {fileID: 362037422}
   m_Layer: 0
   m_Name: Battle Zone
@@ -747,25 +746,6 @@ Transform:
   m_Father: {fileID: 1042105412}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &362037421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 362037419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7b6237e385d1d249bf8b01b30103041, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardAreaWidth: 28
-  _maxCardWidth: 10.25
-  _battleZoneSortingLayerFloor: 0
-  _previewTargetPosition: {x: 0, y: 2.5, z: 5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
-  _holderTransform: {fileID: 357518649}
-  _tempCard: {fileID: 1102408665}
 --- !u!114 &362037422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -778,6 +758,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2b20cf02067214d9bc9a0dc19ec313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1042105414}
+  _intermediateHolder: {fileID: 893572538}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _cardAreaWidth: 28
+  _maxCardWidth: 10.25
+  _battleZoneSortingLayerFloor: 0
+  _previewTargetPosition: {x: 0, y: 2.5, z: 5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
+  _holderTransform: {fileID: 357518649}
+  _tempCard: {fileID: 1102408665}
 --- !u!1 &561292745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,8 +1189,8 @@ MonoBehaviour:
   _dragArrangeYLimit: -7.5
   _intermediateHolder: {fileID: 127403156}
   _isPlayer: 0
-  _fromTransitionTime: 2
-  _toTransitionTime: 2
+  _fromTransitionTime: 1.5
+  _toTransitionTime: 1.5
   _previewTargetPosition: {x: 0, y: 5, z: 15}
   _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
   _circleRadius: 150
@@ -1485,8 +1476,6 @@ MonoBehaviour:
   _fromShieldsTransitionTime: 2
   _toShieldsTransitionTime: 2
   _fromDeckTransitionTime: 2
-  _fromManaTransitionTime: 1
-  _toManaTransitionTime: 1
   _fromBattleTransitionTime: 1
   _toBattleTransitionTime: 1
 --- !u!114 &1042105414
@@ -2010,7 +1999,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1774565248}
-  - component: {fileID: 1774565249}
   - component: {fileID: 1774565250}
   m_Layer: 0
   m_Name: Battle Zone
@@ -2035,25 +2023,6 @@ Transform:
   m_Father: {fileID: 1962481309}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
---- !u!114 &1774565249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1774565247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7b6237e385d1d249bf8b01b30103041, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardAreaWidth: 28
-  _maxCardWidth: 10.25
-  _battleZoneSortingLayerFloor: 0
-  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
-  _holderTransform: {fileID: 763472561}
-  _tempCard: {fileID: 1508421688}
 --- !u!114 &1774565250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2066,6 +2035,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2b20cf02067214d9bc9a0dc19ec313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1962481311}
+  _intermediateHolder: {fileID: 127403156}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _cardAreaWidth: 28
+  _maxCardWidth: 10.25
+  _battleZoneSortingLayerFloor: 0
+  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
+  _holderTransform: {fileID: 763472561}
+  _tempCard: {fileID: 1508421688}
 --- !u!1 &1788549066
 GameObject:
   m_ObjectHideFlags: 0
@@ -2339,8 +2319,6 @@ MonoBehaviour:
   _fromShieldsTransitionTime: 2
   _toShieldsTransitionTime: 2
   _fromDeckTransitionTime: 2
-  _fromManaTransitionTime: 1
-  _toManaTransitionTime: 1
   _fromBattleTransitionTime: 1
   _toBattleTransitionTime: 1
 --- !u!114 &1962481311
@@ -2647,8 +2625,8 @@ MonoBehaviour:
   _dragArrangeYLimit: -7.5
   _intermediateHolder: {fileID: 893572538}
   _isPlayer: 1
-  _fromTransitionTime: 2
-  _toTransitionTime: 2
+  _fromTransitionTime: 1.5
+  _toTransitionTime: 1.5
   _previewTargetPosition: {x: 0, y: 1, z: 5}
   _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _circleRadius: 150
