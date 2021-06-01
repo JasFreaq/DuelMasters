@@ -87,15 +87,7 @@ public class CardManager : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        if (_CurrentlySelected != this) 
-        {
-            _isGlowing = true;
-            if (_CurrentlySelected)
-                DeselectCurrentSelection();
-            _CurrentlySelected = this;
-        }
-        else if (_CurrentlySelected)
-            DeselectCurrentSelection();
+        Select();
     }
 
     private void OnMouseExit()
@@ -156,6 +148,19 @@ public class CardManager : MonoBehaviour
     #endregion
 
     #region State Methods
+
+    public void Select()
+    {
+        if (_CurrentlySelected != this)
+        {
+            _isGlowing = true;
+            if (_CurrentlySelected)
+                DeselectCurrentSelection();
+            _CurrentlySelected = this;
+        }
+        else if (_CurrentlySelected)
+            DeselectCurrentSelection();
+    }
 
     public void SetCardVisible()
     {

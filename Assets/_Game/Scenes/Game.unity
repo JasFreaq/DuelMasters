@@ -1195,14 +1195,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25a7797c4437e804fb48c62a6059dd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1962481311}
   _circleRadius: 150
   _cardAreaWidth: 24
   _maxCardWidth: 8
+  _handSortingLayerFloor: 50
   _arrangeLeftToRight: 0
   _previewTargetPosition: {x: 0, y: 5, z: 15}
   _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
   _holderTransform: {fileID: 1920806617}
   _tempCard: {fileID: 1633565210}
+  _isPlayer: 0
+  _fromTransitionTime: 2
+  _toTransitionTime: 2
+  _intermediateHolder: {fileID: 127403156}
 --- !u!114 &759882950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1215,8 +1221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0585ed10646244a9a41b74aa34fce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1962481311}
   _dragArrangeYLimit: -7.5
-  _handSortingLayerFloor: 50
 --- !u!1 &763472560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1449,6 +1455,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1042105412}
   - component: {fileID: 1042105413}
+  - component: {fileID: 1042105414}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1475,7 +1482,7 @@ Transform:
   - {fileID: 68126871}
   - {fileID: 893572538}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1042105413
 MonoBehaviour:
@@ -1507,6 +1514,18 @@ MonoBehaviour:
   _toManaTransitionTime: 1
   _fromBattleTransitionTime: 1
   _toBattleTransitionTime: 1
+--- !u!114 &1042105414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042105411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bf282189e5cb84992dc01064fca5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1102408664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1536,6 +1555,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 362037420}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1167120985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1167120987}
+  - component: {fileID: 1167120986}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1167120986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167120985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b3d40ae6b6605c4ab15e99a364a0f41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clientManager: {fileID: 1854645697}
+  _actionMenu: {fileID: 0}
+  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
+  _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
+--- !u!4 &1167120987
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167120985}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1311186675
 GameObject:
@@ -2200,8 +2266,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
-  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
-  _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!4 &1854645698
 Transform:
   m_ObjectHideFlags: 0
@@ -2214,7 +2278,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1920806616
 GameObject:
@@ -2256,6 +2320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962481309}
   - component: {fileID: 1962481310}
+  - component: {fileID: 1962481311}
   m_Layer: 0
   m_Name: Opponent
   m_TagString: Untagged
@@ -2282,7 +2347,7 @@ Transform:
   - {fileID: 171994569}
   - {fileID: 127403156}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!114 &1962481310
 MonoBehaviour:
@@ -2314,6 +2379,18 @@ MonoBehaviour:
   _toManaTransitionTime: 1
   _fromBattleTransitionTime: 1
   _toBattleTransitionTime: 1
+--- !u!114 &1962481311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962481308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8bf282189e5cb84992dc01064fca5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1986497835
 GameObject:
   m_ObjectHideFlags: 0
@@ -2587,14 +2664,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25a7797c4437e804fb48c62a6059dd2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1042105414}
   _circleRadius: 150
   _cardAreaWidth: 24
   _maxCardWidth: 8
+  _handSortingLayerFloor: 50
   _arrangeLeftToRight: 1
   _previewTargetPosition: {x: 0, y: 1, z: 5}
   _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _holderTransform: {fileID: 642158336}
   _tempCard: {fileID: 895444045}
+  _isPlayer: 1
+  _fromTransitionTime: 2
+  _toTransitionTime: 2
+  _intermediateHolder: {fileID: 893572538}
 --- !u!4 &2064906455
 Transform:
   m_ObjectHideFlags: 0
@@ -2623,8 +2706,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0585ed10646244a9a41b74aa34fce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1042105414}
   _dragArrangeYLimit: -7.5
-  _handSortingLayerFloor: 50
 --- !u!1 &2133683596
 GameObject:
   m_ObjectHideFlags: 0

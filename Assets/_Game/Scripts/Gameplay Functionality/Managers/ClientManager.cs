@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,41 +7,24 @@ public class ClientManager : MonoBehaviour
 {
     [SerializeField] private PlayerManager _playerManager;
     [SerializeField] private PlayerManager _opponentManager;
-
-    [SerializeField] private Deck _playerDeck;
-    [SerializeField] private Deck _opponentDeck;
-
-    public void Start()
-    {
-        _playerManager.Initialize(_playerDeck);
-        _opponentManager.Initialize(_opponentDeck);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
-            StartCoroutine(GameStartRoutine());
-    }
     
-    private IEnumerator GameStartRoutine()
+    public IEnumerator GameStartRoutine(Action<CardManager> processAction, Deck playerDeck, Deck opponentDeck)
     {
+        _playerManager.Initialize(playerDeck);
+        _opponentManager.Initialize(opponentDeck);
+
         _playerManager.SetupShields();
         yield return _opponentManager.SetupShields();
 
-        StartCoroutine(DrawStartingHandRoutine(_playerManager));
-        yield return DrawStartingHandRoutine(_opponentManager);
+        StartCoroutine(DrawStartingHandRoutine(_playerManager, processAction));
+        yield return DrawStartingHandRoutine(_opponentManager, processAction);
     }
 
-    private IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
+    private IEnumerator DrawStartingHandRoutine(PlayerManager playerManager, Action<CardManager> processAction)
     {
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 5; i++)
         {
-            yield return StartCoroutine(playerManager.DrawCardRoutine(ProcessGameActions));
+            yield return playerManager.DrawCardRoutine(processAction);
         }
-    }
-    
-    private void ProcessGameActions(CardManager card)
-    {
-        _playerManager.StartCoroutine(_playerManager.ChargeManaRoutine(card.transform.GetSiblingIndex()));
     }
 }

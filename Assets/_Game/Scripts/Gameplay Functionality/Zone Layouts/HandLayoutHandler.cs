@@ -1,25 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 [DisallowMultipleComponent]
 public class HandLayoutHandler : MonoBehaviour
 {
+    [SerializeField] private PlayerDataHolder _playerData;
     [SerializeField] private float _circleRadius = 100;
     [SerializeField] private float _cardAreaWidth = 24;
     [SerializeField] private float _maxCardWidth = 8;
+    [SerializeField] private int _handSortingLayerFloor = 50;
     [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private Vector3 _previewTargetPosition;
     [SerializeField] private Vector3 _previewTargetScale;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
+    [SerializeField] private bool _isPlayer = true;
+    [SerializeField] private float _fromTransitionTime = 2f;
+    [SerializeField] private float _toTransitionTime = 2f;
+    [SerializeField] private Transform _intermediateHolder;
 
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
-
-    private Action _onArrange;
-
+    
     public Transform HolderTransform
     {
         get { return _holderTransform; }
@@ -33,7 +38,42 @@ public class HandLayoutHandler : MonoBehaviour
             _holderTransform.localPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
-    
+
+    public IEnumerator MoveFromHandRoutine(CardManager card, bool forShield)
+    {
+        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = new Vector3(-90, 0, 0);
+        if (forShield && !_isPlayer)
+            rotation = new Vector3(90, 0, 0);
+        card.transform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_fromTransitionTime);
+    }
+
+    public IEnumerator MoveToHandRoutine(CardManager card, bool opponentVisible)
+    {
+        _tempCard.parent = _holderTransform;
+        ArrangeCards();
+        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+
+        Vector3 rotation = _tempCard.rotation.eulerAngles;
+        if (!_isPlayer && opponentVisible)
+        {
+            rotation -= new Vector3(0, 0, 180);
+        }
+        card.transform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_toTransitionTime);
+
+        if (!_isPlayer && opponentVisible)
+        {
+            //TODO: Call Visible Icon Code
+        }
+
+        _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
+        AddCard(card);
+    }
+
     public CardManager RemoveCardAtIndex(CardManager card)
     {
         card.transform.parent = transform;
@@ -41,7 +81,7 @@ public class HandLayoutHandler : MonoBehaviour
         return card;
     }
 
-    public void AddCard(CardManager card)
+    private void AddCard(CardManager card)
     {
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
@@ -51,24 +91,7 @@ public class HandLayoutHandler : MonoBehaviour
         
         ArrangeCards();
     }
-
-    public Transform AssignTempCard()
-    {
-        _tempCard.parent = _holderTransform;
-        ArrangeCards();
-        return _tempCard;
-    }
-
-    public void RegisterOnArrange(Action action)
-    {
-        _onArrange += action;
-    }
     
-    public void DeregisterOnArrange(Action action)
-    {
-        _onArrange -= action;
-    }
-
     private Vector3 ArrangeCards(int index = -1)
     {
         int n = _holderTransform.childCount;
@@ -89,7 +112,11 @@ public class HandLayoutHandler : MonoBehaviour
             
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
-            
+
+            int iD = _holderTransform.GetChild(i).GetInstanceID();
+            if (_playerData.CardsInHand.ContainsKey(iD))
+                _playerData.CardsInHand[iD].CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
+
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
 
@@ -104,9 +131,7 @@ public class HandLayoutHandler : MonoBehaviour
             else
                 cardTransform.localPosition = cardPos;
         }
-
-        _onArrange.Invoke();
-
+        
         return indexCardPos;
     }
     
