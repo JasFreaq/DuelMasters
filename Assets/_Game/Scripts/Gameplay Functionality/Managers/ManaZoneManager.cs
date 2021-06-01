@@ -8,9 +8,9 @@ public class ManaZoneManager : MonoBehaviour
 {
     #region Helper Data Structures
 
-    struct TransformValuePair
+    struct ManaTransform
     {
-        public TransformValuePair(Transform transform, int civValue, string cardName)
+        public ManaTransform(Transform transform, int civValue, string cardName)
         {
             this.transform = transform;
             this.civValue = civValue;
@@ -21,7 +21,7 @@ public class ManaZoneManager : MonoBehaviour
         public int civValue;
         public string cardName;
     }
-
+    
     #endregion
 
     [SerializeField] private PlayerDataHolder _playerData;
@@ -42,12 +42,11 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
+    private ManaTransform _tempManaCard;
+
     private void Start()
     {
-        CardManager card = _tempCard.gameObject.AddComponent<CardManager>();
-        ManaCardLayoutHandler manaCardLayout = _tempCard.gameObject.AddComponent<ManaCardLayoutHandler>();
-        card.ManaLayout = manaCardLayout;
-        _playerData.CardsInMana.Add(_tempCard.GetInstanceID(), card);
+        _tempManaCard = new ManaTransform(_tempCard, 0, "");
     }
 
     #region Transition Methods
@@ -63,7 +62,8 @@ public class ManaZoneManager : MonoBehaviour
     public IEnumerator MoveToManaZoneRoutine(Transform cardTransform, Card card)
     {
         _tempCard.parent = _holderTransform;
-        _playerData.CardsInMana[_tempCard.GetInstanceID()].SetupCard(card, true);
+        _tempManaCard.civValue = GetCivValue(card.Civilization);
+        _tempManaCard.cardName = card.Name;
         ArrangeCards();
 
         cardTransform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
@@ -115,19 +115,27 @@ public class ManaZoneManager : MonoBehaviour
         float sameCivWidth = Mathf.Min(cardWidth / _maxCardWidth) * _maxSameCivWidth;
         Vector3 pos = _holderTransform.localPosition;
 
-        CardManager lastCard = null;
+        ManaTransform lastCard = new ManaTransform(null, 0, "");
 
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
-            CardManager currentCard = _playerData.CardsInMana[cardTransform.GetInstanceID()];
-            if (currentCard.ManaLayout.Canvas)
-                currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
-
             float currentWidth = cardWidth;
-            if (lastCard != null)
+
+            int currentCivValue;
+            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardManager currentCard)) 
             {
-                if (CardParams.IsCivilizationEqual(currentCard.Card.Civilization, lastCard.Card.Civilization))
+                currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
+                currentCivValue = GetCivValue(currentCard.Card.Civilization);
+            }
+            else
+            {
+                currentCivValue = _tempManaCard.civValue;
+            }
+
+            if (lastCard.transform != null)
+            {
+                if (currentCivValue == lastCard.civValue) 
                 {
                     currentWidth = sameCivWidth;
                 }
@@ -137,35 +145,50 @@ public class ManaZoneManager : MonoBehaviour
                 pos.x += _arrangeLeftToRight ? currentWidth : -currentWidth;
             cardTransform.localPosition = pos;
             pos = cardTransform.localPosition;
-            lastCard = currentCard;
+
+            lastCard.transform = currentCard ? currentCard.transform : _tempManaCard.transform;
+            lastCard.civValue = currentCivValue;
         }
     }
 
     void RearrangeCardOrder()
     {
         int n = _holderTransform.childCount;
-        TransformValuePair[] transformValuePairs = new TransformValuePair[n];
+        ManaTransform[] manaTransforms = new ManaTransform[n];
         for (int i = 0; i < n; i++)
         {
-            int value = 0;
-            CardManager card = _playerData.CardsInMana[_holderTransform.GetChild(i).GetInstanceID()];
-            foreach (CardParams.Civilization civilization in card.Card.Civilization)
+            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardManager card))
             {
-                value += (int)civilization;
+                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i),
+                    GetCivValue(card.Card.Civilization),
+                    card.Card.Name);
             }
-
-            transformValuePairs[i] = new TransformValuePair(_holderTransform.GetChild(i), value, card.Card.Name);
+            else
+            {
+                manaTransforms[i] = _tempManaCard;
+            }
         }
 
-        Array.Sort(transformValuePairs, delegate (TransformValuePair a, TransformValuePair b)
+        Array.Sort(manaTransforms, delegate (ManaTransform a, ManaTransform b)
         {
             return a.civValue - b.civValue;
         });
 
         for (int i = 0; i < n; i++)
         {
-            transformValuePairs[i].transform.SetSiblingIndex(i);
+            manaTransforms[i].transform.SetSiblingIndex(i);
         }
+    }
+
+    int GetCivValue(CardParams.Civilization[] civilizations)
+    {
+        int value = 0;
+        foreach (CardParams.Civilization civilization in civilizations)
+        {
+            value += (int) civilization + value * 5;
+        }
+
+        return value;
     }
 
     #endregion

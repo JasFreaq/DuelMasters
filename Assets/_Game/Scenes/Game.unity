@@ -1373,7 +1373,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 965673508}
-  - component: {fileID: 965673509}
   - component: {fileID: 965673510}
   m_Layer: 0
   m_Name: Mana Zone
@@ -1398,27 +1397,6 @@ Transform:
   m_Father: {fileID: 1042105412}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &965673509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965673507}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27eb3cf8ed945964d9f9935ff3bcb0ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardAreaWidth: 50
-  _maxCardWidth: 8
-  _maxSameCivWidth: 6
-  _arrangeLeftToRight: 1
-  _manaZoneSortingLayerFloor: 25
-  _previewTargetPosition: {x: 0, y: 5, z: 5}
-  _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
-  _holderTransform: {fileID: 232627277}
-  _tempCard: {fileID: 2017681614}
 --- !u!114 &965673510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1584,7 +1562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clientManager: {fileID: 1854645697}
   _actionMenu: {fileID: 0}
-  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
+  _playerDeck: {fileID: 11400000, guid: 57db25de543dd094a9c252dabbdb95b8, type: 2}
   _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!4 &1167120987
 Transform:
@@ -1840,7 +1818,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1667101610}
-  - component: {fileID: 1667101611}
   - component: {fileID: 1667101612}
   m_Layer: 0
   m_Name: Mana Zone
@@ -1865,27 +1842,6 @@ Transform:
   m_Father: {fileID: 1962481309}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
---- !u!114 &1667101611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1667101609}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27eb3cf8ed945964d9f9935ff3bcb0ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardAreaWidth: 50
-  _maxCardWidth: 8
-  _maxSameCivWidth: 6
-  _arrangeLeftToRight: 0
-  _manaZoneSortingLayerFloor: 25
-  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
-  _holderTransform: {fileID: 2133683597}
-  _tempCard: {fileID: 1795273316}
 --- !u!114 &1667101612
 MonoBehaviour:
   m_ObjectHideFlags: 0
