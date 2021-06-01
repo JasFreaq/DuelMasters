@@ -49,31 +49,7 @@ public class ManaZoneManager : MonoBehaviour
         _tempManaCard = new ManaTransform(_tempCard, 0, "");
     }
 
-    #region Transition Methods
-
-    public IEnumerator MoveFromManaZoneRoutine(CardManager card)
-    {
-        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_fromTransitionTime);
-    }
-
-    public IEnumerator MoveToManaZoneRoutine(CardManager card)
-    {
-        _tempCard.parent = _holderTransform;
-        _tempManaCard.civValue = GetCivValue(card.Card.Civilization);
-        _tempManaCard.cardName = card.Card.Name;
-        ArrangeCards();
-
-        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_toTransitionTime);
-
-        AddCard(card);
-    }
+    #region Functionality Methods
 
     private void AddCard(CardManager card)
     {
@@ -99,6 +75,34 @@ public class ManaZoneManager : MonoBehaviour
         return card;
     }
 
+    #endregion
+
+    #region Transition Methods
+
+    public IEnumerator MoveFromManaZoneRoutine(CardManager card)
+    {
+        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_fromTransitionTime);
+    }
+
+    public IEnumerator MoveToManaZoneRoutine(CardManager card)
+    {
+        _tempCard.parent = _holderTransform;
+        _tempManaCard.civValue = GetCivValue(card.Card.Civilization);
+        _tempManaCard.cardName = card.Card.Name;
+        ArrangeCards();
+
+        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_toTransitionTime);
+
+        AddCard(card);
+    }
+    
     #endregion
 
     #region Layout Methods

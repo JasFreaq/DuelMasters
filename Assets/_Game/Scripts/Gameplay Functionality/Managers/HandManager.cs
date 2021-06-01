@@ -60,6 +60,30 @@ public class HandManager : MonoBehaviour
         }
     }
 
+    public CardManager RemoveCardAtIndex(int index)
+    {
+        int iD = _holderTransform.GetChild(index).GetInstanceID();
+
+        CardManager card = _playerData.CardsInHand[iD];
+        card.DragHandler.DeregisterOnDrag(HandleCardDrag);
+
+        _playerData.CardsInHand.Remove(iD);
+        card.transform.parent = transform;
+        ArrangeCards();
+        return card;
+    }
+
+    private void AddCard(CardManager card)
+    {
+        _tempCard.parent = transform;
+        card.transform.parent = _holderTransform;
+
+        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
+        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+
+        ArrangeCards();
+    }
+
     #endregion
 
     #region Transition Methods
@@ -100,31 +124,7 @@ public class HandManager : MonoBehaviour
         _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
         AddCard(card);
     }
-
-    public CardManager RemoveCardAtIndex(int index)
-    {
-        int iD = _holderTransform.GetChild(index).GetInstanceID();
-
-        CardManager card = _playerData.CardsInHand[iD];
-        card.DragHandler.DeregisterOnDrag(HandleCardDrag);
-
-        _playerData.CardsInHand.Remove(iD);
-        card.transform.parent = transform;
-        ArrangeCards();
-        return card;
-    }
-
-    private void AddCard(CardManager card)
-    {
-        _tempCard.parent = transform;
-        card.transform.parent = _holderTransform;
-
-        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
-        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
-
-        ArrangeCards();
-    }
-
+    
     #endregion
     
     #region Layout Methods

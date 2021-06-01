@@ -24,9 +24,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float _makeShieldPauseTime = 0.5f;
     [SerializeField] private float _fromShieldsTransitionTime = 2f;
     [SerializeField] private float _toShieldsTransitionTime = 2f;
-    [SerializeField] private float _fromDeckTransitionTime = 2f;
-    [SerializeField] private float _fromBattleTransitionTime = 1f;
-    [SerializeField] private float _toBattleTransitionTime = 1f;
+    [SerializeField] private float _fromDeckTransitionTime = 1.5f;
     
     private void Update()
     {
@@ -48,7 +46,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Initialize(Deck deck)
     {
-        _deckManager.Initialize(deck, _isPlayer, _fromDeckTransitionTime, _intermediateTransform);
+        _deckManager.Initialize(deck);
         
         _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
             _toShieldsTransitionTime, _intermediateTransform);

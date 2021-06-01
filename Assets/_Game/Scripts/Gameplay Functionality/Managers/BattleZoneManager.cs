@@ -21,6 +21,38 @@ public class BattleZoneManager : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
+    #region Functionality Methods
+
+    public void AddCard(Transform cardTransform)
+    {
+        _tempCard.parent = transform;
+        _tempCard.localScale = Vector3.one;
+        cardTransform.parent = _holderTransform;
+
+        CreatureCardManager card = cardTransform.GetComponent<CreatureCardManager>();
+        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
+        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+        _playerData.CardsInBattle.Add(cardTransform.GetInstanceID(), card);
+
+        ArrangeCards();
+    }
+
+    public CreatureCardManager GetCardAtIndex(int index)
+    {
+        return _playerData.CardsInBattle[_holderTransform.GetChild(index).GetInstanceID()];
+    }
+
+    public CreatureCardManager RemoveCardAtIndex(int index)
+    {
+        CreatureCardManager card = GetCardAtIndex(index);
+        _playerData.CardsInBattle.Remove(_holderTransform.GetChild(index).GetInstanceID());
+        card.transform.parent = transform;
+        ArrangeCards();
+        return card;
+    }
+
+    #endregion
+
     #region Transition Methods
 
     public IEnumerator MoveFromBattleZoneRoutine(Transform cardTransform)
@@ -46,35 +78,7 @@ public class BattleZoneManager : MonoBehaviour
 
         AddCard(cardTransform);
     }
-
-    public void AddCard(Transform cardTransform)
-    {
-        _tempCard.parent = transform;
-        _tempCard.localScale = Vector3.one;
-        cardTransform.parent = _holderTransform;
-
-        CreatureCardManager card = cardTransform.GetComponent<CreatureCardManager>();
-        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
-        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
-        _playerData.CardsInBattle.Add(cardTransform.GetInstanceID(), card);
-
-        ArrangeCards();
-    }
     
-    public CreatureCardManager GetCardAtIndex(int index)
-    {
-        return _playerData.CardsInBattle[_holderTransform.GetChild(index).GetInstanceID()];
-    }
-
-    public CreatureCardManager RemoveCardAtIndex(int index)
-    {
-        CreatureCardManager card = GetCardAtIndex(index);
-        _playerData.CardsInBattle.Remove(_holderTransform.GetChild(index).GetInstanceID());
-        card.transform.parent = transform;
-        ArrangeCards();
-        return card;
-    }
-
     #endregion
 
     #region Layout Methods
