@@ -1158,7 +1158,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 759882948}
-  - component: {fileID: 759882949}
   - component: {fileID: 759882950}
   m_Layer: 0
   m_Name: Hand
@@ -1183,32 +1182,6 @@ Transform:
   m_Father: {fileID: 1962481309}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
---- !u!114 &759882949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 759882947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a7797c4437e804fb48c62a6059dd2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
-  _circleRadius: 150
-  _cardAreaWidth: 24
-  _maxCardWidth: 8
-  _handSortingLayerFloor: 50
-  _arrangeLeftToRight: 0
-  _previewTargetPosition: {x: 0, y: 5, z: 15}
-  _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
-  _holderTransform: {fileID: 1920806617}
-  _tempCard: {fileID: 1633565210}
-  _isPlayer: 0
-  _fromTransitionTime: 2
-  _toTransitionTime: 2
-  _intermediateHolder: {fileID: 127403156}
 --- !u!114 &759882950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,6 +1196,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
   _dragArrangeYLimit: -7.5
+  _intermediateHolder: {fileID: 127403156}
+  _isPlayer: 0
+  _fromTransitionTime: 2
+  _toTransitionTime: 2
+  _previewTargetPosition: {x: 0, y: 5, z: 15}
+  _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
+  _circleRadius: 150
+  _cardAreaWidth: 24
+  _maxCardWidth: 8
+  _handSortingLayerFloor: 50
+  _arrangeLeftToRight: 0
+  _holderTransform: {fileID: 1920806617}
+  _tempCard: {fileID: 1633565210}
 --- !u!1 &763472560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1419,7 +1405,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965673507}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27eb3cf8ed945964d9f9935ff3bcb0ab, type: 3}
   m_Name: 
@@ -1445,6 +1431,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3758623340291e248946aaf5af0a5f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1042105414}
+  _intermediateHolder: {fileID: 893572538}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _cardAreaWidth: 50
+  _maxCardWidth: 8
+  _maxSameCivWidth: 6
+  _arrangeLeftToRight: 1
+  _manaZoneSortingLayerFloor: 25
+  _previewTargetPosition: {x: 0, y: 5, z: 5}
+  _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
+  _holderTransform: {fileID: 232627277}
+  _tempCard: {fileID: 2017681614}
 --- !u!1 &1042105411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1508,8 +1507,6 @@ MonoBehaviour:
   _fromShieldsTransitionTime: 2
   _toShieldsTransitionTime: 2
   _fromDeckTransitionTime: 2
-  _fromHandTransitionTime: 2
-  _toHandTransitionTime: 2
   _fromManaTransitionTime: 1
   _toManaTransitionTime: 1
   _fromBattleTransitionTime: 1
@@ -1875,7 +1872,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667101609}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27eb3cf8ed945964d9f9935ff3bcb0ab, type: 3}
   m_Name: 
@@ -1901,6 +1898,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3758623340291e248946aaf5af0a5f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerData: {fileID: 1962481311}
+  _intermediateHolder: {fileID: 127403156}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _cardAreaWidth: 50
+  _maxCardWidth: 8
+  _maxSameCivWidth: 6
+  _arrangeLeftToRight: 0
+  _manaZoneSortingLayerFloor: 25
+  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
+  _holderTransform: {fileID: 2133683597}
+  _tempCard: {fileID: 1795273316}
 --- !u!1 &1756759975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2373,8 +2383,6 @@ MonoBehaviour:
   _fromShieldsTransitionTime: 2
   _toShieldsTransitionTime: 2
   _fromDeckTransitionTime: 2
-  _fromHandTransitionTime: 2
-  _toHandTransitionTime: 2
   _fromManaTransitionTime: 1
   _toManaTransitionTime: 1
   _fromBattleTransitionTime: 1
@@ -2643,7 +2651,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2064906455}
-  - component: {fileID: 2064906454}
   - component: {fileID: 2064906456}
   m_Layer: 0
   m_Name: Hand
@@ -2652,32 +2659,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2064906454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064906453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a7797c4437e804fb48c62a6059dd2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
-  _circleRadius: 150
-  _cardAreaWidth: 24
-  _maxCardWidth: 8
-  _handSortingLayerFloor: 50
-  _arrangeLeftToRight: 1
-  _previewTargetPosition: {x: 0, y: 1, z: 5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
-  _holderTransform: {fileID: 642158336}
-  _tempCard: {fileID: 895444045}
-  _isPlayer: 1
-  _fromTransitionTime: 2
-  _toTransitionTime: 2
-  _intermediateHolder: {fileID: 893572538}
 --- !u!4 &2064906455
 Transform:
   m_ObjectHideFlags: 0
@@ -2708,6 +2689,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
   _dragArrangeYLimit: -7.5
+  _intermediateHolder: {fileID: 893572538}
+  _isPlayer: 1
+  _fromTransitionTime: 2
+  _toTransitionTime: 2
+  _previewTargetPosition: {x: 0, y: 1, z: 5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
+  _circleRadius: 150
+  _cardAreaWidth: 24
+  _maxCardWidth: 8
+  _handSortingLayerFloor: 50
+  _arrangeLeftToRight: 1
+  _holderTransform: {fileID: 642158336}
+  _tempCard: {fileID: 895444045}
 --- !u!1 &2133683596
 GameObject:
   m_ObjectHideFlags: 0

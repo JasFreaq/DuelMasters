@@ -8,14 +8,14 @@ public class ManaZoneLayoutHandler : MonoBehaviour
 {
     struct TransformValuePair
     {
-        public TransformValuePair(Transform transform, int value)
+        public TransformValuePair(Transform transform, int civValue)
         {
             this.transform = transform;
-            this.value = value;
+            this.civValue = civValue;
         }
 
         public Transform transform;
-        public int value;
+        public int civValue;
     }
 
     [SerializeField] private float _cardAreaWidth = 16;
@@ -126,7 +126,7 @@ public class ManaZoneLayoutHandler : MonoBehaviour
 
         Array.Sort(transformValuePairs, delegate(TransformValuePair a, TransformValuePair b)
         {
-            return a.value - b.value;
+            return a.civValue - b.civValue;
         });
 
         for (int i = 0; i < n; i++)
