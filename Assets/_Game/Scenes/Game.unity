@@ -198,7 +198,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 68126871}
-  - component: {fileID: 68126873}
   - component: {fileID: 68126872}
   m_Layer: 0
   m_Name: Graveyard
@@ -215,8 +214,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68126870}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -30, y: -10, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -38.5, y: -12.5, z: -0.05}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children: []
   m_Father: {fileID: 1042105412}
   m_RootOrder: 5
@@ -233,22 +232,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f2b2d8ac15a76469bb92d2b6fedeae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &68126873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68126870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e77005b4389a6840b0e80518292310a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _playerData: {fileID: 1042105414}
+  _previewTargetPosition: {x: 30, y: 27.5, z: 13}
+  _previewTargetScale: {x: 2, y: 2, z: 2}
+  _isPlayer: 1
   _cardWidth: 0.05
   _cardScale: 0.5
-  _previewTargetPosition: {x: 25, y: 20, z: 15}
-  _previewTargetScale: {x: 2, y: 2, z: 2}
 --- !u!1 &85316046
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,7 +373,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 171994569}
-  - component: {fileID: 171994571}
   - component: {fileID: 171994570}
   m_Layer: 0
   m_Name: Graveyard
@@ -400,9 +388,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 171994568}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -30, y: -5, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: -45, y: -17.5, z: 7.5}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 1962481309}
   m_RootOrder: 5
@@ -419,22 +407,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f2b2d8ac15a76469bb92d2b6fedeae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &171994571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 171994568}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e77005b4389a6840b0e80518292310a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _playerData: {fileID: 1962481311}
+  _previewTargetPosition: {x: -25, y: 30, z: -35}
+  _previewTargetScale: {x: 2, y: 2, z: 2}
+  _isPlayer: 0
   _cardWidth: 0.05
   _cardScale: 0.5
-  _previewTargetPosition: {x: -15, y: 20, z: -25}
-  _previewTargetScale: {x: 2, y: 2, z: 2}
 --- !u!1 &206433197
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,11 +740,11 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 893572538}
   _fromTransitionTime: 1
   _toTransitionTime: 1
+  _previewTargetPosition: {x: 0, y: 2.5, z: 5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
-  _previewTargetPosition: {x: 0, y: 2.5, z: 5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _holderTransform: {fileID: 357518649}
   _tempCard: {fileID: 1102408665}
 --- !u!1 &561292745
@@ -878,7 +856,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 574495384}
-  - component: {fileID: 574495385}
   - component: {fileID: 574495386}
   m_Layer: 0
   m_Name: Deck
@@ -895,28 +872,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 574495383}
   m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -25, y: -5, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -37.5, y: -17.5, z: 7.5}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 1962481309}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
---- !u!114 &574495385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 574495383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1823707361f49c84492e501dd0f3875e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardWidth: 0.05
-  _cardScale: 0.5
-  _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
-  _spellPrefab: {fileID: 343298941492645285, guid: 4a63c9421e696484eb767328f2d8cdd0, type: 3}
 --- !u!114 &574495386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -976,7 +937,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712870838}
-  - component: {fileID: 712870839}
   - component: {fileID: 712870840}
   m_Layer: 0
   m_Name: Deck
@@ -993,28 +953,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712870837}
   m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -25, y: -10, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -32.5, y: -12.5, z: -0.05}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children: []
   m_Father: {fileID: 1042105412}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
---- !u!114 &712870839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712870837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1823707361f49c84492e501dd0f3875e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardWidth: 0.05
-  _cardScale: 0.5
-  _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
-  _spellPrefab: {fileID: 343298941492645285, guid: 4a63c9421e696484eb767328f2d8cdd0, type: 3}
 --- !u!114 &712870840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,7 +1259,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 905610299}
-  - component: {fileID: 905610301}
   - component: {fileID: 905610300}
   m_Layer: 0
   m_Name: Shields
@@ -1351,26 +1294,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2c16942c2c2c845a90beda9800497f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shieldBreakTriggerName: BreakShield
-  _shieldUnbreakTriggerName: UnbreakShield
-  _animationTime: 1
---- !u!114 &905610301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 905610298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4a7ab3c9929a6b4ea6a532ab4ab3c8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _playerData: {fileID: 1042105414}
+  _intermediateHolder: {fileID: 893572538}
+  _isPlayer: 1
+  _pauseTime: 0.75
+  _fromTransitionTime: 1.5
+  _toTransitionTime: 1.5
   _shieldPrefab: {fileID: 4016510806583502724, guid: aeed23a14ac0d874ebcd0ffb54734001, type: 3}
   _shieldAreaWidth: 25
   _maxShieldWidth: 10
   _shieldScale: 12.5
   _holderTransform: {fileID: 1853220378}
+  _shieldBreakTriggerName: BreakShield
+  _shieldUnbreakTriggerName: UnbreakShield
+  _animationTime: 1
 --- !u!1 &965673507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,13 +1357,13 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 893572538}
   _fromTransitionTime: 1
   _toTransitionTime: 1
+  _previewTargetPosition: {x: 0, y: 5, z: 5}
+  _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _maxSameCivWidth: 6
   _arrangeLeftToRight: 1
   _manaZoneSortingLayerFloor: 25
-  _previewTargetPosition: {x: 0, y: 5, z: 5}
-  _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
   _holderTransform: {fileID: 232627277}
   _tempCard: {fileID: 2017681614}
 --- !u!1 &1042105411
@@ -1480,18 +1417,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2398d827f3f5ace44b6e4bf433ee20b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intermediateTransform: {fileID: 893572538}
+  _isPlayer: 1
   _deckManager: {fileID: 712870840}
   _shieldsManager: {fileID: 905610300}
   _handManager: {fileID: 2064906456}
   _manaZoneManager: {fileID: 965673510}
   _battleZoneManager: {fileID: 362037422}
   _graveyardManager: {fileID: 68126872}
-  _intermediateTransform: {fileID: 893572538}
-  _isPlayer: 1
-  _makeShieldPauseTime: 0.5
-  _fromShieldsTransitionTime: 2
-  _toShieldsTransitionTime: 2
-  _fromDeckTransitionTime: 2
 --- !u!114 &1042105414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1565,7 +1498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clientManager: {fileID: 1854645697}
   _actionMenu: {fileID: 0}
-  _playerDeck: {fileID: 11400000, guid: 57db25de543dd094a9c252dabbdb95b8, type: 2}
+  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
   _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!4 &1167120987
 Transform:
@@ -1590,7 +1523,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1311186676}
-  - component: {fileID: 1311186678}
   - component: {fileID: 1311186677}
   m_Layer: 0
   m_Name: Shields
@@ -1611,7 +1543,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2000661157}
-  - {fileID: 1314618841}
   m_Father: {fileID: 1962481309}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -105, y: 0, z: 0}
@@ -1627,56 +1558,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2c16942c2c2c845a90beda9800497f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shieldBreakTriggerName: BreakShield
-  _shieldUnbreakTriggerName: UnbreakShield
-  _animationTime: 1
---- !u!114 &1311186678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1311186675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4a7ab3c9929a6b4ea6a532ab4ab3c8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _playerData: {fileID: 1962481311}
+  _intermediateHolder: {fileID: 127403156}
+  _isPlayer: 0
+  _pauseTime: 0.75
+  _fromTransitionTime: 1.5
+  _toTransitionTime: 1.5
   _shieldPrefab: {fileID: 4016510806583502724, guid: aeed23a14ac0d874ebcd0ffb54734001, type: 3}
   _shieldAreaWidth: 25
   _maxShieldWidth: 10
   _shieldScale: 12.5
   _holderTransform: {fileID: 2000661157}
---- !u!1 &1314618840
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1314618841}
-  m_Layer: 0
-  m_Name: Temp Shield
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1314618841
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1314618840}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1311186676}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  _shieldBreakTriggerName: BreakShield
+  _shieldUnbreakTriggerName: UnbreakShield
+  _animationTime: 1
 --- !u!1 &1508421687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1861,13 +1756,13 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 127403156}
   _fromTransitionTime: 1
   _toTransitionTime: 1
+  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _maxSameCivWidth: 6
   _arrangeLeftToRight: 0
   _manaZoneSortingLayerFloor: 25
-  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _holderTransform: {fileID: 2133683597}
   _tempCard: {fileID: 1795273316}
 --- !u!1 &1756759975
@@ -2053,11 +1948,11 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 127403156}
   _fromTransitionTime: 1
   _toTransitionTime: 1
+  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
-  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _holderTransform: {fileID: 763472561}
   _tempCard: {fileID: 1508421688}
 --- !u!1 &1788549066
@@ -2321,18 +2216,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2398d827f3f5ace44b6e4bf433ee20b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intermediateTransform: {fileID: 127403156}
+  _isPlayer: 0
   _deckManager: {fileID: 574495386}
   _shieldsManager: {fileID: 1311186677}
   _handManager: {fileID: 759882950}
   _manaZoneManager: {fileID: 1667101612}
   _battleZoneManager: {fileID: 1774565250}
   _graveyardManager: {fileID: 171994570}
-  _intermediateTransform: {fileID: 127403156}
-  _isPlayer: 0
-  _makeShieldPauseTime: 0.75
-  _fromShieldsTransitionTime: 2
-  _toShieldsTransitionTime: 2
-  _fromDeckTransitionTime: 2
 --- !u!114 &1962481311
 MonoBehaviour:
   m_ObjectHideFlags: 0

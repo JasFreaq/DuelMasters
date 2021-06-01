@@ -6,54 +6,60 @@ using DG.Tweening;
 
 public class ShieldsManager : MonoBehaviour
 {
+    [SerializeField] private PlayerDataHolder _playerData;
+
+    [Header("Transition")]
+    [SerializeField] private Transform _intermediateHolder;
+    [SerializeField] private bool _isPlayer = true;
+    [SerializeField] private float _pauseTime = 0.5f;
+    [SerializeField] private float _fromTransitionTime = 1.5f;
+    [SerializeField] private float _toTransitionTime = 1.5f;
+
+    [Header("Layout")]
+    [SerializeField] private Shield _shieldPrefab;
+    [SerializeField] private float _shieldAreaWidth = 25;
+    [SerializeField] private float _maxShieldWidth = 10;
+    [SerializeField] private float _shieldScale = 12.5f;
+    [SerializeField] private Transform _holderTransform;
+
+    [Header("Animation")]
     [SerializeField] private string _shieldBreakTriggerName = "BreakShield";
     [SerializeField] private string _shieldUnbreakTriggerName = "UnbreakShield";
     [SerializeField] private float _animationTime = 1f;
+    
+    private List<Shield> _shields = new List<Shield>();
 
     private int _shieldBreakTriggerHash;
     private int _shieldUnbreakTriggerHash;
-
-    private bool _isPlayer = true;
-    private float _pauseTime;
-    private float _fromTransitionTime;
-    private float _toTransitionTime;
-    private Transform _intermediateHolder;
-
-    private List<CardManager> _cards = new List<CardManager>();
-    
-    private ShieldsLayoutHandler _shieldsLayoutHandler;
     
     private void Awake()
     {
         _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
         _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
-
-        _shieldsLayoutHandler = GetComponent<ShieldsLayoutHandler>();
     }
 
     private void Start()
     {
-        _shieldsLayoutHandler.Initialize();
+        for (int i = 0; i < 5; i++)
+        {
+            Shield shield = Instantiate(_shieldPrefab, _holderTransform);
+            _shields.Add(shield);
+        }
+
+        ArrangeShields();
     }
 
-    public void Initialize(bool isPlayer, float pauseTime, float fromTransitionTime, float toTransitionTime, Transform intermediateTransform)
-    {
-        _isPlayer = isPlayer;
-        _pauseTime = pauseTime;
-        _fromTransitionTime = fromTransitionTime;
-        _toTransitionTime = toTransitionTime;
-        _intermediateHolder = intermediateTransform;
-    }
+    #region Functionality Methods
 
     public IEnumerator SetupShieldsRoutine(CardManager[] cards)
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 4; i >= 0; i--)
         {
-            MoveToShields(cards[i].transform, _shieldsLayoutHandler.Shields[i].CardHolder);
+            MoveToShields(cards[i], _shields[i].CardHolder);
             yield return new WaitForSeconds(_pauseTime);
         }
 
-        yield return new WaitForSeconds(_toTransitionTime);
+        yield return new WaitForSeconds(_pauseTime);
 
         for (int i = 0; i < 4; i++)
         {
@@ -64,46 +70,20 @@ public class ShieldsManager : MonoBehaviour
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(4));
     }
 
-    private IEnumerator MoveFromShieldsRoutine(Transform cardTransform)
-    {
-        cardTransform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = _intermediateHolder.rotation.eulerAngles;
-        if (!_isPlayer)
-            rotation += new Vector3(0, 0, 180);
-        cardTransform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_fromTransitionTime);
-    }
-
-    private void MoveToShields(Transform cardTransform, Transform holderTransform)
-    {
-        cardTransform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = holderTransform.eulerAngles;
-        if (!_isPlayer)
-        {
-            rotation = new Vector3(0, 0, 0);
-        }
-
-        cardTransform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.parent = holderTransform;
-    }
-
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
-        Shield shield = _shieldsLayoutHandler.Shields[shieldIndex];
+        Shield shield = _shields[shieldIndex];
         shield.SetAnimatorTrigger(_shieldBreakTriggerHash);
         shield.CardHolder.DOScale(shield.HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
 
-        CardManager card = RemoveCardAtIndex(shieldIndex);
+        CardManager card = RemoveShieldAtIndex(shieldIndex);
         card.CardLayout.Canvas.sortingOrder = 100;
         if (_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(true);
 
-        yield return StartCoroutine(MoveFromShieldsRoutine(card.transform));
+        yield return StartCoroutine(MoveFromShieldsRoutine(card));
         if (!_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(true);
     }
@@ -112,62 +92,67 @@ public class ShieldsManager : MonoBehaviour
     {
         int emptyIndex = GetEmptyIndex();
         AddShield(emptyIndex, card);
-        MoveToShields(card.transform, _shieldsLayoutHandler.Shields[emptyIndex].CardHolder);
+        MoveToShields(card, _shields[emptyIndex].CardHolder);
         yield return new WaitForSeconds(_toTransitionTime);
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
     }
 
-    public CardManager GetCardAtIndex(int shieldIndex)
+    public CardManager GetShieldAtIndex(int shieldIndex)
     {
-        return _cards[shieldIndex];
+        return _playerData.CardsInShields[shieldIndex];
     }
 
-    public CardManager RemoveCardAtIndex(int shieldIndex)
+    public CardManager RemoveShieldAtIndex(int shieldIndex)
     {
-        int n = _cards.Count;
-        CardManager card = _cards[shieldIndex];
+        int n = _playerData.CardsInShields.Count;
+        CardManager card = _playerData.CardsInShields[shieldIndex];
         if (n <= 5)
         {
-            _cards[shieldIndex] = null;
+            _playerData.CardsInShields[shieldIndex] = null;
         }
         else
         {
-            _cards.RemoveAt(shieldIndex);
+            _playerData.CardsInShields.RemoveAt(shieldIndex);
         }
 
         card.transform.parent = transform;
-        _shieldsLayoutHandler.RemoveShield(shieldIndex);
+        n = _holderTransform.childCount;
+        if (n > 5 && shieldIndex < n)
+        {
+            _shields.RemoveAt(shieldIndex);
+            Transform shieldTransform = _holderTransform.GetChild(shieldIndex);
+            shieldTransform.parent = transform;
+            Destroy(shieldTransform.gameObject);
+            ArrangeShields();
+        }
+
         return card;
     }
 
     private void AddShield(int shieldIndex, CardManager card)
     {
-        if (_cards.Count > shieldIndex)
+        if (_playerData.CardsInShields.Count > shieldIndex)
         {
-            _cards[shieldIndex] = card;
+            _playerData.CardsInShields[shieldIndex] = card;
         }
         else
         {
-            _cards.Add(card);
-            if (_cards.Count > 5)
-                _shieldsLayoutHandler.AddShield();
+            _playerData.CardsInShields.Add(card);
+            if (_playerData.CardsInShields.Count > 5)
+            {
+                Shield shield = Instantiate(_shieldPrefab, _holderTransform);
+                _shields.Add(shield);
+                ArrangeShields();
+            }
         }
     }
 
-    private IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)
-    {
-        _shieldsLayoutHandler.Shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
-        _shieldsLayoutHandler.Shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
-
-        yield return new WaitForSeconds(_animationTime);
-    }
-    
     private int GetEmptyIndex()
     {
-        int n = _cards.Count;
+        int n = _playerData.CardsInShields.Count;
         for (int i = 0; i < n; i++)
         {
-            if (_cards[i] == null)
+            if (_playerData.CardsInShields[i] == null)
             {
                 return i;
             }
@@ -175,4 +160,70 @@ public class ShieldsManager : MonoBehaviour
 
         return n;
     }
+
+    #endregion
+
+    #region Transition Methods
+
+    private IEnumerator MoveFromShieldsRoutine(CardManager card)
+    {
+        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = _intermediateHolder.rotation.eulerAngles;
+        if (!_isPlayer)
+            rotation += new Vector3(0, 0, 180);
+        card.transform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_fromTransitionTime);
+    }
+
+    private void MoveToShields(CardManager card, Transform holderTransform)
+    {
+        card.transform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        Vector3 rotation = holderTransform.eulerAngles;
+        if (!_isPlayer)
+        {
+            rotation = new Vector3(0, 0, 0);
+        }
+
+        card.transform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.parent = holderTransform;
+    }
+
+    private IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)
+    {
+        _shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
+        _shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
+
+        yield return new WaitForSeconds(_animationTime);
+    }
+
+    #endregion
+
+    #region Layout Methods
+
+    private void ArrangeShields()
+    {
+        int n = _holderTransform.childCount;
+        float shieldWidth = Mathf.Min((_shieldAreaWidth * 2) / n, _maxShieldWidth);
+        float sizeRatio = (shieldWidth / _maxShieldWidth) * _shieldScale;
+
+        float startOffset = (n % 2) * shieldWidth;
+        if (n % 2 == 0)
+            startOffset += shieldWidth / 2;
+        Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset,
+            _holderTransform.localPosition.y, _holderTransform.localPosition.z);
+
+        for (int i = 0; i < n; i++)
+        {
+            Transform shieldTransform = _holderTransform.GetChild(i);
+            Vector3 shieldPos = new Vector3(startPos.x + (i - n / 2 + 1) * shieldWidth, startPos.y, startPos.z);
+
+            shieldTransform.localPosition = shieldPos;
+            shieldTransform.localScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
+        }
+    }
+
+    #endregion
 }

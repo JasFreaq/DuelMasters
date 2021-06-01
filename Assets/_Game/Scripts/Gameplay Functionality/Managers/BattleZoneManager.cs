@@ -12,27 +12,28 @@ public class BattleZoneManager : MonoBehaviour
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
 
+    [Header("Preview")]
+    [SerializeField] private Vector3 _previewTargetPosition;
+    [SerializeField] private Vector3 _previewTargetScale;
+
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 28;
     [SerializeField] private float _maxCardWidth = 10.25f;
     [SerializeField] private int _battleZoneSortingLayerFloor = 0;
-    [SerializeField] private Vector3 _previewTargetPosition;
-    [SerializeField] private Vector3 _previewTargetScale;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 
     #region Functionality Methods
 
-    public void AddCard(Transform cardTransform)
+    public void AddCard(CreatureCardManager card)
     {
         _tempCard.parent = transform;
         _tempCard.localScale = Vector3.one;
-        cardTransform.parent = _holderTransform;
+        card.transform.parent = _holderTransform;
 
-        CreatureCardManager card = cardTransform.GetComponent<CreatureCardManager>();
         card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
         card.HoverPreviewHandler.TargetScale = _previewTargetScale;
-        _playerData.CardsInBattle.Add(cardTransform.GetInstanceID(), card);
+        _playerData.CardsInBattle.Add(card.transform.GetInstanceID(), card);
 
         ArrangeCards();
     }
@@ -55,28 +56,28 @@ public class BattleZoneManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromBattleZoneRoutine(Transform cardTransform)
+    public IEnumerator MoveFromBattleZoneRoutine(CardManager card)
     {
-        cardTransform.parent = _intermediateHolder;
-        cardTransform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.parent = _intermediateHolder;
+        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToBattleZoneRoutine(Transform cardTransform)
+    public IEnumerator MoveToBattleZoneRoutine(CreatureCardManager card)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();
 
-        cardTransform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(_tempCard.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(_tempCard.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);
 
-        AddCard(cardTransform);
+        AddCard(card);
     }
     
     #endregion

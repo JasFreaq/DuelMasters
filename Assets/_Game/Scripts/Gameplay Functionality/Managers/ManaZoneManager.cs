@@ -31,14 +31,16 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
 
+    [Header("Preview")]
+    [SerializeField] private Vector3 _previewTargetPosition;
+    [SerializeField] private Vector3 _previewTargetScale;
+
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 50;
     [SerializeField] private float _maxCardWidth = 8;
     [SerializeField] private float _maxSameCivWidth = 6;
     [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private int _manaZoneSortingLayerFloor = 25;
-    [SerializeField] private Vector3 _previewTargetPosition;
-    [SerializeField] private Vector3 _previewTargetScale;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
 

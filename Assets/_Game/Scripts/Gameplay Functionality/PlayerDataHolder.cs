@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerDataHolder : MonoBehaviour
 {
     private List<CardManager> _cardsInDeck = new List<CardManager>();
+    private List<CardManager> _cardsInShields = new List<CardManager>();
+    private List<CardManager> _cardsInGraveyard = new List<CardManager>();
+
     private Dictionary<int, CardManager> _cardsInHand = new Dictionary<int, CardManager>();
     private Dictionary<int, CardManager> _cardsInManaZone = new Dictionary<int, CardManager>();
     private Dictionary<int, CreatureCardManager> _cardsInBattleZone = new Dictionary<int, CreatureCardManager>();
@@ -12,6 +15,16 @@ public class PlayerDataHolder : MonoBehaviour
     public List<CardManager> CardsInDeck
     {
         get { return _cardsInDeck; }
+    }
+    
+    public List<CardManager> CardsInShields
+    {
+        get { return _cardsInShields; }
+    }
+    
+    public List<CardManager> CardsInGrave
+    {
+        get { return _cardsInGraveyard; }
     }
 
     public Dictionary<int, CardManager> CardsInHand

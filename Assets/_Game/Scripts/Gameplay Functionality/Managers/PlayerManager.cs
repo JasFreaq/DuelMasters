@@ -8,6 +8,9 @@ using DG.Tweening;
 [DisallowMultipleComponent]
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private Transform _intermediateTransform;
+    [SerializeField] private bool _isPlayer = true;
+
     [Header("Manager Caches")] 
     [SerializeField] private DeckManager _deckManager;
     [SerializeField] private ShieldsManager _shieldsManager;
@@ -15,16 +18,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private ManaZoneManager _manaZoneManager;
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
-
-    [Header("Position Markers")]
-    [SerializeField] private Transform _intermediateTransform;
-
-    [Header("Tween Parameters")] 
-    [SerializeField] private bool _isPlayer = true;
-    [SerializeField] private float _makeShieldPauseTime = 0.5f;
-    [SerializeField] private float _fromShieldsTransitionTime = 2f;
-    [SerializeField] private float _toShieldsTransitionTime = 2f;
-    [SerializeField] private float _fromDeckTransitionTime = 1.5f;
     
     private void Update()
     {
@@ -47,9 +40,6 @@ public class PlayerManager : MonoBehaviour
     public void Initialize(Deck deck)
     {
         _deckManager.Initialize(deck);
-        
-        _shieldsManager.Initialize(_isPlayer, _makeShieldPauseTime, _fromShieldsTransitionTime,
-            _toShieldsTransitionTime, _intermediateTransform);
     }
 
     public Coroutine SetupShields()
@@ -70,7 +60,7 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.gameObject.SetActive(true);
         card.RegisterOnProcessAction(action);
 
-        yield return _deckManager.MoveFromDeckRoutine(card.transform);
+        yield return _deckManager.MoveFromDeckRoutine(card);
         yield return _handManager.MoveToHandRoutine(card);
         card.HoverPreviewHandler.PreviewEnabled = true;
         card.DragHandler.CanDrag = true;
@@ -105,14 +95,14 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator SummonCreatureRoutine(CreatureCardManager creatureCard)
     {
         creatureCard.ActivateBattleLayout();
-        yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard.transform);
+        yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard);
         creatureCard.HoverPreviewHandler.PreviewEnabled = true;
     }
 
     private IEnumerator CastSpellRoutine(SpellCardManager spellCard)
     {
         spellCard.gameObject.SetActive(false);
-        _graveyardManager.AddCard(spellCard.transform);
+        _graveyardManager.AddCard(spellCard);
         spellCard.gameObject.SetActive(true);
 
         yield break;
@@ -120,7 +110,7 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
-        CardManager card = _shieldsManager.GetCardAtIndex(shieldIndex);
+        CardManager card = _shieldsManager.GetShieldAtIndex(shieldIndex);
         yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
         yield return _handManager.MoveToHandRoutine(card);
         card.HoverPreviewHandler.PreviewEnabled = true;
@@ -157,7 +147,7 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.sortingOrder = 100;
 
         card.HoverPreviewHandler.PreviewEnabled = false;
-        yield return _battleZoneManager.MoveFromBattleZoneRoutine(card.transform);
+        yield return _battleZoneManager.MoveFromBattleZoneRoutine(card);
         card.ActivateCardLayout();
         yield return _handManager.MoveToHandRoutine(card, true);
         card.HoverPreviewHandler.PreviewEnabled = true;

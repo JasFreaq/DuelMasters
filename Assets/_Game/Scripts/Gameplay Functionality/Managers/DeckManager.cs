@@ -74,12 +74,13 @@ public class DeckManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromDeckRoutine(Transform cardTransform)
+    public IEnumerator MoveFromDeckRoutine(CardManager card)
     {
-        cardTransform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.parent = null;
+        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         if (_isPlayer)
-            cardTransform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+            card.transform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
