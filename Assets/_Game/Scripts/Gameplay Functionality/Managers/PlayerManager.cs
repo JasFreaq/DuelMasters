@@ -91,7 +91,7 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = false;
         yield return _handManager.MoveFromHandRoutine(card);
         card.ActivateManaLayout();
-        yield return _manaZoneManager.MoveToManaZoneRoutine(card.transform, card.Card);
+        yield return _manaZoneManager.MoveToManaZoneRoutine(card);
         card.HoverPreviewHandler.PreviewEnabled = true;
         card.IsGlowing = false;
     }
@@ -151,7 +151,7 @@ public class PlayerManager : MonoBehaviour
         card.CardLayout.Canvas.sortingOrder = 100;
 
         card.HoverPreviewHandler.PreviewEnabled = false;
-        yield return _manaZoneManager.MoveFromManaZoneRoutine(card.transform);
+        yield return _manaZoneManager.MoveFromManaZoneRoutine(card);
         card.ActivateCardLayout();
         yield return _handManager.MoveToHandRoutine(card, true);
         card.HoverPreviewHandler.PreviewEnabled = true;

@@ -29,7 +29,6 @@ public class CardManager : MonoBehaviour
     public ManaCardLayoutHandler ManaLayout
     {
         get { return _manaCardLayoutHandler; }
-        set { _manaCardLayoutHandler = value; }
     }
 
     public Card Card

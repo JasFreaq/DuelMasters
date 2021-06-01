@@ -34,7 +34,6 @@ public class ManaZoneLayoutHandler : MonoBehaviour
     {
         CardManager card = _tempCard.gameObject.AddComponent<CardManager>();
         ManaCardLayoutHandler manaCardLayout = _tempCard.gameObject.AddComponent<ManaCardLayoutHandler>();
-        card.ManaLayout = manaCardLayout;
         _cardsInManaZone.Add(_tempCard.GetInstanceID(), card);
     }
 

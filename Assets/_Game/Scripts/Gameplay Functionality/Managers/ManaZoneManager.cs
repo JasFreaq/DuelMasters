@@ -7,7 +7,7 @@ using UnityEngine;
 public class ManaZoneManager : MonoBehaviour
 {
     #region Helper Data Structures
-
+    [System.Serializable]
     struct ManaTransform
     {
         public ManaTransform(Transform transform, int civValue, string cardName)
@@ -51,44 +51,41 @@ public class ManaZoneManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromManaZoneRoutine(Transform cardTransform)
+    public IEnumerator MoveFromManaZoneRoutine(CardManager card)
     {
-        cardTransform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToManaZoneRoutine(Transform cardTransform, Card card)
+    public IEnumerator MoveToManaZoneRoutine(CardManager card)
     {
         _tempCard.parent = _holderTransform;
-        _tempManaCard.civValue = GetCivValue(card.Civilization);
-        _tempManaCard.cardName = card.Name;
+        _tempManaCard.civValue = GetCivValue(card.Card.Civilization);
+        _tempManaCard.cardName = card.Card.Name;
         ArrangeCards();
 
-        cardTransform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
-        cardTransform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);
 
-        AddCard(cardTransform);
+        AddCard(card);
     }
 
-    public void AddCard(Transform cardTransform)
+    private void AddCard(CardManager card)
     {
         _tempCard.parent = transform;
-        cardTransform.parent = _holderTransform;
+        card.transform.parent = _holderTransform;
 
-        CardManager card = cardTransform.GetComponent<CardManager>();
         card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
         card.HoverPreviewHandler.TargetScale = _previewTargetScale;
-        _playerData.CardsInMana.Add(cardTransform.GetInstanceID(), card);
-
-        ArrangeCards();
+        _playerData.CardsInMana.Add(card.transform.GetInstanceID(), card);
     }
 
-    public CardManager GetCardAtIndex(int index)
+    private CardManager GetCardAtIndex(int index)
     {
         return _playerData.CardsInMana[_holderTransform.GetChild(index).GetInstanceID()];
     }
@@ -171,9 +168,12 @@ public class ManaZoneManager : MonoBehaviour
 
         Array.Sort(manaTransforms, delegate (ManaTransform a, ManaTransform b)
         {
+            if (a.civValue == b.civValue)
+                return a.cardName.CompareTo(b.cardName);
+
             return a.civValue - b.civValue;
         });
-
+        
         for (int i = 0; i < n; i++)
         {
             manaTransforms[i].transform.SetSiblingIndex(i);

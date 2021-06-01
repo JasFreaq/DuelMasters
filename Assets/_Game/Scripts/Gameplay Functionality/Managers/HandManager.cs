@@ -13,8 +13,8 @@ public class HandManager : MonoBehaviour
     [Header("Transition")]
     [SerializeField] private Transform _intermediateHolder;
     [SerializeField] private bool _isPlayer = true;
-    [SerializeField] private float _fromTransitionTime = 2f;
-    [SerializeField] private float _toTransitionTime = 2f;
+    [SerializeField] private float _fromTransitionTime = 1.5f;
+    [SerializeField] private float _toTransitionTime = 1.5f;
 
     [Header("Preview")]
     [SerializeField] private Vector3 _previewTargetPosition;
