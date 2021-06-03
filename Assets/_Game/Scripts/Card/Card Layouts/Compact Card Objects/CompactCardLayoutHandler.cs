@@ -21,7 +21,12 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     {
         get { return _canvas; }
     }
-    
+
+    public GameObject TappedOverlay
+    {
+        get { return _tappedOverlay; }
+    }
+
     public virtual void SetupCard(Card card)
     {
         _artworkImage.sprite = card.ArtworkImage;

@@ -11,6 +11,8 @@ public class CreatureCardManager : CardManager
         get { return _battleCardLayoutHandler; }
     }
 
+    #region Setup Methods
+
     public override void SetupCard(Card card)
     {
         base.SetupCard(card);
@@ -39,10 +41,22 @@ public class CreatureCardManager : CardManager
         ActivateCompactCardCollider();
     }
 
+    #endregion
+
+    #region State Methods
+
     protected override void SetGlow(bool enableGlow)
     {
         base.SetGlow(enableGlow);
 
         _battleCardLayoutHandler.SetGlow(enableGlow);
     }
+
+    public override void SetTap(bool tap)
+    {
+        base.SetTap(tap);
+        _battleCardLayoutHandler.TappedOverlay.SetActive(tap);
+    }
+
+    #endregion
 }

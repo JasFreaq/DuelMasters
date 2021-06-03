@@ -13,23 +13,27 @@ MonoBehaviour:
   m_Name: Test Deck
   m_EditorClassIdentifier: 
   _cardList:
-  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
+  - card: {fileID: 11400000, guid: 9f5b70e6bbc8f484c85b7312a06a412f, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
+  - card: {fileID: 11400000, guid: 1772d733b0b9453438234c0dfb0bc757, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
+  - card: {fileID: 11400000, guid: dce606d638365ec4cbe1ef552084a6b0, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 9f5b70e6bbc8f484c85b7312a06a412f, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
+  - card: {fileID: 11400000, guid: 1772d733b0b9453438234c0dfb0bc757, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 256e23105f54f6244ae3445782126040, type: 2}
+  - card: {fileID: 11400000, guid: dce606d638365ec4cbe1ef552084a6b0, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 9f5b70e6bbc8f484c85b7312a06a412f, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
+  - card: {fileID: 11400000, guid: 1772d733b0b9453438234c0dfb0bc757, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
+  - card: {fileID: 11400000, guid: dce606d638365ec4cbe1ef552084a6b0, type: 2}
+    number: 2
+  - card: {fileID: 11400000, guid: 9f5b70e6bbc8f484c85b7312a06a412f, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
+  - card: {fileID: 11400000, guid: 1772d733b0b9453438234c0dfb0bc757, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
-    number: 4
-  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
-    number: 4
+  - card: {fileID: 11400000, guid: dce606d638365ec4cbe1ef552084a6b0, type: 2}
+    number: 2

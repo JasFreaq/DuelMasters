@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(GameLoopRoutine(_playerDeck, _opponentDeck));
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            _currentStep = GameStep.ChargeStep;
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            _currentStep = GameStep.MainStep;
     }
 
     private IEnumerator GameLoopRoutine(Deck playerDeck, Deck opponentDeck)
@@ -89,6 +95,11 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameStep.UntapStep:
+                foreach (CardManager card in _playerDataHandler.TappedCards)
+                {
+                    card.SetTap(false);
+                }
+                _playerDataHandler.TappedCards.Clear();
                 _currentStep = GameStep.StartOfTurnStep;
                 break;
 
@@ -127,21 +138,32 @@ public class GameManager : MonoBehaviour
         {
             if (_playerCards.Contains(card))
             {
-                StartCoroutine(ProcessGameAction(card, _playerManager));
+                StartCoroutine(ProcessGameAction(card, _playerManager, _playerDataHandler));
             }
         }
         else if ( _opponentCards.Contains(card))
         {
-            StartCoroutine(ProcessGameAction(card, _opponentManager));
+            StartCoroutine(ProcessGameAction(card, _opponentManager, _opponentDataHandler));
         }
     }
 
-    private IEnumerator ProcessGameAction(CardManager card, PlayerManager manager)
+    private IEnumerator ProcessGameAction(CardManager card, PlayerManager manager, PlayerDataHandler dataHandler)
     {
-        if (_currentStep == GameStep.ChargeStep) 
+        switch (_currentStep)
         {
-            yield return manager.StartCoroutine(manager.ChargeManaRoutine(card.transform.GetSiblingIndex()));
-            _currentStep = GameStep.MainStep;
+            case GameStep.ChargeStep:
+                yield return manager.StartCoroutine(manager.ChargeManaRoutine(card));
+                //_currentStep = GameStep.MainStep;
+                break;
+
+            case GameStep.MainStep:
+                if (dataHandler.CanPayCost(card.Card, 0)) 
+                {
+                    print("toot");
+                    dataHandler.PayCost(card.Card, 0);
+                    yield return manager.StartCoroutine(manager.PlayCardRoutine(card));
+                }
+                break;
         }
     }
 }

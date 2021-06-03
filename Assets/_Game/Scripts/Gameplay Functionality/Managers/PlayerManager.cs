@@ -18,24 +18,14 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private ManaZoneManager _manaZoneManager;
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
-    
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.P))
-    //    {
-    //        StartCoroutine(PlayCardRoutine(0));
-    //    }
-        
-    //    if (Input.GetKeyDown(KeyCode.D))
-    //    {
-    //        StartCoroutine(DrawCardRoutine());
-    //    }
-        
-    //    if (Input.GetKeyDown(KeyCode.M))
-    //    {
-    //        StartCoroutine(ChargeManaRoutine(0));
-    //    }
-    //}
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            StartCoroutine(DrawCardRoutine());
+        }
+    }
 
     public void Initialize(Deck deck, Action<CardManager> action)
     {
@@ -65,24 +55,26 @@ public class PlayerManager : MonoBehaviour
         card.DragHandler.CanDrag = true;
     }
 
-    public IEnumerator ChargeManaRoutine(int index)
+    public IEnumerator ChargeManaRoutine(CardManager card)
     {
-        CardManager card = _handManager.RemoveCardAtIndex(index);
         card.ManaLayout.Canvas.sortingOrder = 100;
-        
         card.IsGlowing = true;
         card.HoverPreviewHandler.PreviewEnabled = false;
+
         yield return _handManager.MoveFromHandRoutine(card);
+
         card.ActivateManaLayout();
+
         yield return _manaZoneManager.MoveToManaZoneRoutine(card);
+
         card.HoverPreviewHandler.PreviewEnabled = true;
         card.IsGlowing = false;
     }
 
-    public IEnumerator PlayCardRoutine(int index)
+    public IEnumerator PlayCardRoutine(CardManager card)
     {
-        CardManager card = _handManager.RemoveCardAtIndex(index);
         card.HoverPreviewHandler.PreviewEnabled = false;
+
         yield return _handManager.MoveFromHandRoutine(card);
 
         if (card is CreatureCardManager creatureCard)
@@ -115,13 +107,13 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
-    public IEnumerator MakeShieldFromHandRoutine(int index)
+    public IEnumerator MakeShieldFromHandRoutine(CardManager card)
     {
-        CardManager card = _handManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
-        
         card.HoverPreviewHandler.PreviewEnabled = false;
+
         yield return _handManager.MoveFromHandRoutine(card, true);
+
         if (!_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(false);
         

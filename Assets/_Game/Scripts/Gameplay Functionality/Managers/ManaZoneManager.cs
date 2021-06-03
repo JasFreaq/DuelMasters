@@ -92,7 +92,7 @@ public class ManaZoneManager : MonoBehaviour
     public IEnumerator MoveToManaZoneRoutine(CardManager card)
     {
         _tempCard.parent = _holderTransform;
-        _tempManaCard.civValue = GetCivValue(card.Card.Civilization);
+        _tempManaCard.civValue = CardParams.GetCivValue(card.Card.Civilization);
         _tempManaCard.cardName = card.Card.Name;
         ArrangeCards();
 
@@ -129,7 +129,7 @@ public class ManaZoneManager : MonoBehaviour
             if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardManager currentCard)) 
             {
                 currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
-                currentCivValue = GetCivValue(currentCard.Card.Civilization);
+                currentCivValue = CardParams.GetCivValue(currentCard.Card.Civilization);
             }
             else
             {
@@ -163,7 +163,7 @@ public class ManaZoneManager : MonoBehaviour
             if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardManager card))
             {
                 manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i),
-                    GetCivValue(card.Card.Civilization),
+                    CardParams.GetCivValue(card.Card.Civilization),
                     card.Card.Name);
             }
             else
@@ -185,17 +185,6 @@ public class ManaZoneManager : MonoBehaviour
             manaTransforms[i].transform.SetSiblingIndex(i);
         }
     }
-
-    int GetCivValue(CardParams.Civilization[] civilizations)
-    {
-        int value = 0;
-        foreach (CardParams.Civilization civilization in civilizations)
-        {
-            value += (int) civilization + value * 5;
-        }
-
-        return value;
-    }
-
+    
     #endregion
 }

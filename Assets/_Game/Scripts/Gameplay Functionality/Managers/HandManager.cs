@@ -60,7 +60,7 @@ public class HandManager : MonoBehaviour
         }
     }
 
-    public CardManager RemoveCardAtIndex(int index)
+    private void RemoveCardAtIndex(int index)
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
@@ -70,7 +70,6 @@ public class HandManager : MonoBehaviour
         _playerData.CardsInHand.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
-        return card;
     }
 
     private void AddCard(CardManager card)
@@ -90,6 +89,8 @@ public class HandManager : MonoBehaviour
 
     public IEnumerator MoveFromHandRoutine(CardManager card, bool forShield = false)
     {
+        RemoveCardAtIndex(card.transform.GetSiblingIndex());
+        
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Vector3 rotation = new Vector3(-90, 0, 0);
         if (forShield && !_isPlayer)

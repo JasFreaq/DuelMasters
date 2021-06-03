@@ -6,6 +6,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CardManager : MonoBehaviour
 {
+    private const float TAP_ANGLE = 15f;
+
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
     [SerializeField] private GameObject _visibleEyeIcon;
@@ -18,7 +20,8 @@ public class CardManager : MonoBehaviour
     private DragHandler _dragHandler;
 
     private Action<CardManager> _onProcessAction;
-
+    
+    private bool _isTapped = false;
     private bool _isGlowing = false;
 
     public CardLayoutHandler CardLayout
@@ -46,6 +49,11 @@ public class CardManager : MonoBehaviour
         get { return _dragHandler; }
     }
 
+    public bool IsTapped
+    {
+        get { return _isTapped; }
+    }
+    
     public bool IsGlowing
     {
         set
@@ -156,6 +164,14 @@ public class CardManager : MonoBehaviour
         }
         else if (_CurrentlySelected)
             DeselectCurrentSelection();
+    }
+
+    public virtual void SetTap(bool tap)
+    {
+        _isTapped = tap;
+        _manaCardLayoutHandler.TappedOverlay.SetActive(tap);
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x,
+            tap ? TAP_ANGLE : 0, transform.localEulerAngles.z);
     }
 
     public void SetCardVisible()

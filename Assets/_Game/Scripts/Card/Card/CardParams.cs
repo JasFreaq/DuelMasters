@@ -142,6 +142,17 @@ public static class CardParams
         return true;
     }
 
+    public static int GetCivValue(Civilization[] civilizations)
+    {
+        int value = 0;
+        foreach (Civilization civilization in civilizations)
+        {
+            value += (int)civilization + value * 5;
+        }
+
+        return value;
+    }
+
     #endregion
 
     #region Rarity

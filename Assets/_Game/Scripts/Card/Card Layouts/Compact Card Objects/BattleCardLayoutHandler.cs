@@ -7,6 +7,7 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
 {
     [SerializeField] private TextMeshProUGUI _creatureRaceText;
     [SerializeField] private TextMeshProUGUI _powerText;
+    [SerializeField] private TextMeshProUGUI _powerTextShade;
 
     public override void SetupCard(Card card)
     {
@@ -20,5 +21,6 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
         _creatureRaceText.text = raceStr;
 
         _powerText.text = creature.Power.ToString();
+        _powerTextShade.text = creature.Power.ToString();
     }
 }
