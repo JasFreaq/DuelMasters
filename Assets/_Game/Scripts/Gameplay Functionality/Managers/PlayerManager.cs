@@ -19,23 +19,23 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
     
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            StartCoroutine(PlayCardRoutine(0));
-        }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        StartCoroutine(PlayCardRoutine(0));
+    //    }
         
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            StartCoroutine(DrawCardRoutine());
-        }
+    //    if (Input.GetKeyDown(KeyCode.D))
+    //    {
+    //        StartCoroutine(DrawCardRoutine());
+    //    }
         
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            StartCoroutine(ChargeManaRoutine(0));
-        }
-    }
+    //    if (Input.GetKeyDown(KeyCode.M))
+    //    {
+    //        StartCoroutine(ChargeManaRoutine(0));
+    //    }
+    //}
 
     public void Initialize(Deck deck, Action<CardManager> action)
     {

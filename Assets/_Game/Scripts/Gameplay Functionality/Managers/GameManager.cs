@@ -9,11 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool _playerGoesFirst = true;
     [SerializeField] private ActionMenu _actionMenu;
 
-    [Header("Player")]
+    [Header("Player Managers")]
     [SerializeField] private PlayerManager _playerManager;
     [SerializeField] private Deck _playerDeck;
-    
-    [Header("Opponent")]
     [SerializeField] private PlayerManager _opponentManager;
     [SerializeField] private Deck _opponentDeck;
 
@@ -41,12 +39,12 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return))
-            StartCoroutine(GameLoopRoutine());
+            StartCoroutine(GameLoopRoutine(_playerDeck, _opponentDeck));
     }
 
-    private IEnumerator GameLoopRoutine()
+    private IEnumerator GameLoopRoutine(Deck playerDeck, Deck opponentDeck)
     {
-        yield return GameStartRoutine(_playerDeck, _opponentDeck);
+        yield return GameStartRoutine(playerDeck, opponentDeck);
 
         PlayerManager currentManager;
         _playerTurn = _playerGoesFirst;
