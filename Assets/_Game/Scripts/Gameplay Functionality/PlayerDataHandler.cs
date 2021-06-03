@@ -60,7 +60,7 @@ public class PlayerDataHandler : MonoBehaviour
         foreach (KeyValuePair<int, CardManager> pair in _cardsInManaZone)
         {
             CardManager card = pair.Value;
-            if (!_tappedCards.Contains(card))
+            if (!card.IsTapped)
             {
                 int civValue = CardParams.GetCivValue(card.CardData.Civilization);
                 if (!availableMana.ContainsKey(civValue))
@@ -135,7 +135,7 @@ public class PlayerDataHandler : MonoBehaviour
         Dictionary<int, List<CardManager>> availableMana = GetAvailableManaCards();
         int cost = Mathf.Max(cardData.Cost - costReduction, 1);
 
-        List<List<CardManager>> correspondingCards = new List<List<CardManager>>();
+        List<List<CardManager>> correspondingCardLists = new List<List<CardManager>>();
         int smallestAvailableCivLen = int.MaxValue;
 
         if (GetAvailableMana(availableMana) >= cost)
@@ -150,7 +150,7 @@ public class PlayerDataHandler : MonoBehaviour
                 if (availableMana.ContainsKey(iD))
                 {
                     hits++;
-                    correspondingCards.Add(availableMana[iD]);
+                    correspondingCardLists.Add(availableMana[iD]);
                     if (availableMana[iD].Count < smallestAvailableCivLen)
                         smallestAvailableCivLen = availableMana[iD].Count;
                 }
@@ -161,17 +161,18 @@ public class PlayerDataHandler : MonoBehaviour
 
             for (int i = 0; i < smallestAvailableCivLen; i++) 
             {
-                foreach (List<CardManager> correspondingCardList in correspondingCards)
+                foreach (List<CardManager> correspondingCardList in correspondingCardLists)
                 {
                     cost--;
                     correspondingCardList[i].SetTap(true);
+                    _tappedCards.Add(correspondingCardList[i]);
 
                     if (cost == 0)
                         return;
                 }
             }
 
-            foreach (List<CardManager> correspondingCardList in correspondingCards)
+            foreach (List<CardManager> correspondingCardList in correspondingCardLists)
             {
                 foreach (CardManager card in correspondingCardList)
                 {
@@ -179,6 +180,7 @@ public class PlayerDataHandler : MonoBehaviour
                     {
                         cost--;
                         card.SetTap(true);
+                        _tappedCards.Add(card);
 
                         if (cost == 0)
                             return;

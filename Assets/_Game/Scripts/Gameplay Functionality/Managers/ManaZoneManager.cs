@@ -43,11 +43,12 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private float _tapUntapDist = 12;
     [SerializeField] private float _maxSameCivTapWidth = 4;
     [SerializeField] private float _maxSameCivUntapWidth = 6;
+    [SerializeField] private float _arrangeMoveTime = 0.5f;
     [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private int _manaZoneSortingLayerFloor = 25;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
-
+    
     private ManaTransform _tempManaCard;
 
     private void Start()
@@ -142,7 +143,7 @@ public class ManaZoneManager : MonoBehaviour
             float currentWidth = cardWidth;
 
             ManaTransform currentManaCard = new ManaTransform(null, false, 0, "");
-            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardManager currentCard)) 
+            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardManager currentCard))
             {
                 currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
 
@@ -167,7 +168,7 @@ public class ManaZoneManager : MonoBehaviour
                         currentWidth = ratio * _tapUntapDist;
                     }
                 }
-                else if (currentManaCard.civValue == lastManaCard.civValue) 
+                else if (currentManaCard.civValue == lastManaCard.civValue)
                 {
                     currentWidth = ratio * _maxSameCivUntapWidth;
                 }
@@ -175,11 +176,27 @@ public class ManaZoneManager : MonoBehaviour
 
             if (i > 0)
                 pos.x += _arrangeLeftToRight ? currentWidth : -currentWidth;
-            cardTransform.localPosition = pos;
-            pos = cardTransform.localPosition;
-
             lastManaCard = currentManaCard;
-            lastManaCard.transform = currentCard ? currentCard.transform : _tempManaCard.transform;
+
+            if (currentCard)
+            {
+                Vector3 layoutWorldPos = currentCard.ManaLayout.transform.position;
+
+                cardTransform.localPosition = pos;
+                pos = cardTransform.localPosition;
+
+                currentCard.ManaLayout.transform.position = layoutWorldPos;
+                currentCard.ManaLayout.transform.DOLocalMove(Vector3.zero, _arrangeMoveTime).SetEase(Ease.OutQuint);
+
+                lastManaCard.transform = currentCard.transform;
+            }
+            else
+            {
+                cardTransform.localPosition = pos;
+                pos = cardTransform.localPosition;
+
+                lastManaCard.transform = _tempManaCard.transform;
+            }
         }
     }
 

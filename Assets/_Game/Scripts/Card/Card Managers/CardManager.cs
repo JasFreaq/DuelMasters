@@ -172,6 +172,8 @@ public class CardManager : MonoBehaviour
         _manaCardLayoutHandler.TappedOverlay.SetActive(tap);
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x,
             tap ? TAP_ANGLE : 0, transform.localEulerAngles.z);
+        _previewCardLayout.transform.localEulerAngles = new Vector3(_previewCardLayout.transform.localEulerAngles.x,
+            tap ? -TAP_ANGLE : 0, _previewCardLayout.transform.localEulerAngles.z);
     }
 
     public void SetCardVisible()

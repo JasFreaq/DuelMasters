@@ -1361,7 +1361,10 @@ MonoBehaviour:
   _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
   _cardAreaWidth: 50
   _maxCardWidth: 8
-  _maxSameCivWidth: 6
+  _tapUntapDist: 12
+  _maxSameCivTapWidth: 4
+  _maxSameCivUntapWidth: 6
+  _arrangeMoveTime: 0.5
   _arrangeLeftToRight: 1
   _manaZoneSortingLayerFloor: 25
   _holderTransform: {fileID: 232627277}
@@ -1550,7 +1553,7 @@ MonoBehaviour:
   _playerGoesFirst: 1
   _actionMenu: {fileID: 1156849063}
   _playerManager: {fileID: 1042105413}
-  _playerDeck: {fileID: 11400000, guid: 57db25de543dd094a9c252dabbdb95b8, type: 2}
+  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
   _opponentManager: {fileID: 1962481310}
   _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!4 &1167120987
@@ -1813,7 +1816,10 @@ MonoBehaviour:
   _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 50
   _maxCardWidth: 8
-  _maxSameCivWidth: 6
+  _tapUntapDist: 12
+  _maxSameCivTapWidth: 4
+  _maxSameCivUntapWidth: 6
+  _arrangeMoveTime: 0.5
   _arrangeLeftToRight: 0
   _manaZoneSortingLayerFloor: 25
   _holderTransform: {fileID: 2133683597}
