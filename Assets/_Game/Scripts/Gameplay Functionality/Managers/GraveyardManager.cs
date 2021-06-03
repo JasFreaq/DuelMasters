@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GraveyardManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHolder _playerData;
+    [SerializeField] private PlayerDataHandler _playerData;
 
     [Header("Preview")]
     [SerializeField] private Vector3 _previewTargetPosition;

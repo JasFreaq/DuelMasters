@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDataHolder : MonoBehaviour
+public class PlayerDataHandler : MonoBehaviour
 {
     private List<CardManager> _cardsInDeck = new List<CardManager>();
     private List<CardManager> _cardsInShields = new List<CardManager>();

@@ -28,7 +28,7 @@ public class PlayerManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.D))
         {
-            StartCoroutine(DrawCardRoutine(null));
+            StartCoroutine(DrawCardRoutine());
         }
         
         if (Input.GetKeyDown(KeyCode.M))
@@ -37,9 +37,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Initialize(Deck deck)
+    public void Initialize(Deck deck, Action<CardManager> action)
     {
-        _deckManager.Initialize(deck);
+        _deckManager.Initialize(deck, action);
     }
 
     public Coroutine SetupShields()
@@ -53,12 +53,11 @@ public class PlayerManager : MonoBehaviour
         return StartCoroutine(_shieldsManager.SetupShieldsRoutine(cards));
     }
 
-    public IEnumerator DrawCardRoutine(Action<CardManager> action)
+    public IEnumerator DrawCardRoutine()
     {
         CardManager card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
-        card.RegisterOnProcessAction(action);
 
         yield return _deckManager.MoveFromDeckRoutine(card);
         yield return _handManager.MoveToHandRoutine(card);

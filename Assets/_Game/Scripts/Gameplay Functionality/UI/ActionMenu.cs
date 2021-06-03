@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ActionMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Button _actionButton;
+    [SerializeField] private TextMeshProUGUI _actionText;
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize()
     {
-        
+        //_actionButton.
     }
 }

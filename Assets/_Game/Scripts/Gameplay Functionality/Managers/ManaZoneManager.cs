@@ -24,7 +24,7 @@ public class ManaZoneManager : MonoBehaviour
     
     #endregion
 
-    [SerializeField] private PlayerDataHolder _playerData;
+    [SerializeField] private PlayerDataHandler _playerData;
 
     [Header("Transition")]
     [SerializeField] private Transform _intermediateHolder;

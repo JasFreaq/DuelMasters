@@ -7,7 +7,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class HandManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHolder _playerData;
+    [SerializeField] private PlayerDataHandler _playerData;
     [SerializeField] private float _dragArrangeYLimit = -7.5f;
     
     [Header("Transition")]

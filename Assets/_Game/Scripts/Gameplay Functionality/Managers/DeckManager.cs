@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 [DisallowMultipleComponent]
 public class DeckManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHolder _playerData;
+    [SerializeField] private PlayerDataHandler _playerData;
 
     [Header("Transition")]
     [SerializeField] private Transform _intermediateHolder;
@@ -23,12 +23,12 @@ public class DeckManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public void Initialize(Deck deck)
+    public void Initialize(Deck deck, Action<CardManager> action)
     {
-        SetupDeck(deck.GetCards());
+        SetupDeck(deck.GetCards(), action);
     }
 
-    private void SetupDeck(List<Card> cardList)
+    private void SetupDeck(List<Card> cardList, Action<CardManager> action)
     {
         float lastYPos = 0;
 
@@ -51,6 +51,7 @@ public class DeckManager : MonoBehaviour
             card.ActivateCardLayout();
             card.CardLayout.Canvas.gameObject.SetActive(false);
             card.name = cardData.Name;
+            card.RegisterOnProcessAction(action);
 
             _playerData.CardsInDeck.Add(card);
         }

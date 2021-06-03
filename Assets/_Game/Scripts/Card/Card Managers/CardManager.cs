@@ -12,7 +12,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] protected CardLayoutHandler _previewCardLayout;
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
-
+    
     private Card _card;
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
@@ -30,7 +30,7 @@ public class CardManager : MonoBehaviour
     {
         get { return _manaCardLayoutHandler; }
     }
-
+    
     public Card Card
     {
         get { return _card; }
@@ -103,17 +103,14 @@ public class CardManager : MonoBehaviour
 
     #region Setup Methods
 
-    public virtual void SetupCard(Card card, bool considerAsDataObject = false)
+    public virtual void SetupCard(Card card)
     {
         _card = card;
+        
+        _cardLayoutHandler.SetupCard(card);
+        _manaCardLayoutHandler.SetupCard(card);
 
-        if (!considerAsDataObject) 
-        {
-            _cardLayoutHandler.SetupCard(card);
-            _manaCardLayoutHandler.SetupCard(card);
-
-            _previewCardLayout.SetupCard(card);
-        }
+        _previewCardLayout.SetupCard(card);
     }
     
     public virtual void ActivateCardLayout()
