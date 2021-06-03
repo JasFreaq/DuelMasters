@@ -62,7 +62,7 @@ public class PlayerDataHandler : MonoBehaviour
             CardManager card = pair.Value;
             if (!_tappedCards.Contains(card))
             {
-                int civValue = CardParams.GetCivValue(card.Card.Civilization);
+                int civValue = CardParams.GetCivValue(card.CardData.Civilization);
                 if (!availableMana.ContainsKey(civValue))
                 {
                     availableMana[civValue] = new List<CardManager>();
@@ -70,7 +70,7 @@ public class PlayerDataHandler : MonoBehaviour
                 availableMana[civValue].Add(card);
             }
         }
-        print($"Count: {availableMana.Count}");
+
         return availableMana;
     }
 

@@ -552,36 +552,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1768039567137611287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3066916608676903111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d5719e0db5e0034aa59cb4cbe599028, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _canvas: {fileID: 3066916608832970831}
-  _artworkImage: {fileID: 3066916610525986007}
-  _frameImage: {fileID: 3066916608937595707}
-  _nameText: {fileID: 3066916609035876913}
-  _costText: {fileID: 3066916610602583761}
-  _cardTypeTextTransform: {fileID: 3066916610537768396}
-  _rulesPanel: {fileID: 3066916608685474678}
-  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
-  _glowFrame: {fileID: 6415911113819027435}
-  _cardFrameDatabase: {fileID: 0}
-  _creatureText: {fileID: 3066916610537768395}
-  _creatureRaceText: {fileID: 5098640856492570479}
-  _powerText: {fileID: 9192050661014457760}
-  _evolutionCreatureText: {fileID: 2298043772015721664}
-  _evolutionIconImage: {fileID: 4149669526636466906}
-  _vortexEvolutionIconImage: {fileID: 2451786931581363282}
-  _survivorIconImage: {fileID: 2207299389198243037}
-  _waveStrikerIconImage: {fileID: 2860938259440165900}
 --- !u!1 &2860938259440165900
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +627,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1768039567137611287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3066916608676903111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d5719e0db5e0034aa59cb4cbe599028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvas: {fileID: 3066916608832970831}
+  _artworkImage: {fileID: 3066916610525986007}
+  _frameImage: {fileID: 3066916608937595707}
+  _nameText: {fileID: 3066916609035876913}
+  _costText: {fileID: 3066916610602583761}
+  _cardTypeTextTransform: {fileID: 3066916610537768396}
+  _rulesPanel: {fileID: 3066916608685474678}
+  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  _glowFrame: {fileID: 6415911113819027435}
+  _cardFrameDatabase: {fileID: 0}
+  _creatureText: {fileID: 3066916610537768395}
+  _creatureRaceText: {fileID: 5098640856492570479}
+  _powerText: {fileID: 9192050661014457760}
+  _powerTextShade: {fileID: 1847307972903371160}
+  _evolutionCreatureText: {fileID: 2298043772015721664}
+  _evolutionIconImage: {fileID: 4149669526636466906}
+  _vortexEvolutionIconImage: {fileID: 2451786931581363282}
+  _survivorIconImage: {fileID: 2207299389198243037}
+  _waveStrikerIconImage: {fileID: 2860938259440165900}
 --- !u!1 &4149669526636466906
 GameObject:
   m_ObjectHideFlags: 0

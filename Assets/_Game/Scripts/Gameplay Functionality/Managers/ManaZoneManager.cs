@@ -10,14 +10,16 @@ public class ManaZoneManager : MonoBehaviour
     [System.Serializable]
     struct ManaTransform
     {
-        public ManaTransform(Transform transform, int civValue, string cardName)
+        public ManaTransform(Transform transform, bool isTapped, int civValue, string cardName)
         {
             this.transform = transform;
+            this.isTapped = isTapped;
             this.civValue = civValue;
             this.cardName = cardName;
         }
 
         public Transform transform;
+        public bool isTapped;
         public int civValue;
         public string cardName;
     }
@@ -38,7 +40,9 @@ public class ManaZoneManager : MonoBehaviour
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 50;
     [SerializeField] private float _maxCardWidth = 8;
-    [SerializeField] private float _maxSameCivWidth = 6;
+    [SerializeField] private float _tapUntapDist = 12;
+    [SerializeField] private float _maxSameCivTapWidth = 4;
+    [SerializeField] private float _maxSameCivUntapWidth = 6;
     [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private int _manaZoneSortingLayerFloor = 25;
     [SerializeField] private Transform _holderTransform;
@@ -48,7 +52,7 @@ public class ManaZoneManager : MonoBehaviour
 
     private void Start()
     {
-        _tempManaCard = new ManaTransform(_tempCard, 0, "");
+        _tempManaCard = new ManaTransform(_tempCard, false, 0, "");
     }
 
     #region Functionality Methods
@@ -92,8 +96,20 @@ public class ManaZoneManager : MonoBehaviour
     public IEnumerator MoveToManaZoneRoutine(CardManager card)
     {
         _tempCard.parent = _holderTransform;
-        _tempManaCard.civValue = CardParams.GetCivValue(card.Card.Civilization);
-        _tempManaCard.cardName = card.Card.Name;
+        _tempManaCard.isTapped = card.CardData.Civilization.Length > 1;
+        if (_tempManaCard.isTapped)
+        {
+            _tempCard.localEulerAngles = new Vector3(_tempCard.localEulerAngles.x,
+                CardManager.TAP_ANGLE, _tempCard.localEulerAngles.z);
+        }
+        else
+        {
+            _tempCard.localEulerAngles = new Vector3(_tempCard.localEulerAngles.x,
+                0, _tempCard.localEulerAngles.z);
+        }
+
+        _tempManaCard.civValue = CardParams.GetCivValue(card.CardData.Civilization);
+        _tempManaCard.cardName = card.CardData.Name;
         ArrangeCards();
 
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
@@ -109,38 +125,51 @@ public class ManaZoneManager : MonoBehaviour
 
     #region Layout Methods
 
-    void ArrangeCards()
+    public void ArrangeCards()
     {
         RearrangeCardOrder();
 
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min(_cardAreaWidth / n, _maxCardWidth);
-        float sameCivWidth = Mathf.Min(cardWidth / _maxCardWidth) * _maxSameCivWidth;
+        float ratio = Mathf.Min(cardWidth / _maxCardWidth);
         Vector3 pos = _holderTransform.localPosition;
 
-        ManaTransform lastCard = new ManaTransform(null, 0, "");
+        ManaTransform lastManaCard = new ManaTransform(null, false, 0, "");
 
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
             float currentWidth = cardWidth;
 
-            int currentCivValue;
+            ManaTransform currentManaCard = new ManaTransform(null, false, 0, "");
             if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardManager currentCard)) 
             {
                 currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
-                currentCivValue = CardParams.GetCivValue(currentCard.Card.Civilization);
+
+                currentManaCard.isTapped = currentCard.IsTapped;
+                currentManaCard.civValue = CardParams.GetCivValue(currentCard.CardData.Civilization);
             }
             else
             {
-                currentCivValue = _tempManaCard.civValue;
+                currentManaCard = _tempManaCard;
             }
 
-            if (lastCard.transform != null)
+            if (lastManaCard.transform != null)
             {
-                if (currentCivValue == lastCard.civValue) 
+                if (lastManaCard.isTapped)
                 {
-                    currentWidth = sameCivWidth;
+                    if (currentManaCard.isTapped)
+                    {
+                        currentWidth = ratio * _maxSameCivTapWidth;
+                    }
+                    else
+                    {
+                        currentWidth = ratio * _tapUntapDist;
+                    }
+                }
+                else if (currentManaCard.civValue == lastManaCard.civValue) 
+                {
+                    currentWidth = ratio * _maxSameCivUntapWidth;
                 }
             }
 
@@ -149,12 +178,12 @@ public class ManaZoneManager : MonoBehaviour
             cardTransform.localPosition = pos;
             pos = cardTransform.localPosition;
 
-            lastCard.transform = currentCard ? currentCard.transform : _tempManaCard.transform;
-            lastCard.civValue = currentCivValue;
+            lastManaCard = currentManaCard;
+            lastManaCard.transform = currentCard ? currentCard.transform : _tempManaCard.transform;
         }
     }
 
-    void RearrangeCardOrder()
+    private void RearrangeCardOrder()
     {
         int n = _holderTransform.childCount;
         ManaTransform[] manaTransforms = new ManaTransform[n];
@@ -162,9 +191,8 @@ public class ManaZoneManager : MonoBehaviour
         {
             if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardManager card))
             {
-                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i),
-                    CardParams.GetCivValue(card.Card.Civilization),
-                    card.Card.Name);
+                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i), card.IsTapped,
+                    CardParams.GetCivValue(card.CardData.Civilization), card.CardData.Name);
             }
             else
             {
@@ -174,8 +202,14 @@ public class ManaZoneManager : MonoBehaviour
 
         Array.Sort(manaTransforms, delegate (ManaTransform a, ManaTransform b)
         {
+            if (a.isTapped && !b.isTapped)
+                return -1;
+
+            if (!a.isTapped && b.isTapped)
+                return 1;
+
             if (a.civValue == b.civValue)
-                return a.cardName.CompareTo(b.cardName);
+                    return a.cardName.CompareTo(b.cardName);
 
             return a.civValue - b.civValue;
         });

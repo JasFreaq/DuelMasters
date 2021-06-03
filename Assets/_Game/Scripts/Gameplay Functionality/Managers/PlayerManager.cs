@@ -19,6 +19,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
 
+    public ManaZoneManager ManaZoneManager
+    {
+        get { return _manaZoneManager; }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.D))

@@ -6,7 +6,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CardManager : MonoBehaviour
 {
-    private const float TAP_ANGLE = 15f;
+    public const float TAP_ANGLE = 15f;
 
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
@@ -34,7 +34,7 @@ public class CardManager : MonoBehaviour
         get { return _manaCardLayoutHandler; }
     }
     
-    public Card Card
+    public Card CardData
     {
         get { return _card; }
     }

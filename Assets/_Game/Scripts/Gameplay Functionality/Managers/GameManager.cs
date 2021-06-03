@@ -153,14 +153,19 @@ public class GameManager : MonoBehaviour
         {
             case GameStep.ChargeStep:
                 yield return manager.StartCoroutine(manager.ChargeManaRoutine(card));
+                if (card.CardData.Civilization.Length > 1)
+                {
+                    card.SetTap(true);
+                    dataHandler.TappedCards.Add(card);
+                }
                 //_currentStep = GameStep.MainStep;
                 break;
 
             case GameStep.MainStep:
-                if (dataHandler.CanPayCost(card.Card, 0)) 
+                if (dataHandler.CanPayCost(card.CardData, 0)) 
                 {
-                    print("toot");
-                    dataHandler.PayCost(card.Card, 0);
+                    dataHandler.PayCost(card.CardData, 0);
+                    manager.ManaZoneManager.ArrangeCards();
                     yield return manager.StartCoroutine(manager.PlayCardRoutine(card));
                 }
                 break;

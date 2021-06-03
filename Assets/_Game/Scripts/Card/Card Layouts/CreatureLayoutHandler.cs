@@ -9,6 +9,7 @@ public class CreatureLayoutHandler : CardLayoutHandler
     [SerializeField] private GameObject _creatureText;
     [SerializeField] private TextMeshProUGUI _creatureRaceText;
     [SerializeField] private TextMeshProUGUI _powerText;
+    [SerializeField] private TextMeshProUGUI _powerTextShade;
     [SerializeField] private GameObject _evolutionCreatureText;
     [SerializeField] private GameObject _evolutionIconImage;
     [SerializeField] private GameObject _vortexEvolutionIconImage;
@@ -27,6 +28,7 @@ public class CreatureLayoutHandler : CardLayoutHandler
         _creatureRaceText.text = raceStr;
 
         _powerText.text = creature.Power.ToString();
+        _powerTextShade.text = creature.Power.ToString();
     }
 
     protected override void SetupRules(string rulesText)
