@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
                     card.SetTap(true);
                     dataHandler.TappedCards.Add(card);
                 }
-                //_currentStep = GameStep.MainStep;
+                _currentStep = GameStep.MainStep;
                 break;
 
             case GameStep.MainStep:
