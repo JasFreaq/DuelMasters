@@ -144,7 +144,7 @@ public class CardManager : MonoBehaviour
         
         Vector3 tapStateRotation = new Vector3(transform.localEulerAngles.x,
             tap ? TAP_ANGLE : 0, transform.localEulerAngles.z);
-        transform.DORotate(tapStateRotation, TAP_TRANSITION_TIME).SetEase(Ease.OutQuint);
+        transform.DOLocalRotate(tapStateRotation, TAP_TRANSITION_TIME).SetEase(Ease.OutQuint);
         
         _previewCardLayout.transform.localEulerAngles = new Vector3(_previewCardLayout.transform.localEulerAngles.x,
             tap ? -TAP_ANGLE : 0, _previewCardLayout.transform.localEulerAngles.z);

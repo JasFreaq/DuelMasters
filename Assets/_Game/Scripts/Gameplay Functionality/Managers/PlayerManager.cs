@@ -106,6 +106,8 @@ public class PlayerManager : MonoBehaviour
             yield return StartCoroutine(SummonCreatureRoutine(creatureCard));
         else if (card is SpellCardManager spellCard)
             yield return StartCoroutine(CastSpellRoutine(spellCard));
+
+        SelectCard(card);
     }
 
     private IEnumerator SummonCreatureRoutine(CreatureCardManager creatureCard)

@@ -169,6 +169,10 @@ public class GameManager : MonoBehaviour
                     manager.ManaZoneManager.ArrangeCards();
                     yield return manager.PlayCardRoutine(card);
                 }
+                else
+                {
+                    card.DragHandler.ReturnToPosition();
+                }
                 break;
         }
     }

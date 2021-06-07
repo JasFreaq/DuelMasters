@@ -21,7 +21,7 @@ public class DragHandler : MonoBehaviour
         set { _canDrag = value; }
     }
 
-    public bool ReturnToPosition
+    public bool IsReturningToPosition
     {
         get { return _returnToPosition;}
         set { _returnToPosition = value; }
@@ -77,13 +77,18 @@ public class DragHandler : MonoBehaviour
 
             if (_returnToPosition)
             {
-                transform.DOMove(_originalPosition, 0.8f).SetEase(Ease.OutQuint);
+                ReturnToPosition();
             }
             else
             {
                 _onDragRelease.Invoke();
             }
         }
+    }
+
+    public void ReturnToPosition()
+    {
+        transform.DOMove(_originalPosition, 0.8f).SetEase(Ease.OutQuint);
     }
 
     public void RegisterOnDrag(Action<Transform> action)
