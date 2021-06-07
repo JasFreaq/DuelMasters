@@ -19,6 +19,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
 
+    private static CardManager _currentlySelected;
+
     public ManaZoneManager ManaZoneManager
     {
         get { return _manaZoneManager; }
@@ -32,9 +34,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Initialize(Deck deck, Action<CardManager> action)
+    public void Initialize(Deck deck, Action<CardManager> processAction)
     {
-        _deckManager.Initialize(deck, action);
+        _deckManager.Initialize(deck, processAction, SelectCard);
     }
 
     public Coroutine SetupShields()
@@ -46,6 +48,25 @@ public class PlayerManager : MonoBehaviour
         }
 
         return StartCoroutine(_shieldsManager.SetupShieldsRoutine(cards));
+    }
+
+    private void SelectCard(CardManager card)
+    {
+        if (_currentlySelected != card)
+        {
+            card.Select(true);
+            if (_currentlySelected)
+                DeselectCurrentSelection();
+            _currentlySelected = card;
+        }
+        else if (_currentlySelected)
+            DeselectCurrentSelection();
+
+        void DeselectCurrentSelection()
+        {
+            _currentlySelected.Select( false);
+            _currentlySelected = null;
+        }
     }
 
     public IEnumerator DrawCardRoutine()
@@ -63,7 +84,6 @@ public class PlayerManager : MonoBehaviour
     public IEnumerator ChargeManaRoutine(CardManager card)
     {
         card.ManaLayout.Canvas.sortingOrder = 100;
-        card.IsGlowing = true;
         card.HoverPreviewHandler.PreviewEnabled = false;
 
         yield return _handManager.MoveFromHandRoutine(card);
@@ -73,7 +93,7 @@ public class PlayerManager : MonoBehaviour
         yield return _manaZoneManager.MoveToManaZoneRoutine(card);
 
         card.HoverPreviewHandler.PreviewEnabled = true;
-        card.IsGlowing = false;
+        SelectCard(card);
     }
 
     public IEnumerator PlayCardRoutine(CardManager card)

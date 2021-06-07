@@ -21,10 +21,12 @@ public class CardManager : MonoBehaviour
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
+    private Action<CardManager> _onMouseUpAsButton;
     private Action<CardManager> _onProcessAction;
     
     private bool _isTapped = false;
     private bool _isGlowing = false;
+    private bool _isSelected = false;
 
     public CardLayoutHandler CardLayout
     {
@@ -56,26 +58,6 @@ public class CardManager : MonoBehaviour
         get { return _isTapped; }
     }
     
-    public bool IsGlowing
-    {
-        set
-        {
-            _isGlowing = value;
-            SetGlow(_isGlowing);
-        }
-    }
-
-    #region Static Data Members
-
-    private static CardManager _CurrentlySelected;
-
-    public static CardManager CurrentlySelected
-    {
-        get { return _CurrentlySelected; }
-    }
-
-    #endregion
-
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
@@ -90,18 +72,18 @@ public class CardManager : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (!(_isGlowing || _CurrentlySelected))
+        if (!(_isGlowing || _isSelected))
             SetGlow(true);
     }
 
     private void OnMouseUpAsButton()
     {
-        Select();
+        _onMouseUpAsButton.Invoke(this);
     }
 
     private void OnMouseExit()
     {
-        if (!(_isGlowing || _CurrentlySelected))
+        if (!(_isGlowing || _isSelected))
             SetGlow(false);
     }
     
@@ -154,20 +136,7 @@ public class CardManager : MonoBehaviour
     #endregion
 
     #region State Methods
-
-    public void Select()
-    {
-        if (_CurrentlySelected != this)
-        {
-            _isGlowing = true;
-            if (_CurrentlySelected)
-                DeselectCurrentSelection();
-            _CurrentlySelected = this;
-        }
-        else if (_CurrentlySelected)
-            DeselectCurrentSelection();
-    }
-
+    
     public virtual void SetTap(bool tap)
     {
         _isTapped = tap;
@@ -186,6 +155,13 @@ public class CardManager : MonoBehaviour
         //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
     }
 
+    public void Select(bool selected)
+    {
+        _isSelected = selected;
+        _isGlowing = _isSelected;
+        SetGlow(_isGlowing);
+    }
+
     protected virtual void SetGlow(bool enableGlow)
     {
         _cardLayoutHandler.SetGlow(enableGlow);
@@ -199,6 +175,8 @@ public class CardManager : MonoBehaviour
         _onProcessAction.Invoke(this);
     }
 
+    #region Register Callbacks
+
     public void RegisterOnProcessAction(Action<CardManager> action)
     {
         _onProcessAction += action;
@@ -208,13 +186,15 @@ public class CardManager : MonoBehaviour
     {
         _onProcessAction -= action;
     }
-
-    #region Static Methods
-
-    private static void DeselectCurrentSelection()
+    
+    public void RegisterOnMouseUpAsButton(Action<CardManager> action)
     {
-        _CurrentlySelected.IsGlowing = false;
-        _CurrentlySelected = null;
+        _onMouseUpAsButton += action;
+    }
+
+    public void DeregisterOnMouseUpAsButton(Action<CardManager> action)
+    {
+        _onMouseUpAsButton -= action;
     }
 
     #endregion

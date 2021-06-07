@@ -23,13 +23,10 @@ public class DeckManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public void Initialize(Deck deck, Action<CardManager> action)
+    public void Initialize(Deck deck, Action<CardManager> processAction, Action<CardManager> selectAction)
     {
-        SetupDeck(deck.GetCards(), action);
-    }
+        List<Card> cardList = deck.GetCards();
 
-    private void SetupDeck(List<Card> cardList, Action<CardManager> action)
-    {
         float lastYPos = 0;
 
         foreach (Card cardData in cardList)
@@ -45,20 +42,24 @@ public class DeckManager : MonoBehaviour
             }
 
             card.SetupCard(cardData);
+            card.name = cardData.Name;
+
             card.transform.localPosition = new Vector3(card.transform.localPosition.x,
                 lastYPos -= _cardWidth * _cardScale, card.transform.localPosition.z);
             card.transform.localScale = Vector3.one * _cardScale;
+
             card.ActivateCardLayout();
             card.CardLayout.Canvas.gameObject.SetActive(false);
-            card.name = cardData.Name;
-            card.RegisterOnProcessAction(action);
+
+            card.RegisterOnProcessAction(processAction);
+            card.RegisterOnMouseUpAsButton(selectAction);
 
             _playerData.CardsInDeck.Add(card);
         }
 
         ShuffleCards();
     }
-
+    
     public CardManager GetTopCard()
     {
         return _playerData.CardsInDeck[_playerData.CardsInDeck.Count - 1];
