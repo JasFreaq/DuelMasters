@@ -32,6 +32,8 @@ public class HandManager : MonoBehaviour
 
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
+    private Vector3 _previewCardPosition;
+    private Vector3 _previewCardRotation;
 
     private void Start()
     {
@@ -67,12 +69,35 @@ public class HandManager : MonoBehaviour
         }
     }
 
+    private void HandleHandPreview(bool preview, Transform cardTransform)
+    {
+        if (preview)
+        {
+            _previewCardPosition = cardTransform.position;
+            _previewCardRotation = cardTransform.eulerAngles;
+
+            Vector3 previewPosition = _previewTargetPosition;
+            previewPosition.x = cardTransform.position.x;
+            cardTransform.DOMove(previewPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            cardTransform.DORotate(_previewTargetRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            cardTransform.DOScale(_previewTargetScale, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+        }
+        else
+        {
+            cardTransform.DOMove(_previewCardPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            cardTransform.DORotate(_previewCardRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            cardTransform.DOScale(Vector3.one, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+        }
+    }
+
     private void RemoveCardAtIndex(int index)
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
         CardManager card = _playerData.CardsInHand[iD];
         card.DragHandler.DeregisterOnDrag(HandleCardDrag);
+        if (_isPlayer)
+            card.HoverPreviewHandler.EnableHandPreview(false, HandleHandPreview);
 
         _playerData.CardsInHand.Remove(iD);
         card.transform.parent = transform;
@@ -85,7 +110,7 @@ public class HandManager : MonoBehaviour
         card.transform.parent = _holderTransform;
 
         if (_isPlayer)
-            card.HoverPreviewHandler.InPlayerHand = true;
+            card.HoverPreviewHandler.EnableHandPreview(true, HandleHandPreview);
         else
             card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
         card.HoverPreviewHandler.TargetScale = _previewTargetScale;
@@ -106,6 +131,7 @@ public class HandManager : MonoBehaviour
         if (forShield && !_isPlayer)
             rotation = new Vector3(90, 0, 0);
         card.transform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
@@ -163,32 +189,23 @@ public class HandManager : MonoBehaviour
             
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
-
-            cardTransform.localEulerAngles = new Vector3(cardTransform.localEulerAngles.x, Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
-                cardTransform.localEulerAngles.z);
-
+            
             cardPos = relativeVector * _circleRadius;
             cardPos.z -= _circleRadius;
 
             if (index == i)
                 indexCardPos = transform.TransformPoint(cardPos);
             else
+            {
+                cardTransform.localEulerAngles = new Vector3(cardTransform.localEulerAngles.x, Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
+                    cardTransform.localEulerAngles.z);
                 cardTransform.localPosition = cardPos;
+            }
 
             int iD = _holderTransform.GetChild(i).GetInstanceID();
             if (_playerData.CardsInHand.ContainsKey(iD))
             {
-                CardManager card = _playerData.CardsInHand[iD];
-
-                card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
-
-                if (_isPlayer) 
-                {
-                    Vector3 previewPosition = _previewTargetPosition;
-                    previewPosition.x = cardPos.x;
-                    card.HoverPreviewHandler.TargetPosition = previewPosition;
-                    card.HoverPreviewHandler.TargetRotation = _previewTargetRotation;
-                }
+                _playerData.CardsInHand[iD].CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
             }
         }
 

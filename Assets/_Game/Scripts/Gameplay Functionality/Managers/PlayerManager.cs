@@ -83,8 +83,6 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator ChargeManaRoutine(CardManager card)
     {
-        SelectCard(card);
-
         card.ManaLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
 

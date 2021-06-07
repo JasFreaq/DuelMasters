@@ -2540,7 +2540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
-  _dragArrangeYLimit: -7.5
+  _dragArrangeYLimit: 0
   _intermediateHolder: {fileID: 893572538}
   _isPlayer: 1
   _fromTransitionTime: 1

@@ -28,6 +28,7 @@ public class CardManager : MonoBehaviour
     private Action<CardManager> _onProcessAction;
     
     private bool _isTapped = false;
+    private bool _canGlow = false;
     private bool _isGlowing = false;
     private bool _isGlowSelectColor = true;
     private bool _isSelected = false;
@@ -62,6 +63,11 @@ public class CardManager : MonoBehaviour
         get { return _isTapped; }
     }
 
+    public bool CanGlow
+    {
+        set { _canGlow = value; }
+    }
+
     public bool IsGlowSelectColor
     {
         get { return _isGlowSelectColor; }
@@ -78,22 +84,10 @@ public class CardManager : MonoBehaviour
         if (_dragHandler)
             _dragHandler.RegisterOnDragRelease(ProcessAction);
     }
-
-    private void OnMouseEnter()
-    {
-        if (!(_isGlowing || _isSelected))
-            SetGlow(true);
-    }
-
+    
     private void OnMouseUpAsButton()
     {
         _onMouseUpAsButton.Invoke(this);
-    }
-
-    private void OnMouseExit()
-    {
-        if (!(_isGlowing || _isSelected))
-            SetGlow(false);
     }
     
     private void OnDisable()

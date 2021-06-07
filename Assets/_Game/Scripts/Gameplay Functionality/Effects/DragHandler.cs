@@ -5,11 +5,14 @@ using DG.Tweening;
 
 public class DragHandler : MonoBehaviour
 {
+    private const float RETURN_TIME = 0.8f;
+    
     private bool _isDragging = false;
     private bool _canDrag = false;
     private bool _returnToPosition = true;
 
     private Vector3 _originalPosition;
+    private Vector3 _originalRotation;
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
 
@@ -52,21 +55,7 @@ public class DragHandler : MonoBehaviour
             _onDrag.Invoke(transform);
         }
     }
-
-    private void OnMouseDown()
-    {
-        if (_canDrag)
-        {
-            _isDragging = true;
-            HoverPreviewHandler.PreviewsAllowed = false;
-
-            _CurrentlyDragging = this;
-            _originalPosition = transform.position;
-            _zDisplacement = -Camera.main.transform.position.z + _originalPosition.z;
-            _pointerDisplacement = -_originalPosition + MouseInWorldCoords();
-        }
-    }
-
+    
     private void OnMouseUp()
     {
         if (_isDragging)
@@ -84,11 +73,25 @@ public class DragHandler : MonoBehaviour
                 _onDragRelease.Invoke();
             }
         }
+        else if (_canDrag)
+        {
+            _isDragging = true;
+            HoverPreviewHandler.PreviewsAllowed = false;
+            _CurrentlyDragging = this;
+
+            _originalPosition = transform.position;
+            _originalRotation = transform.eulerAngles;
+            transform.eulerAngles = new Vector3(-90, 0, 0);
+
+            _zDisplacement = -Camera.main.transform.position.z + _originalPosition.z;
+            _pointerDisplacement = -_originalPosition + MouseInWorldCoords();
+        }
     }
 
     public void ReturnToPosition()
     {
-        transform.DOMove(_originalPosition, 0.8f).SetEase(Ease.OutQuint);
+        transform.DOMove(_originalPosition, RETURN_TIME).SetEase(Ease.OutQuint);
+        transform.DORotate(_originalRotation, RETURN_TIME).SetEase(Ease.OutQuint);
     }
 
     public void RegisterOnDrag(Action<Transform> action)
