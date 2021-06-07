@@ -169,7 +169,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 93.5}
-  m_SizeDelta: {x: 750, y: 750}
+  m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6567202714370062328
 CanvasRenderer:
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1362,7 +1362,7 @@ MonoBehaviour:
   _frameImage: {fileID: 7332533855401942186}
   _nameText: {fileID: 7332533854852668786}
   _bgRenderer: {fileID: 7332533856434192645}
-  _glowFrame: {fileID: 6144696630741716050}
+  _glowFrame: {fileID: 2356031955993564043}
   _tappedOverlay: {fileID: 7332533856521770066}
   _cardFrameDatabase: {fileID: 0}
   _creatureRaceText: {fileID: 7332533856762865641}

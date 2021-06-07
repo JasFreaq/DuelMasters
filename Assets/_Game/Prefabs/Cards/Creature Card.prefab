@@ -1355,7 +1355,7 @@ MonoBehaviour:
   _cardTypeTextTransform: {fileID: -951726409332857473}
   _rulesPanel: {fileID: -951726423393356814}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
-  _glowFrame: {fileID: 6285302622507674964}
+  _glowFrame: {fileID: -4570352163533976932}
   _cardFrameDatabase: {fileID: 2206084188606242702}
   _creatureText: {fileID: -951726409332857532}
   _creatureRaceText: {fileID: -6448260732537902794}
@@ -1721,7 +1721,7 @@ GameObject:
   - component: {fileID: 2778496660951038578}
   - component: {fileID: -4570352163533976932}
   m_Layer: 0
-  m_Name: Glow Image
+  m_Name: Glow Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1767,7 +1767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2012,6 +2012,18 @@ PrefabInstance:
     - target: {fileID: 3066916608676903111, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
       propertyPath: m_Name
       value: Creature Layout
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386337665500828027, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386337665500828027, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386337665500828027, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4572038751214096210, guid: efe559e1a6107564d9d73982d2b1a294, type: 3}

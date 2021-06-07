@@ -20,7 +20,7 @@ MonoBehaviour:
   _cardTypeTextTransform: {fileID: 3188356579979272929}
   _rulesPanel: {fileID: 3188356580271285339}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
-  _glowFrame: {fileID: 6897636837242769606}
+  _glowFrame: {fileID: 5508092093116134998}
   _cardFrameDatabase: {fileID: 0}
 --- !u!1001 &2595183003087082162
 PrefabInstance:
@@ -133,11 +133,17 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 593525567152182736, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
   m_PrefabInstance: {fileID: 2595183003087082162}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6897636837242769606 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8915619941334516340, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
+--- !u!114 &5508092093116134998 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7526462354149614820, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}
   m_PrefabInstance: {fileID: 2595183003087082162}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3188356579964328954 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 593525566631479624, guid: 2e402ed34d968594ba399b1d75f25113, type: 3}

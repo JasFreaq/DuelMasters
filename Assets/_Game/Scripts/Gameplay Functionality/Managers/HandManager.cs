@@ -48,15 +48,21 @@ public class HandManager : MonoBehaviour
         CardManager card = _playerData.CardsInHand[draggedTransform.GetInstanceID()];
         if (draggedTransform.position.y < _dragArrangeYLimit)
         {
-            if (!card.DragHandler.IsReturningToPosition)
-                card.DragHandler.IsReturningToPosition = true;
-
+            SetState(true);
             DragRearrange(card);
         }
         else
         {
-            if (card.DragHandler.IsReturningToPosition)
-                card.DragHandler.IsReturningToPosition = false;
+            SetState(false);
+        }
+
+        void SetState(bool state)
+        {
+            if (card.DragHandler.IsReturningToPosition != state)
+                card.DragHandler.IsReturningToPosition = state;
+
+            if (card.IsGlowSelectColor != state)
+                card.SetGlowColor(!state);
         }
     }
 

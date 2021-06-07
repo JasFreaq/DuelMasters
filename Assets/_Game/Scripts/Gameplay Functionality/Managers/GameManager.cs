@@ -7,6 +7,8 @@ using GameParams;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private bool _playerGoesFirst = true;
+
+    [Header("UI")]
     [SerializeField] private ActionMenu _actionMenu;
 
     [Header("Player Managers")]

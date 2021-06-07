@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 3573555360340121570}
   - component: {fileID: 3208046771036485630}
   m_Layer: 0
-  m_Name: Glow Image
+  m_Name: Glow Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -408,49 +408,6 @@ MonoBehaviour:
   _previewCardLayout: {fileID: 3167275879486283357}
   _cardLayoutHandler: {fileID: 5172767861766778179}
   _manaCardLayoutHandler: {fileID: 3389197699088125356}
---- !u!114 &8015085866577669313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3958148146565861390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _frames:
-  - civilization: 01000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: 5c726d5dc04e593419a3698c4d8c54a7, type: 3}
-  - civilization: 0100000002000000
-    cardTypePosY: -85.75
-    frameImage: {fileID: 21300000, guid: 1f3714fc4009d1a4ebe5b96fd1eea463, type: 3}
-  - civilization: 02000000
-    cardTypePosY: -83.5
-    frameImage: {fileID: 21300000, guid: bf24454af2d359a4cbbc6b77aa416612, type: 3}
-  - civilization: 0200000003000000
-    cardTypePosY: -84
-    frameImage: {fileID: 21300000, guid: 4601055ac6b26cd4d95cc08432e2baa8, type: 3}
-  - civilization: 04000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: ea41fedc64f1a6c42a422d76b48341f3, type: 3}
-  - civilization: 0400000003000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: 304bbdc290a8c14438fe2c120e75a43e, type: 3}
-  - civilization: 0400000005000000
-    cardTypePosY: -83.5
-    frameImage: {fileID: 21300000, guid: 2d89a57074bab464b93f425e72d002c0, type: 3}
-  - civilization: 03000000
-    cardTypePosY: -84.75
-    frameImage: {fileID: 21300000, guid: ea2a635ce417e304583f5af642192a73, type: 3}
-  - civilization: 05000000
-    cardTypePosY: -85.75
-    frameImage: {fileID: 21300000, guid: ecd082c2cc071044997a0f179a2b158d, type: 3}
-  - civilization: 0500000001000000
-    cardTypePosY: -84.5
-    frameImage: {fileID: 21300000, guid: bd8ddac60a1cfbe46b92fdd600002a7c, type: 3}
 --- !u!114 &3813295192086143219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,6 +451,49 @@ MonoBehaviour:
   - civilization: 0500000001000000
     frameImage: {fileID: 21300000, guid: 97ce971104a78f34599c080fb4cd89bd, type: 3}
     frameBGMaterial: {fileID: 2100000, guid: bfc2891d1f62323438e956db693f172d, type: 2}
+--- !u!114 &8015085866577669313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3958148146565861390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: 5c726d5dc04e593419a3698c4d8c54a7, type: 3}
+  - civilization: 0100000002000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 1f3714fc4009d1a4ebe5b96fd1eea463, type: 3}
+  - civilization: 02000000
+    cardTypePosY: -83.5
+    frameImage: {fileID: 21300000, guid: bf24454af2d359a4cbbc6b77aa416612, type: 3}
+  - civilization: 0200000003000000
+    cardTypePosY: -84
+    frameImage: {fileID: 21300000, guid: 4601055ac6b26cd4d95cc08432e2baa8, type: 3}
+  - civilization: 04000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: ea41fedc64f1a6c42a422d76b48341f3, type: 3}
+  - civilization: 0400000003000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: 304bbdc290a8c14438fe2c120e75a43e, type: 3}
+  - civilization: 0400000005000000
+    cardTypePosY: -83.5
+    frameImage: {fileID: 21300000, guid: 2d89a57074bab464b93f425e72d002c0, type: 3}
+  - civilization: 03000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: ea2a635ce417e304583f5af642192a73, type: 3}
+  - civilization: 05000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: ecd082c2cc071044997a0f179a2b158d, type: 3}
+  - civilization: 0500000001000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: bd8ddac60a1cfbe46b92fdd600002a7c, type: 3}
 --- !u!114 &3167275879486283357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,7 +514,7 @@ MonoBehaviour:
   _cardTypeTextTransform: {fileID: 5533437898333184841}
   _rulesPanel: {fileID: 5533437896280614387}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
-  _glowFrame: {fileID: 4561228542039675246}
+  _glowFrame: {fileID: 3208046771036485630}
   _cardFrameDatabase: {fileID: 8015085866577669313}
 --- !u!1 &5533437896280614384
 GameObject:

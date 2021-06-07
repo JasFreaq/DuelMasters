@@ -83,6 +83,8 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator ChargeManaRoutine(CardManager card)
     {
+        SelectCard(card);
+
         card.ManaLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
 
@@ -93,7 +95,6 @@ public class PlayerManager : MonoBehaviour
         yield return _manaZoneManager.MoveToManaZoneRoutine(card);
 
         card.HoverPreviewHandler.PreviewEnabled = true;
-        SelectCard(card);
     }
 
     public IEnumerator PlayCardRoutine(CardManager card)

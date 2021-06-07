@@ -58,5 +58,12 @@ public class CreatureCardManager : CardManager
         _battleCardLayoutHandler.TappedOverlay.SetActive(tap);
     }
 
+    public override void SetGlowColor(bool play)
+    {
+        base.SetGlowColor(play);
+
+        _battleCardLayoutHandler.SetGlowColor(play ? PLAY_GLOW_COLOR : SELECT_GLOW_COLOR);
+    }
+
     #endregion
 }

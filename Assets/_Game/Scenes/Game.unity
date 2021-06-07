@@ -1149,8 +1149,8 @@ MonoBehaviour:
   _dragArrangeYLimit: -7.5
   _intermediateHolder: {fileID: 127403156}
   _isPlayer: 0
-  _fromTransitionTime: 1.5
-  _toTransitionTime: 1.5
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
   _previewTargetPosition: {x: 0, y: 5, z: 15}
   _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
   _circleRadius: 150
@@ -1486,7 +1486,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1156849062
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2542,8 +2542,8 @@ MonoBehaviour:
   _dragArrangeYLimit: -7.5
   _intermediateHolder: {fileID: 893572538}
   _isPlayer: 1
-  _fromTransitionTime: 1.5
-  _toTransitionTime: 1.5
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
   _previewTargetPosition: {x: 0, y: 1, z: 5}
   _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _circleRadius: 150

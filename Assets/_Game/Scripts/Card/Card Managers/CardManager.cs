@@ -10,6 +10,9 @@ public class CardManager : MonoBehaviour
     public const float TAP_ANGLE = 15f;
     private const float TAP_TRANSITION_TIME = 0.5f;
 
+    protected static readonly Color SELECT_GLOW_COLOR = new Color(0f, 1f, 1f, 1f);
+    protected static readonly Color PLAY_GLOW_COLOR = new Color(1f, 0.4117647f, 0f, 1f);
+
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
     [SerializeField] private GameObject _visibleEyeIcon;
@@ -26,6 +29,7 @@ public class CardManager : MonoBehaviour
     
     private bool _isTapped = false;
     private bool _isGlowing = false;
+    private bool _isGlowSelectColor = true;
     private bool _isSelected = false;
 
     public CardLayoutHandler CardLayout
@@ -57,7 +61,12 @@ public class CardManager : MonoBehaviour
     {
         get { return _isTapped; }
     }
-    
+
+    public bool IsGlowSelectColor
+    {
+        get { return _isGlowSelectColor; }
+    }
+
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
@@ -162,6 +171,15 @@ public class CardManager : MonoBehaviour
         SetGlow(_isGlowing);
     }
 
+    public virtual void SetGlowColor(bool play)
+    {
+        _isGlowSelectColor = !play;
+        Color color = play ? PLAY_GLOW_COLOR : SELECT_GLOW_COLOR;
+
+        _cardLayoutHandler.SetGlowColor(color);
+        _manaCardLayoutHandler.SetGlowColor(color);
+    }
+
     protected virtual void SetGlow(bool enableGlow)
     {
         _cardLayoutHandler.SetGlow(enableGlow);
@@ -176,7 +194,7 @@ public class CardManager : MonoBehaviour
     }
 
     #region Register Callbacks
-
+    
     public void RegisterOnProcessAction(Action<CardManager> action)
     {
         _onProcessAction += action;
