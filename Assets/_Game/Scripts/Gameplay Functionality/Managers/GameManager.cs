@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour
         switch (_currentStep)
         {
             case GameStep.ChargeStep:
-                yield return manager.StartCoroutine(manager.ChargeManaRoutine(card));
+                yield return manager.ChargeManaRoutine(card);
                 if (card.CardData.Civilization.Length > 1)
                 {
                     card.SetTap(true);
@@ -162,11 +162,12 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameStep.MainStep:
-                if (dataHandler.CanPayCost(card.CardData, 0)) 
+                Card cardData = card.CardData;
+                if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost)) 
                 {
-                    dataHandler.PayCost(card.CardData, 0);
+                    dataHandler.PayCost(cardData.Civilization, cardData.Cost);
                     manager.ManaZoneManager.ArrangeCards();
-                    yield return manager.StartCoroutine(manager.PlayCardRoutine(card));
+                    yield return manager.PlayCardRoutine(card);
                 }
                 break;
         }

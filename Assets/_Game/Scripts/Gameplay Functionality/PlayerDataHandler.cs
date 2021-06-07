@@ -107,16 +107,16 @@ public class PlayerDataHandler : MonoBehaviour
         return iDs;
     }
     
-    public bool CanPayCost(Card cardData, int costReduction)
+    public bool CanPayCost(CardParams.Civilization[] civilization, int cost)
     {
         Dictionary<int, List<CardManager>> availableMana = GetAvailableManaCards();
 
-        if (GetAvailableMana(availableMana) >= cardData.Cost - costReduction) 
+        if (GetAvailableMana(availableMana) >= cost) 
         {
-            List<int> iDs = GetCivIDs(cardData.Civilization);
+            List<int> iDs = GetCivIDs(civilization);
 
             int hits = 0;
-            int n = cardData.Civilization.Length;
+            int n = civilization.Length;
             foreach (int i in iDs)
             {
                 if (availableMana.ContainsKey(i))
@@ -130,21 +130,20 @@ public class PlayerDataHandler : MonoBehaviour
         return false;
     }
 
-    public void PayCost(Card cardData, int costReduction)
+    public void PayCost(CardParams.Civilization[] civilization, int cost)
     {
         Dictionary<int, List<CardManager>> availableMana = GetAvailableManaCards();
-        int cost = Mathf.Max(cardData.Cost - costReduction, 1);
 
         List<List<CardManager>> correspondingCardLists = new List<List<CardManager>>();
         int smallestAvailableCivLen = int.MaxValue;
 
         if (GetAvailableMana(availableMana) >= cost)
         {
-            List<int> iDs = GetCivIDs(cardData.Civilization);
+            List<int> iDs = GetCivIDs(civilization);
             iDs.Sort();
 
             int hits = 0;
-            int n = cardData.Civilization.Length;
+            int n = civilization.Length;
             foreach (int iD in iDs)
             {
                 if (availableMana.ContainsKey(iD))
