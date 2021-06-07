@@ -18,6 +18,7 @@ public class HandManager : MonoBehaviour
 
     [Header("Preview")]
     [SerializeField] private Vector3 _previewTargetPosition;
+    [SerializeField] private Vector3 _previewTargetRotation;
     [SerializeField] private Vector3 _previewTargetScale;
 
     [Header("Layout")]
@@ -83,7 +84,10 @@ public class HandManager : MonoBehaviour
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
 
-        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
+        if (_isPlayer)
+            card.HoverPreviewHandler.InPlayerHand = true;
+        else
+            card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
         card.HoverPreviewHandler.TargetScale = _previewTargetScale;
 
         ArrangeCards();
@@ -156,11 +160,7 @@ public class HandManager : MonoBehaviour
 
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
-
-            int iD = _holderTransform.GetChild(i).GetInstanceID();
-            if (_playerData.CardsInHand.ContainsKey(iD))
-                _playerData.CardsInHand[iD].CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
-
+            
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
 
@@ -174,6 +174,22 @@ public class HandManager : MonoBehaviour
                 indexCardPos = transform.TransformPoint(cardPos);
             else
                 cardTransform.localPosition = cardPos;
+
+            int iD = _holderTransform.GetChild(i).GetInstanceID();
+            if (_playerData.CardsInHand.ContainsKey(iD))
+            {
+                CardManager card = _playerData.CardsInHand[iD];
+
+                card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
+
+                if (_isPlayer) 
+                {
+                    Vector3 previewPosition = _previewTargetPosition;
+                    previewPosition.x = cardPos.x;
+                    card.HoverPreviewHandler.TargetPosition = previewPosition;
+                    card.HoverPreviewHandler.TargetRotation = _previewTargetRotation;
+                }
+            }
         }
 
         return indexCardPos;

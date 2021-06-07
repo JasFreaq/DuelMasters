@@ -1152,6 +1152,7 @@ MonoBehaviour:
   _fromTransitionTime: 1
   _toTransitionTime: 1
   _previewTargetPosition: {x: 0, y: 5, z: 15}
+  _previewTargetRotation: {x: 0, y: 0, z: 0}
   _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
   _circleRadius: 150
   _cardAreaWidth: 24
@@ -2544,7 +2545,8 @@ MonoBehaviour:
   _isPlayer: 1
   _fromTransitionTime: 1
   _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: 1, z: 5}
+  _previewTargetPosition: {x: 0, y: -7.5, z: -13.5}
+  _previewTargetRotation: {x: -90, y: 0, z: 0}
   _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _circleRadius: 150
   _cardAreaWidth: 24

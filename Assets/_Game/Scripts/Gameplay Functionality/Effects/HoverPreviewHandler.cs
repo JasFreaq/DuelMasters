@@ -5,13 +5,17 @@ using DG.Tweening;
 
 public class HoverPreviewHandler: MonoBehaviour
 {
+    private const float TRANSITION_TIME = 0.75f;
+
     [SerializeField] private GameObject _previewGameObject;
     [SerializeField] private float _hoverTimeBeforePreview = 0.5f;
     [SerializeField] private List<GameObject> _objectsToHide = new List<GameObject>();
-    
-    private Vector3 _targetPosition;
-    private Vector3 _targetScale;
+
+    private Vector3 _targetPosition = Vector3.zero;
+    private Vector3 _targetRotation = Vector3.zero;
+    private Vector3 _targetScale = Vector3.one;
     private bool _previewEnabled = false;
+    private bool _inPlayerHand = false;
     private Coroutine _previewRoutine = null;
 
     public bool OverCollider { get; set; }
@@ -20,10 +24,20 @@ public class HoverPreviewHandler: MonoBehaviour
     {
         set { _targetPosition = value; }
     }
+    
+    public Vector3 TargetRotation
+    {
+        set { _targetRotation = value; }
+    }
 
     public Vector3 TargetScale
     {
         set { _targetScale = value; }
+    }
+
+    public bool InPlayerHand
+    {
+        set { _inPlayerHand = value; }
     }
 
     public bool PreviewEnabled
@@ -115,19 +129,30 @@ public class HoverPreviewHandler: MonoBehaviour
             @object.SetActive(false);
         }
 
-        // tween to target position
+        //// tween to target position
         _previewGameObject.transform.localPosition = Vector3.zero;
+        _previewGameObject.transform.localEulerAngles = Vector3.zero;
         _previewGameObject.transform.localScale = Vector3.one;
 
-        _previewGameObject.transform.DOLocalMove(_targetPosition, 0.75f).SetEase(Ease.OutQuint);
-        _previewGameObject.transform.DOScale(_targetScale, 0.75f).SetEase(Ease.OutQuint);
+        if (_inPlayerHand)
+        {
+            _previewGameObject.transform.DOMove(_targetPosition, TRANSITION_TIME).SetEase(Ease.OutQuint);
+            _previewGameObject.transform.DORotate(_targetRotation, TRANSITION_TIME).SetEase(Ease.OutQuint);
+        }
+        else
+        {
+            _previewGameObject.transform.DOLocalMove(_targetPosition, TRANSITION_TIME).SetEase(Ease.OutQuint);
+            _previewGameObject.transform.DOLocalRotate(_targetRotation, TRANSITION_TIME).SetEase(Ease.OutQuint);
+        }
+        _previewGameObject.transform.DOScale(_targetScale, TRANSITION_TIME).SetEase(Ease.OutQuint);
     }
 
     void StopThisPreview()
     {
         _previewGameObject.SetActive(false);
-        _previewGameObject.transform.localScale = Vector3.one;
         _previewGameObject.transform.localPosition = Vector3.zero;
+        _previewGameObject.transform.localEulerAngles = Vector3.zero;
+        _previewGameObject.transform.localScale = Vector3.one;
         foreach (GameObject @object in _objectsToHide)
         {
             @object.SetActive(true);
@@ -143,8 +168,9 @@ public class HoverPreviewHandler: MonoBehaviour
             if (_CurrentlyViewing._previewRoutine != null)
                 _CurrentlyViewing.StopCoroutine(_CurrentlyViewing._previewRoutine);
             _CurrentlyViewing._previewGameObject.SetActive(false);
-            _CurrentlyViewing._previewGameObject.transform.localScale = Vector3.one;
             _CurrentlyViewing._previewGameObject.transform.localPosition = Vector3.zero;
+            _CurrentlyViewing._previewGameObject.transform.localEulerAngles = Vector3.zero;
+            _CurrentlyViewing._previewGameObject.transform.localScale = Vector3.one;
             foreach (GameObject @object in _CurrentlyViewing._objectsToHide)
             {
                 @object.SetActive(true);
