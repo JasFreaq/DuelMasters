@@ -232,7 +232,7 @@ public class HandManager : MonoBehaviour
 
             Vector3 cardRot = new Vector3(cardTransform.localEulerAngles.x,
                 Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
-                cardTransform.localEulerAngles.z);
+                _tempCard.localEulerAngles.z);
 
             cardPos = relativeVector * _circleRadius;
             cardPos.z -= _circleRadius;
@@ -285,6 +285,7 @@ public class HandManager : MonoBehaviour
         {
             _holderTransform.GetChild(siblingIndex).SetSiblingIndex(index);
             _currentDraggedCard.transform.SetSiblingIndex(siblingIndex);
+            
             TransformData orientation = ArrangeCards(siblingIndex);
             _currentDraggedCard.DragHandler.SetOriginalOrientation(orientation.position, orientation.eulerAngles);
         }

@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class DragHandler : MonoBehaviour
 {
-    private const float BUFFER_TIME = 0.1f;
+    private const float BUFFER_TIME = 0.05f;
     private const float RETURN_TIME = 0.8f;
 
     private Transform _cameraTransform;

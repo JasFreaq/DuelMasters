@@ -87,14 +87,13 @@ public class CardManager : MonoBehaviour
 
     public void OnMouseDown()
     {
+        _onSelect.Invoke(this);
+
         _dragHandler.BeginDragging();
     }
 
     private void OnMouseUp()
     {
-        if (!_dragHandler.IsDragging)
-            _onSelect.Invoke(this);
-     
         _dragHandler.EndDragging();
     }
     
