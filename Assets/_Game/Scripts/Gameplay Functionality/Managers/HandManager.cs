@@ -111,6 +111,8 @@ public class HandManager : MonoBehaviour
             _previewCardPosition = cardTransform.position;
             _previewCardRotation = cardTransform.eulerAngles;
 
+            _playerData.CardsInHand[cardTransform.GetInstanceID()].DragHandler.SetOriginalOrientation(cardTransform.localPosition, cardTransform.localEulerAngles);
+
             Vector3 previewPosition = _previewTargetPosition;
             previewPosition.x = cardTransform.position.x;
             cardTransform.DOMove(previewPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
@@ -124,7 +126,7 @@ public class HandManager : MonoBehaviour
             cardTransform.DOScale(Vector3.one, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
         }
     }
-
+    
     private void RemoveCardAtIndex(int index)
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
@@ -132,6 +134,7 @@ public class HandManager : MonoBehaviour
         CardManager card = _playerData.CardsInHand[iD];
         card.DragHandler.DeregisterOnDragBegin(BeginCardDrag);
         card.DragHandler.DeregisterOnDragEnd(EndCardDrag);
+
         if (_isPlayer)
             card.HoverPreviewHandler.EnableHandPreview(false, HandleHandPreview);
 
@@ -146,7 +149,7 @@ public class HandManager : MonoBehaviour
         card.transform.parent = _holderTransform;
 
         if (_isPlayer)
-            card.HoverPreviewHandler.EnableHandPreview(true, HandleHandPreview);
+                card.HoverPreviewHandler.EnableHandPreview(true, HandleHandPreview);
         else
             card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
         card.HoverPreviewHandler.TargetScale = _previewTargetScale;

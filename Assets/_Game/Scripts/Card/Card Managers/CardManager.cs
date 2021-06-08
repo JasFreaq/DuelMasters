@@ -10,7 +10,7 @@ public class CardManager : MonoBehaviour
     public const float TAP_ANGLE = 15f;
     private const float TAP_TRANSITION_TIME = 0.5f;
 
-    protected static readonly Color SELECT_GLOW_COLOR = new Color(0f, 1f, 1f, 1f);
+    protected static readonly Color HIGHLIGHT_GLOW_COLOR = new Color(0f, 1f, 1f, 1f);
     protected static readonly Color PLAY_GLOW_COLOR = new Color(1f, 0.4117647f, 0f, 1f);
 
     [SerializeField] private BoxCollider _cardLayoutCollider;
@@ -24,7 +24,7 @@ public class CardManager : MonoBehaviour
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
-    private Action<CardManager> _onMouseUpAsButton;
+    private Action<CardManager> _onSelect;
     private Action<CardManager> _onProcessAction;
     
     private bool _isTapped = false;
@@ -84,10 +84,18 @@ public class CardManager : MonoBehaviour
         if (_dragHandler)
             _dragHandler.RegisterOnDragEnd(ProcessAction);
     }
-    
-    private void OnMouseUpAsButton()
+
+    public void OnMouseDown()
     {
-        _onMouseUpAsButton.Invoke(this);
+        _dragHandler.BeginDragging();
+    }
+
+    private void OnMouseUp()
+    {
+        if (!_dragHandler.IsDragging)
+            _onSelect.Invoke(this);
+     
+        _dragHandler.EndDragging();
     }
     
     private void OnDisable()
@@ -168,7 +176,7 @@ public class CardManager : MonoBehaviour
     public virtual void SetGlowColor(bool play)
     {
         _isGlowSelectColor = !play;
-        Color color = play ? PLAY_GLOW_COLOR : SELECT_GLOW_COLOR;
+        Color color = play ? PLAY_GLOW_COLOR : HIGHLIGHT_GLOW_COLOR;
 
         _cardLayoutHandler.SetGlowColor(color);
         _manaCardLayoutHandler.SetGlowColor(color);
@@ -199,14 +207,14 @@ public class CardManager : MonoBehaviour
         _onProcessAction -= action;
     }
     
-    public void RegisterOnMouseUpAsButton(Action<CardManager> action)
+    public void RegisterOnSelect(Action<CardManager> action)
     {
-        _onMouseUpAsButton += action;
+        _onSelect += action;
     }
 
-    public void DeregisterOnMouseUpAsButton(Action<CardManager> action)
+    public void DeregisterOnSelect(Action<CardManager> action)
     {
-        _onMouseUpAsButton -= action;
+        _onSelect -= action;
     }
 
     #endregion

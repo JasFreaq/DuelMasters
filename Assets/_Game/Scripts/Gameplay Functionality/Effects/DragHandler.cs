@@ -5,8 +5,12 @@ using DG.Tweening;
 
 public class DragHandler : MonoBehaviour
 {
+    private const float BUFFER_TIME = 0.1f;
     private const float RETURN_TIME = 0.8f;
-    
+
+    private Transform _cameraTransform;
+
+    private bool _attemptDrag = false;
     private bool _isDragging = false;
     private bool _canDrag = false;
     private bool _returnToPosition = true;
@@ -15,9 +19,15 @@ public class DragHandler : MonoBehaviour
     private Vector3 _originalRotation;
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
+    private float _attemptTimer = 0f;
 
     private Action<Transform> _onDragBegin;
     private Action _onDragEnd;
+
+    public bool IsDragging
+    {
+        get { return _isDragging; }
+    }
 
     public bool CanDrag
     {
@@ -41,34 +51,50 @@ public class DragHandler : MonoBehaviour
 
     #endregion
 
+    private void Start()
+    {
+        _cameraTransform = Camera.main.transform;
+    }
+
     private void Update()
     {
-        if (_isDragging)
+        if (_attemptDrag)
+        {
+            if (_attemptTimer < BUFFER_TIME)
+                _attemptTimer += Time.deltaTime;
+            else
+            {
+                _attemptDrag = false;
+                _isDragging = true;
+                HoverPreviewHandler.PreviewsAllowed = false;
+                _CurrentlyDragging = this;
+
+                _zDisplacement = -_cameraTransform.position.z + transform.position.z;
+                _pointerDisplacement = -transform.position + MouseInWorldCoords();
+
+                _onDragBegin?.Invoke(transform);
+            }
+        }
+        else if (_isDragging)
         {
             Vector3 mousePos = MouseInWorldCoords();
             transform.position = new Vector3(mousePos.x - _pointerDisplacement.x, mousePos.y - _pointerDisplacement.y, transform.position.z);
         }
     }
 
-    private void OnMouseDown()
+    public void BeginDragging()
     {
         if (_canDrag)
         {
-            _isDragging = true;
-            HoverPreviewHandler.PreviewsAllowed = false;
-            _CurrentlyDragging = this;
-
-            SetOriginalOrientation(transform.localPosition, transform.localEulerAngles);
-
-            _zDisplacement = -Camera.main.transform.position.z + transform.position.z;
-            _pointerDisplacement = -transform.position + MouseInWorldCoords();
-
-            _onDragBegin.Invoke(transform);
+            _attemptDrag = true;
+            _attemptTimer = 0f;
         }
     }
-    
-    private void OnMouseUp()
+
+    public void EndDragging()
     {
+        _attemptDrag = false;
+
         if (_isDragging)
         {
             _isDragging = false;
@@ -78,10 +104,10 @@ public class DragHandler : MonoBehaviour
             if (_returnToPosition)
                 ReturnToPosition();
             else
-                _onDragEnd.Invoke();
+                _onDragEnd?.Invoke();
         }
     }
-
+    
     public void SetOriginalOrientation(Vector3 position, Vector3 rotation)
     {
         _originalPosition = position;

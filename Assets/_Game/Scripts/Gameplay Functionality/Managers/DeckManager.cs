@@ -52,7 +52,7 @@ public class DeckManager : MonoBehaviour
             card.CardLayout.Canvas.gameObject.SetActive(false);
 
             card.RegisterOnProcessAction(processAction);
-            card.RegisterOnMouseUpAsButton(selectAction);
+            card.RegisterOnSelect(selectAction);
 
             _playerData.CardsInDeck.Add(card);
         }

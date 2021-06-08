@@ -91,7 +91,7 @@ public class HoverPreviewHandler: MonoBehaviour
             _previewRoutine = null;
         }
 
-        if (_enablePlayerHandPreview)
+        if (_enablePlayerHandPreview && _previewEnabled)
         {
             _onPreview?.Invoke(false, transform);
         }
@@ -105,6 +105,7 @@ public class HoverPreviewHandler: MonoBehaviour
     {
         if (_enablePlayerHandPreview)
         {
+            yield return new WaitForEndOfFrame();
             _onPreview?.Invoke(true, transform);
         }
         else

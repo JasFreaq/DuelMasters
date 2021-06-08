@@ -79,11 +79,24 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DrawStartingHandRoutine(_playerManager));
         yield return DrawStartingHandRoutine(_opponentManager);
 
+        EnableHandInteraction(_playerDataHandler);
+        EnableHandInteraction(_opponentDataHandler);
+
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
             for (int i = 0; i < 5; i++)
             {
-                yield return playerManager.DrawCardRoutine();
+                yield return playerManager.DrawCardRoutine(true);
+            }
+        }
+
+        void EnableHandInteraction(PlayerDataHandler playerData)
+        {
+            foreach (KeyValuePair<int, CardManager> pair in playerData.CardsInHand)
+            {
+                CardManager card = pair.Value;
+                card.HoverPreviewHandler.PreviewEnabled = true;
+                card.DragHandler.CanDrag = true;
             }
         }
     }

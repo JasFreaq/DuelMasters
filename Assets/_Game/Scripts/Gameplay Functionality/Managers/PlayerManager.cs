@@ -69,7 +69,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public IEnumerator DrawCardRoutine()
+    public IEnumerator DrawCardRoutine(bool disableInteraction = false)
     {
         CardManager card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
@@ -77,14 +77,19 @@ public class PlayerManager : MonoBehaviour
 
         yield return _deckManager.MoveFromDeckRoutine(card);
         yield return _handManager.MoveToHandRoutine(card);
-        card.HoverPreviewHandler.PreviewEnabled = true;
-        card.DragHandler.CanDrag = true;
+        
+        if (!disableInteraction)
+        {
+            card.HoverPreviewHandler.PreviewEnabled = true;
+            card.DragHandler.CanDrag = true;
+        }
     }
 
     public IEnumerator ChargeManaRoutine(CardManager card)
     {
         card.ManaLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
+        card.DragHandler.CanDrag = false;
 
         yield return _handManager.MoveFromHandRoutine(card);
 
