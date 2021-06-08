@@ -64,7 +64,7 @@ public class PlayerManager : MonoBehaviour
 
         void DeselectCurrentSelection()
         {
-            _currentlySelected.Select( false);
+            _currentlySelected.Select(false);
             _currentlySelected = null;
         }
     }

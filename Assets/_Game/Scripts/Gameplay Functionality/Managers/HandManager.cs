@@ -7,6 +7,16 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class HandManager : MonoBehaviour
 {
+    #region Helper Data Structures
+
+    struct TransformData
+    {
+        public Vector3 position;
+        public Vector3 eulerAngles;
+    }
+
+    #endregion
+
     [SerializeField] private PlayerDataHandler _playerData;
     [SerializeField] private float _dragArrangeYLimit = -7.5f;
     
@@ -35,6 +45,8 @@ public class HandManager : MonoBehaviour
     private Vector3 _previewCardPosition;
     private Vector3 _previewCardRotation;
 
+    private CardManager _currentDraggedCard = null;
+
     private void Start()
     {
         _circleCenter = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
@@ -44,15 +56,29 @@ public class HandManager : MonoBehaviour
         _circleCentralAxis.Normalize();
     }
 
+    private void Update()
+    {
+        if (_currentDraggedCard) 
+            HandleCardDrag();
+    }
+
     #region Functionality Methods
 
-    private void HandleCardDrag(Transform draggedTransform)
+    private void BeginCardDrag(Transform draggedTransform)
     {
-        CardManager card = _playerData.CardsInHand[draggedTransform.GetInstanceID()];
-        if (draggedTransform.position.y < _dragArrangeYLimit)
+        _currentDraggedCard = _playerData.CardsInHand[draggedTransform.GetInstanceID()];
+
+        HoverPreviewHandler previewHandler = _currentDraggedCard.HoverPreviewHandler;
+        previewHandler.PreviewEnabled = false;
+        previewHandler.EnableHandPreview(false, HandleHandPreview);
+    }
+
+    private void HandleCardDrag()
+    {
+        if (_currentDraggedCard.transform.position.y < _dragArrangeYLimit)
         {
             SetState(true);
-            DragRearrange(card);
+            DragRearrange();
         }
         else
         {
@@ -61,12 +87,21 @@ public class HandManager : MonoBehaviour
 
         void SetState(bool state)
         {
-            if (card.DragHandler.IsReturningToPosition != state)
-                card.DragHandler.IsReturningToPosition = state;
+            if (_currentDraggedCard.DragHandler.IsReturningToPosition != state)
+                _currentDraggedCard.DragHandler.IsReturningToPosition = state;
 
-            if (card.IsGlowSelectColor != state)
-                card.SetGlowColor(!state);
+            if (_currentDraggedCard.IsGlowSelectColor != state)
+                _currentDraggedCard.SetGlowColor(!state);
         }
+    }
+
+    private void EndCardDrag()
+    {
+        HoverPreviewHandler previewHandler = _currentDraggedCard.HoverPreviewHandler;
+        previewHandler.PreviewEnabled = true;
+        previewHandler.EnableHandPreview(true, HandleHandPreview);
+        
+        _currentDraggedCard = null;
     }
 
     private void HandleHandPreview(bool preview, Transform cardTransform)
@@ -95,7 +130,8 @@ public class HandManager : MonoBehaviour
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
         CardManager card = _playerData.CardsInHand[iD];
-        card.DragHandler.DeregisterOnDrag(HandleCardDrag);
+        card.DragHandler.DeregisterOnDragBegin(BeginCardDrag);
+        card.DragHandler.DeregisterOnDragEnd(EndCardDrag);
         if (_isPlayer)
             card.HoverPreviewHandler.EnableHandPreview(false, HandleHandPreview);
 
@@ -138,7 +174,8 @@ public class HandManager : MonoBehaviour
 
     public IEnumerator MoveToHandRoutine(CardManager card, bool opponentVisible = false)
     {
-        card.DragHandler.RegisterOnDrag(HandleCardDrag);
+        card.DragHandler.RegisterOnDragBegin(BeginCardDrag);
+        card.DragHandler.RegisterOnDragEnd(EndCardDrag);
 
         _tempCard.parent = _holderTransform;
         ArrangeCards();
@@ -166,7 +203,7 @@ public class HandManager : MonoBehaviour
     
     #region Layout Methods
 
-    private Vector3 ArrangeCards(int index = -1)
+    private TransformData ArrangeCards(int index = -1)
     {
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
@@ -178,7 +215,7 @@ public class HandManager : MonoBehaviour
         Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset, _holderTransform.localPosition.y,
             _holderTransform.localPosition.z);
 
-        Vector3 indexCardPos = Vector3.zero;
+        TransformData indexCardTransform = new TransformData();
 
         for (int i = 0; i < n; i++)
         {
@@ -189,17 +226,23 @@ public class HandManager : MonoBehaviour
             
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
-            
+
+            Vector3 cardRot = new Vector3(cardTransform.localEulerAngles.x,
+                Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
+                cardTransform.localEulerAngles.z);
+
             cardPos = relativeVector * _circleRadius;
             cardPos.z -= _circleRadius;
 
             if (index == i)
-                indexCardPos = transform.TransformPoint(cardPos);
+            {
+                indexCardTransform.position = cardPos;
+                indexCardTransform.eulerAngles = cardRot;
+            }
             else
             {
-                cardTransform.localEulerAngles = new Vector3(cardTransform.localEulerAngles.x, Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
-                    cardTransform.localEulerAngles.z);
                 cardTransform.localPosition = cardPos;
+                cardTransform.localEulerAngles = cardRot;
             }
 
             int iD = _holderTransform.GetChild(i).GetInstanceID();
@@ -209,18 +252,18 @@ public class HandManager : MonoBehaviour
             }
         }
 
-        return indexCardPos;
+        return indexCardTransform;
     }
 
-    public void DragRearrange(CardManager card)
+    public void DragRearrange()
     {
-        int index = card.transform.GetSiblingIndex();
+        int index = _currentDraggedCard.transform.GetSiblingIndex();
         int siblingIndex = -1;
 
         if (index > 0)
         {
             Transform sibling = _holderTransform.GetChild(index - 1);
-            if (card.transform.position.x < sibling.position.x)
+            if (_currentDraggedCard.transform.position.x < sibling.position.x)
             {
                 siblingIndex = index - 1;
             }
@@ -229,7 +272,7 @@ public class HandManager : MonoBehaviour
         if (index < _holderTransform.childCount - 1)
         {
             Transform sibling = _holderTransform.GetChild(index + 1);
-            if (card.transform.position.x > sibling.position.x)
+            if (_currentDraggedCard.transform.position.x > sibling.position.x)
             {
                 siblingIndex = index + 1;
             }
@@ -238,8 +281,9 @@ public class HandManager : MonoBehaviour
         if (siblingIndex != -1)
         {
             _holderTransform.GetChild(siblingIndex).SetSiblingIndex(index);
-            card.transform.SetSiblingIndex(siblingIndex);
-            card.DragHandler.OriginalPosition = ArrangeCards(siblingIndex);
+            _currentDraggedCard.transform.SetSiblingIndex(siblingIndex);
+            TransformData orientation = ArrangeCards(siblingIndex);
+            _currentDraggedCard.DragHandler.SetOriginalOrientation(orientation.position, orientation.eulerAngles);
         }
     }
 

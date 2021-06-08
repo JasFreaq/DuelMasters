@@ -16,8 +16,8 @@ public class DragHandler : MonoBehaviour
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
 
-    private Action<Transform> _onDrag;
-    private Action _onDragRelease;
+    private Action<Transform> _onDragBegin;
+    private Action _onDragEnd;
 
     public bool CanDrag
     {
@@ -29,12 +29,7 @@ public class DragHandler : MonoBehaviour
         get { return _returnToPosition;}
         set { _returnToPosition = value; }
     }
-
-    public Vector3 OriginalPosition
-    {
-        set { _originalPosition = value; }
-    }
-
+    
     #region Static Data Members
 
     private static DragHandler _CurrentlyDragging;
@@ -52,7 +47,23 @@ public class DragHandler : MonoBehaviour
         {
             Vector3 mousePos = MouseInWorldCoords();
             transform.position = new Vector3(mousePos.x - _pointerDisplacement.x, mousePos.y - _pointerDisplacement.y, transform.position.z);
-            _onDrag.Invoke(transform);
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        if (_canDrag)
+        {
+            _isDragging = true;
+            HoverPreviewHandler.PreviewsAllowed = false;
+            _CurrentlyDragging = this;
+
+            SetOriginalOrientation(transform.localPosition, transform.localEulerAngles);
+
+            _zDisplacement = -Camera.main.transform.position.z + transform.position.z;
+            _pointerDisplacement = -transform.position + MouseInWorldCoords();
+
+            _onDragBegin.Invoke(transform);
         }
     }
     
@@ -65,54 +76,55 @@ public class DragHandler : MonoBehaviour
             _CurrentlyDragging = null;
 
             if (_returnToPosition)
-            {
                 ReturnToPosition();
-            }
             else
-            {
-                _onDragRelease.Invoke();
-            }
+                _onDragEnd.Invoke();
         }
-        else if (_canDrag)
-        {
-            _isDragging = true;
-            HoverPreviewHandler.PreviewsAllowed = false;
-            _CurrentlyDragging = this;
+    }
 
-            _originalPosition = transform.position;
-            _originalRotation = transform.eulerAngles;
-            transform.eulerAngles = new Vector3(-90, 0, 0);
-
-            _zDisplacement = -Camera.main.transform.position.z + _originalPosition.z;
-            _pointerDisplacement = -_originalPosition + MouseInWorldCoords();
-        }
+    public void SetOriginalOrientation(Vector3 position, Vector3 rotation)
+    {
+        _originalPosition = position;
+        _originalRotation = rotation;
     }
 
     public void ReturnToPosition()
     {
-        transform.DOMove(_originalPosition, RETURN_TIME).SetEase(Ease.OutQuint);
-        transform.DORotate(_originalRotation, RETURN_TIME).SetEase(Ease.OutQuint);
+        transform.DOLocalMove(_originalPosition, RETURN_TIME).SetEase(Ease.OutQuint);
+        transform.DOLocalRotate(_originalRotation, RETURN_TIME).SetEase(Ease.OutQuint);
+        transform.DOScale(Vector3.one, RETURN_TIME).SetEase(Ease.OutQuint);
+        StartCoroutine(InvokeDragEndRoutine());
+
+        IEnumerator InvokeDragEndRoutine()
+        {
+            yield return new WaitForSeconds(RETURN_TIME);
+            _onDragEnd.Invoke();
+        }
     }
 
-    public void RegisterOnDrag(Action<Transform> action)
+    #region Register Callbacks
+
+    public void RegisterOnDragBegin(Action<Transform> action)
     {
-        _onDrag += action;
+        _onDragBegin += action;
     }
     
-    public void DeregisterOnDrag(Action<Transform> action)
+    public void DeregisterOnDragBegin(Action<Transform> action)
     {
-        _onDrag -= action;
+        _onDragBegin -= action;
     }
     
-    public void RegisterOnDragRelease(Action action)
+    public void RegisterOnDragEnd(Action action)
     {
-        _onDragRelease += action;
+        _onDragEnd += action;
     }
     
-    public void DeregisterOnDragRelease(Action action)
+    public void DeregisterOnDragEnd(Action action)
     {
-        _onDragRelease -= action;
+        _onDragEnd -= action;
     }
+
+    #endregion
 
     private Vector3 MouseInWorldCoords()
     {

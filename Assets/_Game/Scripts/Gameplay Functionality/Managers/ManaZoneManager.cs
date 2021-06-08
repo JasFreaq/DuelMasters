@@ -7,7 +7,6 @@ using UnityEngine;
 public class ManaZoneManager : MonoBehaviour
 {
     #region Helper Data Structures
-    [System.Serializable]
     struct ManaTransform
     {
         public ManaTransform(Transform transform, bool isTapped, int civValue, string cardName)

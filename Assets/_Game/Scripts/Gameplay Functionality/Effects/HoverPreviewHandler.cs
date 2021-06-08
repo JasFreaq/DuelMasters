@@ -17,7 +17,7 @@ public class HoverPreviewHandler: MonoBehaviour
     private Vector3 _targetPosition = Vector3.zero;
     private Vector3 _targetScale = Vector3.one;
     private bool _previewEnabled = false;
-    private bool _inPlayerHand = false;
+    private bool _enablePlayerHandPreview = false;
     private Coroutine _previewRoutine = null;
 
     public bool OverCollider { get; set; }
@@ -75,7 +75,7 @@ public class HoverPreviewHandler: MonoBehaviour
     void OnMouseEnter()
     {
         OverCollider = true;
-        if (PreviewsAllowed && PreviewEnabled)
+        if (PreviewsAllowed && _previewEnabled)
         {
             _previewRoutine = StartCoroutine(StartPreviewRoutine());
         }
@@ -91,7 +91,7 @@ public class HoverPreviewHandler: MonoBehaviour
             _previewRoutine = null;
         }
 
-        if (_inPlayerHand)
+        if (_enablePlayerHandPreview)
         {
             _onPreview?.Invoke(false, transform);
         }
@@ -103,16 +103,17 @@ public class HoverPreviewHandler: MonoBehaviour
 
     IEnumerator StartPreviewRoutine()
     {
-        if (_inPlayerHand)
+        if (_enablePlayerHandPreview)
         {
             _onPreview?.Invoke(true, transform);
         }
         else
         {
+            yield return new WaitForSeconds(_hoverTimeBeforePreview);
+
             // save this HoverPreview as current
             _CurrentlyViewing = this;
 
-            yield return new WaitForSeconds(_hoverTimeBeforePreview);
             PreviewThisObject();
             _previewRoutine = null;
         }
@@ -140,14 +141,22 @@ public class HoverPreviewHandler: MonoBehaviour
         _previewGameObject.transform.DOScale(_targetScale, TRANSITION_TIME).SetEase(Ease.OutQuint);
     }
 
-    void StopThisPreview()
+    private void StopThisPreview()
     {
-        _previewGameObject.SetActive(false);
-        _previewGameObject.transform.localPosition = Vector3.zero;
-        _previewGameObject.transform.localScale = Vector3.one;
-        foreach (GameObject @object in _objectsToHide)
+        if (_previewRoutine != null) 
         {
-            @object.SetActive(true);
+            StopCoroutine(_previewRoutine);
+            _previewRoutine = null;
+        }
+        else
+        {
+            _previewGameObject.SetActive(false);
+            _previewGameObject.transform.localPosition = Vector3.zero;
+            _previewGameObject.transform.localScale = Vector3.one;
+            foreach (GameObject @object in _objectsToHide)
+            {
+                @object.SetActive(true);
+            }
         }
     }
 
@@ -187,8 +196,8 @@ public class HoverPreviewHandler: MonoBehaviour
 
     public void EnableHandPreview(bool enable, Action<bool, Transform> handPreview)
     {
-        _inPlayerHand = enable;
-        if (_inPlayerHand)
+        _enablePlayerHandPreview = enable;
+        if (_enablePlayerHandPreview)
             _onPreview += handPreview;
         else
             _onPreview -= handPreview;

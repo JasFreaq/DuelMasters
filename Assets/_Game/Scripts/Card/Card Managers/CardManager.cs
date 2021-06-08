@@ -82,7 +82,7 @@ public class CardManager : MonoBehaviour
     private void OnEnable()
     {
         if (_dragHandler)
-            _dragHandler.RegisterOnDragRelease(ProcessAction);
+            _dragHandler.RegisterOnDragEnd(ProcessAction);
     }
     
     private void OnMouseUpAsButton()
@@ -93,7 +93,7 @@ public class CardManager : MonoBehaviour
     private void OnDisable()
     {
         if (_dragHandler)
-            _dragHandler.DeregisterOnDragRelease(ProcessAction);
+            _dragHandler.DeregisterOnDragEnd(ProcessAction);
     }
 
     #region Setup Methods
