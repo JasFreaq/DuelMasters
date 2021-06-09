@@ -165,19 +165,27 @@ public class HandManager : MonoBehaviour
     {
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
+        float arrangeTime = GameParamsHolder.Instance.LayoutsArrangeMoveTime;
+
         float startOffset = (n % 2) * cardWidth;
         if (n % 2 == 0)
             startOffset += cardWidth / 2;
         if (!_arrangeLeftToRight)
             startOffset = -startOffset;
+        
         Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset, _holderTransform.localPosition.y,
             _holderTransform.localPosition.z);
-
+        
         TransformData indexCardTransform = new TransformData();
 
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
+            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardManager card)) 
+            {
+                card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
+            }
+
 
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
@@ -197,16 +205,15 @@ public class HandManager : MonoBehaviour
                 indexCardTransform.position = cardPos;
                 indexCardTransform.eulerAngles = cardRot;
             }
+            else if (card)
+            {
+                cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint); 
+                cardTransform.DOLocalRotate(cardRot, arrangeTime).SetEase(Ease.OutQuint);
+            }
             else
             {
                 cardTransform.localPosition = cardPos;
                 cardTransform.localEulerAngles = cardRot;
-            }
-
-            int iD = _holderTransform.GetChild(i).GetInstanceID();
-            if (_playerData.CardsInHand.ContainsKey(iD))
-            {
-                _playerData.CardsInHand[iD].CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
             }
         }
 
