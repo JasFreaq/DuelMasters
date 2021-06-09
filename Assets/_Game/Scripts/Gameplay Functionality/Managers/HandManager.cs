@@ -103,43 +103,6 @@ public class HandManager : MonoBehaviour
         
         _currentDraggedCard = null;
     }
-
-    private void HandleHandPreview(bool preview, Transform cardTransform)
-    {
-        if (preview)
-        {
-            if (_currentPreviewingCard != cardTransform)
-            {
-                _currentPreviewingCard = cardTransform;
-
-                _previewCardPosition = cardTransform.position;
-                _previewCardRotation = cardTransform.eulerAngles;
-
-                _playerData.CardsInHand[cardTransform.GetInstanceID()].DragHandler.SetOriginalOrientation(cardTransform.localPosition, cardTransform.localEulerAngles);
-            }
-            else if (_previewResetRoutine != null) 
-                StopCoroutine(_previewResetRoutine);
-
-            Vector3 previewPosition = _previewTargetPosition;
-            previewPosition.x = cardTransform.position.x;
-            //cardTransform.DOMove(previewPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            //cardTransform.DORotate(_previewTargetRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            //cardTransform.DOScale(_previewTargetScale, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-        }
-        else
-        {
-            //cardTransform.DOMove(_previewCardPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            //cardTransform.DORotate(_previewCardRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            //cardTransform.DOScale(Vector3.one, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            //_previewResetRoutine = StartCoroutine(ResetPreviewingCardRoutine());
-        }
-
-        //IEnumerator ResetPreviewingCardRoutine()
-        //{
-        //    yield return new WaitForSeconds(HoverPreviewHandler.TRANSITION_TIME);
-        //    _currentPreviewingCard = null;
-        //}
-    }
     
     private void RemoveCardAtIndex(int index)
     {

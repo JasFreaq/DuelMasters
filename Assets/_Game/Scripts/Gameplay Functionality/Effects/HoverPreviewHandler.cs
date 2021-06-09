@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class HoverPreviewHandler: MonoBehaviour
 {
-    private const float TRANSITION_TIME = 0.75f;
-
     [SerializeField] private GameObject _previewGameObject;
     [SerializeField] private float _hoverTimeBeforePreview = 0.5f;
     [SerializeField] private List<GameObject> _objectsToHide = new List<GameObject>();
@@ -120,7 +118,9 @@ public class HoverPreviewHandler: MonoBehaviour
         // first disable the previous preview if there is one already
         if (_CurrentlyViewing != this)
             StopPreview();
-        
+
+        float transitionTime = GameParamsHolder.Instance.PreviewTransitionTime;
+
         // tween to target position
         if (_inPlayerHand)
         {
@@ -137,9 +137,9 @@ public class HoverPreviewHandler: MonoBehaviour
             Vector3 previewPosition = _targetPosition;
             previewPosition.x = transform.position.x;
 
-            transform.DOMove(previewPosition, TRANSITION_TIME).SetEase(Ease.OutQuint);
-            transform.DOScale(_targetScale, TRANSITION_TIME).SetEase(Ease.OutQuint);
-            transform.DORotate(_targetRotation, TRANSITION_TIME).SetEase(Ease.OutQuint);
+            transform.DOMove(previewPosition, transitionTime).SetEase(Ease.OutQuint);
+            transform.DOScale(_targetScale, transitionTime).SetEase(Ease.OutQuint);
+            transform.DORotate(_targetRotation, transitionTime).SetEase(Ease.OutQuint);
         }
         else
         {
@@ -155,8 +155,8 @@ public class HoverPreviewHandler: MonoBehaviour
                 @object.SetActive(false);
             }
 
-            _previewGameObject.transform.DOLocalMove(_targetPosition, TRANSITION_TIME).SetEase(Ease.OutQuint);
-            _previewGameObject.transform.DOScale(_targetScale, TRANSITION_TIME).SetEase(Ease.OutQuint);
+            _previewGameObject.transform.DOLocalMove(_targetPosition, transitionTime).SetEase(Ease.OutQuint);
+            _previewGameObject.transform.DOScale(_targetScale, transitionTime).SetEase(Ease.OutQuint);
         }
     }
 
@@ -171,11 +171,19 @@ public class HoverPreviewHandler: MonoBehaviour
         {
             if (_inPlayerHand)
             {
-                transform.DOMove(_handPosition, TRANSITION_TIME).SetEase(Ease.OutQuint);
-                transform.DORotate(_handRotation, TRANSITION_TIME).SetEase(Ease.OutQuint);
-                transform.DOScale(Vector3.one, TRANSITION_TIME).SetEase(Ease.OutQuint);
+                float transitionTime = GameParamsHolder.Instance.PreviewTransitionTime;
+
+                transform.DOMove(_handPosition, transitionTime).SetEase(Ease.OutQuint);
+                transform.DORotate(_handRotation, transitionTime).SetEase(Ease.OutQuint);
+                transform.DOScale(Vector3.one, transitionTime).SetEase(Ease.OutQuint);
 
                 _handPreviewStopRoutine = StartCoroutine(StopPreviewRoutine());
+
+                IEnumerator StopPreviewRoutine()
+                {
+                    yield return new WaitForSeconds(transitionTime);
+                    _isPreviewing = false;
+                }
             }
             else
             {
@@ -189,12 +197,6 @@ public class HoverPreviewHandler: MonoBehaviour
 
                 _isPreviewing = false;
             }
-        }
-
-        IEnumerator StopPreviewRoutine()
-        {
-            yield return new WaitForSeconds(TRANSITION_TIME);
-            _isPreviewing = false;
         }
     }
 

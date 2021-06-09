@@ -99,7 +99,7 @@ public class ManaZoneManager : MonoBehaviour
         if (_tempManaCard.isTapped)
         {
             _tempCard.localEulerAngles = new Vector3(_tempCard.localEulerAngles.x,
-                CardManager.TAP_ANGLE, _tempCard.localEulerAngles.z);
+                GameParamsHolder.Instance.TapAngle, _tempCard.localEulerAngles.z);
         }
         else
         {

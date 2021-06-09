@@ -63,7 +63,8 @@ public class CreatureCardManager : CardManager
     {
         base.SetGlowColor(play);
 
-        _battleCardLayoutHandler.SetGlowColor(play ? PLAY_GLOW_COLOR : HIGHLIGHT_GLOW_COLOR);
+        _battleCardLayoutHandler.SetGlowColor(play ? GameParamsHolder.Instance.PlayGlowColor
+            : GameParamsHolder.Instance.HighlightGlowColor);
     }
 
     #endregion

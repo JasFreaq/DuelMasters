@@ -5,8 +5,6 @@ using DG.Tweening;
 
 public class DragHandler : MonoBehaviour
 {
-    private const float RETURN_TIME = 0.8f;
-
     private Transform _cameraTransform;
 
     private bool _isDragging = false;
@@ -95,14 +93,16 @@ public class DragHandler : MonoBehaviour
 
     public void ReturnToPosition()
     {
-        transform.DOLocalMove(_originalPosition, RETURN_TIME).SetEase(Ease.OutQuint);
-        transform.DOLocalRotate(_originalRotation, RETURN_TIME).SetEase(Ease.OutQuint);
-        transform.DOScale(Vector3.one, RETURN_TIME).SetEase(Ease.OutQuint);
+        float returnTime = GameParamsHolder.Instance.DragReturnTime;
+
+        transform.DOLocalMove(_originalPosition, returnTime).SetEase(Ease.OutQuint);
+        transform.DOLocalRotate(_originalRotation, returnTime).SetEase(Ease.OutQuint);
+        transform.DOScale(Vector3.one, returnTime).SetEase(Ease.OutQuint);
         StartCoroutine(InvokeDragEndRoutine());
 
         IEnumerator InvokeDragEndRoutine()
         {
-            yield return new WaitForSeconds(RETURN_TIME);
+            yield return new WaitForSeconds(returnTime);
             _onDragEnd.Invoke();
         }
     }

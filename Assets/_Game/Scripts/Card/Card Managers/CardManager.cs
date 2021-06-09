@@ -7,12 +7,6 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CardManager : MonoBehaviour
 {
-    public const float TAP_ANGLE = 15f;
-    private const float TAP_TRANSITION_TIME = 0.5f;
-
-    protected static readonly Color HIGHLIGHT_GLOW_COLOR = new Color(0f, 1f, 1f, 1f);
-    protected static readonly Color PLAY_GLOW_COLOR = new Color(1f, 0.4117647f, 0f, 1f);
-
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
     [SerializeField] private GameObject _visibleEyeIcon;
@@ -144,7 +138,8 @@ public class CardManager : MonoBehaviour
     public virtual void SetGlowColor(bool play)
     {
         _isGlowSelectColor = !play;
-        Color color = play ? PLAY_GLOW_COLOR : HIGHLIGHT_GLOW_COLOR;
+        Color color = play ? GameParamsHolder.Instance.PlayGlowColor 
+            : GameParamsHolder.Instance.HighlightGlowColor;
 
         _cardLayoutHandler.SetGlowColor(color);
         _manaCardLayoutHandler.SetGlowColor(color);
@@ -161,13 +156,15 @@ public class CardManager : MonoBehaviour
     {
         _isTapped = !_isTapped;
         _manaCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
+
+        float tapAngle = GameParamsHolder.Instance.TapAngle;
         
         Vector3 tapStateRotation = new Vector3(transform.localEulerAngles.x,
-            _isTapped ? TAP_ANGLE : 0, transform.localEulerAngles.z);
-        transform.DOLocalRotate(tapStateRotation, TAP_TRANSITION_TIME).SetEase(Ease.OutQuint);
+            _isTapped ? tapAngle : 0, transform.localEulerAngles.z);
+        transform.DOLocalRotate(tapStateRotation, GameParamsHolder.Instance.TapTransitionTime).SetEase(Ease.OutQuint);
         
         _previewCardLayout.transform.localEulerAngles = new Vector3(_previewCardLayout.transform.localEulerAngles.x,
-            _isTapped ? -TAP_ANGLE : 0, _previewCardLayout.transform.localEulerAngles.z);
+            _isTapped ? -tapAngle : 0, _previewCardLayout.transform.localEulerAngles.z);
     }
 
     public void SetCardVisible()
