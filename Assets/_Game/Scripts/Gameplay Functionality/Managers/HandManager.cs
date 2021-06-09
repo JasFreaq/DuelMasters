@@ -45,7 +45,6 @@ public class HandManager : MonoBehaviour
     private Vector3 _previewCardPosition;
     private Vector3 _previewCardRotation;
 
-    private CardManager _currentDraggedCard = null;
     private Transform _currentPreviewingCard = null;
     private Coroutine _previewResetRoutine = null;
 
@@ -58,25 +57,16 @@ public class HandManager : MonoBehaviour
         _circleCentralAxis.Normalize();
     }
 
-    private void Update()
-    {
-        if (_currentDraggedCard) 
-            HandleCardDrag();
-    }
-
+    
     #region Functionality Methods
-
-    private void BeginCardDrag(Transform draggedTransform)
+    
+    private void HandleCardDrag(Transform cardTransform)
     {
-        _currentDraggedCard = _playerData.CardsInHand[draggedTransform.GetInstanceID()];
-    }
-
-    private void HandleCardDrag()
-    {
-        if (_currentDraggedCard.transform.position.y < _dragArrangeYLimit)
+        CardManager card = _playerData.CardsInHand[cardTransform.GetInstanceID()];
+        if (card.transform.position.y < _dragArrangeYLimit)
         {
             SetState(false);
-            DragRearrange();
+            DragRearrange(card);
         }
         else
         {
@@ -85,17 +75,12 @@ public class HandManager : MonoBehaviour
 
         void SetState(bool state)
         {
-            if (_currentDraggedCard.ProcessAction != state)
-                _currentDraggedCard.ProcessAction = state;
+            if (card.ProcessAction != state)
+                card.ProcessAction = state;
 
-            if (_currentDraggedCard.IsGlowSelectColor == state)
-                _currentDraggedCard.SetGlowColor(state);
+            if (card.IsGlowSelectColor == state)
+                card.SetGlowColor(state);
         }
-    }
-
-    private void EndCardDrag()
-    {
-        _currentDraggedCard = null;
     }
     
     private void RemoveCardAtIndex(int index)
@@ -103,8 +88,7 @@ public class HandManager : MonoBehaviour
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
         CardManager card = _playerData.CardsInHand[iD];
-        card.DragHandler.DeregisterOnDragBegin(BeginCardDrag);
-        card.DragHandler.DeregisterOnDragEnd(EndCardDrag);
+        card.DragHandler.DeregisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
             card.InPlayerHand = false;
@@ -118,6 +102,7 @@ public class HandManager : MonoBehaviour
     {
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
+        card.DragHandler.RegisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
         {
@@ -150,9 +135,6 @@ public class HandManager : MonoBehaviour
 
     public IEnumerator MoveToHandRoutine(CardManager card, bool opponentVisible = false)
     {
-        card.DragHandler.RegisterOnDragBegin(BeginCardDrag);
-        card.DragHandler.RegisterOnDragEnd(EndCardDrag);
-
         _tempCard.parent = _holderTransform;
         ArrangeCards();
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
@@ -231,15 +213,15 @@ public class HandManager : MonoBehaviour
         return indexCardTransform;
     }
 
-    public void DragRearrange()
+    private void DragRearrange(CardManager card)
     {
-        int index = _currentDraggedCard.transform.GetSiblingIndex();
+        int index = card.transform.GetSiblingIndex();
         int siblingIndex = -1;
 
         if (index > 0)
         {
             Transform sibling = _holderTransform.GetChild(index - 1);
-            if (_currentDraggedCard.transform.position.x < sibling.position.x)
+            if (card.transform.position.x < sibling.position.x)
             {
                 siblingIndex = index - 1;
             }
@@ -248,7 +230,7 @@ public class HandManager : MonoBehaviour
         if (index < _holderTransform.childCount - 1)
         {
             Transform sibling = _holderTransform.GetChild(index + 1);
-            if (_currentDraggedCard.transform.position.x > sibling.position.x)
+            if (card.transform.position.x > sibling.position.x)
             {
                 siblingIndex = index + 1;
             }
@@ -257,10 +239,10 @@ public class HandManager : MonoBehaviour
         if (siblingIndex != -1)
         {
             _holderTransform.GetChild(siblingIndex).SetSiblingIndex(index);
-            _currentDraggedCard.transform.SetSiblingIndex(siblingIndex);
+            card.transform.SetSiblingIndex(siblingIndex);
             
             TransformData orientation = ArrangeCards(siblingIndex);
-            _currentDraggedCard.DragHandler.SetOriginalOrientation(orientation.position, orientation.eulerAngles);
+            card.DragHandler.SetOriginalOrientation(orientation.position, orientation.eulerAngles);
         }
     }
 

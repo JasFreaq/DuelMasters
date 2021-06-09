@@ -15,8 +15,7 @@ public class DragHandler : MonoBehaviour
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
 
-    private Action<Transform> _onDragBegin;
-    private Action _onDragEnd;
+    private Action<Transform> _onDrag;
     
     public bool CanDrag
     {
@@ -45,6 +44,7 @@ public class DragHandler : MonoBehaviour
         {
             Vector3 mousePos = MouseInWorldCoords();
             transform.position = new Vector3(mousePos.x - _pointerDisplacement.x, mousePos.y - _pointerDisplacement.y, transform.position.z);
+            _onDrag.Invoke(transform);
         }
     }
 
@@ -58,7 +58,7 @@ public class DragHandler : MonoBehaviour
             _zDisplacement = -_cameraTransform.position.z + transform.position.z;
             _pointerDisplacement = -transform.position + MouseInWorldCoords();
 
-            _onDragBegin?.Invoke(transform);
+            _onDrag?.Invoke(transform);
         }
     }
 
@@ -94,26 +94,16 @@ public class DragHandler : MonoBehaviour
 
     #region Register Callbacks
 
-    public void RegisterOnDragBegin(Action<Transform> action)
+    public void RegisterOnDrag(Action<Transform> action)
     {
-        _onDragBegin += action;
+        _onDrag += action;
     }
     
-    public void DeregisterOnDragBegin(Action<Transform> action)
+    public void DeregisterOnDrag(Action<Transform> action)
     {
-        _onDragBegin -= action;
+        _onDrag -= action;
     }
     
-    public void RegisterOnDragEnd(Action action)
-    {
-        _onDragEnd += action;
-    }
-    
-    public void DeregisterOnDragEnd(Action action)
-    {
-        _onDragEnd -= action;
-    }
-
     #endregion
 
     private Vector3 MouseInWorldCoords()
