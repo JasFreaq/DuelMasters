@@ -22,6 +22,8 @@ public class HoverPreviewHandler: MonoBehaviour
     private bool _isPreviewing = false;
     private bool _shouldStopPreview = true;
 
+    private Action _onBeginPlayerHandPreview;
+
     private bool _isOverCollider = false;
     private Coroutine _previewRoutine = null;
     private Coroutine _handPreviewStopRoutine = null;
@@ -124,6 +126,7 @@ public class HoverPreviewHandler: MonoBehaviour
             {
                 _handPosition = transform.position;
                 _handRotation = transform.eulerAngles;
+                _onBeginPlayerHandPreview.Invoke();
                 _isPreviewing = true;
             }
 
@@ -218,4 +221,14 @@ public class HoverPreviewHandler: MonoBehaviour
     }
 
     #endregion
+
+    public void RegisterOnBeginPlayerHandPreview(Action action)
+    {
+        _onBeginPlayerHandPreview += action;
+    }
+    
+    public void DeregisterOnBeginPlayerHandPreview(Action action)
+    {
+        _onBeginPlayerHandPreview -= action;
+    }
 }

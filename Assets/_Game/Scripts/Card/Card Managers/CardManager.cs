@@ -79,6 +79,10 @@ public class CardManager : MonoBehaviour
         {
             _inPlayerHand = value;
             _hoverPreviewHandler.InPlayerHand = _inPlayerHand;
+            if (_inPlayerHand) 
+                _hoverPreviewHandler.RegisterOnBeginPlayerHandPreview(SetDragOrientationOnPreviewBegin);
+            else
+                _hoverPreviewHandler.DeregisterOnBeginPlayerHandPreview(SetDragOrientationOnPreviewBegin);
         }
     }
 
@@ -122,6 +126,11 @@ public class CardManager : MonoBehaviour
     {
         _hoverPreviewHandler.EndPreviewing();
         _hoverPreviewHandler.ShouldStopPreview = true;
+    }
+
+    public void SetDragOrientationOnPreviewBegin()
+    {
+        _dragHandler.SetOriginalOrientation(transform.localPosition, transform.localEulerAngles);
     }
 
     #region Setup Methods
