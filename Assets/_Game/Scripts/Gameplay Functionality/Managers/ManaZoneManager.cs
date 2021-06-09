@@ -186,6 +186,15 @@ public class ManaZoneManager : MonoBehaviour
                 currentCard.ManaLayout.transform.DOLocalMove(Vector3.zero, GameParamsHolder.Instance.LayoutsArrangeMoveTime).SetEase(Ease.OutQuint);
 
                 lastManaCard.transform = currentCard.transform;
+
+                //Vector3 initialCardPosition = cardTransform.localPosition;
+                //Vector3 cardDestinationPosition = pos;
+
+                //cardTransform.localPosition = pos;
+                //pos = cardTransform.localPosition;
+
+                //cardTransform.localPosition = initialCardPosition;
+                //currentCard.transform.DOLocalMove(cardDestinationPosition, GameParamsHolder.Instance.LayoutsArrangeMoveTime).SetEase(Ease.OutQuint);
             }
             else
             {
