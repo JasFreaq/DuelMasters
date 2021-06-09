@@ -118,7 +118,8 @@ public class HoverPreviewHandler: MonoBehaviour
     private void PreviewThisObject()
     {
         // first disable the previous preview if there is one already
-        StopPreview();
+        if (_CurrentlyViewing != this)
+            StopPreview();
         
         // tween to target position
         if (_inPlayerHand)
