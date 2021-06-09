@@ -62,8 +62,7 @@ public class ManaZoneManager : MonoBehaviour
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
 
-        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
-        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+        card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
         _playerData.CardsInMana.Add(card.transform.GetInstanceID(), card);
     }
 

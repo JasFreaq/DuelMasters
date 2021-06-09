@@ -45,17 +45,18 @@ public class CreatureCardManager : CardManager
 
     #region State Methods
 
-    protected override void SetGlow(bool enableGlow)
+    public override void ToggleGlow()
     {
-        base.SetGlow(enableGlow);
+        base.ToggleGlow();
 
-        _battleCardLayoutHandler.SetGlow(enableGlow);
+        _battleCardLayoutHandler.SetGlow(_isGlowing);
     }
 
-    public override void SetTap(bool tap)
+    public override void ToggleTap()
     {
-        base.SetTap(tap);
-        _battleCardLayoutHandler.TappedOverlay.SetActive(tap);
+        base.ToggleTap();
+
+        _battleCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
     }
 
     public override void SetGlowColor(bool play)

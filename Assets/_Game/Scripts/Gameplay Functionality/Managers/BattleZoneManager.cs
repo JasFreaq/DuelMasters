@@ -31,8 +31,7 @@ public class BattleZoneManager : MonoBehaviour
         _tempCard.localScale = Vector3.one;
         card.transform.parent = _holderTransform;
 
-        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
-        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+        card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
         _playerData.CardsInBattle.Add(card.transform.GetInstanceID(), card);
 
         ArrangeCards();

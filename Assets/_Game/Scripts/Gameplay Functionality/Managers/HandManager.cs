@@ -46,6 +46,8 @@ public class HandManager : MonoBehaviour
     private Vector3 _previewCardRotation;
 
     private CardManager _currentDraggedCard = null;
+    private Transform _currentPreviewingCard = null;
+    private Coroutine _previewResetRoutine = null;
 
     private void Start()
     {
@@ -70,7 +72,6 @@ public class HandManager : MonoBehaviour
 
         HoverPreviewHandler previewHandler = _currentDraggedCard.HoverPreviewHandler;
         previewHandler.PreviewEnabled = false;
-        previewHandler.EnableHandPreview(false, HandleHandPreview);
     }
 
     private void HandleCardDrag()
@@ -99,7 +100,6 @@ public class HandManager : MonoBehaviour
     {
         HoverPreviewHandler previewHandler = _currentDraggedCard.HoverPreviewHandler;
         previewHandler.PreviewEnabled = true;
-        previewHandler.EnableHandPreview(true, HandleHandPreview);
         
         _currentDraggedCard = null;
     }
@@ -108,23 +108,37 @@ public class HandManager : MonoBehaviour
     {
         if (preview)
         {
-            _previewCardPosition = cardTransform.position;
-            _previewCardRotation = cardTransform.eulerAngles;
+            if (_currentPreviewingCard != cardTransform)
+            {
+                _currentPreviewingCard = cardTransform;
 
-            _playerData.CardsInHand[cardTransform.GetInstanceID()].DragHandler.SetOriginalOrientation(cardTransform.localPosition, cardTransform.localEulerAngles);
+                _previewCardPosition = cardTransform.position;
+                _previewCardRotation = cardTransform.eulerAngles;
+
+                _playerData.CardsInHand[cardTransform.GetInstanceID()].DragHandler.SetOriginalOrientation(cardTransform.localPosition, cardTransform.localEulerAngles);
+            }
+            else if (_previewResetRoutine != null) 
+                StopCoroutine(_previewResetRoutine);
 
             Vector3 previewPosition = _previewTargetPosition;
             previewPosition.x = cardTransform.position.x;
-            cardTransform.DOMove(previewPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            cardTransform.DORotate(_previewTargetRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            cardTransform.DOScale(_previewTargetScale, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //cardTransform.DOMove(previewPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //cardTransform.DORotate(_previewTargetRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //cardTransform.DOScale(_previewTargetScale, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
         }
         else
         {
-            cardTransform.DOMove(_previewCardPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            cardTransform.DORotate(_previewCardRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
-            cardTransform.DOScale(Vector3.one, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //cardTransform.DOMove(_previewCardPosition, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //cardTransform.DORotate(_previewCardRotation, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //cardTransform.DOScale(Vector3.one, HoverPreviewHandler.TRANSITION_TIME).SetEase(Ease.OutQuint);
+            //_previewResetRoutine = StartCoroutine(ResetPreviewingCardRoutine());
         }
+
+        //IEnumerator ResetPreviewingCardRoutine()
+        //{
+        //    yield return new WaitForSeconds(HoverPreviewHandler.TRANSITION_TIME);
+        //    _currentPreviewingCard = null;
+        //}
     }
     
     private void RemoveCardAtIndex(int index)
@@ -136,8 +150,8 @@ public class HandManager : MonoBehaviour
         card.DragHandler.DeregisterOnDragEnd(EndCardDrag);
 
         if (_isPlayer)
-            card.HoverPreviewHandler.EnableHandPreview(false, HandleHandPreview);
-
+            card.HoverPreviewHandler.InPlayerHand = false;
+        
         _playerData.CardsInHand.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
@@ -149,10 +163,12 @@ public class HandManager : MonoBehaviour
         card.transform.parent = _holderTransform;
 
         if (_isPlayer)
-                card.HoverPreviewHandler.EnableHandPreview(true, HandleHandPreview);
+        {
+            card.HoverPreviewHandler.InPlayerHand = true;
+            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale, _previewTargetRotation);
+        }
         else
-            card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
-        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
 
         ArrangeCards();
     }

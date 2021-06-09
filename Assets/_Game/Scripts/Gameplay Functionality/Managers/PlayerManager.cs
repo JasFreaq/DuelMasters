@@ -19,11 +19,17 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
 
-    private static CardManager _currentlySelected;
+    private CardManager _currentlySelected;
+    private bool _canSelect = false;
 
     public ManaZoneManager ManaZoneManager
     {
         get { return _manaZoneManager; }
+    }
+
+    public bool CanSelect
+    {
+        set { _canSelect = value; }
     }
 
     private void Update()
@@ -52,15 +58,18 @@ public class PlayerManager : MonoBehaviour
 
     private void SelectCard(CardManager card)
     {
-        if (_currentlySelected != card)
+        if (_canSelect) 
         {
-            card.Select(true);
-            if (_currentlySelected)
+            if (_currentlySelected != card)
+            {
+                card.Select(true);
+                if (_currentlySelected)
+                    DeselectCurrentSelection();
+                _currentlySelected = card;
+            }
+            else if (_currentlySelected)
                 DeselectCurrentSelection();
-            _currentlySelected = card;
         }
-        else if (_currentlySelected)
-            DeselectCurrentSelection();
 
         void DeselectCurrentSelection()
         {

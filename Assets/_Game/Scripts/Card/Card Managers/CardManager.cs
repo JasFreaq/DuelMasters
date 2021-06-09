@@ -27,9 +27,8 @@ public class CardManager : MonoBehaviour
     private Action<CardManager> _onSelect;
     private Action<CardManager> _onProcessAction;
     
-    private bool _isTapped = false;
-    private bool _canGlow = false;
-    private bool _isGlowing = false;
+    protected bool _isTapped = false;
+    protected bool _isGlowing = false;
     private bool _isGlowSelectColor = true;
     private bool _isSelected = false;
 
@@ -62,12 +61,7 @@ public class CardManager : MonoBehaviour
     {
         get { return _isTapped; }
     }
-
-    public bool CanGlow
-    {
-        set { _canGlow = value; }
-    }
-
+    
     public bool IsGlowSelectColor
     {
         get { return _isGlowSelectColor; }
@@ -79,10 +73,9 @@ public class CardManager : MonoBehaviour
         _dragHandler = GetComponent<DragHandler>();
     }
 
-    private void OnEnable()
+    private void OnMouseEnter()
     {
-        if (_dragHandler)
-            _dragHandler.RegisterOnDragEnd(ProcessAction);
+        _hoverPreviewHandler.BeginPreviewing();
     }
 
     public void OnMouseDown()
@@ -95,12 +88,13 @@ public class CardManager : MonoBehaviour
     private void OnMouseUp()
     {
         _dragHandler.EndDragging();
+
+        _onProcessAction.Invoke(this);
     }
-    
-    private void OnDisable()
+
+    private void OnMouseExit()
     {
-        if (_dragHandler)
-            _dragHandler.DeregisterOnDragEnd(ProcessAction);
+        _hoverPreviewHandler.EndPreviewing();
     }
 
     #region Setup Methods
@@ -146,31 +140,6 @@ public class CardManager : MonoBehaviour
     #endregion
 
     #region State Methods
-    
-    public virtual void SetTap(bool tap)
-    {
-        _isTapped = tap;
-        _manaCardLayoutHandler.TappedOverlay.SetActive(tap);
-        
-        Vector3 tapStateRotation = new Vector3(transform.localEulerAngles.x,
-            tap ? TAP_ANGLE : 0, transform.localEulerAngles.z);
-        transform.DOLocalRotate(tapStateRotation, TAP_TRANSITION_TIME).SetEase(Ease.OutQuint);
-        
-        _previewCardLayout.transform.localEulerAngles = new Vector3(_previewCardLayout.transform.localEulerAngles.x,
-            tap ? -TAP_ANGLE : 0, _previewCardLayout.transform.localEulerAngles.z);
-    }
-
-    public void SetCardVisible()
-    {
-        //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
-    }
-
-    public void Select(bool selected)
-    {
-        _isSelected = selected;
-        _isGlowing = _isSelected;
-        SetGlow(_isGlowing);
-    }
 
     public virtual void SetGlowColor(bool play)
     {
@@ -181,19 +150,39 @@ public class CardManager : MonoBehaviour
         _manaCardLayoutHandler.SetGlowColor(color);
     }
 
-    protected virtual void SetGlow(bool enableGlow)
+    public virtual void ToggleGlow()
     {
-        _cardLayoutHandler.SetGlow(enableGlow);
-        _manaCardLayoutHandler.SetGlow(enableGlow);
+        _isGlowing = !_isGlowing;
+        _cardLayoutHandler.SetGlow(_isGlowing);
+        _manaCardLayoutHandler.SetGlow(_isGlowing);
+    }
+
+    public virtual void ToggleTap()
+    {
+        _isTapped = !_isTapped;
+        _manaCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
+        
+        Vector3 tapStateRotation = new Vector3(transform.localEulerAngles.x,
+            _isTapped ? TAP_ANGLE : 0, transform.localEulerAngles.z);
+        transform.DOLocalRotate(tapStateRotation, TAP_TRANSITION_TIME).SetEase(Ease.OutQuint);
+        
+        _previewCardLayout.transform.localEulerAngles = new Vector3(_previewCardLayout.transform.localEulerAngles.x,
+            _isTapped ? -TAP_ANGLE : 0, _previewCardLayout.transform.localEulerAngles.z);
+    }
+
+    public void SetCardVisible()
+    {
+        //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
+    }
+
+    public void Select(bool selected)
+    {
+        _isSelected = selected;
+        ToggleGlow();
     }
     
     #endregion
-
-    private void ProcessAction()
-    {
-        _onProcessAction.Invoke(this);
-    }
-
+    
     #region Register Callbacks
     
     public void RegisterOnProcessAction(Action<CardManager> action)

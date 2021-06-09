@@ -82,6 +82,9 @@ public class GameManager : MonoBehaviour
         EnableHandInteraction(_playerDataHandler);
         EnableHandInteraction(_opponentDataHandler);
 
+        _playerManager.CanSelect = true;
+        _opponentManager.CanSelect = true;
+
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
             for (int i = 0; i < 5; i++)
@@ -112,7 +115,7 @@ public class GameManager : MonoBehaviour
             case GameStep.UntapStep:
                 foreach (CardManager card in _playerDataHandler.TappedCards)
                 {
-                    card.SetTap(false);
+                    card.ToggleTap();
                 }
                 _playerDataHandler.TappedCards.Clear();
                 _currentStep = GameStep.StartOfTurnStep;
@@ -172,7 +175,7 @@ public class GameManager : MonoBehaviour
                     yield return manager.ChargeManaRoutine(card);
                     if (card.CardData.Civilization.Length > 1)
                     {
-                        card.SetTap(true);
+                        card.ToggleTap();
                         dataHandler.TappedCards.Add(card);
                     }
 

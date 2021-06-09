@@ -163,7 +163,7 @@ public class PlayerDataHandler : MonoBehaviour
                 foreach (List<CardManager> correspondingCardList in correspondingCardLists)
                 {
                     cost--;
-                    correspondingCardList[i].SetTap(true);
+                    correspondingCardList[i].ToggleTap();
                     _tappedCards.Add(correspondingCardList[i]);
 
                     if (cost == 0)
@@ -178,7 +178,7 @@ public class PlayerDataHandler : MonoBehaviour
                     if (!card.IsTapped) 
                     {
                         cost--;
-                        card.SetTap(true);
+                        card.ToggleTap();
                         _tappedCards.Add(card);
 
                         if (cost == 0)

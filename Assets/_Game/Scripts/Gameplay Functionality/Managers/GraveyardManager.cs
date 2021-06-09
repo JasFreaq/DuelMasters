@@ -34,8 +34,8 @@ public class GraveyardManager : MonoBehaviour
         {
             _playerData.CardsInGrave[_playerData.CardsInGrave.Count - 1].HoverPreviewHandler.PreviewEnabled = false;
         }
-        card.HoverPreviewHandler.TargetPosition = _previewTargetPosition;
-        card.HoverPreviewHandler.TargetScale = _previewTargetScale;
+
+        card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
         card.HoverPreviewHandler.PreviewEnabled = true;
         _playerData.CardsInGrave.Add(card);
     }

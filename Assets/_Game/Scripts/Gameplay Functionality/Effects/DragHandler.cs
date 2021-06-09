@@ -5,12 +5,10 @@ using DG.Tweening;
 
 public class DragHandler : MonoBehaviour
 {
-    private const float BUFFER_TIME = 0.05f;
     private const float RETURN_TIME = 0.8f;
 
     private Transform _cameraTransform;
 
-    private bool _attemptDrag = false;
     private bool _isDragging = false;
     private bool _canDrag = false;
     private bool _returnToPosition = true;
@@ -19,16 +17,10 @@ public class DragHandler : MonoBehaviour
     private Vector3 _originalRotation;
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
-    private float _attemptTimer = 0f;
 
     private Action<Transform> _onDragBegin;
     private Action _onDragEnd;
-
-    public bool IsDragging
-    {
-        get { return _isDragging; }
-    }
-
+    
     public bool CanDrag
     {
         set { _canDrag = value; }
@@ -58,24 +50,7 @@ public class DragHandler : MonoBehaviour
 
     private void Update()
     {
-        if (_attemptDrag)
-        {
-            if (_attemptTimer < BUFFER_TIME)
-                _attemptTimer += Time.deltaTime;
-            else
-            {
-                _attemptDrag = false;
-                _isDragging = true;
-                HoverPreviewHandler.PreviewsAllowed = false;
-                _CurrentlyDragging = this;
-
-                _zDisplacement = -_cameraTransform.position.z + transform.position.z;
-                _pointerDisplacement = -transform.position + MouseInWorldCoords();
-
-                _onDragBegin?.Invoke(transform);
-            }
-        }
-        else if (_isDragging)
+        if (_isDragging)
         {
             Vector3 mousePos = MouseInWorldCoords();
             transform.position = new Vector3(mousePos.x - _pointerDisplacement.x, mousePos.y - _pointerDisplacement.y, transform.position.z);
@@ -86,15 +61,19 @@ public class DragHandler : MonoBehaviour
     {
         if (_canDrag)
         {
-            _attemptDrag = true;
-            _attemptTimer = 0f;
+            _isDragging = true;
+            HoverPreviewHandler.PreviewsAllowed = false;
+            _CurrentlyDragging = this;
+
+            _zDisplacement = -_cameraTransform.position.z + transform.position.z;
+            _pointerDisplacement = -transform.position + MouseInWorldCoords();
+
+            _onDragBegin?.Invoke(transform);
         }
     }
 
     public void EndDragging()
     {
-        _attemptDrag = false;
-
         if (_isDragging)
         {
             _isDragging = false;
