@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private static GameStep _currentStep = GameStep.BeginStep;
     private bool _firstTurn = true;
     private bool _playerTurn = true;
+    private bool _endStep = false;
     private bool _gameOver = false;
 
     private List<CardManager> _playerCards;
@@ -131,10 +132,22 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameStep.ChargeStep:
+                if (_endStep)
+                {
+                    _endStep = false;
 
+                    _currentStep = GameStep.MainStep;
+                    HighlightPlayableCards();
+                }
                 break;
 
             case GameStep.MainStep:
+                if (_endStep)
+                {
+                    _endStep = false;
+
+                    _currentStep = GameStep.AttackStep;
+                }
                 break;
 
             case GameStep.AttackStep:
@@ -148,6 +161,27 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    private void HighlightPlayableCards()
+    {
+        PlayerDataHandler dataHandler;
+        if (_playerTurn)
+            dataHandler = _playerDataHandler;
+        else
+            dataHandler = _opponentDataHandler;
+        
+
+        foreach (KeyValuePair<int, CardManager> pair in dataHandler.CardsInHand)
+        {
+            CardManager card = pair.Value;
+            if (dataHandler.CanPayCost(card.CardData.Civilization, card.CardData.Cost)) 
+            {
+                card.ToggleGlow();
+            }
+        }
+    }
+
+    #region Game Action Handling
 
     private void ProcessGameActionHandler(CardManager card)
     {
@@ -177,6 +211,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 _currentStep = GameStep.MainStep;
+                HighlightPlayableCards();
                 break;
 
             case GameStep.MainStep:
@@ -195,4 +230,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+
+    #endregion
 }
