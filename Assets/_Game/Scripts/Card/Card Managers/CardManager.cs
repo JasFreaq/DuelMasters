@@ -110,6 +110,7 @@ public class CardManager : MonoBehaviour
     {
         if (_processAction)
         {
+            _onSelect.Invoke(this);
             _dragHandler.ResetDragging();
             _onProcessAction?.Invoke(this);
         }
