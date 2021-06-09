@@ -129,7 +129,7 @@ public class ManaZoneManager : MonoBehaviour
 
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min(_cardAreaWidth / n, _maxCardWidth);
-        float ratio = Mathf.Min(cardWidth / _maxCardWidth);
+        float ratio = cardWidth / _maxCardWidth;
         Vector3 pos = _holderTransform.localPosition;
 
         ManaTransform lastManaCard = new ManaTransform(null, false, 0, "");
@@ -144,6 +144,7 @@ public class ManaZoneManager : MonoBehaviour
             {
                 currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
 
+                currentManaCard.transform = currentCard.transform;
                 currentManaCard.isTapped = currentCard.IsTapped;
                 currentManaCard.civValue = CardParams.GetCivValue(currentCard.CardData.Civilization);
             }
@@ -152,7 +153,7 @@ public class ManaZoneManager : MonoBehaviour
                 currentManaCard = _tempManaCard;
             }
 
-            if (lastManaCard.transform != null)
+            if (lastManaCard.transform)
             {
                 if (lastManaCard.isTapped)
                 {
@@ -173,36 +174,25 @@ public class ManaZoneManager : MonoBehaviour
 
             if (i > 0)
                 pos.x += _arrangeLeftToRight ? currentWidth : -currentWidth;
-            lastManaCard = currentManaCard;
 
             if (currentCard)
             {
-                Vector3 layoutWorldPos = currentCard.ManaLayout.transform.position;
+                Vector3 initialCardPosition = cardTransform.localPosition;
+                Vector3 cardDestinationPosition = pos;
 
                 cardTransform.localPosition = pos;
                 pos = cardTransform.localPosition;
 
-                currentCard.ManaLayout.transform.position = layoutWorldPos;
-                currentCard.ManaLayout.transform.DOLocalMove(Vector3.zero, GameParamsHolder.Instance.LayoutsArrangeMoveTime).SetEase(Ease.OutQuint);
-
-                lastManaCard.transform = currentCard.transform;
-
-                //Vector3 initialCardPosition = cardTransform.localPosition;
-                //Vector3 cardDestinationPosition = pos;
-
-                //cardTransform.localPosition = pos;
-                //pos = cardTransform.localPosition;
-
-                //cardTransform.localPosition = initialCardPosition;
-                //currentCard.transform.DOLocalMove(cardDestinationPosition, GameParamsHolder.Instance.LayoutsArrangeMoveTime).SetEase(Ease.OutQuint);
+                cardTransform.localPosition = initialCardPosition;
+                cardTransform.DOLocalMove(cardDestinationPosition, GameParamsHolder.Instance.LayoutsArrangeMoveTime).SetEase(Ease.OutQuint);
             }
             else
             {
                 cardTransform.localPosition = pos;
                 pos = cardTransform.localPosition;
-
-                lastManaCard.transform = _tempManaCard.transform;
             }
+            
+            lastManaCard = currentManaCard;
         }
     }
 
