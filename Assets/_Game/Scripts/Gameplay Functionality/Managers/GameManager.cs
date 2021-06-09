@@ -166,36 +166,33 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ProcessGameAction(CardManager card, PlayerManager manager, PlayerDataHandler dataHandler)
     {
-        if (!card.DragHandler.IsReturningToPosition) 
+        switch (_currentStep)
         {
-            switch (_currentStep)
-            {
-                case GameStep.ChargeStep:
-                    yield return manager.ChargeManaRoutine(card);
-                    if (card.CardData.Civilization.Length > 1)
-                    {
-                        card.ToggleTap();
-                        dataHandler.TappedCards.Add(card);
-                    }
+            case GameStep.ChargeStep:
+                yield return manager.ChargeManaRoutine(card);
+                if (card.CardData.Civilization.Length > 1)
+                {
+                    card.ToggleTap();
+                    dataHandler.TappedCards.Add(card);
+                }
 
-                    _currentStep = GameStep.MainStep;
-                    break;
+                _currentStep = GameStep.MainStep;
+                break;
 
-                case GameStep.MainStep:
-                    Card cardData = card.CardData;
-                    if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost))
-                    {
-                        dataHandler.PayCost(cardData.Civilization, cardData.Cost);
-                        manager.ManaZoneManager.ArrangeCards();
-                        yield return manager.PlayCardRoutine(card);
-                    }
-                    else
-                    {
-                        card.DragHandler.ReturnToPosition();
-                    }
+            case GameStep.MainStep:
+                Card cardData = card.CardData;
+                if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost))
+                {
+                    dataHandler.PayCost(cardData.Civilization, cardData.Cost);
+                    manager.ManaZoneManager.ArrangeCards();
+                    yield return manager.PlayCardRoutine(card);
+                }
+                else
+                {
+                    card.DragHandler.ReturnToPosition();
+                }
 
-                    break;
-            }
+                break;
         }
     }
 }

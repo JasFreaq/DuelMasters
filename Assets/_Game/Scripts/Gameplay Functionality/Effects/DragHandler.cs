@@ -9,7 +9,6 @@ public class DragHandler : MonoBehaviour
 
     private bool _isDragging = false;
     private bool _canDrag = false;
-    private bool _returnToPosition = true;
 
     private Vector3 _originalPosition;
     private Vector3 _originalRotation;
@@ -22,12 +21,6 @@ public class DragHandler : MonoBehaviour
     public bool CanDrag
     {
         set { _canDrag = value; }
-    }
-
-    public bool IsReturningToPosition
-    {
-        get { return _returnToPosition;}
-        set { _returnToPosition = value; }
     }
     
     #region Static Data Members
@@ -60,7 +53,6 @@ public class DragHandler : MonoBehaviour
         if (_canDrag)
         {
             _isDragging = true;
-            HoverPreviewHandler.PreviewsAllowed = false;
             _CurrentlyDragging = this;
 
             _zDisplacement = -_cameraTransform.position.z + transform.position.z;
@@ -70,18 +62,18 @@ public class DragHandler : MonoBehaviour
         }
     }
 
+    public void ResetDragging()
+    {
+        _isDragging = false;
+        _CurrentlyDragging = null;
+    }
+
     public void EndDragging()
     {
         if (_isDragging)
         {
-            _isDragging = false;
-            HoverPreviewHandler.PreviewsAllowed = true;
-            _CurrentlyDragging = null;
-
-            if (_returnToPosition)
-                ReturnToPosition();
-            else
-                _onDragEnd?.Invoke();
+            ResetDragging();
+            ReturnToPosition();
         }
     }
     
@@ -98,13 +90,6 @@ public class DragHandler : MonoBehaviour
         transform.DOLocalMove(_originalPosition, returnTime).SetEase(Ease.OutQuint);
         transform.DOLocalRotate(_originalRotation, returnTime).SetEase(Ease.OutQuint);
         transform.DOScale(Vector3.one, returnTime).SetEase(Ease.OutQuint);
-        StartCoroutine(InvokeDragEndRoutine());
-
-        IEnumerator InvokeDragEndRoutine()
-        {
-            yield return new WaitForSeconds(returnTime);
-            _onDragEnd.Invoke();
-        }
     }
 
     #region Register Callbacks

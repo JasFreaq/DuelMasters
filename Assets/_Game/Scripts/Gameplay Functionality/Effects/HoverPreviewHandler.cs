@@ -20,6 +20,7 @@ public class HoverPreviewHandler: MonoBehaviour
     private bool _previewEnabled = false;
     private bool _inPlayerHand = false;
     private bool _isPreviewing = false;
+    private bool _shouldStopPreview = true;
 
     private bool _isOverCollider = false;
     private Coroutine _previewRoutine = null;
@@ -28,6 +29,11 @@ public class HoverPreviewHandler: MonoBehaviour
     public bool InPlayerHand
     {
         set { _inPlayerHand = value; }
+    }
+
+    public bool ShouldStopPreview
+    {
+        set { _shouldStopPreview = value; }
     }
 
     public bool PreviewEnabled
@@ -46,20 +52,7 @@ public class HoverPreviewHandler: MonoBehaviour
 
     private static HoverPreviewHandler _CurrentlyViewing = null;
     private static HoverPreviewHandler[] _AllHoverPreviews = null;
-
-    private static bool _PreviewsAllowed = true;
-    public static bool PreviewsAllowed
-    {
-        get { return _PreviewsAllowed;}
-
-        set 
-        { 
-            _PreviewsAllowed = value;
-            if (!_PreviewsAllowed)
-                StopPreview();
-        }
-    }
-
+    
     #endregion
 
     private void Start()
@@ -73,7 +66,7 @@ public class HoverPreviewHandler: MonoBehaviour
     public void BeginPreviewing()
     {
         _isOverCollider = true;
-        if (PreviewsAllowed && _previewEnabled)
+        if (_previewEnabled)
         {
             _previewRoutine = StartCoroutine(StartPreviewRoutine());
         }
@@ -90,7 +83,10 @@ public class HoverPreviewHandler: MonoBehaviour
         }
         else if (!PreviewingSomeCard())
         {
-            StopPreview();
+            if (_shouldStopPreview)
+                StopPreview();
+            else if (_isPreviewing)
+                _isPreviewing = false;
         }
     }
 
@@ -212,9 +208,6 @@ public class HoverPreviewHandler: MonoBehaviour
 
     private static bool PreviewingSomeCard()
     {
-        if (!PreviewsAllowed)
-            return false;
-        
         foreach (HoverPreviewHandler hoverPreview in _AllHoverPreviews)
         {
             if (hoverPreview._isOverCollider && hoverPreview.PreviewEnabled)

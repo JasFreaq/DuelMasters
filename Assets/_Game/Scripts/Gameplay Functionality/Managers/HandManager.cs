@@ -69,38 +69,32 @@ public class HandManager : MonoBehaviour
     private void BeginCardDrag(Transform draggedTransform)
     {
         _currentDraggedCard = _playerData.CardsInHand[draggedTransform.GetInstanceID()];
-
-        HoverPreviewHandler previewHandler = _currentDraggedCard.HoverPreviewHandler;
-        previewHandler.PreviewEnabled = false;
     }
 
     private void HandleCardDrag()
     {
         if (_currentDraggedCard.transform.position.y < _dragArrangeYLimit)
         {
-            SetState(true);
+            SetState(false);
             DragRearrange();
         }
         else
         {
-            SetState(false);
+            SetState(true);
         }
 
         void SetState(bool state)
         {
-            if (_currentDraggedCard.DragHandler.IsReturningToPosition != state)
-                _currentDraggedCard.DragHandler.IsReturningToPosition = state;
+            if (_currentDraggedCard.ProcessAction != state)
+                _currentDraggedCard.ProcessAction = state;
 
-            if (_currentDraggedCard.IsGlowSelectColor != state)
-                _currentDraggedCard.SetGlowColor(!state);
+            if (_currentDraggedCard.IsGlowSelectColor == state)
+                _currentDraggedCard.SetGlowColor(state);
         }
     }
 
     private void EndCardDrag()
     {
-        HoverPreviewHandler previewHandler = _currentDraggedCard.HoverPreviewHandler;
-        previewHandler.PreviewEnabled = true;
-        
         _currentDraggedCard = null;
     }
     
@@ -113,7 +107,7 @@ public class HandManager : MonoBehaviour
         card.DragHandler.DeregisterOnDragEnd(EndCardDrag);
 
         if (_isPlayer)
-            card.HoverPreviewHandler.InPlayerHand = false;
+            card.InPlayerHand = false;
         
         _playerData.CardsInHand.Remove(iD);
         card.transform.parent = transform;
@@ -127,7 +121,7 @@ public class HandManager : MonoBehaviour
 
         if (_isPlayer)
         {
-            card.HoverPreviewHandler.InPlayerHand = true;
+            card.InPlayerHand = true;
             card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale, _previewTargetRotation);
         }
         else

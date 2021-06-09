@@ -26,6 +26,12 @@ public class CardManager : MonoBehaviour
     private bool _isGlowSelectColor = true;
     private bool _isSelected = false;
 
+    private bool _processAction = false;
+    private bool _inPlayerHand = false;
+
+
+    #region Properties
+
     public CardLayoutHandler CardLayout
     {
         get { return _cardLayoutHandler; }
@@ -61,6 +67,23 @@ public class CardManager : MonoBehaviour
         get { return _isGlowSelectColor; }
     }
 
+    public bool ProcessAction
+    {
+        get { return _processAction;}
+        set { _processAction = value; }
+    }
+    
+    public bool InPlayerHand
+    {
+        set
+        {
+            _inPlayerHand = value;
+            _hoverPreviewHandler.InPlayerHand = _inPlayerHand;
+        }
+    }
+
+    #endregion
+
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
@@ -81,14 +104,24 @@ public class CardManager : MonoBehaviour
 
     private void OnMouseUp()
     {
-        _dragHandler.EndDragging();
+        if (_processAction)
+        {
+            _dragHandler.ResetDragging();
+            _onProcessAction?.Invoke(this);
+        }
+        else
+        {
+            _dragHandler.EndDragging();
+            if (_inPlayerHand)
+                _hoverPreviewHandler.ShouldStopPreview = false;
+        }
 
-        _onProcessAction.Invoke(this);
     }
 
     private void OnMouseExit()
     {
         _hoverPreviewHandler.EndPreviewing();
+        _hoverPreviewHandler.ShouldStopPreview = true;
     }
 
     #region Setup Methods
