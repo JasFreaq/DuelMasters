@@ -116,9 +116,10 @@ public class CardManager : MonoBehaviour
         else
         {
             _dragHandler.EndDragging();
-            if (_inPlayerHand)
-                _hoverPreviewHandler.ShouldStopPreview = false;
         }
+        
+        if (_inPlayerHand)
+            _hoverPreviewHandler.ShouldStopPreview = false;
 
     }
 
