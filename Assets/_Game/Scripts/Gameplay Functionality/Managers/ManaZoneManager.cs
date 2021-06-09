@@ -42,7 +42,6 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private float _tapUntapDist = 12;
     [SerializeField] private float _maxSameCivTapWidth = 4;
     [SerializeField] private float _maxSameCivUntapWidth = 6;
-    [SerializeField] private float _arrangeMoveTime = 0.5f;
     [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private int _manaZoneSortingLayerFloor = 25;
     [SerializeField] private Transform _holderTransform;
@@ -184,7 +183,7 @@ public class ManaZoneManager : MonoBehaviour
                 pos = cardTransform.localPosition;
 
                 currentCard.ManaLayout.transform.position = layoutWorldPos;
-                currentCard.ManaLayout.transform.DOLocalMove(Vector3.zero, _arrangeMoveTime).SetEase(Ease.OutQuint);
+                currentCard.ManaLayout.transform.DOLocalMove(Vector3.zero, GameParamsHolder.Instance.LayoutsArrangeMoveTime).SetEase(Ease.OutQuint);
 
                 lastManaCard.transform = currentCard.transform;
             }

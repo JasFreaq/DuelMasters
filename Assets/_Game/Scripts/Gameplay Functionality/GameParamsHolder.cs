@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameParamsHolder : MonoBehaviour
 {
     [Header("Floats")]
+    [SerializeField] private float _layoutsArrangeMoveTime = 0.5f;
     [SerializeField] private float _previewTransitionTime = 0.75f;
     [SerializeField] private float _dragReturnTime = 0.8f;
     [SerializeField] private float _tapAngle = 15f;
@@ -32,6 +33,11 @@ public class GameParamsHolder : MonoBehaviour
     #endregion
 
     #region Float Properties
+
+    public float LayoutsArrangeMoveTime
+    {
+        get { return _layoutsArrangeMoveTime; }
+    }
 
     public float PreviewTransitionTime
     {
