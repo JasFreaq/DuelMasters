@@ -98,8 +98,7 @@ public class PlayerManager : MonoBehaviour
     {
         card.ManaLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
-        card.DragHandler.CanDrag = false;
-
+        
         yield return _handManager.MoveFromHandRoutine(card);
 
         card.ActivateManaLayout();

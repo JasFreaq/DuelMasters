@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Deck _opponentDeck;
 
     private static GameStep _currentStep = GameStep.BeginStep;
+    private int _playableCards = 0;
     private bool _firstTurn = true;
     private bool _playerTurn = true;
     private bool _endStep = false;
@@ -142,7 +143,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameStep.MainStep:
-                if (_endStep)
+                if (_endStep || _playableCards == 0) 
                 {
                     _endStep = false;
 
@@ -164,12 +165,7 @@ public class GameManager : MonoBehaviour
 
     private void HighlightPlayableCards()
     {
-        PlayerDataHandler dataHandler;
-        if (_playerTurn)
-            dataHandler = _playerDataHandler;
-        else
-            dataHandler = _opponentDataHandler;
-        
+        PlayerDataHandler dataHandler = _playerTurn ? _playerDataHandler : _opponentDataHandler;
 
         foreach (KeyValuePair<int, CardManager> pair in dataHandler.CardsInHand)
         {
@@ -177,6 +173,7 @@ public class GameManager : MonoBehaviour
             if (dataHandler.CanPayCost(card.CardData.Civilization, card.CardData.Cost)) 
             {
                 card.ToggleGlow();
+                _playableCards++;
             }
         }
     }

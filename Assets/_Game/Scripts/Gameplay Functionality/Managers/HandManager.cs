@@ -122,7 +122,8 @@ public class HandManager : MonoBehaviour
     public IEnumerator MoveFromHandRoutine(CardManager card, bool forShield = false)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
-        
+        card.DragHandler.CanDrag = false;
+
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Vector3 rotation = new Vector3(-90, 0, 0);
         if (forShield && !_isPlayer)

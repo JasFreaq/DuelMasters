@@ -8,7 +8,6 @@ public class HoverPreviewHandler: MonoBehaviour
 {
     [SerializeField] private GameObject _previewGameObject;
     [SerializeField] private float _hoverTimeBeforePreview = 0.5f;
-    [SerializeField] private List<GameObject> _objectsToHide = new List<GameObject>();
     
     private Vector3 _targetPosition = Vector3.zero;
     private Vector3 _targetScale = Vector3.one;
@@ -148,12 +147,6 @@ public class HoverPreviewHandler: MonoBehaviour
             // enable Preview game object
             _previewGameObject.SetActive(true);
 
-            // disable
-            foreach (GameObject @object in _objectsToHide)
-            {
-                @object.SetActive(false);
-            }
-
             _previewGameObject.transform.DOLocalMove(_targetPosition, transitionTime).SetEase(Ease.OutQuint);
             _previewGameObject.transform.DOScale(_targetScale, transitionTime).SetEase(Ease.OutQuint);
         }
@@ -189,10 +182,6 @@ public class HoverPreviewHandler: MonoBehaviour
                 _previewGameObject.SetActive(false);
                 _previewGameObject.transform.localPosition = Vector3.zero;
                 _previewGameObject.transform.localScale = Vector3.one;
-                foreach (GameObject @object in _objectsToHide)
-                {
-                    @object.SetActive(true);
-                }
 
                 _isPreviewing = false;
             }
