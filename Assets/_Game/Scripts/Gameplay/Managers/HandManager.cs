@@ -108,10 +108,8 @@ public class HandManager : MonoBehaviour
         if (_isPlayer)
         {
             card.InPlayerHand = true;
-            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale, _previewTargetRotation);
+            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetRotation, _previewTargetScale);
         }
-        else
-            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
 
         ArrangeCards();
     }
@@ -126,7 +124,7 @@ public class HandManager : MonoBehaviour
         card.DragHandler.CanDrag = false;
 
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = new Vector3(-90, 0, 0);
+        Vector3 rotation = _intermediateHolder.eulerAngles;
         if (forShield && !_isPlayer)
             rotation = new Vector3(90, 0, 0);
         card.transform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
@@ -141,7 +139,7 @@ public class HandManager : MonoBehaviour
         ArrangeCards();
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
 
-        Vector3 rotation = _tempCard.rotation.eulerAngles;
+        Vector3 rotation = _tempCard.eulerAngles;
         if (!_isPlayer && opponentVisible)
         {
             rotation -= new Vector3(0, 0, 180);

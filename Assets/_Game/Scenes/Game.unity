@@ -233,8 +233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
-  _previewTargetPosition: {x: 30, y: 27.5, z: 13}
-  _previewTargetScale: {x: 2, y: 2, z: 2}
   _isPlayer: 1
   _cardWidth: 0.05
   _cardScale: 0.5
@@ -357,13 +355,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127403155}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: 0.79335344, z: -0.60876137, w: -0}
   m_LocalPosition: {x: 15, y: 12.5, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1962481309}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: -255, y: 0, z: 180}
 --- !u!1 &171994568
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,8 +406,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
-  _previewTargetPosition: {x: -25, y: 30, z: -35}
-  _previewTargetScale: {x: 2, y: 2, z: 2}
   _isPlayer: 0
   _cardWidth: 0.05
   _cardScale: 0.5
@@ -740,8 +736,6 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 893572538}
   _fromTransitionTime: 1
   _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: 2.5, z: 5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
@@ -891,7 +885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
-  _intermediateHolder: {fileID: 127403156}
+  _intermediateHolder: {fileID: 1355605650}
   _isPlayer: 0
   _fromTransitionTime: 1.5
   _cardWidth: 0.05
@@ -1214,13 +1208,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893572537}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7933534, y: 0, z: 0, w: 0.6087614}
   m_LocalPosition: {x: 12.5, y: -0, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1042105412}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -105, y: 0, z: 0}
 --- !u!1 &895444044
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,14 +1352,11 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 893572538}
   _fromTransitionTime: 1
   _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: 5, z: 5}
-  _previewTargetScale: {x: 1.25, y: 1.25, z: 1.25}
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _tapUntapDist: 12
   _maxSameCivTapWidth: 4
   _maxSameCivUntapWidth: 6
-  _arrangeMoveTime: 0.5
   _arrangeLeftToRight: 1
   _manaZoneSortingLayerFloor: 25
   _holderTransform: {fileID: 232627277}
@@ -1568,7 +1559,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1892421610}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1584,10 +1576,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0d079a83051ed4e8e8c15c9ece4c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _previewTransitionTime: 0.75
+  _layoutsArrangeMoveTime: 0.5
+  _hoverBeforePreviewTime: 0.5
+  _previewTransitionTime: 0.25
   _dragReturnTime: 0.8
   _tapAngle: 15
   _tapTransitionTime: 0.5
+  _hoverIntermediateTransform: {fileID: 1892421610}
   _highlightGlowColor: {r: 0, g: 1, b: 1, a: 1}
   _playGlowColor: {r: 1, g: 0.4117647, b: 0, a: 1}
 --- !u!1 &1311186675
@@ -1648,6 +1643,36 @@ MonoBehaviour:
   _shieldBreakTriggerName: BreakShield
   _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
+--- !u!1 &1355605649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355605650}
+  m_Layer: 0
+  m_Name: From Deck Intermediate Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1355605650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355605649}
+  m_LocalRotation: {x: 0, y: 0.60876137, z: 0.7933534, w: -0}
+  m_LocalPosition: {x: 15, y: 12.5, z: -25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1962481309}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 255, y: -180, z: 0}
 --- !u!1 &1508421687
 GameObject:
   m_ObjectHideFlags: 0
@@ -1832,14 +1857,11 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 127403156}
   _fromTransitionTime: 1
   _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _tapUntapDist: 12
   _maxSameCivTapWidth: 4
   _maxSameCivUntapWidth: 6
-  _arrangeMoveTime: 0.5
   _arrangeLeftToRight: 0
   _manaZoneSortingLayerFloor: 25
   _holderTransform: {fileID: 2133683597}
@@ -2027,8 +2049,6 @@ MonoBehaviour:
   _intermediateHolder: {fileID: 127403156}
   _fromTransitionTime: 1
   _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: 2.5, z: -2.5}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
@@ -2132,13 +2152,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795273315}
-  m_LocalRotation: {x: 0, y: 0, z: 0.008726558, w: 0.999962}
+  m_LocalRotation: {x: 0, y: 0, z: -0.008726465, w: 0.999962}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1667101610}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1}
 --- !u!1 &1853220377
 GameObject:
   m_ObjectHideFlags: 0
@@ -2169,6 +2189,36 @@ Transform:
   m_Father: {fileID: 905610299}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1892421609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1892421610}
+  m_Layer: 0
+  m_Name: Hover Intermediary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1892421610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892421609}
+  m_LocalRotation: {x: -0.13052624, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 0, y: 0, z: -20}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_Children: []
+  m_Father: {fileID: 1167120987}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -15, y: 0, z: 0}
 --- !u!1 &1920806616
 GameObject:
   m_ObjectHideFlags: 0
@@ -2234,6 +2284,7 @@ Transform:
   - {fileID: 1667101610}
   - {fileID: 1774565248}
   - {fileID: 171994569}
+  - {fileID: 1355605650}
   - {fileID: 127403156}
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -2564,8 +2615,8 @@ MonoBehaviour:
   _isPlayer: 1
   _fromTransitionTime: 1
   _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: -7.5, z: -13.5}
-  _previewTargetRotation: {x: -90, y: 0, z: 0}
+  _previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
+  _previewTargetRotation: {x: -105, y: 0, z: 0}
   _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _circleRadius: 150
   _cardAreaWidth: 24

@@ -13,10 +13,6 @@ public class Test : MonoBehaviour
 
     private void Move()
     {
-        print($"1: {transform.position}");
-        transform.position = Vector3.one;
-        print($"2: {transform.position}");
-        transform.position = Vector3.zero;
-        print($"3: {transform.position}");
+        transform.LookAt(Camera.main.transform.position);
     }
 }

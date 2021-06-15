@@ -56,6 +56,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+            Time.timeScale = 0.25f;
+
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(GameLoopRoutine(_playerDeck, _opponentDeck));
 

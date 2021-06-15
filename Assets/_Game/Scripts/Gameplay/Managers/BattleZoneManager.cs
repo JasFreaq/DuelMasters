@@ -11,11 +11,7 @@ public class BattleZoneManager : MonoBehaviour
     [SerializeField] private Transform _intermediateHolder;
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
-
-    [Header("Preview")]
-    [SerializeField] private Vector3 _previewTargetPosition;
-    [SerializeField] private Vector3 _previewTargetScale;
-
+    
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 28;
     [SerializeField] private float _maxCardWidth = 10.25f;
@@ -31,10 +27,7 @@ public class BattleZoneManager : MonoBehaviour
         _tempCard.localScale = Vector3.one;
         card.transform.parent = _holderTransform;
 
-        card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
         _playerData.CardsInBattle.Add(card.transform.GetInstanceID(), card);
-
-        ArrangeCards();
     }
 
     public CreatureCardManager GetCardAtIndex(int index)

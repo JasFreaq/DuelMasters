@@ -31,11 +31,7 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private Transform _intermediateHolder;
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
-
-    [Header("Preview")]
-    [SerializeField] private Vector3 _previewTargetPosition;
-    [SerializeField] private Vector3 _previewTargetScale;
-
+    
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 50;
     [SerializeField] private float _maxCardWidth = 8;
@@ -61,7 +57,6 @@ public class ManaZoneManager : MonoBehaviour
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
 
-        card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
         _playerData.CardsInMana.Add(card.transform.GetInstanceID(), card);
     }
 
@@ -86,7 +81,7 @@ public class ManaZoneManager : MonoBehaviour
     public IEnumerator MoveFromManaZoneRoutine(CardManager card)
     {
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_intermediateHolder.rotation.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_intermediateHolder.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
@@ -95,23 +90,24 @@ public class ManaZoneManager : MonoBehaviour
     {
         _tempCard.parent = _holderTransform;
         _tempManaCard.isTapped = card.CardData.Civilization.Length > 1;
+
+        Vector3 tempEulerAngles = _tempCard.localEulerAngles;
         if (_tempManaCard.isTapped)
         {
-            _tempCard.localEulerAngles = new Vector3(_tempCard.localEulerAngles.x,
-                GameParamsHolder.Instance.TapAngle, _tempCard.localEulerAngles.z);
+            tempEulerAngles.y = GameParamsHolder.Instance.TapAngle;
         }
         else
         {
-            _tempCard.localEulerAngles = new Vector3(_tempCard.localEulerAngles.x,
-                0, _tempCard.localEulerAngles.z);
+            tempEulerAngles.y = 0;
         }
+        _tempCard.localEulerAngles = tempEulerAngles;
 
         _tempManaCard.civValue = CardParams.GetCivValue(card.CardData.Civilization);
         _tempManaCard.cardName = card.CardData.Name;
         ArrangeCards();
 
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_tempCard.rotation.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotate(_tempCard.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);

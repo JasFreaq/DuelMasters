@@ -6,15 +6,14 @@ using DG.Tweening;
 
 public class HoverPreviewHandler: MonoBehaviour
 {
-    [SerializeField] private GameObject _previewGameObject;
-    [SerializeField] private float _hoverTimeBeforePreview = 0.5f;
+    [SerializeField] private Transform _previewTransform;
     
-    private Vector3 _targetPosition = Vector3.zero;
-    private Vector3 _targetScale = Vector3.one;
-    private Vector3 _targetRotation = Vector3.zero;
+    private Vector3 _handPreviewPosition = Vector3.zero;
+    private Vector3 _handPreviewScale = Vector3.one;
+    private Vector3 _handPreviewRotation = Vector3.zero;
 
-    private Vector3 _handPosition = Vector3.zero;
-    private Vector3 _handRotation = Vector3.zero;
+    private Vector3 _handOriginalPosition = Vector3.zero;
+    private Vector3 _handOriginalRotation = Vector3.zero;
 
     private bool _previewEnabled = false;
     private bool _inPlayerHand = false;
@@ -63,7 +62,7 @@ public class HoverPreviewHandler: MonoBehaviour
             _AllHoverPreviews = FindObjectsOfType<HoverPreviewHandler>();
         }
     }
-
+    
     public void BeginPreviewing()
     {
         _isOverCollider = true;
@@ -91,17 +90,17 @@ public class HoverPreviewHandler: MonoBehaviour
         }
     }
 
-    public void SetPreviewParameters(Vector3 targetPosition, Vector3 targetScale, Vector3 targetRotation = new Vector3())
+    public void SetPreviewParameters(Vector3 targetPosition, Vector3 targetRotation, Vector3 targetScale)
     {
-        _targetPosition = targetPosition;
-        _targetScale = targetScale;
-        _targetRotation = targetRotation;
+        _handPreviewPosition = targetPosition;
+        _handPreviewRotation = targetRotation;
+        _handPreviewScale = targetScale;
     }
 
     private IEnumerator StartPreviewRoutine()
     {
         if (!_inPlayerHand)
-            yield return new WaitForSeconds(_hoverTimeBeforePreview);
+            yield return new WaitForSeconds(GameParamsHolder.Instance.HoverBeforePreviewTime);
 
         // save this HoverPreview as current
         _CurrentlyViewing = this;
@@ -123,8 +122,8 @@ public class HoverPreviewHandler: MonoBehaviour
         {
             if (!_isPreviewing) 
             {
-                _handPosition = transform.position;
-                _handRotation = transform.eulerAngles;
+                _handOriginalPosition = transform.position;
+                _handOriginalRotation = transform.eulerAngles;
                 _onBeginPlayerHandPreview.Invoke();
                 _isPreviewing = true;
             }
@@ -132,23 +131,28 @@ public class HoverPreviewHandler: MonoBehaviour
             if (_handPreviewStopRoutine != null)
                 StopCoroutine(_handPreviewStopRoutine);
 
-            Vector3 previewPosition = _targetPosition;
+            Vector3 previewPosition = _handPreviewPosition;
             previewPosition.x = transform.position.x;
 
-            transform.DOMove(previewPosition, transitionTime).SetEase(Ease.OutQuint);
-            transform.DOScale(_targetScale, transitionTime).SetEase(Ease.OutQuint);
-            transform.DORotate(_targetRotation, transitionTime).SetEase(Ease.OutQuint);
+            transform.DOMove(previewPosition, transitionTime).SetEase(Ease.OutSine);
+            transform.DOScale(_handPreviewScale, transitionTime).SetEase(Ease.OutSine);
+            transform.DORotate(_handPreviewRotation, transitionTime).SetEase(Ease.OutSine);
         }
         else
         {
             if (!_isPreviewing)
                 _isPreviewing = true;
+            
+            Transform hoverIntermediate = GameParamsHolder.Instance.HoverIntermediateTransform;
+            _previewTransform.parent = hoverIntermediate;
+            _previewTransform.localPosition = Vector3.zero;
 
-            // enable Preview game object
-            _previewGameObject.SetActive(true);
+            Vector3 hoverEulerAngles = hoverIntermediate.eulerAngles;
+            hoverEulerAngles.x += _previewTransform.eulerAngles.x;
+            _previewTransform.eulerAngles = hoverEulerAngles;
 
-            _previewGameObject.transform.DOLocalMove(_targetPosition, transitionTime).SetEase(Ease.OutQuint);
-            _previewGameObject.transform.DOScale(_targetScale, transitionTime).SetEase(Ease.OutQuint);
+            _previewTransform.localScale = Vector3.one;
+            _previewTransform.gameObject.SetActive(true);
         }
     }
 
@@ -165,9 +169,9 @@ public class HoverPreviewHandler: MonoBehaviour
             {
                 float transitionTime = GameParamsHolder.Instance.PreviewTransitionTime;
 
-                transform.DOMove(_handPosition, transitionTime).SetEase(Ease.OutQuint);
-                transform.DORotate(_handRotation, transitionTime).SetEase(Ease.OutQuint);
-                transform.DOScale(Vector3.one, transitionTime).SetEase(Ease.OutQuint);
+                transform.DOMove(_handOriginalPosition, transitionTime).SetEase(Ease.OutSine);
+                transform.DORotate(_handOriginalRotation, transitionTime).SetEase(Ease.OutSine);
+                transform.DOScale(Vector3.one, transitionTime).SetEase(Ease.OutSine);
 
                 _handPreviewStopRoutine = StartCoroutine(StopPreviewRoutine());
 
@@ -179,9 +183,9 @@ public class HoverPreviewHandler: MonoBehaviour
             }
             else
             {
-                _previewGameObject.SetActive(false);
-                _previewGameObject.transform.localPosition = Vector3.zero;
-                _previewGameObject.transform.localScale = Vector3.one;
+                _previewTransform.gameObject.SetActive(false);
+                _previewTransform.parent = transform;
+                _previewTransform.localEulerAngles = Vector3.zero;
 
                 _isPreviewing = false;
             }

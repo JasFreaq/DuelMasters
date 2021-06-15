@@ -7,10 +7,14 @@ public class GameParamsHolder : MonoBehaviour
 {
     [Header("Floats")]
     [SerializeField] private float _layoutsArrangeMoveTime = 0.5f;
-    [SerializeField] private float _previewTransitionTime = 0.75f;
+    [SerializeField] private float _hoverBeforePreviewTime = 0.5f;
+    [SerializeField] private float _previewTransitionTime = 0.25f;
     [SerializeField] private float _dragReturnTime = 0.8f;
     [SerializeField] private float _tapAngle = 15f;
     [SerializeField] private float _tapTransitionTime = 0.5f;
+
+    [Header("Transforms")] 
+    [SerializeField] private Transform _hoverIntermediateTransform = null;
 
     [Header("Colors")]
     [SerializeField] private Color _highlightGlowColor = new Color(0f, 1f, 1f, 1f);
@@ -39,6 +43,11 @@ public class GameParamsHolder : MonoBehaviour
         get { return _layoutsArrangeMoveTime; }
     }
 
+    public float HoverBeforePreviewTime
+    {
+        get { return _hoverBeforePreviewTime; }
+    }
+    
     public float PreviewTransitionTime
     {
         get { return _previewTransitionTime; }
@@ -57,6 +66,15 @@ public class GameParamsHolder : MonoBehaviour
     public float TapTransitionTime
     {
         get { return _tapTransitionTime; }
+    }
+
+    #endregion
+
+    #region Transform Properties
+
+    public Transform HoverIntermediateTransform
+    {
+        get { return _hoverIntermediateTransform; }
     }
 
     #endregion

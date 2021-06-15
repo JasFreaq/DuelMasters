@@ -6,11 +6,7 @@ using UnityEngine;
 public class GraveyardManager : MonoBehaviour
 {
     [SerializeField] private PlayerDataHandler _playerData;
-
-    [Header("Preview")]
-    [SerializeField] private Vector3 _previewTargetPosition;
-    [SerializeField] private Vector3 _previewTargetScale;
-
+    
     [Header("Layout")] 
     [SerializeField] private bool _isPlayer = true;
     [SerializeField] private float _cardWidth = 0.05f;
@@ -35,7 +31,6 @@ public class GraveyardManager : MonoBehaviour
             _playerData.CardsInGrave[_playerData.CardsInGrave.Count - 1].HoverPreviewHandler.PreviewEnabled = false;
         }
 
-        card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetScale);
         card.HoverPreviewHandler.PreviewEnabled = true;
         _playerData.CardsInGrave.Add(card);
     }

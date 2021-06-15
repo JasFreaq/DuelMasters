@@ -49,9 +49,15 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.D))
-        {
             StartCoroutine(DrawCardRoutine());
-        }
+
+        CardManager card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+        if (Input.GetKeyDown(KeyCode.M))
+            StartCoroutine(ChargeManaRoutine(card));
+        if (Input.GetKeyDown(KeyCode.P))
+            StartCoroutine(PlayCardRoutine(card));
+        if (Input.GetKeyDown(KeyCode.S))
+            StartCoroutine(MakeShieldFromHandRoutine(card));
     }
 
     #region Setup Methods

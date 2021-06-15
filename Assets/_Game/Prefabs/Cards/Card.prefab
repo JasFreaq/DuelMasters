@@ -134,10 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad188e2605060d428947cd593661eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _previewGameObject: {fileID: 9214949861950901938}
+  _previewTransform: {fileID: 9214949861950901939}
   _hoverTimeBeforePreview: 0.5
-  _objectsToHide:
-  - {fileID: 7957958512946782141}
 --- !u!114 &6056413903163206420
 MonoBehaviour:
   m_ObjectHideFlags: 0
