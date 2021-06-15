@@ -108,10 +108,15 @@ public class PlayerManager : MonoBehaviour
                         break;
 
                     case GameStepType.MainStep:
-                        foreach (CardManager cardManager in _playableCards)
+                        if (_currentlySelected.ProcessAction) 
+                            _currentlySelected.SetGlow(false);
+                        else
                         {
-                            if (cardManager != _currentlySelected)
-                                cardManager.SetGlow(true);
+                            foreach (CardManager cardManager in _playableCards)
+                            {
+                                if (cardManager != _currentlySelected)
+                                    cardManager.SetGlow(true);
+                            }
                         }
                         break;
                 }
