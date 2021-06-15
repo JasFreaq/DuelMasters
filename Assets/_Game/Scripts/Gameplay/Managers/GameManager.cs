@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     private Dictionary<GameStepType, GameStep> _gameSteps = new Dictionary<GameStepType, GameStep>();
 
     private bool _endCurrentStep = false;
-
     private bool _firstTurn = true;
     private bool _playerTurn = true;
     private bool _gameOver = false;
@@ -28,7 +27,7 @@ public class GameManager : MonoBehaviour
     private List<CardManager> _playerCards;
     private List<CardManager> _opponentCards;
 
-    public GameStepType CurrentStep
+    public static GameStepType CurrentStep
     {
         get { return _currentStep.StepType; }
     }
@@ -137,22 +136,6 @@ public class GameManager : MonoBehaviour
             if (_endCurrentStep)
                 _endCurrentStep = false;
         }
-    }
-    
-    public int HighlightPlayableCards(PlayerDataHandler dataHandler)
-    {
-        int playableCards = 0;
-        foreach (KeyValuePair<int, CardManager> pair in dataHandler.CardsInHand)
-        {
-            CardManager card = pair.Value;
-            if (dataHandler.CanPayCost(card.CardData.Civilization, card.CardData.Cost)) 
-            {
-                card.ToggleGlow();
-                playableCards++;
-            }
-        }
-
-        return playableCards;
     }
     
     private void ProcessGameAction(CardManager card)

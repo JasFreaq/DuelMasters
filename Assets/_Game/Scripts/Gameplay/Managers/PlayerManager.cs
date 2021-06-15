@@ -53,6 +53,8 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    #region Setup Methods
+
     public void Initialize(Deck deck, Action<CardManager> processAction)
     {
         _deckManager.Initialize(deck, processAction, SelectCard);
@@ -69,16 +71,20 @@ public class PlayerManager : MonoBehaviour
         return StartCoroutine(_shieldsManager.SetupShieldsRoutine(cards));
     }
 
+    #endregion
+
+    #region Interactivity Methods
+
     private void SelectCard(CardManager card)
     {
         if (_canSelect) 
         {
             if (_currentlySelected != card)
             {
-                card.Select(true);
-                if (_currentlySelected)
-                    DeselectCurrentSelection();
                 _currentlySelected = card;
+
+                if (GameManager.CurrentStep == GameStepType.ChargeStep)
+                    _currentlySelected.SetGlow(true);
             }
             else if (_currentlySelected)
                 DeselectCurrentSelection();
@@ -86,10 +92,30 @@ public class PlayerManager : MonoBehaviour
 
         void DeselectCurrentSelection()
         {
-            _currentlySelected.Select(false);
+            if (GameManager.CurrentStep == GameStepType.ChargeStep)
+                _currentlySelected.SetGlow(false);
+
             _currentlySelected = null;
         }
     }
+
+    public int HighlightPlayableCards()
+    {
+        int playableCards = 0;
+        foreach (KeyValuePair<int, CardManager> pair in _playerData.CardsInHand)
+        {
+            CardManager card = pair.Value;
+            if (_playerData.CanPayCost(card.CardData.Civilization, card.CardData.Cost))
+            {
+                card.SetGlow(true);
+                playableCards++;
+            }
+        }
+
+        return playableCards;
+    }
+
+    #endregion
 
     public IEnumerator DrawCardRoutine(bool disableInteraction = false)
     {

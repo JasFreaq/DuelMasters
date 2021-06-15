@@ -45,9 +45,9 @@ public class CreatureCardManager : CardManager
 
     #region State Methods
 
-    public override void ToggleGlow()
+    public override void SetGlow(bool enableGlow)
     {
-        base.ToggleGlow();
+        base.SetGlow(enableGlow);
 
         _battleCardLayoutHandler.SetGlow(_isGlowing);
     }

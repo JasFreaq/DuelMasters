@@ -28,8 +28,7 @@ public class CardManager : MonoBehaviour
 
     private bool _processAction = false;
     private bool _inPlayerHand = false;
-
-
+    
     #region Properties
 
     public CardLayoutHandler CardLayout
@@ -102,28 +101,27 @@ public class CardManager : MonoBehaviour
     public void OnMouseDown()
     {
         _onSelect.Invoke(this);
-
-        _dragHandler.BeginDragging();
-    }
-
-    private void OnMouseUp()
-    {
-        if (_processAction)
+        _isSelected = !_isSelected;
+        
+        if (_isSelected)
         {
-            _onSelect.Invoke(this);
-            _dragHandler.ResetDragging();
-            _onProcessAction?.Invoke(this);
+            _dragHandler.BeginDragging();
         }
         else
         {
-            _dragHandler.EndDragging();
+            if (_processAction)
+            {
+                _dragHandler.ResetDragging();
+                _onProcessAction?.Invoke(this);
+            }
+            else
+            {
+                _hoverPreviewHandler.ShouldStopPreview = false;
+                _dragHandler.EndDragging();
+            }
         }
-        
-        if (_inPlayerHand)
-            _hoverPreviewHandler.ShouldStopPreview = false;
-
     }
-
+    
     private void OnMouseExit()
     {
         _hoverPreviewHandler.EndPreviewing();
@@ -189,9 +187,9 @@ public class CardManager : MonoBehaviour
         _manaCardLayoutHandler.SetGlowColor(color);
     }
 
-    public virtual void ToggleGlow()
+    public virtual void SetGlow(bool enableGlow)
     {
-        _isGlowing = !_isGlowing;
+        _isGlowing = enableGlow;
         _cardLayoutHandler.SetGlow(_isGlowing);
         _manaCardLayoutHandler.SetGlow(_isGlowing);
     }
@@ -214,12 +212,6 @@ public class CardManager : MonoBehaviour
     public void SetCardVisible()
     {
         //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
-    }
-
-    public void Select(bool selected)
-    {
-        _isSelected = selected;
-        ToggleGlow();
     }
     
     #endregion

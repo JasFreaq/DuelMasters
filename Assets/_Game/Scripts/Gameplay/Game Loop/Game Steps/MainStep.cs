@@ -37,7 +37,7 @@ public class MainStep : GameStep
 
     private void CheckPlayableCards(PlayerManager currentPlayer)
     {
-        int playableCards = _gameManager.HighlightPlayableCards(currentPlayer.DataHandler);
+        int playableCards = currentPlayer.HighlightPlayableCards();
         if (playableCards == 0)
         {
             _gameManager.EndCurrentStep();
