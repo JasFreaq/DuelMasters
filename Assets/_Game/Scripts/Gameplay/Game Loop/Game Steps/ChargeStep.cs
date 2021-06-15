@@ -15,6 +15,7 @@ public class ChargeStep : GameStep
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
 
+        card.DragHandler.ResetDragging();
         yield return currentPlayer.ChargeManaRoutine(card);
 
         if (card.CardData.Civilization.Length > 1)

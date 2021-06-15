@@ -111,7 +111,6 @@ public class CardManager : MonoBehaviour
         {
             if (_processAction)
             {
-                _dragHandler.ResetDragging();
                 _onProcessAction?.Invoke(this);
             }
             else

@@ -24,14 +24,18 @@ public class MainStep : GameStep
 
         if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost))
         {
+            card.DragHandler.ResetDragging();
+
             dataHandler.PayCost(cardData.Civilization, cardData.Cost);
             currentPlayer.ManaZoneManager.ArrangeCards();
             yield return currentPlayer.PlayCardRoutine(card);
+
             CheckPlayableCards(currentPlayer);
         }
         else
         {
-            card.DragHandler.ReturnToPosition();
+            card.HoverPreviewHandler.ShouldStopPreview = false;
+            card.DragHandler.EndDragging();
         }
     }
 

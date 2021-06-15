@@ -38,13 +38,13 @@ public class DragHandler : MonoBehaviour
         _cameraTransform = Camera.main.transform;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (_isDragging)
         {
             Vector3 mousePos = MouseInWorldCoords();
             transform.position = new Vector3(mousePos.x - _pointerDisplacement.x, mousePos.y - _pointerDisplacement.y, transform.position.z);
-            _onDrag.Invoke(transform);
+            _onDrag?.Invoke(transform);
         }
     }
 
