@@ -8,6 +8,7 @@ using DG.Tweening;
 [DisallowMultipleComponent]
 public class PlayerManager : MonoBehaviour
 {
+    [Header("Effect Params")]
     [SerializeField] private Transform _intermediateTransform;
     [SerializeField] private bool _isPlayer = true;
 
@@ -19,8 +20,15 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
 
+    private PlayerDataHandler _playerData;
+
     private CardManager _currentlySelected;
     private bool _canSelect = false;
+
+    public PlayerDataHandler DataHandler
+    {
+        get { return _playerData; }
+    }
 
     public ManaZoneManager ManaZoneManager
     {
@@ -30,6 +38,11 @@ public class PlayerManager : MonoBehaviour
     public bool CanSelect
     {
         set { _canSelect = value; }
+    }
+
+    private void Awake()
+    {
+        _playerData = GetComponent<PlayerDataHandler>();
     }
 
     private void Update()
