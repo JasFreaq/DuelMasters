@@ -22,6 +22,7 @@ public class PlayerManager : MonoBehaviour
 
     private PlayerDataHandler _playerData;
 
+    private List<CardManager> _playableCards = new List<CardManager>();
     private CardManager _currentlySelected;
     private bool _canSelect = false;
 
@@ -83,36 +84,58 @@ public class PlayerManager : MonoBehaviour
             {
                 _currentlySelected = card;
 
-                if (GameManager.CurrentStep == GameStepType.ChargeStep)
-                    _currentlySelected.SetGlow(true);
+                switch (GameManager.CurrentStep)
+                {
+                    case GameStepType.ChargeStep:
+                        _currentlySelected.SetGlow(true);
+                        break;
+
+                    case GameStepType.MainStep:
+                        foreach (CardManager cardManager in _playableCards)
+                        {
+                            if (cardManager != _currentlySelected)
+                                cardManager.SetGlow(false);
+                        }
+                        break;
+                }
             }
             else if (_currentlySelected)
-                DeselectCurrentSelection();
-        }
+            {
+                switch (GameManager.CurrentStep)
+                {
+                    case GameStepType.ChargeStep:
+                        _currentlySelected.SetGlow(false);
+                        break;
 
-        void DeselectCurrentSelection()
-        {
-            if (GameManager.CurrentStep == GameStepType.ChargeStep)
-                _currentlySelected.SetGlow(false);
+                    case GameStepType.MainStep:
+                        foreach (CardManager cardManager in _playableCards)
+                        {
+                            if (cardManager != _currentlySelected)
+                                cardManager.SetGlow(true);
+                        }
+                        break;
+                }
 
-            _currentlySelected = null;
+                _currentlySelected = null;
+            }
         }
     }
 
     public int HighlightPlayableCards()
     {
-        int playableCards = 0;
+        _playableCards.Clear();
+
         foreach (KeyValuePair<int, CardManager> pair in _playerData.CardsInHand)
         {
             CardManager card = pair.Value;
             if (_playerData.CanPayCost(card.CardData.Civilization, card.CardData.Cost))
             {
                 card.SetGlow(true);
-                playableCards++;
+                _playableCards.Add(card);
             }
         }
 
-        return playableCards;
+        return _playableCards.Count;
     }
 
     #endregion
