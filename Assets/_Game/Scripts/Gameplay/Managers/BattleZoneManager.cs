@@ -29,19 +29,13 @@ public class BattleZoneManager : MonoBehaviour
 
         _playerData.CardsInBattle.Add(card.transform.GetInstanceID(), card);
     }
-
-    public CreatureCardManager GetCardAtIndex(int index)
+    
+    private void RemoveCardAtIndex(int index)
     {
-        return _playerData.CardsInBattle[_holderTransform.GetChild(index).GetInstanceID()];
-    }
-
-    public CreatureCardManager RemoveCardAtIndex(int index)
-    {
-        CreatureCardManager card = GetCardAtIndex(index);
+        CreatureCardManager card = _playerData.CardsInBattle[_holderTransform.GetChild(index).GetInstanceID()];
         _playerData.CardsInBattle.Remove(_holderTransform.GetChild(index).GetInstanceID());
         card.transform.parent = transform;
         ArrangeCards();
-        return card;
     }
 
     #endregion
@@ -50,6 +44,8 @@ public class BattleZoneManager : MonoBehaviour
 
     public IEnumerator MoveFromBattleZoneRoutine(CardManager card)
     {
+        RemoveCardAtIndex(card.transform.GetSiblingIndex());
+
         card.transform.parent = _intermediateHolder;
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);

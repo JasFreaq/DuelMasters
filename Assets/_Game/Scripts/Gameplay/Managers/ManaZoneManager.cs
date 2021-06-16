@@ -59,19 +59,13 @@ public class ManaZoneManager : MonoBehaviour
 
         _playerData.CardsInMana.Add(card.transform.GetInstanceID(), card);
     }
-
-    private CardManager GetCardAtIndex(int index)
+    
+    private void RemoveCardAtIndex(int index)
     {
-        return _playerData.CardsInMana[_holderTransform.GetChild(index).GetInstanceID()];
-    }
-
-    public CardManager RemoveCardAtIndex(int index)
-    {
-        CardManager card = GetCardAtIndex(index);
+        CardManager card = _playerData.CardsInMana[_holderTransform.GetChild(index).GetInstanceID()];
         _playerData.CardsInMana.Remove(_holderTransform.GetChild(index).GetInstanceID());
         card.transform.parent = transform;
         ArrangeCards();
-        return card;
     }
 
     #endregion
@@ -80,8 +74,12 @@ public class ManaZoneManager : MonoBehaviour
 
     public IEnumerator MoveFromManaZoneRoutine(CardManager card)
     {
+        RemoveCardAtIndex(card.transform.GetSiblingIndex());
+
+        card.transform.parent = _intermediateHolder;
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DORotate(_intermediateHolder.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }

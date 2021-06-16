@@ -52,15 +52,26 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
             StartCoroutine(DrawCardRoutine());
 
-        CardManager card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
-        if (Input.GetKeyDown(KeyCode.M))
-            StartCoroutine(ChargeManaRoutine(card));
-        if (Input.GetKeyDown(KeyCode.P))
-            StartCoroutine(PlayCardRoutine(card));
-        if (Input.GetKeyDown(KeyCode.S))
-            StartCoroutine(MakeShieldFromHandRoutine(card));
+        if (_handManager.transform.GetChild(0).childCount > 0) 
+        {
+            CardManager card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+            if (Input.GetKeyDown(KeyCode.M))
+                StartCoroutine(ChargeManaRoutine(card));
+            if (Input.GetKeyDown(KeyCode.P))
+                StartCoroutine(PlayCardRoutine(card));
+            if (Input.GetKeyDown(KeyCode.S))
+                StartCoroutine(MakeShieldFromHandRoutine(card));
+        }
+
+        if (_manaZoneManager.transform.GetChild(0).childCount > 0)
+        {
+            CardManager card = _playerData.CardsInMana[_manaZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+            if (Input.GetKeyDown(KeyCode.N))
+                StartCoroutine(ReturnFromManaRoutine(card));
+        }
+
         if (Input.GetKeyDown(KeyCode.A))
-            _playerData.CardsInBattle[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()].AttackTarget(_attackTarget);
+            _playerData.CardsInBattle[_battleZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()].AttackTarget(_attackTarget);
     }
 
     #region Setup Methods
@@ -233,9 +244,8 @@ public class PlayerManager : MonoBehaviour
         yield return StartCoroutine(_shieldsManager.MakeShieldRoutine(card));
     }
 
-    public IEnumerator ReturnFromManaRoutine(int index)
+    public IEnumerator ReturnFromManaRoutine(CardManager card)
     {
-        CardManager card = _manaZoneManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
 
         card.HoverPreviewHandler.PreviewEnabled = false;
@@ -245,9 +255,8 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
-    public IEnumerator ReturnFromBattleRoutine(int index)
+    public IEnumerator ReturnFromBattleRoutine(CardManager card)
     {
-        CardManager card = _battleZoneManager.RemoveCardAtIndex(index);
         card.CardLayout.Canvas.sortingOrder = 100;
 
         card.HoverPreviewHandler.PreviewEnabled = false;
