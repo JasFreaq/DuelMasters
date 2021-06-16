@@ -95,10 +95,19 @@ public class HandManager : MonoBehaviour
         card.DragHandler.DeregisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
+        {
             card.InPlayerHand = false;
-        
+            if (card.IsVisible)
+                card.VisibleEyeIcon.SetActive(false);
+        }
+
+        if (card.IsVisible)
+            card.IsVisible = false;
+        card.DragHandler.CanDrag = false;
+
         _playerData.CardsInHand.Remove(iD);
         card.transform.parent = transform;
+        
         ArrangeCards();
     }
 
@@ -124,7 +133,6 @@ public class HandManager : MonoBehaviour
     public IEnumerator MoveFromHandRoutine(CardManager card, bool forShield = false)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
-        card.DragHandler.CanDrag = false;
 
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Quaternion rotation = (forShield && !_isPlayer) ? 
@@ -135,25 +143,21 @@ public class HandManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToHandRoutine(CardManager card, bool opponentVisible = false)
+    public IEnumerator MoveToHandRoutine(CardManager card)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
 
-        Vector3 rotation = _tempCard.eulerAngles;
-        if (!_isPlayer && opponentVisible)
-        {
-            rotation -= new Vector3(0, 0, 180);
-        }
-        card.transform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        Quaternion rotation = _tempCard.rotation;
+        if (!_isPlayer && card.IsVisible)
+            rotation *= Quaternion.Euler(0, 0, 180);
+        card.transform.DORotateQuaternion(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);
 
-        if (!_isPlayer && opponentVisible)
-        {
-            //TODO: Call Visible Icon Code
-        }
+        if (_isPlayer && card.IsVisible)
+            card.VisibleEyeIcon.SetActive(true);
 
         _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
         AddCard(card);
@@ -183,11 +187,7 @@ public class HandManager : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
-            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardManager card)) 
-            {
-                card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
-            }
-
+            
 
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
@@ -195,27 +195,38 @@ public class HandManager : MonoBehaviour
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
 
-            Vector3 cardRot = new Vector3(cardTransform.localEulerAngles.x,
+            Vector3 rotation = new Vector3(cardTransform.localEulerAngles.x,
                 Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
                 _tempCard.localEulerAngles.z);
 
             cardPos = relativeVector * _circleRadius;
             cardPos.z -= _circleRadius;
 
+            Quaternion cardRot = Quaternion.Euler(rotation);
+
+            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardManager card))
+            {
+                card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
+                if (!_isPlayer && card.IsVisible)
+                {
+                    cardRot *= Quaternion.Euler(0, 0, 180);
+                }
+            }
+            
             if (index == i)
             {
                 indexCardTransform.position = cardPos;
-                indexCardTransform.eulerAngles = cardRot;
+                indexCardTransform.eulerAngles = rotation;
             }
             else if (card)
             {
                 cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint); 
-                cardTransform.DOLocalRotate(cardRot, arrangeTime).SetEase(Ease.OutQuint);
+                cardTransform.DOLocalRotateQuaternion(cardRot, arrangeTime).SetEase(Ease.OutQuint);
             }
             else
             {
                 cardTransform.localPosition = cardPos;
-                cardTransform.localEulerAngles = cardRot;
+                cardTransform.localRotation = cardRot;
             }
         }
 

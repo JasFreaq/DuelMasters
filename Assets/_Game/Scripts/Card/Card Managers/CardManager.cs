@@ -25,7 +25,8 @@ public class CardManager : MonoBehaviour
     protected bool _isGlowing = false;
     private bool _isGlowSelectColor = true;
     private bool _isSelected = false;
-
+    private bool _isVisible = false;
+    
     private bool _processAction = false;
     private bool _inPlayerHand = false;
     
@@ -40,7 +41,12 @@ public class CardManager : MonoBehaviour
     {
         get { return _manaCardLayoutHandler; }
     }
-    
+
+    public GameObject VisibleEyeIcon
+    {
+        get { return _visibleEyeIcon; }
+    }
+
     public Card CardData
     {
         get { return _card; }
@@ -64,6 +70,12 @@ public class CardManager : MonoBehaviour
     public bool IsGlowSelectColor
     {
         get { return _isGlowSelectColor; }
+    }
+    
+    public bool IsVisible
+    {
+        get { return _isVisible; }
+        set { _isVisible = value; }
     }
 
     public bool ProcessAction

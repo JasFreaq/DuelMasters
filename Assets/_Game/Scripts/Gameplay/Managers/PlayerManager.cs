@@ -181,6 +181,8 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    #region From-Hand Transitions
+
     public IEnumerator ChargeManaRoutine(CardManager card)
     {
         card.ManaLayout.Canvas.sortingOrder = 100;
@@ -222,14 +224,6 @@ public class PlayerManager : MonoBehaviour
 
         yield break;
     }
-
-    public IEnumerator BreakShieldRoutine(int shieldIndex)
-    {
-        CardManager card = _shieldsManager.GetShieldAtIndex(shieldIndex);
-        yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
-        yield return _handManager.MoveToHandRoutine(card);
-        card.HoverPreviewHandler.PreviewEnabled = true;
-    }
     
     public IEnumerator MakeShieldFromHandRoutine(CardManager card)
     {
@@ -244,25 +238,43 @@ public class PlayerManager : MonoBehaviour
         yield return StartCoroutine(_shieldsManager.MakeShieldRoutine(card));
     }
 
+    #endregion
+
+    #region To-Hand Transitions
+
+    public IEnumerator BreakShieldRoutine(int shieldIndex)
+    {
+        CardManager card = _shieldsManager.GetShieldAtIndex(shieldIndex);
+        yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
+        yield return _handManager.MoveToHandRoutine(card);
+        card.HoverPreviewHandler.PreviewEnabled = true;
+    }
+
     public IEnumerator ReturnFromManaRoutine(CardManager card)
     {
         card.CardLayout.Canvas.sortingOrder = 100;
-
         card.HoverPreviewHandler.PreviewEnabled = false;
+        card.IsVisible = true;
+
         yield return _manaZoneManager.MoveFromManaZoneRoutine(card);
         card.ActivateCardLayout();
-        yield return _handManager.MoveToHandRoutine(card, true);
+        yield return _handManager.MoveToHandRoutine(card);
+
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
     public IEnumerator ReturnFromBattleRoutine(CardManager card)
     {
         card.CardLayout.Canvas.sortingOrder = 100;
-
         card.HoverPreviewHandler.PreviewEnabled = false;
+        card.IsVisible = true;
+
         yield return _battleZoneManager.MoveFromBattleZoneRoutine(card);
         card.ActivateCardLayout();
-        yield return _handManager.MoveToHandRoutine(card, true);
+        yield return _handManager.MoveToHandRoutine(card);
+
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
+
+    #endregion
 }
