@@ -120,7 +120,8 @@ public class HandManager : MonoBehaviour
         if (_isPlayer)
         {
             card.InPlayerHand = true;
-            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition, _previewTargetRotation, _previewTargetScale);
+            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition,
+                Quaternion.Euler(_previewTargetRotation), _previewTargetScale);
         }
 
         ArrangeCards();

@@ -78,7 +78,7 @@ public class ManaZoneManager : MonoBehaviour
 
         card.transform.parent = _intermediateHolder;
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_intermediateHolder.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
@@ -93,7 +93,7 @@ public class ManaZoneManager : MonoBehaviour
         ArrangeCards();
 
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_tempCard.eulerAngles, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotateQuaternion(_tempCard.rotation, _toTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);

@@ -168,10 +168,10 @@ public class ShieldsManager : MonoBehaviour
     private IEnumerator MoveFromShieldsRoutine(CardManager card)
     {
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = _intermediateHolder.rotation.eulerAngles;
+        Quaternion rotation = _intermediateHolder.rotation;
         if (!_isPlayer)
-            rotation += new Vector3(0, 0, 180);
-        card.transform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+            rotation *= Quaternion.Euler(0, 0, 180);
+        card.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
@@ -180,13 +180,11 @@ public class ShieldsManager : MonoBehaviour
     private void MoveToShields(CardManager card, Transform holderTransform)
     {
         card.transform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = holderTransform.eulerAngles;
+        Quaternion rotation = holderTransform.rotation;
         if (!_isPlayer)
-        {
-            rotation = new Vector3(0, 0, 0);
-        }
+            rotation = Quaternion.Euler(0, 0, 0);
 
-        card.transform.DORotate(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotateQuaternion(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
         card.transform.parent = holderTransform;
     }

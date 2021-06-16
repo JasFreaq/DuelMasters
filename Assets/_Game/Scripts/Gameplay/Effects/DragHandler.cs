@@ -82,7 +82,6 @@ public class DragHandler : MonoBehaviour
     {
         _originalPosition = position;
         _originalRotation = rotation;
-        print(_originalRotation.eulerAngles);
     }
 
     public void ReturnToPosition()
