@@ -11,7 +11,8 @@ public class DragHandler : MonoBehaviour
     private bool _canDrag = false;
 
     private Vector3 _originalPosition;
-    private Vector3 _originalRotation;
+    private Quaternion _originalRotation;
+
     private Vector3 _pointerDisplacement;
     private float _zDisplacement;
 
@@ -77,10 +78,11 @@ public class DragHandler : MonoBehaviour
         }
     }
     
-    public void SetOriginalOrientation(Vector3 position, Vector3 rotation)
+    public void SetOriginalOrientation(Vector3 position, Quaternion rotation)
     {
         _originalPosition = position;
         _originalRotation = rotation;
+        print(_originalRotation.eulerAngles);
     }
 
     public void ReturnToPosition()
@@ -88,7 +90,7 @@ public class DragHandler : MonoBehaviour
         float returnTime = GameParamsHolder.Instance.DragReturnTime;
 
         transform.DOLocalMove(_originalPosition, returnTime).SetEase(Ease.OutQuint);
-        transform.DOLocalRotate(_originalRotation, returnTime).SetEase(Ease.OutQuint);
+        transform.DOLocalRotateQuaternion(_originalRotation, returnTime).SetEase(Ease.OutQuint);
         transform.DOScale(Vector3.one, returnTime).SetEase(Ease.OutQuint);
     }
 

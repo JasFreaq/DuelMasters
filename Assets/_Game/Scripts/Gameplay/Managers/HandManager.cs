@@ -12,7 +12,7 @@ public class HandManager : MonoBehaviour
     struct TransformData
     {
         public Vector3 position;
-        public Vector3 eulerAngles;
+        public Quaternion rotation;
     }
 
     #endregion
@@ -195,7 +195,7 @@ public class HandManager : MonoBehaviour
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
 
-            Vector3 rotation = new Vector3(cardTransform.localEulerAngles.x,
+            Vector3 rotation = new Vector3(_tempCard.localEulerAngles.x,
                 Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
                 _tempCard.localEulerAngles.z);
 
@@ -216,7 +216,7 @@ public class HandManager : MonoBehaviour
             if (index == i)
             {
                 indexCardTransform.position = cardPos;
-                indexCardTransform.eulerAngles = rotation;
+                indexCardTransform.rotation = cardRot;
             }
             else if (card)
             {
@@ -262,7 +262,7 @@ public class HandManager : MonoBehaviour
             card.transform.SetSiblingIndex(siblingIndex);
             
             TransformData orientation = ArrangeCards(siblingIndex);
-            card.DragHandler.SetOriginalOrientation(orientation.position, orientation.eulerAngles);
+            card.DragHandler.SetOriginalOrientation(orientation.position, orientation.rotation);
         }
     }
 

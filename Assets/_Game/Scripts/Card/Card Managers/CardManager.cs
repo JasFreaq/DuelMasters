@@ -141,7 +141,7 @@ public class CardManager : MonoBehaviour
 
     public void SetDragOrientationOnPreviewBegin()
     {
-        _dragHandler.SetOriginalOrientation(transform.localPosition, transform.localEulerAngles);
+        _dragHandler.SetOriginalOrientation(transform.localPosition, transform.localRotation);
     }
 
     #region Setup Methods
