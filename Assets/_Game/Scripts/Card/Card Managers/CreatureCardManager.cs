@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CreatureCardManager : CardManager
@@ -65,6 +66,18 @@ public class CreatureCardManager : CardManager
 
         _battleCardLayoutHandler.SetGlowColor(play ? GameParamsHolder.Instance.PlayGlowColor
             : GameParamsHolder.Instance.HighlightGlowColor);
+    }
+
+    #endregion
+
+    #region Functionality Methods
+
+    public void AttackTarget(Transform targetTransform)
+    {
+        transform.DOMove(targetTransform.position, 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InCubic).OnComplete(() =>
+        {
+
+        });
     }
 
     #endregion

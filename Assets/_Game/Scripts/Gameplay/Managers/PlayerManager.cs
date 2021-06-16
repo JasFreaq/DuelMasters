@@ -8,6 +8,8 @@ using DG.Tweening;
 [DisallowMultipleComponent]
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private Transform _attackTarget;
+
     [Header("Effect Params")]
     [SerializeField] private Transform _intermediateTransform;
     [SerializeField] private bool _isPlayer = true;
@@ -58,6 +60,8 @@ public class PlayerManager : MonoBehaviour
             StartCoroutine(PlayCardRoutine(card));
         if (Input.GetKeyDown(KeyCode.S))
             StartCoroutine(MakeShieldFromHandRoutine(card));
+        if (Input.GetKeyDown(KeyCode.A))
+            _playerData.CardsInBattle[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()].AttackTarget(_attackTarget);
     }
 
     #region Setup Methods

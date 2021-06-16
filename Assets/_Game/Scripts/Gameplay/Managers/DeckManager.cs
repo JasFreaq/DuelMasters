@@ -80,7 +80,7 @@ public class DeckManager : MonoBehaviour
     {
         card.transform.parent = null;
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotate(_intermediateHolder.eulerAngles, _fromTransitionTime).SetEase(Ease.OutQuint);
+        card.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
