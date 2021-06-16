@@ -11,7 +11,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Transform _attackTarget;
 
     [Header("Effect Params")]
-    [SerializeField] private Transform _intermediateTransform;
     [SerializeField] private bool _isPlayer = true;
 
     [Header("Manager Caches")] 

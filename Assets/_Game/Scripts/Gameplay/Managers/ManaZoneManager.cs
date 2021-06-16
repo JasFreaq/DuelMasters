@@ -26,11 +26,6 @@ public class ManaZoneManager : MonoBehaviour
     #endregion
 
     [SerializeField] private PlayerDataHandler _playerData;
-
-    [Header("Transition")]
-    [SerializeField] private Transform _intermediateHolder;
-    [SerializeField] private float _fromTransitionTime = 1f;
-    [SerializeField] private float _toTransitionTime = 1f;
     
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 50;
@@ -42,6 +37,11 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private int _manaZoneSortingLayerFloor = 25;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
+    
+    [Header("Transition")]
+    [SerializeField] private Transform _intermediateHolder;
+    [SerializeField] private float _fromTransitionTime = 1f;
+    [SerializeField] private float _toTransitionTime = 1f;
     
     private ManaTransform _tempManaCard;
 

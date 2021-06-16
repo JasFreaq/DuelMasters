@@ -20,17 +20,6 @@ public class HandManager : MonoBehaviour
     [SerializeField] private PlayerDataHandler _playerData;
     [SerializeField] private float _dragArrangeYLimit = -7.5f;
     
-    [Header("Transition")]
-    [SerializeField] private Transform _intermediateHolder;
-    [SerializeField] private bool _isPlayer = true;
-    [SerializeField] private float _fromTransitionTime = 1.5f;
-    [SerializeField] private float _toTransitionTime = 1.5f;
-
-    [Header("Preview")]
-    [SerializeField] private Vector3 _previewTargetPosition;
-    [SerializeField] private Vector3 _previewTargetRotation;
-    [SerializeField] private Vector3 _previewTargetScale;
-
     [Header("Layout")]
     [SerializeField] private float _circleRadius = 150;
     [SerializeField] private float _cardAreaWidth = 24;
@@ -39,15 +28,29 @@ public class HandManager : MonoBehaviour
     [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
+    
+    [Header("Transition")]
+    [SerializeField] private bool _isPlayer = true;
+    [SerializeField] private float _fromTransitionTime = 1.5f;
+    [SerializeField] private float _toTransitionTime = 1.5f;
+    [SerializeField] private Transform _intermediateHolder;
+
+    [HideInInspector] public Transform _flippedIntermediateHolder;
+    [HideInInspector] public Vector3 _previewTargetPosition = new Vector3(0, -8.25f, -14.5f);
+    [HideInInspector] public Vector3 _previewTargetRotation = new Vector3(-105f, 0, 0);
+    [HideInInspector] public Vector3 _previewTargetScale = new Vector3(1.5f, 1.5f, 1.5f);
 
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
-    private Vector3 _previewCardPosition;
-    private Vector3 _previewCardRotation;
 
     private Transform _currentPreviewingCard = null;
     private Coroutine _previewResetRoutine = null;
 
+    public bool IsPlayer
+    {
+        get { return _isPlayer; }
+    }
+    
     private void Start()
     {
         _circleCenter = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
@@ -124,10 +127,9 @@ public class HandManager : MonoBehaviour
         card.DragHandler.CanDrag = false;
 
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        Vector3 rotation = _intermediateHolder.eulerAngles;
-        if (forShield && !_isPlayer)
-            rotation = new Vector3(90, 0, 0);
-        card.transform.DORotate(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        Quaternion rotation = (forShield && !_isPlayer) ? 
+            _flippedIntermediateHolder.rotation : _intermediateHolder.rotation;
+        card.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);

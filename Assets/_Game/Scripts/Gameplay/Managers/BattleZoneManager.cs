@@ -7,17 +7,17 @@ public class BattleZoneManager : MonoBehaviour
 {
     [SerializeField] private PlayerDataHandler _playerData;
 
-    [Header("Transition")]
-    [SerializeField] private Transform _intermediateHolder;
-    [SerializeField] private float _fromTransitionTime = 1f;
-    [SerializeField] private float _toTransitionTime = 1f;
-    
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 28;
     [SerializeField] private float _maxCardWidth = 10.25f;
     [SerializeField] private int _battleZoneSortingLayerFloor = 0;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
+    
+    [Header("Transition")]
+    [SerializeField] private float _fromTransitionTime = 1f;
+    [SerializeField] private float _toTransitionTime = 1f;
+    [SerializeField] private Transform _intermediateHolder;
 
     #region Functionality Methods
 

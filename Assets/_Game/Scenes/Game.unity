@@ -355,14 +355,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127403155}
-  m_LocalRotation: {x: -0, y: 0.79335344, z: -0.60876137, w: -0}
+  m_LocalRotation: {x: 0, y: -0.7933534, z: 0.6087614, w: 0}
   m_LocalPosition: {x: 15, y: 13.5, z: -24.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1355605650}
   m_Father: {fileID: 1962481309}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: -255, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 105, y: 0, z: 180}
 --- !u!1 &171994568
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,14 +734,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
-  _intermediateHolder: {fileID: 893572538}
-  _fromTransitionTime: 1
-  _toTransitionTime: 1
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
   _holderTransform: {fileID: 357518649}
   _tempCard: {fileID: 1102408665}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _intermediateHolder: {fileID: 893572538}
 --- !u!1 &561292745
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,13 +886,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
-  _intermediateHolder: {fileID: 1355605650}
-  _isPlayer: 0
-  _fromTransitionTime: 1.5
   _cardWidth: 0.05
   _cardScale: 0.5
   _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
   _spellPrefab: {fileID: 343298941492645285, guid: 4a63c9421e696484eb767328f2d8cdd0, type: 3}
+  _fromTransitionTime: 1.5
+  _intermediateHolder: {fileID: 1355605650}
 --- !u!1 &642158335
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,13 +966,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
-  _intermediateHolder: {fileID: 893572538}
-  _isPlayer: 1
-  _fromTransitionTime: 1.5
   _cardWidth: 0.05
   _cardScale: 0.5
   _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
   _spellPrefab: {fileID: 343298941492645285, guid: 4a63c9421e696484eb767328f2d8cdd0, type: 3}
+  _fromTransitionTime: 1.5
+  _intermediateHolder: {fileID: 893572538}
 --- !u!1 &741983388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,13 +1140,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
   _dragArrangeYLimit: -7.5
-  _intermediateHolder: {fileID: 127403156}
-  _isPlayer: 0
-  _fromTransitionTime: 1
-  _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: 5, z: 15}
-  _previewTargetRotation: {x: 0, y: 0, z: 0}
-  _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
   _circleRadius: 150
   _cardAreaWidth: 24
   _maxCardWidth: 8
@@ -1156,6 +1147,14 @@ MonoBehaviour:
   _arrangeLeftToRight: 0
   _holderTransform: {fileID: 1920806617}
   _tempCard: {fileID: 1633565210}
+  _isPlayer: 0
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _intermediateHolder: {fileID: 127403156}
+  _flippedIntermediateHolder: {fileID: 1355605650}
+  _previewTargetPosition: {x: 0, y: 5, z: 15}
+  _previewTargetRotation: {x: 0, y: 0, z: 0}
+  _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
 --- !u!1 &763472560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,11 +1290,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
-  _intermediateHolder: {fileID: 893572538}
-  _isPlayer: 1
-  _pauseTime: 0.75
-  _fromTransitionTime: 1.5
-  _toTransitionTime: 1.5
   _shieldPrefab: {fileID: 4016510806583502724, guid: aeed23a14ac0d874ebcd0ffb54734001, type: 3}
   _shieldAreaWidth: 25
   _maxShieldWidth: 10
@@ -1304,6 +1298,11 @@ MonoBehaviour:
   _shieldBreakTriggerName: BreakShield
   _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
+  _isPlayer: 1
+  _pauseTime: 0.75
+  _fromTransitionTime: 1.5
+  _toTransitionTime: 1.5
+  _intermediateHolder: {fileID: 893572538}
 --- !u!1 &965673507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,9 +1349,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
-  _intermediateHolder: {fileID: 893572538}
-  _fromTransitionTime: 1
-  _toTransitionTime: 1
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _tapUntapDist: 12
@@ -1362,6 +1358,9 @@ MonoBehaviour:
   _manaZoneSortingLayerFloor: 25
   _holderTransform: {fileID: 232627277}
   _tempCard: {fileID: 2017681614}
+  _intermediateHolder: {fileID: 893572538}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
 --- !u!1 &1042105411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,7 +1413,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackTarget: {fileID: 0}
-  _intermediateTransform: {fileID: 893572538}
   _isPlayer: 1
   _deckManager: {fileID: 712870840}
   _shieldsManager: {fileID: 905610300}
@@ -1632,11 +1630,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
-  _intermediateHolder: {fileID: 127403156}
-  _isPlayer: 0
-  _pauseTime: 0.75
-  _fromTransitionTime: 1.5
-  _toTransitionTime: 1.5
   _shieldPrefab: {fileID: 4016510806583502724, guid: aeed23a14ac0d874ebcd0ffb54734001, type: 3}
   _shieldAreaWidth: 25
   _maxShieldWidth: 10
@@ -1645,6 +1638,11 @@ MonoBehaviour:
   _shieldBreakTriggerName: BreakShield
   _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
+  _isPlayer: 0
+  _pauseTime: 0.75
+  _fromTransitionTime: 1.5
+  _toTransitionTime: 1.5
+  _intermediateHolder: {fileID: 127403156}
 --- !u!1 &1355605649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,7 +1653,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1355605650}
   m_Layer: 0
-  m_Name: From Deck Intermediate Position
+  m_Name: Flipped Intermediate Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1856,9 +1854,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
-  _intermediateHolder: {fileID: 127403156}
-  _fromTransitionTime: 1
-  _toTransitionTime: 1
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _tapUntapDist: 12
@@ -1868,6 +1863,9 @@ MonoBehaviour:
   _manaZoneSortingLayerFloor: 25
   _holderTransform: {fileID: 2133683597}
   _tempCard: {fileID: 1795273316}
+  _intermediateHolder: {fileID: 127403156}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
 --- !u!1 &1756759975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2048,14 +2046,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1962481311}
-  _intermediateHolder: {fileID: 127403156}
-  _fromTransitionTime: 1
-  _toTransitionTime: 1
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
   _holderTransform: {fileID: 763472561}
   _tempCard: {fileID: 1508421688}
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _intermediateHolder: {fileID: 127403156}
 --- !u!1 &1788549066
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,7 +2301,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackTarget: {fileID: 0}
-  _intermediateTransform: {fileID: 127403156}
   _isPlayer: 0
   _deckManager: {fileID: 574495386}
   _shieldsManager: {fileID: 1311186677}
@@ -2613,13 +2610,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerData: {fileID: 1042105414}
   _dragArrangeYLimit: 0
-  _intermediateHolder: {fileID: 893572538}
-  _isPlayer: 1
-  _fromTransitionTime: 1
-  _toTransitionTime: 1
-  _previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
-  _previewTargetRotation: {x: -105, y: 0, z: 0}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
   _circleRadius: 150
   _cardAreaWidth: 24
   _maxCardWidth: 8
@@ -2627,6 +2617,14 @@ MonoBehaviour:
   _arrangeLeftToRight: 1
   _holderTransform: {fileID: 642158336}
   _tempCard: {fileID: 895444045}
+  _isPlayer: 1
+  _fromTransitionTime: 1
+  _toTransitionTime: 1
+  _intermediateHolder: {fileID: 893572538}
+  _flippedIntermediateHolder: {fileID: 0}
+  _previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
+  _previewTargetRotation: {x: -105, y: 0, z: 0}
+  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
 --- !u!1 &2133683596
 GameObject:
   m_ObjectHideFlags: 0

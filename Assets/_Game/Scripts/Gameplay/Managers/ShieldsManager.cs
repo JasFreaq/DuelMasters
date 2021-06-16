@@ -7,14 +7,7 @@ using DG.Tweening;
 public class ShieldsManager : MonoBehaviour
 {
     [SerializeField] private PlayerDataHandler _playerData;
-
-    [Header("Transition")]
-    [SerializeField] private Transform _intermediateHolder;
-    [SerializeField] private bool _isPlayer = true;
-    [SerializeField] private float _pauseTime = 0.5f;
-    [SerializeField] private float _fromTransitionTime = 1.5f;
-    [SerializeField] private float _toTransitionTime = 1.5f;
-
+    
     [Header("Layout")]
     [SerializeField] private Shield _shieldPrefab;
     [SerializeField] private float _shieldAreaWidth = 25;
@@ -26,6 +19,13 @@ public class ShieldsManager : MonoBehaviour
     [SerializeField] private string _shieldBreakTriggerName = "BreakShield";
     [SerializeField] private string _shieldUnbreakTriggerName = "UnbreakShield";
     [SerializeField] private float _animationTime = 1f;
+    
+    [Header("Transition")]
+    [SerializeField] private bool _isPlayer = true;
+    [SerializeField] private float _pauseTime = 0.5f;
+    [SerializeField] private float _fromTransitionTime = 1.5f;
+    [SerializeField] private float _toTransitionTime = 1.5f;
+    [SerializeField] private Transform _intermediateHolder;
     
     private List<Shield> _shields = new List<Shield>();
 

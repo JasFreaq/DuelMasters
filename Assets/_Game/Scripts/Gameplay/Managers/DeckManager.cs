@@ -9,17 +9,16 @@ using Random = UnityEngine.Random;
 public class DeckManager : MonoBehaviour
 {
     [SerializeField] private PlayerDataHandler _playerData;
-
-    [Header("Transition")]
-    [SerializeField] private Transform _intermediateHolder;
-    [SerializeField] private bool _isPlayer = true;
-    [SerializeField] private float _fromTransitionTime = 1.5f;
-
+    
     [Header("Layout")]
     [SerializeField] private float _cardWidth = 0.05f;
     [SerializeField] [Range(0f, 1f)] private float _cardScale = 0.5f;
     [SerializeField] private CreatureCardManager _creaturePrefab;
     [SerializeField] private SpellCardManager _spellPrefab;
+    
+    [Header("Transition")]
+    [SerializeField] private float _fromTransitionTime = 1.5f;
+    [SerializeField] private Transform _intermediateHolder;
 
     #region Functionality Methods
 
