@@ -22,6 +22,7 @@ public class ChargeStep : GameStep
         {
             card.ToggleTap();
             dataHandler.TappedCards.Add(card);
+            currentPlayer.ManaZoneManager.ArrangeCards();
         }
 
         _gameManager.EndCurrentStep();

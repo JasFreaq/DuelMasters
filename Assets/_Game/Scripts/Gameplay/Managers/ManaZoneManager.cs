@@ -87,18 +87,6 @@ public class ManaZoneManager : MonoBehaviour
     public IEnumerator MoveToManaZoneRoutine(CardManager card)
     {
         _tempCard.parent = _holderTransform;
-        _tempManaCard.isTapped = card.CardData.Civilization.Length > 1;
-
-        Vector3 tempEulerAngles = _tempCard.localEulerAngles;
-        if (_tempManaCard.isTapped)
-        {
-            tempEulerAngles.y = GameParamsHolder.Instance.TapAngle;
-        }
-        else
-        {
-            tempEulerAngles.y = 0;
-        }
-        _tempCard.localEulerAngles = tempEulerAngles;
 
         _tempManaCard.civValue = CardParams.GetCivValue(card.CardData.Civilization);
         _tempManaCard.cardName = card.CardData.Name;
