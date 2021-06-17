@@ -54,6 +54,7 @@ public class DeckManager : MonoBehaviour
             card.RegisterOnSelect(selectAction);
 
             _playerData.CardsInDeck.Add(card);
+            card.CurrentZone = CardZone.Deck;
         }
 
         ShuffleCards();

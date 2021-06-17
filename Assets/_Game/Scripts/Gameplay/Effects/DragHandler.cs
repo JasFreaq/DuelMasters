@@ -8,7 +8,6 @@ public class DragHandler : MonoBehaviour
     private Transform _cameraTransform;
 
     private bool _isDragging = false;
-    private bool _canDrag = false;
 
     private Vector3 _originalPosition;
     private Quaternion _originalRotation;
@@ -17,11 +16,6 @@ public class DragHandler : MonoBehaviour
     private float _zDisplacement;
 
     private Action<Transform> _onDrag;
-    
-    public bool CanDrag
-    {
-        set { _canDrag = value; }
-    }
     
     #region Static Data Members
 
@@ -51,16 +45,13 @@ public class DragHandler : MonoBehaviour
 
     public void BeginDragging()
     {
-        if (_canDrag)
-        {
-            _isDragging = true;
-            _CurrentlyDragging = this;
-            
-            _zDisplacement = -_cameraTransform.position.z + transform.position.z;
-            _pointerDisplacement = -transform.position + MouseInWorldCoords();
+        _isDragging = true;
+        _CurrentlyDragging = this;
+        
+        _zDisplacement = -_cameraTransform.position.z + transform.position.z;
+        _pointerDisplacement = -transform.position + MouseInWorldCoords();
 
-            _onDrag?.Invoke(transform);
-        }
+        _onDrag?.Invoke(transform);
     }
 
     public void ResetDragging()

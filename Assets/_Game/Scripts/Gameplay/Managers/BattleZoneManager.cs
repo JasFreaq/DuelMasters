@@ -28,12 +28,14 @@ public class BattleZoneManager : MonoBehaviour
         card.transform.parent = _holderTransform;
 
         _playerData.CardsInBattle.Add(card.transform.GetInstanceID(), card);
+        card.CurrentZone = CardZone.BattleZone;
     }
     
     private void RemoveCardAtIndex(int index)
     {
-        CreatureCardManager card = _playerData.CardsInBattle[_holderTransform.GetChild(index).GetInstanceID()];
-        _playerData.CardsInBattle.Remove(_holderTransform.GetChild(index).GetInstanceID());
+        int iD = _holderTransform.GetChild(index).GetInstanceID();
+        CreatureCardManager card = _playerData.CardsInBattle[iD];
+        _playerData.CardsInBattle.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
     }

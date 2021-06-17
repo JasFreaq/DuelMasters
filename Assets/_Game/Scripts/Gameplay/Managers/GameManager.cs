@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
             {
                 CardManager card = pair.Value;
                 card.HoverPreviewHandler.PreviewEnabled = true;
-                card.DragHandler.CanDrag = true;
+                card.CanDrag = true;
             }
         }
     }

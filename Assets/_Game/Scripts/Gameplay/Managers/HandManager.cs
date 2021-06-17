@@ -103,7 +103,7 @@ public class HandManager : MonoBehaviour
 
         if (card.IsVisible)
             card.IsVisible = false;
-        card.DragHandler.CanDrag = false;
+        card.CanDrag = false;
 
         _playerData.CardsInHand.Remove(iD);
         card.transform.parent = transform;
@@ -123,6 +123,9 @@ public class HandManager : MonoBehaviour
             card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition,
                 Quaternion.Euler(_previewTargetRotation), _previewTargetScale);
         }
+
+        _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
+        card.CurrentZone = CardZone.Hand;
 
         ArrangeCards();
     }
@@ -159,8 +162,7 @@ public class HandManager : MonoBehaviour
 
         if (_isPlayer && card.IsVisible)
             card.VisibleEyeIcon.SetActive(true);
-
-        _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
+        
         AddCard(card);
     }
     

@@ -21,11 +21,14 @@ public class CardManager : MonoBehaviour
     private Action<CardManager> _onSelect;
     private Action<CardManager> _onProcessAction;
     
+    protected CardZone _currentZone = 0;
+    
     protected bool _isTapped = false;
     protected bool _isGlowing = false;
     private bool _isGlowSelectColor = true;
     private bool _isSelected = false;
     private bool _isVisible = false;
+    private bool _canDrag = false;
     
     private bool _processAction = false;
     private bool _inPlayerHand = false;
@@ -62,6 +65,11 @@ public class CardManager : MonoBehaviour
         get { return _dragHandler; }
     }
 
+    public CardZone CurrentZone
+    {
+        set { _currentZone = value; }
+    }
+
     public bool IsTapped
     {
         get { return _isTapped; }
@@ -76,6 +84,11 @@ public class CardManager : MonoBehaviour
     {
         get { return _isVisible; }
         set { _isVisible = value; }
+    }
+
+    public bool CanDrag
+    {
+        set { _canDrag = value; }
     }
 
     public bool ProcessAction
@@ -96,7 +109,7 @@ public class CardManager : MonoBehaviour
                 _hoverPreviewHandler.DeregisterOnBeginPlayerHandPreview(SetDragOrientationOnPreviewBegin);
         }
     }
-
+    
     #endregion
 
     private void Awake()
@@ -110,29 +123,35 @@ public class CardManager : MonoBehaviour
         _hoverPreviewHandler.BeginPreviewing();
     }
 
-    public void OnMouseDown()
+    private void OnMouseDown()
     {
-        _onSelect.Invoke(this);
-        _isSelected = !_isSelected;
-        
-        if (_isSelected)
+        if (_currentZone == CardZone.Hand) 
         {
-            _dragHandler.BeginDragging();
-        }
-        else
-        {
-            if (_processAction)
+            _onSelect.Invoke(this);
+            _isSelected = !_isSelected;
+
+            if (_canDrag)
             {
-                _onProcessAction?.Invoke(this);
-            }
-            else
-            {
-                _hoverPreviewHandler.ShouldStopPreview = false;
-                _dragHandler.EndDragging();
+                if (_isSelected)
+                {
+                    _dragHandler.BeginDragging();
+                }
+                else
+                {
+                    if (_processAction)
+                    {
+                        _onProcessAction?.Invoke(this);
+                    }
+                    else
+                    {
+                        _hoverPreviewHandler.ShouldStopPreview = false;
+                        _dragHandler.EndDragging();
+                    }
+                }
             }
         }
     }
-    
+
     private void OnMouseExit()
     {
         _hoverPreviewHandler.EndPreviewing();

@@ -10,7 +10,7 @@ public class HoverPreviewHandler: MonoBehaviour
     
     private Vector3 _handPreviewPosition = Vector3.zero;
     private Vector3 _handPreviewScale = Vector3.one;
-    private Quaternion _handPreviewRotation = Vector3.zero;
+    private Quaternion _handPreviewRotation = Quaternion.identity;
 
     private Vector3 _handOriginalPosition = Vector3.zero;
     private Quaternion _handOriginalRotation = Quaternion.identity;

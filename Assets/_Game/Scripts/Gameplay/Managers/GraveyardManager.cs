@@ -33,6 +33,7 @@ public class GraveyardManager : MonoBehaviour
 
         card.HoverPreviewHandler.PreviewEnabled = true;
         _playerData.CardsInGrave.Add(card);
+        card.CurrentZone = CardZone.Graveyard;
     }
 
     public CardManager RemoveCardAtIndex(int index)

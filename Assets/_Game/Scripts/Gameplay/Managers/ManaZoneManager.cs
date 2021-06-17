@@ -58,12 +58,14 @@ public class ManaZoneManager : MonoBehaviour
         card.transform.parent = _holderTransform;
 
         _playerData.CardsInMana.Add(card.transform.GetInstanceID(), card);
+        card.CurrentZone = CardZone.ManaZone;
     }
     
     private void RemoveCardAtIndex(int index)
     {
-        CardManager card = _playerData.CardsInMana[_holderTransform.GetChild(index).GetInstanceID()];
-        _playerData.CardsInMana.Remove(_holderTransform.GetChild(index).GetInstanceID());
+        int iD = _holderTransform.GetChild(index).GetInstanceID();
+        CardManager card = _playerData.CardsInMana[iD];
+        _playerData.CardsInMana.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
     }

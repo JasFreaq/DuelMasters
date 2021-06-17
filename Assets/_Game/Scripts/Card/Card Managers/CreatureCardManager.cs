@@ -11,7 +11,7 @@ public class CreatureCardManager : CardManager
     {
         get { return _battleCardLayoutHandler; }
     }
-
+    
     #region Setup Methods
 
     public override void SetupCard(Card card)

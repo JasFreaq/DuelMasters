@@ -145,6 +145,8 @@ public class ShieldsManager : MonoBehaviour
                 ArrangeShields();
             }
         }
+
+        card.CurrentZone = CardZone.Shields;
     }
 
     private int GetEmptyIndex()

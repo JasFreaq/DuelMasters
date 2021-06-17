@@ -177,7 +177,7 @@ public class PlayerManager : MonoBehaviour
         if (!disableInteraction)
         {
             card.HoverPreviewHandler.PreviewEnabled = true;
-            card.DragHandler.CanDrag = true;
+            card.CanDrag = true;
         }
     }
 
