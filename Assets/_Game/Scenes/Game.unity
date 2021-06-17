@@ -1593,7 +1593,7 @@ MonoBehaviour:
   _hoverIntermediateTransform: {fileID: 1892421610}
   _baseHighlightColor: {r: 0, g: 1, b: 1, a: 1}
   _playHighlightColor: {r: 1, g: 0.4117647, b: 0, a: 1}
-  _shieldBaseMat: {fileID: 0}
+  _shieldBaseMat: {fileID: 2100000, guid: fa69f72f41417854cab1c22d84581efd, type: 2}
   _shieldHighlightMat: {fileID: 2100000, guid: e3857fb2fb3b7654e8a41a52ed3f67fb, type: 2}
 --- !u!1 &1311186675
 GameObject:

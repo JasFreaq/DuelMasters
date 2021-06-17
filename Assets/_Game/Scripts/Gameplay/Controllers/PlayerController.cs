@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
         {
             int iD = hit.transform.GetInstanceID();
             ProcessCardHover(iD);
+            ProcessShieldHover(iD);
             ProcessInput(iD);
         }
     }
@@ -91,43 +92,43 @@ public class PlayerController : MonoBehaviour
         #endregion
     }
 
-    private void ProcessShieldHover()
+    private void ProcessShieldHover(int iD)
     {
-        //else if (_manager.CurrentlySelected &&
-        //         _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
-        //{
-        //    Shield tempShield = null;
-        //    foreach (Shield shield in _manager.DataHandler.Shields)
-        //    {
-        //        if (shield.transform.GetInstanceID() == iD)
-        //        {
-        //            tempShield = shield;
-        //            break;
-        //        }
-        //    }
+        if (_manager.CurrentlySelected &&
+                 _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+        {
+            Shield tempShield = null;
+            foreach (Shield shield in GameManager.OpponentDataHandler.Shields)
+            {
+                if (shield.transform.GetInstanceID() == iD)
+                {
+                    tempShield = shield;
+                    break;
+                }
+            }
 
-        //    if (tempShield)
-        //    {
-        //        if (_hoveredShield != tempShield)
-        //        {
-        //            ExitHover();
+            if (tempShield)
+            {
+                if (_hoveredShield != tempShield)
+                {
+                    ExitHover();
 
-        //            if (_hoverState == HoverState.None)
-        //            {
-        //                _hoveredShield = tempShield;
+                    if (_hoverState == HoverState.None)
+                    {
+                        _hoveredShield = tempShield;
 
-        //                //OnMouseEnter
-        //                _hoveredShield.SetHighlight(true);
-        //            }
+                        //OnMouseEnter
+                        _hoveredShield.SetHighlight(true);
+                    }
 
-        //            _hoverState = HoverState.Hover;
-        //        }
-        //    }
-        //    else if (_hoveredShield)
-        //    {
-        //        ExitHover();
-        //    }
-        //}
+                    _hoverState = HoverState.Hover;
+                }
+            }
+            else if (_hoveredShield)
+            {
+                ExitHover();
+            }
+        }
 
         #region Local Functions
 

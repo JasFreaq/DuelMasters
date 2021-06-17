@@ -39,10 +39,10 @@ public class Shield : MonoBehaviour
         {
             Material meshMat = highlight ? GameParamsHolder.Instance.ShieldHighlightMat
                 : GameParamsHolder.Instance.ShieldBaseMat;
-            Material[] shieldMaterials = _shieldRenderer.materials;
-            for (int i = 0, n = shieldMaterials.Length; i < n; i++)
+
+            for (int i = 0, n = _shieldRenderer.materials.Length; i < n; i++)
             {
-                shieldMaterials[i] = meshMat;
+                _shieldRenderer.materials[i] = meshMat;
             }
 
             _isHighlighted = highlight;

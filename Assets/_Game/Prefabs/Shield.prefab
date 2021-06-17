@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4078082339459076264}
   - component: {fileID: 2158720421680086860}
+  - component: {fileID: 7932097453273564993}
   - component: {fileID: 4016510806583502724}
   m_Layer: 0
   m_Name: Shield
@@ -84,6 +85,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &7932097453273564993
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4078082339459076267}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.75, y: 0.9, z: 0.2}
+  m_Center: {x: 0, y: -0.05, z: 0.05}
 --- !u!114 &4016510806583502724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5168fe049fc1b674b932b07794fe0817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shieldRenderer: {fileID: 3411995577668063198}
   _cardHolderTransform: {fileID: 836673217886814443}
 --- !u!1001 &4078082338191922010
 PrefabInstance:
@@ -181,6 +196,11 @@ PrefabInstance:
 --- !u!4 &4544971204020417713 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
+  m_PrefabInstance: {fileID: 4078082338191922010}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3411995577668063198 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
   m_PrefabInstance: {fileID: 4078082338191922010}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4078082338808498107
