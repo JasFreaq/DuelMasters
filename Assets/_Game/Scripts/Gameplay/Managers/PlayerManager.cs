@@ -72,9 +72,6 @@ public class PlayerManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.N))
                 StartCoroutine(ReturnFromManaRoutine(card));
         }
-
-        if (Input.GetKeyDown(KeyCode.A))
-            _playerData.CardsInBattle[_battleZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()].Attack();
     }
 
     #region Setup Methods

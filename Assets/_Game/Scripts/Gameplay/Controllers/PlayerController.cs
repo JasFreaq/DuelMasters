@@ -164,6 +164,18 @@ public class PlayerController : MonoBehaviour
                     //OnMouseOver
                 }
             }
+            else if (_hoveredShield)
+            {
+                if (_manager.CurrentlySelected &&
+                    _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        CreatureCardManager creature = (CreatureCardManager)_manager.CurrentlySelected;
+                        creature.Attack(_hoveredShield.transform);
+                    }
+                }
+            }
         }
     }
 }
