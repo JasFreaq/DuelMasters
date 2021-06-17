@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -5,8 +6,8 @@ using UnityEngine;
 
 public class BattleZoneManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHandler _playerData;
-
+    [SerializeField] private bool _isPlayer = true;
+    
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 28;
     [SerializeField] private float _maxCardWidth = 10.25f;
@@ -18,6 +19,13 @@ public class BattleZoneManager : MonoBehaviour
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
     [SerializeField] private Transform _intermediateHolder;
+    
+    private PlayerDataHandler _playerData;
+
+    private void Start()
+    {
+        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+    }
 
     #region Functionality Methods
 

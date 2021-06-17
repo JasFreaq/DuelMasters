@@ -16,7 +16,7 @@ public abstract class CardLayoutHandler : MonoBehaviour
     [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
     [SerializeField] private FlavorTextLayoutHandler flavorTextLayoutPrefab;
-    [SerializeField] protected Image _glowFrame;
+    [SerializeField] protected Image _highlightFrame;
     [SerializeField] CardFrameDatabase _cardFrameDatabase;
     
     public Canvas Canvas
@@ -49,11 +49,11 @@ public abstract class CardLayoutHandler : MonoBehaviour
 
     public void SetGlow(bool enableGlow)
     {
-        _glowFrame.gameObject.SetActive(enableGlow);
+        _highlightFrame.gameObject.SetActive(enableGlow);
     }
     
-    public void SetGlowColor(Color color)
+    public void SetHighlightColor(Color color)
     {
-        _glowFrame.color = color;
+        _highlightFrame.color = color;
     }
 }

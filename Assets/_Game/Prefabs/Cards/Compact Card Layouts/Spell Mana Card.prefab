@@ -17,7 +17,7 @@ MonoBehaviour:
   _frameImage: {fileID: 7206591397517228844}
   _nameText: {fileID: 3996320500062144103}
   _bgRenderer: {fileID: 3996320499488332304}
-  _glowFrame: {fileID: 4920403542049641265}
+  _highlightFrame: {fileID: 4920403542049641265}
   _tappedOverlay: {fileID: 3996320499433295687}
   _cardFrameDatabase: {fileID: 0}
 --- !u!1001 &8208428556367134614
@@ -27,6 +27,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3070440522286668296, guid: 72453975b7c45c64baad2bf9307abe41, type: 3}
+      propertyPath: m_Name
+      value: Highlight Frame
+      objectReference: {fileID: 0}
     - target: {fileID: 5089061093759084413, guid: 72453975b7c45c64baad2bf9307abe41, type: 3}
       propertyPath: m_RootOrder
       value: 0

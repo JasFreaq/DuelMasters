@@ -17,8 +17,12 @@ public class GameParamsHolder : MonoBehaviour
     [SerializeField] private Transform _hoverIntermediateTransform = null;
 
     [Header("Colors")]
-    [SerializeField] private Color _highlightGlowColor = new Color(0f, 1f, 1f, 1f);
-    [SerializeField] private Color _playGlowColor = new Color(1f, 0.4117647f, 0f, 1f);
+    [SerializeField] private Color _baseHighlightColor = new Color(0f, 1f, 1f, 1f);
+    [SerializeField] private Color _playHighlightColor = new Color(1f, 0.4117647f, 0f, 1f);
+
+    [Header("Materials")] 
+    [SerializeField] private Material _shieldBaseMat;
+    [SerializeField] private Material _shieldHighlightMat;
 
     #region Static Variables
 
@@ -36,7 +40,9 @@ public class GameParamsHolder : MonoBehaviour
 
     #endregion
 
-    #region Float Properties
+    #region Properties
+
+    #region Float(s)
 
     public float LayoutsArrangeMoveTime
     {
@@ -70,7 +76,7 @@ public class GameParamsHolder : MonoBehaviour
 
     #endregion
 
-    #region Transform Properties
+    #region Transform(s)
 
     public Transform HoverIntermediateTransform
     {
@@ -79,17 +85,33 @@ public class GameParamsHolder : MonoBehaviour
 
     #endregion
 
-    #region Color Properties
+    #region Color(s)
 
-    public Color HighlightGlowColor
+    public Color BaseHighlightColor
     {
-        get { return _highlightGlowColor; }
+        get { return _baseHighlightColor; }
     }
     
-    public Color PlayGlowColor
+    public Color PlayHighlightColor
     {
-        get { return _playGlowColor; }
+        get { return _playHighlightColor; }
     }
+
+    #endregion
+
+    #region Material(s)
+    
+    public Material ShieldBaseMat
+    {
+        get { return _shieldBaseMat; }
+    }
+
+    public Material ShieldHighlightMat
+    {
+        get { return _shieldHighlightMat; }
+    }
+
+    #endregion
 
     #endregion
 

@@ -232,7 +232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f2b2d8ac15a76469bb92d2b6fedeae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
   _isPlayer: 1
   _cardWidth: 0.05
   _cardScale: 0.5
@@ -406,7 +405,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f2b2d8ac15a76469bb92d2b6fedeae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
   _isPlayer: 0
   _cardWidth: 0.05
   _cardScale: 0.5
@@ -733,7 +731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2b20cf02067214d9bc9a0dc19ec313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
+  _isPlayer: 1
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
@@ -885,7 +883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b8b223a8337bc458ec9f3c61c6b24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
+  _isPlayer: 0
   _cardWidth: 0.05
   _cardScale: 0.5
   _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
@@ -965,7 +963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b8b223a8337bc458ec9f3c61c6b24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
+  _isPlayer: 1
   _cardWidth: 0.05
   _cardScale: 0.5
   _creaturePrefab: {fileID: 4488545779044491318, guid: 76fb7ee808dcebc42834b429bb3fb0ad, type: 3}
@@ -1138,7 +1136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0585ed10646244a9a41b74aa34fce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
+  _isPlayer: 0
   _dragArrangeYLimit: -7.5
   _circleRadius: 150
   _cardAreaWidth: 24
@@ -1147,7 +1145,6 @@ MonoBehaviour:
   _arrangeLeftToRight: 0
   _holderTransform: {fileID: 1920806617}
   _tempCard: {fileID: 1633565210}
-  _isPlayer: 0
   _fromTransitionTime: 1
   _toTransitionTime: 1
   _intermediateHolder: {fileID: 127403156}
@@ -1289,7 +1286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2c16942c2c2c845a90beda9800497f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
+  _isPlayer: 1
   _shieldPrefab: {fileID: 4016510806583502724, guid: aeed23a14ac0d874ebcd0ffb54734001, type: 3}
   _shieldAreaWidth: 25
   _maxShieldWidth: 10
@@ -1298,7 +1295,6 @@ MonoBehaviour:
   _shieldBreakTriggerName: BreakShield
   _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
-  _isPlayer: 1
   _pauseTime: 0.75
   _fromTransitionTime: 1.5
   _toTransitionTime: 1.5
@@ -1348,7 +1344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3758623340291e248946aaf5af0a5f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
+  _isPlayer: 1
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _tapUntapDist: 12
@@ -1372,6 +1368,7 @@ GameObject:
   - component: {fileID: 1042105412}
   - component: {fileID: 1042105413}
   - component: {fileID: 1042105414}
+  - component: {fileID: 1042105415}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1430,6 +1427,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8bf282189e5cb84992dc01064fca5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1042105415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042105411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1efcbb597dfe02949b01778a662628c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1102408664
@@ -1583,8 +1592,10 @@ MonoBehaviour:
   _tapAngle: 15
   _tapTransitionTime: 0.5
   _hoverIntermediateTransform: {fileID: 1892421610}
-  _highlightGlowColor: {r: 0, g: 1, b: 1, a: 1}
-  _playGlowColor: {r: 1, g: 0.4117647, b: 0, a: 1}
+  _baseHighlightColor: {r: 0, g: 1, b: 1, a: 1}
+  _playHighlightColor: {r: 1, g: 0.4117647, b: 0, a: 1}
+  _shieldBaseMat: {fileID: 0}
+  _shieldHighlightMat: {fileID: 2100000, guid: e3857fb2fb3b7654e8a41a52ed3f67fb, type: 2}
 --- !u!1 &1311186675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1629,7 +1640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f2c16942c2c2c845a90beda9800497f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
+  _isPlayer: 0
   _shieldPrefab: {fileID: 4016510806583502724, guid: aeed23a14ac0d874ebcd0ffb54734001, type: 3}
   _shieldAreaWidth: 25
   _maxShieldWidth: 10
@@ -1638,7 +1649,6 @@ MonoBehaviour:
   _shieldBreakTriggerName: BreakShield
   _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
-  _isPlayer: 0
   _pauseTime: 0.75
   _fromTransitionTime: 1.5
   _toTransitionTime: 1.5
@@ -1853,7 +1863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3758623340291e248946aaf5af0a5f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
+  _isPlayer: 0
   _cardAreaWidth: 50
   _maxCardWidth: 8
   _tapUntapDist: 12
@@ -2045,7 +2055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2b20cf02067214d9bc9a0dc19ec313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1962481311}
+  _isPlayer: 0
   _cardAreaWidth: 28
   _maxCardWidth: 10.25
   _battleZoneSortingLayerFloor: 0
@@ -2608,7 +2618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec0585ed10646244a9a41b74aa34fce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerData: {fileID: 1042105414}
+  _isPlayer: 1
   _dragArrangeYLimit: 0
   _circleRadius: 150
   _cardAreaWidth: 24
@@ -2617,7 +2627,6 @@ MonoBehaviour:
   _arrangeLeftToRight: 1
   _holderTransform: {fileID: 642158336}
   _tempCard: {fileID: 895444045}
-  _isPlayer: 1
   _fromTransitionTime: 1
   _toTransitionTime: 1
   _intermediateHolder: {fileID: 893572538}

@@ -25,7 +25,7 @@ public class ManaZoneManager : MonoBehaviour
     
     #endregion
 
-    [SerializeField] private PlayerDataHandler _playerData;
+    [SerializeField] private bool _isPlayer = true;
     
     [Header("Layout")]
     [SerializeField] private float _cardAreaWidth = 50;
@@ -43,10 +43,14 @@ public class ManaZoneManager : MonoBehaviour
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
     
+    private PlayerDataHandler _playerData;
+    
     private ManaTransform _tempManaCard;
 
     private void Start()
     {
+        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+        
         _tempManaCard = new ManaTransform(_tempCard, false, 0, "");
     }
 

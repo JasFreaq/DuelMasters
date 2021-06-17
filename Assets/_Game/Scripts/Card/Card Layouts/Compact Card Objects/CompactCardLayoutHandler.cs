@@ -13,7 +13,7 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     [SerializeField] private Image _frameImage;
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private Renderer _bgRenderer;
-    [SerializeField] private Image _glowFrame;
+    [SerializeField] private Image _highlightFrame;
     [SerializeField] private GameObject _tappedOverlay;
     [SerializeField] private CompactCardFrameDatabase _cardFrameDatabase;
 
@@ -38,11 +38,11 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
 
     public void SetGlow(bool enableGlow)
     {
-        _glowFrame.gameObject.SetActive(enableGlow);
+        _highlightFrame.gameObject.SetActive(enableGlow);
     }
 
-    public void SetGlowColor(Color color)
+    public void SetHighlightColor(Color color)
     {
-        _glowFrame.color = color;
+        _highlightFrame.color = color;
     }
 }

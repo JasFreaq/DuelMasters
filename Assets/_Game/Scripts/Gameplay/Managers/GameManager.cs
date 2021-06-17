@@ -26,17 +26,17 @@ public class GameManager : MonoBehaviour
 
     #region Static Data Members
 
-    private static Dictionary<int, CardManager> _playerCards = new Dictionary<int, CardManager>();
-    private static Dictionary<int, CardManager> _opponentCards = new Dictionary<int, CardManager>();
+    private static PlayerDataHandler _playerDataHandler;
+    private static PlayerDataHandler _opponentDataHandler;
 
-    public static IReadOnlyDictionary<int, CardManager> PlayerCards
+    public static PlayerDataHandler PlayerDataHandler
     {
-        get { return _playerCards; }
+        get { return _playerDataHandler; }
     }
 
-    public static IReadOnlyDictionary<int, CardManager> OpponentCards
+    public static PlayerDataHandler OpponentDataHandler
     {
-        get { return _opponentCards; }
+        get { return _opponentDataHandler; }
     }
 
     #endregion
@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour
     {
         SetupSteps();
 
+        _playerDataHandler = _playerManager.DataHandler;
+        _opponentDataHandler = _opponentManager.DataHandler;
+
+        #region Internal Functions
+
         void SetupSteps()
         {
             _gameSteps[GameStepType.BeginStep] = new BeginStep(this);
@@ -66,6 +71,8 @@ public class GameManager : MonoBehaviour
             _gameSteps[GameStepType.AttackStep] = new AttackStep(this);
             _gameSteps[GameStepType.EndStep] = new EndStep(this);
         }
+
+        #endregion
     }
 
     void Update()
@@ -107,8 +114,8 @@ public class GameManager : MonoBehaviour
         _playerManager.Initialize(playerDeck, ProcessGameAction);
         _opponentManager.Initialize(opponentDeck, ProcessGameAction);
 
-        SetupCardDatabase(_playerManager.DataHandler.CardsInDeck, ref _playerCards);
-        SetupCardDatabase(_opponentManager.DataHandler.CardsInDeck, ref _opponentCards);
+        _playerManager.DataHandler.SetAllCards();
+        _opponentManager.DataHandler.SetAllCards();
 
         _playerManager.SetupShields();
         yield return _opponentManager.SetupShields();
@@ -123,15 +130,7 @@ public class GameManager : MonoBehaviour
         _opponentManager.CanSelect = true;
 
         #region Internal Functions
-
-        void SetupCardDatabase(List<CardManager> cards, ref Dictionary<int, CardManager> database)
-        {
-            foreach (CardManager card in cards)
-            {
-                database.Add(card.transform.GetInstanceID(), card);
-            }
-        }
-
+        
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
             for (int i = 0; i < 5; i++)
@@ -169,14 +168,15 @@ public class GameManager : MonoBehaviour
     
     private void ProcessGameAction(CardManager card)
     {
+        int iD = card.transform.GetInstanceID();
         if (_playerTurn)
         {
-            if (_playerCards.ContainsValue(card))
+            if (_playerManager.DataHandler.AllCards.ContainsKey(iD))
             {
                 StartCoroutine(_currentStep.ProcessGameAction(card, _playerManager));
             }
         }
-        else if ( _opponentCards.ContainsValue(card))
+        else if (_opponentManager.DataHandler.AllCards.ContainsKey(iD))
         {
             StartCoroutine(_currentStep.ProcessGameAction(card, _opponentManager));
         }

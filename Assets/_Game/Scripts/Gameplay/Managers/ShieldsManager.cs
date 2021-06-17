@@ -6,8 +6,8 @@ using DG.Tweening;
 
 public class ShieldsManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHandler _playerData;
-    
+    [SerializeField] private bool _isPlayer = true;
+
     [Header("Layout")]
     [SerializeField] private Shield _shieldPrefab;
     [SerializeField] private float _shieldAreaWidth = 25;
@@ -21,29 +21,27 @@ public class ShieldsManager : MonoBehaviour
     [SerializeField] private float _animationTime = 1f;
     
     [Header("Transition")]
-    [SerializeField] private bool _isPlayer = true;
     [SerializeField] private float _pauseTime = 0.5f;
     [SerializeField] private float _fromTransitionTime = 1.5f;
     [SerializeField] private float _toTransitionTime = 1.5f;
     [SerializeField] private Transform _intermediateHolder;
     
-    private List<Shield> _shields = new List<Shield>();
-
+    private PlayerDataHandler _playerData;
+    
     private int _shieldBreakTriggerHash;
     private int _shieldUnbreakTriggerHash;
     
-    private void Awake()
-    {
-        _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
-        _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
-    }
-
     private void Start()
     {
+        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+
+        _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
+        _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
+
         for (int i = 0; i < 5; i++)
         {
             Shield shield = Instantiate(_shieldPrefab, _holderTransform);
-            _shields.Add(shield);
+            _playerData.Shields.Add(shield);
         }
 
         ArrangeShields();
@@ -55,7 +53,7 @@ public class ShieldsManager : MonoBehaviour
     {
         for (int i = 4; i >= 0; i--)
         {
-            MoveToShields(cards[i], _shields[i].CardHolder);
+            MoveToShields(cards[i], _playerData.Shields[i].CardHolder);
             yield return new WaitForSeconds(_pauseTime);
         }
 
@@ -72,7 +70,7 @@ public class ShieldsManager : MonoBehaviour
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
-        Shield shield = _shields[shieldIndex];
+        Shield shield = _playerData.Shields[shieldIndex];
         shield.SetAnimatorTrigger(_shieldBreakTriggerHash);
         shield.CardHolder.DOScale(shield.HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
@@ -92,7 +90,7 @@ public class ShieldsManager : MonoBehaviour
     {
         int emptyIndex = GetEmptyIndex();
         AddShield(emptyIndex, card);
-        MoveToShields(card, _shields[emptyIndex].CardHolder);
+        MoveToShields(card, _playerData.Shields[emptyIndex].CardHolder);
         yield return new WaitForSeconds(_toTransitionTime);
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
     }
@@ -119,7 +117,7 @@ public class ShieldsManager : MonoBehaviour
         n = _holderTransform.childCount;
         if (n > 5 && shieldIndex < n)
         {
-            _shields.RemoveAt(shieldIndex);
+            _playerData.Shields.RemoveAt(shieldIndex);
             Transform shieldTransform = _holderTransform.GetChild(shieldIndex);
             shieldTransform.parent = transform;
             Destroy(shieldTransform.gameObject);
@@ -141,7 +139,7 @@ public class ShieldsManager : MonoBehaviour
             if (_playerData.CardsInShields.Count > 5)
             {
                 Shield shield = Instantiate(_shieldPrefab, _holderTransform);
-                _shields.Add(shield);
+                _playerData.Shields.Add(shield);
                 ArrangeShields();
             }
         }
@@ -193,8 +191,8 @@ public class ShieldsManager : MonoBehaviour
 
     private IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)
     {
-        _shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
-        _shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
+        _playerData.Shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
+        _playerData.Shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
     }

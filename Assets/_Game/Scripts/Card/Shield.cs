@@ -5,11 +5,15 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
+    [SerializeField] private MeshRenderer _shieldRenderer;
     [SerializeField] private Transform _cardHolderTransform;
 
     private Animator _animator;
 
+    private bool _isHighlighted = false;
     private Vector3 _holderScale;
+
+    #region Properties
 
     public Transform CardHolder
     {
@@ -21,10 +25,28 @@ public class Shield : MonoBehaviour
         get { return _holderScale; }
     }
 
+    #endregion
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _holderScale = _cardHolderTransform.localScale;
+    }
+
+    public void SetHighlight(bool highlight)
+    {
+        if (highlight != _isHighlighted)
+        {
+            Material meshMat = highlight ? GameParamsHolder.Instance.ShieldHighlightMat
+                : GameParamsHolder.Instance.ShieldBaseMat;
+            Material[] shieldMaterials = _shieldRenderer.materials;
+            for (int i = 0, n = shieldMaterials.Length; i < n; i++)
+            {
+                shieldMaterials[i] = meshMat;
+            }
+
+            _isHighlighted = highlight;
+        }
     }
 
     public void SetAnimatorTrigger(int hash)

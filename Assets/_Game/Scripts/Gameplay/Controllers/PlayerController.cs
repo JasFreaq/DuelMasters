@@ -30,9 +30,9 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             int iD = hit.transform.GetInstanceID();
-            if (GameManager.PlayerCards.ContainsKey(iD))
+            if (GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
             {
-                CardManager card = GameManager.PlayerCards[iD];
+                CardManager card = GameManager.PlayerDataHandler.AllCards[iD];
 
                 if (_hoveredCard != card)
                 {
@@ -56,16 +56,19 @@ public class PlayerController : MonoBehaviour
 
             if (_hoverState == HoverState.Hover)
             {
-                //OnMouseOver
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    //OnMouseDown
-                    _hoveredCard.ProcessMouseDown();
-                }
-                else if (Input.GetMouseButtonUp(0))
+                if (_hoveredCard) 
                 {
                     //OnMouseOver
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        //OnMouseDown
+                        _hoveredCard.ProcessMouseDown();
+                    }
+                    else if (Input.GetMouseButtonUp(0))
+                    {
+                        //OnMouseOver
+                    }
                 }
             }
         }

@@ -85,9 +85,7 @@ public class PlayerManager : MonoBehaviour
     {
         CardManager[] cards = new CardManager[5];
         for (int i = 0; i < 5; i++)
-        {
             cards[i] = _deckManager.RemoveTopCard();
-        }
 
         return StartCoroutine(_shieldsManager.SetupShieldsRoutine(cards));
     }
@@ -107,14 +105,14 @@ public class PlayerManager : MonoBehaviour
                 switch (GameManager.CurrentStep)
                 {
                     case GameStepType.ChargeStep:
-                        _currentlySelected.SetGlow(true);
+                        _currentlySelected.SetHighlight(true);
                         break;
 
                     case GameStepType.MainStep:
                         foreach (CardManager cardManager in _playableCards)
                         {
                             if (cardManager != _currentlySelected)
-                                cardManager.SetGlow(false);
+                                cardManager.SetHighlight(false);
                         }
                         break;
                 }
@@ -124,18 +122,18 @@ public class PlayerManager : MonoBehaviour
                 switch (GameManager.CurrentStep)
                 {
                     case GameStepType.ChargeStep:
-                        _currentlySelected.SetGlow(false);
+                        _currentlySelected.SetHighlight(false);
                         break;
 
                     case GameStepType.MainStep:
                         if (_currentlySelected.ProcessAction) 
-                            _currentlySelected.SetGlow(false);
+                            _currentlySelected.SetHighlight(false);
                         else
                         {
                             foreach (CardManager cardManager in _playableCards)
                             {
                                 if (cardManager != _currentlySelected)
-                                    cardManager.SetGlow(true);
+                                    cardManager.SetHighlight(true);
                             }
                         }
                         break;
@@ -155,7 +153,7 @@ public class PlayerManager : MonoBehaviour
             CardManager card = pair.Value;
             if (_playerData.CanPayCost(card.CardData.Civilization, card.CardData.Cost))
             {
-                card.SetGlow(true);
+                card.SetHighlight(true);
                 _playableCards.Add(card);
             }
         }

@@ -14,6 +14,9 @@ public class PlayerDataHandler : MonoBehaviour
     private Dictionary<int, CreatureCardManager> _cardsInBattleZone = new Dictionary<int, CreatureCardManager>();
     
     private List<CardManager> _tappedCards = new List<CardManager>();
+    private List<Shield> _shields = new List<Shield>();
+
+    private Dictionary<int, CardManager> _allCards = new Dictionary<int, CardManager>();
 
     #region Properties
 
@@ -52,7 +55,27 @@ public class PlayerDataHandler : MonoBehaviour
         get { return _tappedCards; }
     }
 
+    public List<Shield> Shields
+    {
+        get { return _shields; }
+    }
+
+    public IReadOnlyDictionary<int, CardManager> AllCards
+    {
+        get { return _allCards; }
+    }
+
     #endregion
+
+    public void SetAllCards()
+    {
+        foreach (CardManager card in _cardsInDeck)
+        {
+            _allCards.Add(card.transform.GetInstanceID(), card);
+        }
+    }
+
+    #region Mana Functionality
 
     private Dictionary<int, List<CardManager>> GetAvailableManaCards()
     {
@@ -73,7 +96,7 @@ public class PlayerDataHandler : MonoBehaviour
 
         return availableMana;
     }
-
+    
     private int GetAvailableMana(Dictionary<int, List<CardManager>> availableMana)
     {
         int mana = 0;
@@ -188,4 +211,6 @@ public class PlayerDataHandler : MonoBehaviour
             }
         }
     }
+
+    #endregion
 }

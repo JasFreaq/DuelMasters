@@ -25,8 +25,8 @@ public class CardManager : MonoBehaviour
     protected CardZone _currentZone = 0;
     
     protected bool _isTapped = false;
-    protected bool _isGlowing = false;
-    private bool _isGlowSelectColor = true;
+    protected bool _isHighlighted = false;
+    private bool _isHighlightBaseColor = true;
     private bool _isSelected = false;
     private bool _isVisible = false;
     private bool _canDrag = false;
@@ -76,9 +76,9 @@ public class CardManager : MonoBehaviour
         get { return _isTapped; }
     }
     
-    public bool IsGlowSelectColor
+    public bool IsHighlightBaseColor
     {
-        get { return _isGlowSelectColor; }
+        get { return _isHighlightBaseColor; }
     }
     
     public bool IsVisible
@@ -210,21 +210,21 @@ public class CardManager : MonoBehaviour
 
     #region State Methods
 
-    public virtual void SetGlowColor(bool play)
+    public virtual void SetHighlightColor(bool play)
     {
-        _isGlowSelectColor = !play;
-        Color color = play ? GameParamsHolder.Instance.PlayGlowColor 
-            : GameParamsHolder.Instance.HighlightGlowColor;
+        _isHighlightBaseColor = !play;
+        Color color = play ? GameParamsHolder.Instance.PlayHighlightColor 
+            : GameParamsHolder.Instance.BaseHighlightColor;
 
-        _cardLayoutHandler.SetGlowColor(color);
-        _manaCardLayoutHandler.SetGlowColor(color);
+        _cardLayoutHandler.SetHighlightColor(color);
+        _manaCardLayoutHandler.SetHighlightColor(color);
     }
 
-    public virtual void SetGlow(bool enableGlow)
+    public virtual void SetHighlight(bool highlight)
     {
-        _isGlowing = enableGlow;
-        _cardLayoutHandler.SetGlow(_isGlowing);
-        _manaCardLayoutHandler.SetGlow(_isGlowing);
+        _isHighlighted = highlight;
+        _cardLayoutHandler.SetGlow(_isHighlighted);
+        _manaCardLayoutHandler.SetGlow(_isHighlighted);
     }
 
     public virtual void ToggleTap()

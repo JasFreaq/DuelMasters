@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 [DisallowMultipleComponent]
 public class DeckManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHandler _playerData;
+    [SerializeField] private bool _isPlayer = true;
     
     [Header("Layout")]
     [SerializeField] private float _cardWidth = 0.05f;
@@ -19,6 +19,13 @@ public class DeckManager : MonoBehaviour
     [Header("Transition")]
     [SerializeField] private float _fromTransitionTime = 1.5f;
     [SerializeField] private Transform _intermediateHolder;
+
+    private PlayerDataHandler _playerData;
+
+    private void Start()
+    {
+        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+    }
 
     #region Functionality Methods
 

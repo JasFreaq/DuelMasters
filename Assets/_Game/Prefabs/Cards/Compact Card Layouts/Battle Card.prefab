@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 6567202714370062328}
   - component: {fileID: 2356031955993564043}
   m_Layer: 5
-  m_Name: Glow Frame
+  m_Name: Highlight Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1362,7 +1362,7 @@ MonoBehaviour:
   _frameImage: {fileID: 7332533855401942186}
   _nameText: {fileID: 7332533854852668786}
   _bgRenderer: {fileID: 7332533856434192645}
-  _glowFrame: {fileID: 2356031955993564043}
+  _highlightFrame: {fileID: 2356031955993564043}
   _tappedOverlay: {fileID: 7332533856521770066}
   _cardFrameDatabase: {fileID: 0}
   _creatureRaceText: {fileID: 7332533856762865641}

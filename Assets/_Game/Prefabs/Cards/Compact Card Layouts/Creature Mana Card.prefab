@@ -151,7 +151,7 @@ MonoBehaviour:
   _frameImage: {fileID: 8743480709633786094}
   _nameText: {fileID: 3035471789359988133}
   _bgRenderer: {fileID: 3035471790941446610}
-  _glowFrame: {fileID: 6421333876133914867}
+  _highlightFrame: {fileID: 6421333876133914867}
   _tappedOverlay: {fileID: 3035471791012246661}
   _cardFrameDatabase: {fileID: 0}
   _creatureRaceText: {fileID: 2807924182032197603}
@@ -166,6 +166,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 21e3ab97be35712488a2dbf2df927b87, type: 3}
+    - target: {fileID: 3070440522286668296, guid: 72453975b7c45c64baad2bf9307abe41, type: 3}
+      propertyPath: m_Name
+      value: Highlight Frame
+      objectReference: {fileID: 0}
     - target: {fileID: 5089061093759084413, guid: 72453975b7c45c64baad2bf9307abe41, type: 3}
       propertyPath: m_RootOrder
       value: 0

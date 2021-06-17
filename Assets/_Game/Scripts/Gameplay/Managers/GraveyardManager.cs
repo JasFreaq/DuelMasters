@@ -5,17 +5,20 @@ using UnityEngine;
 
 public class GraveyardManager : MonoBehaviour
 {
-    [SerializeField] private PlayerDataHandler _playerData;
+    [SerializeField] private bool _isPlayer = true;
     
     [Header("Layout")] 
-    [SerializeField] private bool _isPlayer = true;
     [SerializeField] private float _cardWidth = 0.05f;
     [SerializeField] [Range(0f, 1f)] private float _cardScale = 0.5f;
+    
+    private PlayerDataHandler _playerData;
     
     float _lastYPos = 0;
 
     private void Start()
     {
+        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+     
         if (!_isPlayer)
             _cardWidth = -_cardWidth;
     }

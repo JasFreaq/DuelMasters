@@ -17,7 +17,7 @@ public class HandManager : MonoBehaviour
 
     #endregion
 
-    [SerializeField] private PlayerDataHandler _playerData;
+    [SerializeField] private bool _isPlayer = true;
     [SerializeField] private float _dragArrangeYLimit = -7.5f;
     
     [Header("Layout")]
@@ -30,7 +30,6 @@ public class HandManager : MonoBehaviour
     [SerializeField] private Transform _tempCard;
     
     [Header("Transition")]
-    [SerializeField] private bool _isPlayer = true;
     [SerializeField] private float _fromTransitionTime = 1.5f;
     [SerializeField] private float _toTransitionTime = 1.5f;
     [SerializeField] private Transform _intermediateHolder;
@@ -39,6 +38,8 @@ public class HandManager : MonoBehaviour
     [HideInInspector] public Vector3 _previewTargetPosition = new Vector3(0, -8.25f, -14.5f);
     [HideInInspector] public Vector3 _previewTargetRotation = new Vector3(-105f, 0, 0);
     [HideInInspector] public Vector3 _previewTargetScale = new Vector3(1.5f, 1.5f, 1.5f);
+    
+    private PlayerDataHandler _playerData;
 
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
@@ -50,9 +51,11 @@ public class HandManager : MonoBehaviour
     {
         get { return _isPlayer; }
     }
-    
+
     private void Start()
     {
+        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+        
         _circleCenter = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
             _holderTransform.localPosition.z - _circleRadius);
         _circleCentralAxis = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
@@ -82,8 +85,8 @@ public class HandManager : MonoBehaviour
             if (card.ProcessAction != state)
                 card.ProcessAction = state;
 
-            if (card.IsGlowSelectColor == state)
-                card.SetGlowColor(state);
+            if (card.IsHighlightBaseColor == state)
+                card.SetHighlightColor(state);
         }
     }
     

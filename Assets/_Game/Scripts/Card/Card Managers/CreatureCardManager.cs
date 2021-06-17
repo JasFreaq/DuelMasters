@@ -46,11 +46,11 @@ public class CreatureCardManager : CardManager
 
     #region State Methods
 
-    public override void SetGlow(bool enableGlow)
+    public override void SetHighlight(bool highlight)
     {
-        base.SetGlow(enableGlow);
+        base.SetHighlight(highlight);
 
-        _battleCardLayoutHandler.SetGlow(_isGlowing);
+        _battleCardLayoutHandler.SetGlow(_isHighlighted);
     }
 
     public override void ToggleTap()
@@ -60,12 +60,12 @@ public class CreatureCardManager : CardManager
         _battleCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
     }
 
-    public override void SetGlowColor(bool play)
+    public override void SetHighlightColor(bool play)
     {
-        base.SetGlowColor(play);
+        base.SetHighlightColor(play);
 
-        _battleCardLayoutHandler.SetGlowColor(play ? GameParamsHolder.Instance.PlayGlowColor
-            : GameParamsHolder.Instance.HighlightGlowColor);
+        _battleCardLayoutHandler.SetHighlightColor(play ? GameParamsHolder.Instance.PlayHighlightColor
+            : GameParamsHolder.Instance.BaseHighlightColor);
     }
 
     #endregion
