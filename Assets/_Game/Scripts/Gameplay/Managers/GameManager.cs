@@ -24,8 +24,22 @@ public class GameManager : MonoBehaviour
     private bool _playerTurn = true;
     private bool _gameOver = false;
 
-    private List<CardManager> _playerCards;
-    private List<CardManager> _opponentCards;
+    #region Static Data Members
+
+    private static Dictionary<int, CardManager> _playerCards = new Dictionary<int, CardManager>();
+    private static Dictionary<int, CardManager> _opponentCards = new Dictionary<int, CardManager>();
+
+    public static IReadOnlyDictionary<int, CardManager> PlayerCards
+    {
+        get { return _playerCards; }
+    }
+
+    public static IReadOnlyDictionary<int, CardManager> OpponentCards
+    {
+        get { return _opponentCards; }
+    }
+
+    #endregion
 
     public static GameStepType CurrentStep
     {
@@ -93,8 +107,8 @@ public class GameManager : MonoBehaviour
         _playerManager.Initialize(playerDeck, ProcessGameAction);
         _opponentManager.Initialize(opponentDeck, ProcessGameAction);
 
-        _playerCards = new List<CardManager>(_playerManager.DataHandler.CardsInDeck);
-        _opponentCards = new List<CardManager>(_opponentManager.DataHandler.CardsInDeck);
+        SetupCardDatabase(_playerManager.DataHandler.CardsInDeck, ref _playerCards);
+        SetupCardDatabase(_opponentManager.DataHandler.CardsInDeck, ref _opponentCards);
 
         _playerManager.SetupShields();
         yield return _opponentManager.SetupShields();
@@ -107,6 +121,16 @@ public class GameManager : MonoBehaviour
 
         _playerManager.CanSelect = true;
         _opponentManager.CanSelect = true;
+
+        #region Internal Functions
+
+        void SetupCardDatabase(List<CardManager> cards, ref Dictionary<int, CardManager> database)
+        {
+            foreach (CardManager card in cards)
+            {
+                database.Add(card.transform.GetInstanceID(), card);
+            }
+        }
 
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
@@ -125,6 +149,8 @@ public class GameManager : MonoBehaviour
                 card.CanDrag = true;
             }
         }
+
+        #endregion
     }
 
     private IEnumerator ProcessGameLoop(PlayerManager manager)
@@ -145,12 +171,12 @@ public class GameManager : MonoBehaviour
     {
         if (_playerTurn)
         {
-            if (_playerCards.Contains(card))
+            if (_playerCards.ContainsValue(card))
             {
                 StartCoroutine(_currentStep.ProcessGameAction(card, _playerManager));
             }
         }
-        else if ( _opponentCards.Contains(card))
+        else if ( _opponentCards.ContainsValue(card))
         {
             StartCoroutine(_currentStep.ProcessGameAction(card, _opponentManager));
         }

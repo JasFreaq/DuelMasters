@@ -20,7 +20,8 @@ public class CardManager : MonoBehaviour
 
     private Action<CardManager> _onSelect;
     private Action<CardManager> _onProcessAction;
-    
+
+    //private Guid _uniqueId;
     protected CardZone _currentZone = 0;
     
     protected bool _isTapped = false;
@@ -116,16 +117,18 @@ public class CardManager : MonoBehaviour
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
         _dragHandler = GetComponent<DragHandler>();
+        
+        //_uniqueId = Guid.NewGuid();
     }
 
-    private void OnMouseEnter()
+    public void ProcessMouseEnter()
     {
         _hoverPreviewHandler.BeginPreviewing();
     }
 
-    private void OnMouseDown()
+    public void ProcessMouseDown()
     {
-        if (_currentZone == CardZone.Hand) 
+        if (_currentZone == CardZone.Hand)
         {
             _onSelect.Invoke(this);
             _isSelected = !_isSelected;
@@ -151,8 +154,8 @@ public class CardManager : MonoBehaviour
             }
         }
     }
-
-    private void OnMouseExit()
+    
+    public void ProcessMouseExit()
     {
         _hoverPreviewHandler.EndPreviewing();
         _hoverPreviewHandler.ShouldStopPreview = true;
