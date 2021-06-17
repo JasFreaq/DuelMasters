@@ -101,7 +101,7 @@ public class HandManager : MonoBehaviour
         {
             card.InPlayerHand = false;
             if (card.IsVisible)
-                card.VisibleEyeIcon.SetActive(false);
+                card.SetVisibleIcon(false);
         }
 
         if (card.IsVisible)
@@ -164,7 +164,7 @@ public class HandManager : MonoBehaviour
         yield return new WaitForSeconds(_toTransitionTime);
 
         if (_isPlayer && card.IsVisible)
-            card.VisibleEyeIcon.SetActive(true);
+            card.SetVisibleIcon(true);
         
         AddCard(card);
     }

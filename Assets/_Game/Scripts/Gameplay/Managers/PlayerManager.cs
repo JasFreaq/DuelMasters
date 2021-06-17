@@ -8,8 +8,6 @@ using DG.Tweening;
 [DisallowMultipleComponent]
 public class PlayerManager : MonoBehaviour
 {
-    [SerializeField] private Transform _attackTarget;
-
     [Header("Effect Params")]
     [SerializeField] private bool _isPlayer = true;
 
@@ -35,6 +33,11 @@ public class PlayerManager : MonoBehaviour
     public ManaZoneManager ManaZoneManager
     {
         get { return _manaZoneManager; }
+    }
+
+    public CardManager CurrentlySelected
+    {
+        get { return _currentlySelected; }
     }
 
     public bool CanSelect
@@ -71,7 +74,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.A))
-            _playerData.CardsInBattle[_battleZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()].AttackTarget(_attackTarget);
+            _playerData.CardsInBattle[_battleZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()].Attack();
     }
 
     #region Setup Methods

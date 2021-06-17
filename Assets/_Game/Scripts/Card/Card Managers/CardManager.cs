@@ -45,12 +45,7 @@ public class CardManager : MonoBehaviour
     {
         get { return _manaCardLayoutHandler; }
     }
-
-    public GameObject VisibleEyeIcon
-    {
-        get { return _visibleEyeIcon; }
-    }
-
+    
     public Card CardData
     {
         get { return _card; }
@@ -68,6 +63,7 @@ public class CardManager : MonoBehaviour
 
     public CardZone CurrentZone
     {
+        get { return _currentZone;}
         set { _currentZone = value; }
     }
 
@@ -126,12 +122,11 @@ public class CardManager : MonoBehaviour
         _hoverPreviewHandler.BeginPreviewing();
     }
 
-    public void ProcessMouseDown()
+    public virtual void ProcessMouseDown()
     {
         if (_currentZone == CardZone.Hand)
         {
-            _onSelect.Invoke(this);
-            _isSelected = !_isSelected;
+            ToggleSelection();
 
             if (_canDrag)
             {
@@ -160,7 +155,7 @@ public class CardManager : MonoBehaviour
         _hoverPreviewHandler.EndPreviewing();
         _hoverPreviewHandler.ShouldStopPreview = true;
     }
-
+    
     public void SetDragOrientationOnPreviewBegin()
     {
         _dragHandler.SetOriginalOrientation(transform.localPosition, transform.localRotation);
@@ -209,7 +204,7 @@ public class CardManager : MonoBehaviour
     #endregion
 
     #region State Methods
-
+    
     public virtual void SetHighlightColor(bool play)
     {
         _isHighlightBaseColor = !play;
@@ -227,6 +222,12 @@ public class CardManager : MonoBehaviour
         _manaCardLayoutHandler.SetGlow(_isHighlighted);
     }
 
+    protected void ToggleSelection()
+    {
+        _onSelect.Invoke(this);
+        _isSelected = !_isSelected;
+    }
+
     public virtual void ToggleTap()
     {
         _isTapped = !_isTapped;
@@ -242,9 +243,9 @@ public class CardManager : MonoBehaviour
             _isTapped ? -tapAngle : 0, _previewCardLayout.transform.localEulerAngles.z);
     }
 
-    public void SetCardVisible()
+    public void SetVisibleIcon(bool visible)
     {
-        //TODO: Set Visible Eye Icon to Active in Opponent's Player Hand in Opponent's Client
+        _visibleEyeIcon.SetActive(visible);
     }
     
     #endregion

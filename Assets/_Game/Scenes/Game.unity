@@ -1409,7 +1409,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2398d827f3f5ace44b6e4bf433ee20b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackTarget: {fileID: 0}
   _isPlayer: 1
   _deckManager: {fileID: 712870840}
   _shieldsManager: {fileID: 905610300}
@@ -1586,7 +1585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _layoutsArrangeMoveTime: 0.5
-  _hoverBeforePreviewTime: 0.5
+  _hoverBeforePreviewTime: 0.75
   _previewTransitionTime: 0.25
   _dragReturnTime: 0.8
   _tapAngle: 15
@@ -2310,7 +2309,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2398d827f3f5ace44b6e4bf433ee20b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackTarget: {fileID: 0}
   _isPlayer: 0
   _deckManager: {fileID: 574495386}
   _shieldsManager: {fileID: 1311186677}

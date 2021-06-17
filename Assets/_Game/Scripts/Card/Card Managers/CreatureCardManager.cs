@@ -7,11 +7,30 @@ public class CreatureCardManager : CardManager
 {
     [SerializeField] private BattleCardLayoutHandler _battleCardLayoutHandler;
 
+    private Transform _attackTarget;
+
     public BattleCardLayoutHandler BattleLayout
     {
         get { return _battleCardLayoutHandler; }
     }
-    
+
+    public Transform AttackTarget
+    {
+        set { _attackTarget = value; }
+    }
+
+    public override void ProcessMouseDown()
+    {
+        base.ProcessMouseDown();
+
+        if (_currentZone == CardZone.BattleZone)
+        {
+            ToggleSelection();
+            ProcessMouseExit();
+            ProcessMouseEnter();
+        }
+    }
+
     #region Setup Methods
 
     public override void SetupCard(Card card)
@@ -72,9 +91,9 @@ public class CreatureCardManager : CardManager
 
     #region Functionality Methods
 
-    public void AttackTarget(Transform targetTransform)
+    public void Attack()
     {
-        transform.DOMove(targetTransform.position, 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InCubic).OnComplete(() =>
+        transform.DOMove(_attackTarget.position, 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InCubic).OnComplete(() =>
         {
 
         });

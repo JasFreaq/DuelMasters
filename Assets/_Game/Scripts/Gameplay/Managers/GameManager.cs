@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         _playerDataHandler = _playerManager.DataHandler;
         _opponentDataHandler = _opponentManager.DataHandler;
 
-        #region Internal Functions
+        #region Local Functions
 
         void SetupSteps()
         {
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         _playerManager.CanSelect = true;
         _opponentManager.CanSelect = true;
 
-        #region Internal Functions
+        #region Local Functions
         
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
