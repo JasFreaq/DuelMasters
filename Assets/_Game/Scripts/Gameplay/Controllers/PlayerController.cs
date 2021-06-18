@@ -150,32 +150,51 @@ public class PlayerController : MonoBehaviour
     {
         if (_hoverState == HoverState.Hover)
         {
-            if (_hoveredCard && GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
+            if (_hoveredCard)
             {
-                //OnMouseOver
-
-                if (Input.GetMouseButtonDown(0))
-                {
-                    //OnMouseDown
-                    _hoveredCard.ProcessMouseDown();
-                }
-                else if (Input.GetMouseButtonUp(0))
+                if (GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
                 {
                     //OnMouseOver
+
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        //OnMouseDown
+                        _hoveredCard.ProcessMouseDown();
+                    }
+                    else if (Input.GetMouseButtonUp(0))
+                    {
+                        //OnMouseOver
+                    }
+                }
+                else if (GameManager.OpponentDataHandler.AllCards.ContainsKey(iD))
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        AttemptAttack(_hoveredCard.transform);
+                    }
                 }
             }
             else if (_hoveredShield)
             {
-                if (_manager.CurrentlySelected &&
-                    _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+                if (Input.GetMouseButtonDown(0))
                 {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        CreatureCardManager creature = (CreatureCardManager)_manager.CurrentlySelected;
-                        creature.Attack(_hoveredShield.transform);
-                    }
+                    AttemptAttack(_hoveredShield.transform);
                 }
             }
         }
+
+        #region Local Functions
+
+        void AttemptAttack(Transform target)
+        {
+            if (_manager.CurrentlySelected &&
+                _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+            {
+                CreatureCardManager creature = (CreatureCardManager) _manager.CurrentlySelected;
+                creature.Attack(target);
+            }
+        }
+
+        #endregion
     }
 }

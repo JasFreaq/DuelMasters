@@ -9,6 +9,7 @@ public class GameParamsHolder : MonoBehaviour
     [SerializeField] private float _layoutsArrangeMoveTime = 0.5f;
     [SerializeField] private float _hoverBeforePreviewTime = 0.5f;
     [SerializeField] private float _previewTransitionTime = 0.25f;
+    [SerializeField] private float _previewSideBoundFraction = 0.651f;
     [SerializeField] private float _dragReturnTime = 0.8f;
     [SerializeField] private float _tapAngle = 15f;
     [SerializeField] private float _tapTransitionTime = 0.5f;
@@ -57,6 +58,11 @@ public class GameParamsHolder : MonoBehaviour
     public float PreviewTransitionTime
     {
         get { return _previewTransitionTime; }
+    }
+
+    public float PreviewSideBoundFraction
+    {
+        get { return _previewSideBoundFraction; }
     }
 
     public float DragReturnTime

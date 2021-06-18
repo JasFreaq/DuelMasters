@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class DragHandler : MonoBehaviour
 {
-    private Transform _cameraTransform;
+    private static Camera _MainCamera = null;
 
     private bool _isDragging = false;
 
@@ -30,7 +30,10 @@ public class DragHandler : MonoBehaviour
 
     private void Start()
     {
-        _cameraTransform = Camera.main.transform;
+        if (!_MainCamera) 
+        {
+            _MainCamera = Camera.main;
+        }
     }
 
     private void FixedUpdate()
@@ -48,7 +51,7 @@ public class DragHandler : MonoBehaviour
         _isDragging = true;
         _CurrentlyDragging = this;
         
-        _zDisplacement = -_cameraTransform.position.z + transform.position.z;
+        _zDisplacement = -_MainCamera.transform.position.z + transform.position.z;
         _pointerDisplacement = -transform.position + MouseInWorldCoords();
 
         _onDrag?.Invoke(transform);
@@ -102,6 +105,6 @@ public class DragHandler : MonoBehaviour
     {
         Vector3 screenMousePos = Input.mousePosition;
         screenMousePos.z = _zDisplacement;
-        return Camera.main.ScreenToWorldPoint(screenMousePos);
+        return _MainCamera.ScreenToWorldPoint(screenMousePos);
     }
 }

@@ -6,6 +6,8 @@ using DG.Tweening;
 
 public class HoverPreviewHandler: MonoBehaviour
 {
+    private static Camera _MainCamera = null;
+    
     [SerializeField] private Transform _previewTransform;
     
     private Vector3 _handPreviewPosition = Vector3.zero;
@@ -60,6 +62,11 @@ public class HoverPreviewHandler: MonoBehaviour
         if (_AllHoverPreviews == null)
         {
             _AllHoverPreviews = FindObjectsOfType<HoverPreviewHandler>();
+        }
+
+        if (!_MainCamera)
+        {
+            _MainCamera = Camera.main;
         }
     }
     
@@ -144,12 +151,25 @@ public class HoverPreviewHandler: MonoBehaviour
                 _isPreviewing = true;
             
             Transform hoverIntermediate = GameParamsHolder.Instance.HoverIntermediateTransform;
-            _previewTransform.parent = hoverIntermediate;
-            
-            _previewTransform.localPosition = Vector3.zero;
-            _previewTransform.localRotation = Quaternion.Euler(Vector3.zero);
-            _previewTransform.localScale = Vector3.one;
 
+            //Flip X of position if Preview overlaps transform in ScreenPoint
+            Vector3 intermediatePosition = hoverIntermediate.position;
+            if (_MainCamera.WorldToScreenPoint(transform.position).x / Screen.width >
+                GameParamsHolder.Instance.PreviewSideBoundFraction) 
+                intermediatePosition.x = -intermediatePosition.x;
+
+            _previewTransform.position = intermediatePosition;
+            
+            _previewTransform.rotation = hoverIntermediate.rotation;
+
+            //Adjust Scale
+            Vector3 intermediateLossyScale = hoverIntermediate.lossyScale;
+            _previewTransform.localScale = Vector3.one;
+            Vector3 previewLossyScale = _previewTransform.lossyScale;
+            
+            _previewTransform.localScale = new Vector3(intermediateLossyScale.x / previewLossyScale.x, 
+                intermediateLossyScale.y / previewLossyScale.y, intermediateLossyScale.z / previewLossyScale.z);
+            
             _previewTransform.gameObject.SetActive(true);
         }
     }
@@ -184,6 +204,11 @@ public class HoverPreviewHandler: MonoBehaviour
                 _previewTransform.gameObject.SetActive(false);
                 _previewTransform.parent = transform;
                 _previewTransform.localEulerAngles = Vector3.zero;
+
+                //Transform hoverIntermediate = GameParamsHolder.Instance.HoverIntermediateTransform;
+                //Vector3 intermediatePos = hoverIntermediate.localPosition;
+                //intermediatePos.x = Mathf.Abs(intermediatePos.x);
+                //hoverIntermediate.localPosition = intermediatePos;
 
                 _isPreviewing = false;
             }

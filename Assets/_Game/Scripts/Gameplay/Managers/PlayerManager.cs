@@ -162,23 +162,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     #endregion
-
-    public IEnumerator DrawCardRoutine(bool disableInteraction = false)
-    {
-        CardManager card = _deckManager.RemoveTopCard();
-        card.CardLayout.Canvas.sortingOrder = 100;
-        card.CardLayout.Canvas.gameObject.SetActive(true);
-
-        yield return _deckManager.MoveFromDeckRoutine(card);
-        yield return _handManager.MoveToHandRoutine(card);
-        
-        if (!disableInteraction)
-        {
-            card.HoverPreviewHandler.PreviewEnabled = true;
-            card.CanDrag = true;
-        }
-    }
-
+    
     #region From-Hand Transitions
 
     public IEnumerator ChargeManaRoutine(CardManager card)
@@ -239,6 +223,22 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     #region To-Hand Transitions
+
+    public IEnumerator DrawCardRoutine(bool disableInteraction = false)
+    {
+        CardManager card = _deckManager.RemoveTopCard();
+        card.CardLayout.Canvas.sortingOrder = 100;
+        card.CardLayout.Canvas.gameObject.SetActive(true);
+
+        yield return _deckManager.MoveFromDeckRoutine(card);
+        yield return _handManager.MoveToHandRoutine(card);
+
+        if (!disableInteraction)
+        {
+            card.HoverPreviewHandler.PreviewEnabled = true;
+            card.CanDrag = true;
+        }
+    }
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {

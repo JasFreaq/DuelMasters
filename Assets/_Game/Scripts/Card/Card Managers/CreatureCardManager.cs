@@ -86,10 +86,7 @@ public class CreatureCardManager : CardManager
     
     public void Attack(Transform attackTarget)
     {
-        transform.DOMove(attackTarget.position, 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InCubic).OnComplete(() =>
-        {
-
-        });
+        transform.DOMove(attackTarget.position, 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InCubic);
     }
 
     #endregion

@@ -13,6 +13,6 @@ public class Test : MonoBehaviour
 
     private void Move()
     {
-        transform.LookAt(Camera.main.transform.position);
+        print($"{Camera.main.WorldToScreenPoint(transform.position)}");
     }
 }
