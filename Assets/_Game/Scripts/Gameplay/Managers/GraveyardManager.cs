@@ -27,6 +27,7 @@ public class GraveyardManager : MonoBehaviour
     {
         card.transform.parent = transform;
         card.transform.localPosition = new Vector3(0, _lastYPos += _cardWidth * _cardScale, 0);
+        card.transform.localRotation = Quaternion.Euler(Vector3.zero);
         card.transform.localScale = Vector3.one * _cardScale;
 
         if (_playerData.CardsInGrave.Count > 0)
@@ -63,6 +64,7 @@ public class GraveyardManager : MonoBehaviour
         foreach (CardManager card in _playerData.CardsInGrave)
         {
             card.transform.localPosition = new Vector3(0, lastYPos -= _cardWidth * _cardScale, 0);
+            card.transform.localRotation = Quaternion.Euler(Vector3.zero);
             card.transform.localScale = Vector3.one * _cardScale;
         }
 
