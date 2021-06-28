@@ -1,6 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -15,19 +19,13 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     
-    private PlayerManager _manager;
     private Camera _mainCamera = null;
 
     private CardInstanceObject _hoveredCard;
     private ShieldObject _hoveredShield;
 
     private HoverState _hoverState = HoverState.None;
-
-    private void Awake()
-    {
-        _manager = GetComponent<PlayerManager>();
-    }
-
+    
     void Start()
     {
         _mainCamera = Camera.main;
@@ -48,10 +46,16 @@ public class PlayerController : MonoBehaviour
     private void ProcessCardHover(int iD)
     {
         CardInstanceObject tempCardObj = null;
-        if (GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
-            tempCardObj = (CardInstanceObject) GameManager.PlayerDataHandler.AllCards[iD];
-        else if (GameManager.OpponentDataHandler.AllCards.ContainsKey(iD))
-            tempCardObj = (CardInstanceObject) GameManager.OpponentDataHandler.AllCards[iD];
+        PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(true);
+
+        if (dataHandler.AllCards.ContainsKey(iD))
+            tempCardObj = (CardInstanceObject) dataHandler.AllCards[iD];
+        else
+        {
+            dataHandler = GameDataHandler.Instance.GetDataHandler(false);
+            if (dataHandler.AllCards.ContainsKey(iD))
+                tempCardObj = (CardInstanceObject) dataHandler.AllCards[iD];
+        }
 
         if (tempCardObj)
         {
@@ -94,11 +98,12 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessShieldHover(int iD)
     {
-        if (_manager.CurrentlySelected &&
-                 _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+        PlayerManager player = GameManager.Instance.GetManager(true);
+        if (player.CurrentlySelected &&
+            player.CurrentlySelected.CurrentZone == CardZone.BattleZone)
         {
             ShieldObject tempShield = null;
-            foreach (ShieldObject shield in GameManager.OpponentDataHandler.Shields)
+            foreach (ShieldObject shield in GameDataHandler.Instance.GetDataHandler(false).Shields)
             {
                 if (shield.transform.GetInstanceID() == iD)
                 {
@@ -152,7 +157,7 @@ public class PlayerController : MonoBehaviour
         {
             if (_hoveredCard)
             {
-                if (GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
+                if (GameDataHandler.Instance.GetDataHandler(true).AllCards.ContainsKey(iD))
                 {
                     //OnMouseOver
 
@@ -166,11 +171,11 @@ public class PlayerController : MonoBehaviour
                         //OnMouseOver
                     }
                 }
-                else if (GameManager.OpponentDataHandler.AllCards.ContainsKey(iD))
+                else if (GameDataHandler.Instance.GetDataHandler(false).AllCards.ContainsKey(iD))
                 {
                     if (Input.GetMouseButtonDown(0))
                     {
-                        AttemptAttack(_hoveredCard.transform);
+                        StartCoroutine(AttemptAttack(_hoveredCard));
                     }
                 }
             }
@@ -178,20 +183,72 @@ public class PlayerController : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    AttemptAttack(_hoveredShield.transform);
+                    StartCoroutine(AttemptAttack(_hoveredShield));
                 }
             }
         }
 
         #region Local Functions
 
-        void AttemptAttack(Transform target)
+        IEnumerator AttemptAttack(CardBehaviour target)
         {
-            if (_manager.CurrentlySelected &&
-                _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+            PlayerManager player = GameManager.Instance.GetManager(true);
+            if (player.CurrentlySelected &&
+                player.CurrentlySelected.CurrentZone == CardZone.BattleZone)
             {
-                CreatureInstanceObject creature = (CreatureInstanceObject) _manager.CurrentlySelected;
-                creature.Attack(target);
+                CreatureInstanceObject creatureObj = (CreatureInstanceObject) player.CurrentlySelected;
+                float attackTime = GameParamsHolder.Instance.AttackTime;
+                Vector3 creaturePos = creatureObj.transform.position;
+
+                creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
+                yield return new WaitForSeconds(attackTime);
+
+                if (target is CreatureInstanceObject)
+                {
+                    CreatureData creatureData = (CreatureData) creatureObj.CardData;
+
+                    CreatureInstanceObject attackedCreatureObj = (CreatureInstanceObject) target;
+                    CreatureData attackedCreatureData = (CreatureData) attackedCreatureObj.CardData;
+
+                    if (creatureData.Power > attackedCreatureData.Power) 
+                        DestroyAttackedCreature();
+                    else if (creatureData.Power == attackedCreatureData.Power)
+                    {
+                        DestroyCreature();
+                        DestroyAttackedCreature();
+                    }
+                    else
+                        DestroyCreature();
+
+                    #region Local Functions
+
+                    void DestroyCreature()
+                    {
+                        player.DeselectCurrentlySelected();
+
+                        GameDataHandler.Instance.GetDataHandler(true).CardsInBattle.Remove(creatureObj.GetInstanceID());
+                        creatureObj.DestroyCard();
+                        GameManager.Instance.GetManager(true).BattleZoneManager.ArrangeCards();
+                        creatureObj = null;
+                    }
+
+                    void DestroyAttackedCreature()
+                    {
+                        GameDataHandler.Instance.GetDataHandler(false).CardsInBattle.Remove(attackedCreatureObj.GetInstanceID());
+                        attackedCreatureObj.DestroyCard();
+                        GameManager.Instance.GetManager(false).BattleZoneManager.ArrangeCards();
+                    }
+
+                    #endregion
+                }
+                else if (target is ShieldObject)
+                {
+                    PlayerManager opponent = GameManager.Instance.GetManager(false);
+                    StartCoroutine(opponent.BreakShieldRoutine(target.transform.GetSiblingIndex()));
+                }
+
+                if (creatureObj)
+                    creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
             }
         }
 

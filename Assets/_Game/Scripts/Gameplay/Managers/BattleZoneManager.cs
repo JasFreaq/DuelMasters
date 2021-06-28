@@ -24,7 +24,7 @@ public class BattleZoneManager : MonoBehaviour
 
     private void Start()
     {
-        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+        _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
     }
 
     #region Functionality Methods
@@ -82,7 +82,7 @@ public class BattleZoneManager : MonoBehaviour
 
     #region Layout Methods
 
-    private void ArrangeCards()
+    public void ArrangeCards()
     {
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
@@ -97,15 +97,22 @@ public class BattleZoneManager : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _holderTransform.GetChild(i);
-            int iD = cardTransform.GetInstanceID();
-            if (_playerData.CardsInBattle.ContainsKey(iD))
-                _playerData.CardsInBattle[iD].BattleLayout.Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
-            
             Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y, startPos.z);
             Vector3 cardScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
-
-            cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint);
-            cardTransform.DOScale(cardScale,arrangeTime).SetEase(Ease.OutQuint);
+            
+            int iD = cardTransform.GetInstanceID();
+            if (_playerData.CardsInBattle.ContainsKey(iD))
+            {
+                _playerData.CardsInBattle[iD].BattleLayout.Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
+                cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint);
+                cardTransform.DOScale(cardScale, arrangeTime).SetEase(Ease.OutQuint);
+            }
+            else
+            {
+                cardTransform.localPosition = cardPos;
+                cardTransform.localScale = cardScale;
+            }
+            
         }
     }
 

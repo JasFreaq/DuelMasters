@@ -27,12 +27,12 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         get { return _tappedOverlay; }
     }
 
-    public virtual void SetupCard(Card card)
+    public virtual void SetupCard(CardData cardData)
     {
-        _artworkImage.sprite = card.ArtworkImage;
-        CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(card.Civilization);
+        _artworkImage.sprite = cardData.ArtworkImage;
+        CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
         _frameImage.sprite = cardFrameData.frameImage;
-        _nameText.text = card.Name;
+        _nameText.text = cardData.Name;
         _bgRenderer.material = cardFrameData.frameBGMaterial;
     }
 

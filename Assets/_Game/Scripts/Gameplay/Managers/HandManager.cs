@@ -54,8 +54,8 @@ public class HandManager : MonoBehaviour
 
     private void Start()
     {
-        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
-        
+        _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
+
         _circleCenter = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
             _holderTransform.localPosition.z - _circleRadius);
         _circleCentralAxis = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,

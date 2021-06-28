@@ -20,7 +20,7 @@ public class MainStep : GameStep
     public override IEnumerator ProcessGameAction(CardInstanceObject card, PlayerManager currentPlayer)
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
-        Card cardData = card.CardData;
+        CardData cardData = card.CardData;
 
         if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost))
         {

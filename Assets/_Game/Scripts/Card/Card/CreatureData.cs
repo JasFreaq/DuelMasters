@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Creature Card", menuName = "Card/Creature", order = 51)]
-public class Creature : Card
+public class CreatureData : CardData
 {
     [SerializeField] private CardParams.Race[] _race = new CardParams.Race[1];
     [SerializeField] private int _power;

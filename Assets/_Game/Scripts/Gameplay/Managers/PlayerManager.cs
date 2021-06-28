@@ -35,6 +35,16 @@ public class PlayerManager : MonoBehaviour
         get { return _manaZoneManager; }
     }
 
+    public BattleZoneManager BattleZoneManager
+    {
+        get { return _battleZoneManager; }
+    }
+
+    public GraveyardManager GraveyardManager
+    {
+        get { return _graveyardManager; }
+    }
+
     public CardInstanceObject CurrentlySelected
     {
         get { return _currentlySelected; }
@@ -107,6 +117,7 @@ public class PlayerManager : MonoBehaviour
                 switch (GameManager.CurrentStep)
                 {
                     case GameStepType.ChargeStep:
+                    case GameStepType.AttackStep:
                         _currentlySelected.SetHighlight(true);
                         break;
 
@@ -121,29 +132,35 @@ public class PlayerManager : MonoBehaviour
             }
             else if (_currentlySelected)
             {
-                switch (GameManager.CurrentStep)
-                {
-                    case GameStepType.ChargeStep:
-                        _currentlySelected.SetHighlight(false);
-                        break;
-
-                    case GameStepType.MainStep:
-                        if (_currentlySelected.ProcessAction) 
-                            _currentlySelected.SetHighlight(false);
-                        else
-                        {
-                            foreach (CardInstanceObject cardManager in _playableCards)
-                            {
-                                if (cardManager != _currentlySelected)
-                                    cardManager.SetHighlight(true);
-                            }
-                        }
-                        break;
-                }
-
-                _currentlySelected = null;
+                DeselectCurrentlySelected();
             }
         }
+    }
+
+    public void DeselectCurrentlySelected()
+    {
+        switch (GameManager.CurrentStep)
+        {
+            case GameStepType.ChargeStep:
+            case GameStepType.AttackStep:
+                _currentlySelected.SetHighlight(false);
+                break;
+
+            case GameStepType.MainStep:
+                if (_currentlySelected.ProcessAction)
+                    _currentlySelected.SetHighlight(false);
+                else
+                {
+                    foreach (CardInstanceObject cardManager in _playableCards)
+                    {
+                        if (cardManager != _currentlySelected)
+                            cardManager.SetHighlight(true);
+                    }
+                }
+                break;
+        }
+
+        _currentlySelected = null;
     }
 
     public int HighlightPlayableCards()
@@ -202,9 +219,7 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator CastSpellRoutine(SpellInstanceObject spellCard)
     {
-        spellCard.gameObject.SetActive(false);
-        _graveyardManager.AddCard(spellCard);
-        spellCard.gameObject.SetActive(true);
+        spellCard.DestroyCard();
 
         yield break;
     }

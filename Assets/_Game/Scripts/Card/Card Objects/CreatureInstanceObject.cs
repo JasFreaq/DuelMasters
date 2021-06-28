@@ -26,11 +26,11 @@ public class CreatureInstanceObject : CardInstanceObject
 
     #region Setup Methods
 
-    public override void SetupCard(Card card)
+    public override void SetupCard(CardData cardData)
     {
-        base.SetupCard(card);
+        base.SetupCard(cardData);
 
-        _battleCardLayoutHandler.SetupCard(card);
+        _battleCardLayoutHandler.SetupCard(cardData);
     }
 
     public override void ActivateCardLayout()
@@ -78,15 +78,6 @@ public class CreatureInstanceObject : CardInstanceObject
 
         _battleCardLayoutHandler.SetHighlightColor(play ? GameParamsHolder.Instance.PlayHighlightColor
             : GameParamsHolder.Instance.BaseHighlightColor);
-    }
-
-    #endregion
-
-    #region Functionality Methods
-    
-    public void Attack(Transform attackTarget)
-    {
-        transform.DOMove(attackTarget.position, 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InCubic);
     }
 
     #endregion

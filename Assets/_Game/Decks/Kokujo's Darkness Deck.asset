@@ -13,47 +13,47 @@ MonoBehaviour:
   m_Name: Kokujo's Darkness Deck
   m_EditorClassIdentifier: 
   _cardList:
-  - card: {fileID: 11400000, guid: a49f840e21c2baa418b2e09050050d96, type: 2}
+  - cardData: {fileID: 11400000, guid: a49f840e21c2baa418b2e09050050d96, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
+  - cardData: {fileID: 11400000, guid: 61cc76ad00e55034c8f46aba9d3f4bf5, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: 893172aa0e0e2d34aab1da48cb148012, type: 2}
+  - cardData: {fileID: 11400000, guid: 893172aa0e0e2d34aab1da48cb148012, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: 059fee4da1f4bf84db610b6ae9e407f0, type: 2}
+  - cardData: {fileID: 11400000, guid: 059fee4da1f4bf84db610b6ae9e407f0, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: a57ef84c3eec4b44f9851eb90996e8a5, type: 2}
+  - cardData: {fileID: 11400000, guid: a57ef84c3eec4b44f9851eb90996e8a5, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: 1e5c39f415671f0478c19b13f39987bb, type: 2}
+  - cardData: {fileID: 11400000, guid: 1e5c39f415671f0478c19b13f39987bb, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: e620a38061174074c907fe29032b54d1, type: 2}
+  - cardData: {fileID: 11400000, guid: e620a38061174074c907fe29032b54d1, type: 2}
     number: 2
-  - card: {fileID: 11400000, guid: deae3ca3093d0234b87b0f14e77aaab9, type: 2}
+  - cardData: {fileID: 11400000, guid: deae3ca3093d0234b87b0f14e77aaab9, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: fa12ad903d6c15c49a2584c06d0e0734, type: 2}
+  - cardData: {fileID: 11400000, guid: fa12ad903d6c15c49a2584c06d0e0734, type: 2}
     number: 3
-  - card: {fileID: 11400000, guid: 38066494daa8a2247bfeeb4d427b4a7d, type: 2}
+  - cardData: {fileID: 11400000, guid: 38066494daa8a2247bfeeb4d427b4a7d, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: f4836624257d6c54ba8efdf219e9c0c7, type: 2}
+  - cardData: {fileID: 11400000, guid: f4836624257d6c54ba8efdf219e9c0c7, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: e62059924b7f7464bbb0a3ae70041afc, type: 2}
+  - cardData: {fileID: 11400000, guid: e62059924b7f7464bbb0a3ae70041afc, type: 2}
     number: 2
-  - card: {fileID: 11400000, guid: 8a37be8f7b106b4429e05318ddc25921, type: 2}
+  - cardData: {fileID: 11400000, guid: 8a37be8f7b106b4429e05318ddc25921, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: df99834290b704247a23c1c95098e483, type: 2}
+  - cardData: {fileID: 11400000, guid: df99834290b704247a23c1c95098e483, type: 2}
     number: 3
-  - card: {fileID: 11400000, guid: 72c8ac94de64e6a48840912121c62828, type: 2}
+  - cardData: {fileID: 11400000, guid: 72c8ac94de64e6a48840912121c62828, type: 2}
     number: 3
-  - card: {fileID: 11400000, guid: 023a57a45e8b40643853de6d24df643b, type: 2}
+  - cardData: {fileID: 11400000, guid: 023a57a45e8b40643853de6d24df643b, type: 2}
     number: 2
-  - card: {fileID: 11400000, guid: d8a6e5c1195d6024ebcfff570a8a0b5c, type: 2}
+  - cardData: {fileID: 11400000, guid: d8a6e5c1195d6024ebcfff570a8a0b5c, type: 2}
     number: 2
-  - card: {fileID: 11400000, guid: d17d2c2745554384ba0d810ef0181fb8, type: 2}
+  - cardData: {fileID: 11400000, guid: d17d2c2745554384ba0d810ef0181fb8, type: 2}
     number: 3
-  - card: {fileID: 11400000, guid: 391247927910e6f49a763fcb38f85cc6, type: 2}
+  - cardData: {fileID: 11400000, guid: 391247927910e6f49a763fcb38f85cc6, type: 2}
     number: 1
-  - card: {fileID: 11400000, guid: de5f00de207940e4b84dd43aae42c037, type: 2}
+  - cardData: {fileID: 11400000, guid: de5f00de207940e4b84dd43aae42c037, type: 2}
     number: 3
-  - card: {fileID: 11400000, guid: a138cf5c139426c44afe974abd29ea54, type: 2}
+  - cardData: {fileID: 11400000, guid: a138cf5c139426c44afe974abd29ea54, type: 2}
     number: 4
-  - card: {fileID: 11400000, guid: fa2ac1f5a4c79e740a684fe2eb8bbccf, type: 2}
+  - cardData: {fileID: 11400000, guid: fa2ac1f5a4c79e740a684fe2eb8bbccf, type: 2}
     number: 2

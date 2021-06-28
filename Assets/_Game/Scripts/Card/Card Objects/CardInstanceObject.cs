@@ -14,7 +14,7 @@ public class CardInstanceObject : CardBehaviour
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
     
-    private Card _card;
+    private CardData _cardData;
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
@@ -46,9 +46,9 @@ public class CardInstanceObject : CardBehaviour
         get { return _manaCardLayoutHandler; }
     }
     
-    public Card CardData
+    public CardData CardData
     {
-        get { return _card; }
+        get { return _cardData; }
     }
 
     public HoverPreviewHandler HoverPreviewHandler
@@ -163,14 +163,14 @@ public class CardInstanceObject : CardBehaviour
 
     #region Setup Methods
 
-    public virtual void SetupCard(Card card)
+    public virtual void SetupCard(CardData cardData)
     {
-        _card = card;
+        _cardData = cardData;
         
-        _cardLayoutHandler.SetupCard(card);
-        _manaCardLayoutHandler.SetupCard(card);
+        _cardLayoutHandler.SetupCard(cardData);
+        _manaCardLayoutHandler.SetupCard(cardData);
 
-        _previewCardLayout.SetupCard(card);
+        _previewCardLayout.SetupCard(cardData);
     }
     
     public virtual void ActivateCardLayout()
@@ -247,7 +247,18 @@ public class CardInstanceObject : CardBehaviour
     {
         _visibleEyeIcon.SetActive(visible);
     }
-    
+
+    public void DestroyCard()
+    {
+        gameObject.SetActive(false);
+        ActivateCardLayout();
+
+        PlayerManager manager = GameManager.Instance.GetManager(GameDataHandler.Instance.IsPlayerCard(this));
+        manager.GraveyardManager.AddCard(this);
+
+        gameObject.SetActive(true);
+    }
+
     #endregion
     
     #region Register Callbacks

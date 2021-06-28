@@ -24,25 +24,25 @@ public class DeckManager : MonoBehaviour
 
     private void Start()
     {
-        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+        _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
     }
 
     #region Functionality Methods
 
     public void Initialize(Deck deck, Action<CardInstanceObject> processAction, Action<CardInstanceObject> selectAction)
     {
-        List<Card> cardList = deck.GetCards();
+        List<CardData> cardList = deck.GetCards();
 
         float lastYPos = 0;
 
-        foreach (Card cardData in cardList)
+        foreach (CardData cardData in cardList)
         {
             CardInstanceObject card = null;
-            if (cardData is Creature)
+            if (cardData is CreatureData)
             {
                 card = Instantiate(_creaturePrefab, transform);
             }
-            else if (cardData is Spell)
+            else if (cardData is SpellData)
             {
                 card = Instantiate(_spellPrefab, transform);
             }

@@ -17,27 +17,24 @@ public class GraveyardManager : MonoBehaviour
 
     private void Start()
     {
-        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
-     
-        if (!_isPlayer)
-            _cardWidth = -_cardWidth;
+        _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
     }
 
-    public void AddCard(CardInstanceObject card)
+    public void AddCard(CardInstanceObject cardObj)
     {
-        card.transform.parent = transform;
-        card.transform.localPosition = new Vector3(0, _lastYPos += _cardWidth * _cardScale, 0);
-        card.transform.localRotation = Quaternion.Euler(Vector3.zero);
-        card.transform.localScale = Vector3.one * _cardScale;
+        cardObj.transform.parent = transform;
+        cardObj.transform.localPosition = new Vector3(0, _lastYPos += _cardWidth * _cardScale, 0);
+        cardObj.transform.localRotation = Quaternion.Euler(Vector3.zero);
+        cardObj.transform.localScale = Vector3.one * _cardScale;
 
         if (_playerData.CardsInGrave.Count > 0)
         {
             _playerData.CardsInGrave[_playerData.CardsInGrave.Count - 1].HoverPreviewHandler.PreviewEnabled = false;
         }
 
-        card.HoverPreviewHandler.PreviewEnabled = true;
-        _playerData.CardsInGrave.Add(card);
-        card.CurrentZone = CardZone.Graveyard;
+        cardObj.HoverPreviewHandler.PreviewEnabled = true;
+        _playerData.CardsInGrave.Add(cardObj);
+        cardObj.CurrentZone = CardZone.Graveyard;
     }
 
     public CardInstanceObject RemoveCardAtIndex(int index)
@@ -63,7 +60,7 @@ public class GraveyardManager : MonoBehaviour
 
         foreach (CardInstanceObject card in _playerData.CardsInGrave)
         {
-            card.transform.localPosition = new Vector3(0, lastYPos -= _cardWidth * _cardScale, 0);
+            card.transform.localPosition = new Vector3(0, lastYPos += _cardWidth * _cardScale, 0);
             card.transform.localRotation = Quaternion.Euler(Vector3.zero);
             card.transform.localScale = Vector3.one * _cardScale;
         }

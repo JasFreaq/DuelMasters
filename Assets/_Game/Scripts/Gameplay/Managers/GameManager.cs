@@ -24,23 +24,6 @@ public class GameManager : MonoBehaviour
     private bool _playerTurn = true;
     private bool _gameOver = false;
 
-    #region Static Data Members
-
-    private static PlayerDataHandler _playerDataHandler;
-    private static PlayerDataHandler _opponentDataHandler;
-
-    public static PlayerDataHandler PlayerDataHandler
-    {
-        get { return _playerDataHandler; }
-    }
-
-    public static PlayerDataHandler OpponentDataHandler
-    {
-        get { return _opponentDataHandler; }
-    }
-
-    #endregion
-
     public static GameStepType CurrentStep
     {
         get { return _currentStep.StepType; }
@@ -50,13 +33,35 @@ public class GameManager : MonoBehaviour
     {
         get { return _firstTurn; }
     }
-    
+
+    #region Static Data Members
+
+    private static GameManager _Instance = null;
+
+    public static GameManager Instance
+    {
+        get
+        {
+            if (!_Instance)
+                _Instance = FindObjectOfType<GameManager>();
+            return _Instance;
+        }
+    }
+
+    #endregion
+
+    private void Awake()
+    {
+        int count = FindObjectsOfType<GameManager>().Length;
+        if (count > 1)
+            Destroy(gameObject);
+        else
+            _Instance = this;
+    }
+
     private void Start()
     {
         SetupSteps();
-
-        _playerDataHandler = _playerManager.DataHandler;
-        _opponentDataHandler = _opponentManager.DataHandler;
 
         #region Local Functions
 
@@ -202,4 +207,9 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public PlayerManager GetManager(bool isPlayer)
+    {
+        return isPlayer ? _playerManager : _opponentManager;
+    }
 }

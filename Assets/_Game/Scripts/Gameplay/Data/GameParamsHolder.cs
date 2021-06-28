@@ -13,6 +13,7 @@ public class GameParamsHolder : MonoBehaviour
     [SerializeField] private float _dragReturnTime = 0.8f;
     [SerializeField] private float _tapAngle = 15f;
     [SerializeField] private float _tapTransitionTime = 0.5f;
+    [SerializeField] private float _attackTime = 0.5f;
 
     [Header("Transforms")] 
     [SerializeField] private Transform _hoverIntermediateTransform = null;
@@ -25,7 +26,7 @@ public class GameParamsHolder : MonoBehaviour
     [SerializeField] private Material _shieldBaseMat;
     [SerializeField] private Material _shieldHighlightMat;
 
-    #region Static Variables
+    #region Static Data Members
 
     private static GameParamsHolder _Instance = null;
 
@@ -78,6 +79,11 @@ public class GameParamsHolder : MonoBehaviour
     public float TapTransitionTime
     {
         get { return _tapTransitionTime; }
+    }
+
+    public float AttackTime
+    {
+        get { return _attackTime; }
     }
 
     #endregion

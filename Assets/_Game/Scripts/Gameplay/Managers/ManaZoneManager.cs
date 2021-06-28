@@ -49,8 +49,8 @@ public class ManaZoneManager : MonoBehaviour
 
     private void Start()
     {
-        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
-        
+        _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
+
         _tempManaCard = new ManaTransform(_tempCard, false, 0, "");
     }
 

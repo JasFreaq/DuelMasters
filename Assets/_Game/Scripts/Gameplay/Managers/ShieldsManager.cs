@@ -33,7 +33,7 @@ public class ShieldsManager : MonoBehaviour
     
     private void Start()
     {
-        _playerData = _isPlayer ? GameManager.PlayerDataHandler : GameManager.OpponentDataHandler;
+        _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
 
         _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
         _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
@@ -79,8 +79,7 @@ public class ShieldsManager : MonoBehaviour
         CardInstanceObject cardObj = shieldObj.CardObject;
         cardObj.CardLayout.Canvas.sortingOrder = 100;
         cardObj.transform.parent = transform;
-        //if (_isPlayer)
-            cardObj.CardLayout.Canvas.gameObject.SetActive(true);
+        cardObj.CardLayout.Canvas.gameObject.SetActive(true);
         
         shieldObj.CardObject = null;
         int n = _playerData.Shields.Count;
@@ -93,8 +92,6 @@ public class ShieldsManager : MonoBehaviour
         }
 
         yield return StartCoroutine(MoveFromShieldsRoutine(cardObj));
-        //if (!_isPlayer)
-        //    cardObj.CardLayout.Canvas.gameObject.SetActive(true);
     }
 
     public IEnumerator MakeShieldRoutine(CardInstanceObject cardObj)
