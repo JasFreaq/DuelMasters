@@ -23,7 +23,7 @@ public class GraveyardManager : MonoBehaviour
             _cardWidth = -_cardWidth;
     }
 
-    public void AddCard(CardManager card)
+    public void AddCard(CardInstanceObject card)
     {
         card.transform.parent = transform;
         card.transform.localPosition = new Vector3(0, _lastYPos += _cardWidth * _cardScale, 0);
@@ -40,7 +40,7 @@ public class GraveyardManager : MonoBehaviour
         card.CurrentZone = CardZone.Graveyard;
     }
 
-    public CardManager RemoveCardAtIndex(int index)
+    public CardInstanceObject RemoveCardAtIndex(int index)
     {
         if (index == _playerData.CardsInGrave.Count - 1)
         {
@@ -51,7 +51,7 @@ public class GraveyardManager : MonoBehaviour
             }
         }
 
-        CardManager card = _playerData.CardsInGrave[index];
+        CardInstanceObject card = _playerData.CardsInGrave[index];
         _playerData.CardsInGrave.RemoveAt(index);
         ArrangeCards();
         return card;
@@ -61,7 +61,7 @@ public class GraveyardManager : MonoBehaviour
     {
         float lastYPos = 0;
 
-        foreach (CardManager card in _playerData.CardsInGrave)
+        foreach (CardInstanceObject card in _playerData.CardsInGrave)
         {
             card.transform.localPosition = new Vector3(0, lastYPos -= _cardWidth * _cardScale, 0);
             card.transform.localRotation = Quaternion.Euler(Vector3.zero);

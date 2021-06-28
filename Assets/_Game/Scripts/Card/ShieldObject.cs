@@ -3,17 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shield : MonoBehaviour
+public class ShieldObject : CardBehaviour
 {
     [SerializeField] private MeshRenderer _shieldRenderer;
     [SerializeField] private Transform _cardHolderTransform;
 
     private Animator _animator;
+    private CardInstanceObject _cardObject = null;
 
     private bool _isHighlighted = false;
     private Vector3 _holderScale;
 
     #region Properties
+
+    public CardInstanceObject CardObject
+    {
+        set { _cardObject = value; }
+    }
 
     public Transform CardHolder
     {

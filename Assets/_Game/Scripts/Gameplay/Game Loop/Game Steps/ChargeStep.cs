@@ -11,7 +11,7 @@ public class ChargeStep : GameStep
         _updateStep = true;
     }
 
-    public override IEnumerator ProcessGameAction(CardManager card, PlayerManager currentPlayer)
+    public override IEnumerator ProcessGameAction(CardInstanceObject card, PlayerManager currentPlayer)
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
 

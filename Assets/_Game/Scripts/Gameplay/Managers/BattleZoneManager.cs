@@ -29,7 +29,7 @@ public class BattleZoneManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public void AddCard(CreatureCardManager card)
+    public void AddCard(CreatureInstanceObject card)
     {
         _tempCard.parent = transform;
         _tempCard.localScale = Vector3.one;
@@ -42,7 +42,7 @@ public class BattleZoneManager : MonoBehaviour
     private void RemoveCardAtIndex(int index)
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
-        CreatureCardManager card = _playerData.CardsInBattle[iD];
+        CreatureInstanceObject card = _playerData.CardsInBattle[iD];
         _playerData.CardsInBattle.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
@@ -52,7 +52,7 @@ public class BattleZoneManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromBattleZoneRoutine(CardManager card)
+    public IEnumerator MoveFromBattleZoneRoutine(CardInstanceObject card)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
 
@@ -64,7 +64,7 @@ public class BattleZoneManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToBattleZoneRoutine(CreatureCardManager card)
+    public IEnumerator MoveToBattleZoneRoutine(CreatureInstanceObject card)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();

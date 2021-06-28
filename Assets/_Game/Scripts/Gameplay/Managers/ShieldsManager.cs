@@ -9,7 +9,7 @@ public class ShieldsManager : MonoBehaviour
     [SerializeField] private bool _isPlayer = true;
 
     [Header("Layout")]
-    [SerializeField] private Shield _shieldPrefab;
+    [SerializeField] private ShieldObject _shieldPrefab;
     [SerializeField] private float _shieldAreaWidth = 25;
     [SerializeField] private float _maxShieldWidth = 10;
     [SerializeField] private float _shieldScale = 12.5f;
@@ -40,7 +40,7 @@ public class ShieldsManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            Shield shield = Instantiate(_shieldPrefab, _holderTransform);
+            ShieldObject shield = Instantiate(_shieldPrefab, _holderTransform);
             _playerData.Shields.Add(shield);
         }
 
@@ -49,11 +49,11 @@ public class ShieldsManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public IEnumerator SetupShieldsRoutine(CardManager[] cards)
+    public IEnumerator SetupShieldsRoutine(CardInstanceObject[] cards)
     {
         for (int i = 4; i >= 0; i--)
         {
-            MoveToShields(cards[i], _playerData.Shields[i].CardHolder);
+            MoveToShields(cards[i], _playerData.Shields[i]);
             yield return new WaitForSeconds(_pauseTime);
         }
 
@@ -70,13 +70,14 @@ public class ShieldsManager : MonoBehaviour
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
-        Shield shield = _playerData.Shields[shieldIndex];
-        shield.SetAnimatorTrigger(_shieldBreakTriggerHash);
-        shield.CardHolder.DOScale(shield.HolderScale, _animationTime).SetEase(Ease.OutQuint);
+        ShieldObject shieldObj = _playerData.Shields[shieldIndex];
+        shieldObj.SetAnimatorTrigger(_shieldBreakTriggerHash);
+        shieldObj.CardHolder.DOScale(shieldObj.HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
+        shieldObj.CardObject = null;
 
-        CardManager card = RemoveShieldAtIndex(shieldIndex);
+        CardInstanceObject card = RemoveShieldAtIndex(shieldIndex);
         card.CardLayout.Canvas.sortingOrder = 100;
         if (_isPlayer)
             card.CardLayout.Canvas.gameObject.SetActive(true);
@@ -86,24 +87,24 @@ public class ShieldsManager : MonoBehaviour
             card.CardLayout.Canvas.gameObject.SetActive(true);
     }
 
-    public IEnumerator MakeShieldRoutine(CardManager card)
+    public IEnumerator MakeShieldRoutine(CardInstanceObject card)
     {
         int emptyIndex = GetEmptyIndex();
         AddShield(emptyIndex, card);
-        MoveToShields(card, _playerData.Shields[emptyIndex].CardHolder);
+        MoveToShields(card, _playerData.Shields[emptyIndex]);
         yield return new WaitForSeconds(_toTransitionTime);
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
     }
 
-    public CardManager GetShieldAtIndex(int shieldIndex)
+    public CardInstanceObject GetShieldAtIndex(int shieldIndex)
     {
         return _playerData.CardsInShields[shieldIndex];
     }
 
-    public CardManager RemoveShieldAtIndex(int shieldIndex)
+    public CardInstanceObject RemoveShieldAtIndex(int shieldIndex)
     {
         int n = _playerData.CardsInShields.Count;
-        CardManager card = _playerData.CardsInShields[shieldIndex];
+        CardInstanceObject card = _playerData.CardsInShields[shieldIndex];
         if (n <= 5)
         {
             _playerData.CardsInShields[shieldIndex] = null;
@@ -127,7 +128,7 @@ public class ShieldsManager : MonoBehaviour
         return card;
     }
 
-    private void AddShield(int shieldIndex, CardManager card)
+    private void AddShield(int shieldIndex, CardInstanceObject card)
     {
         if (_playerData.CardsInShields.Count > shieldIndex)
         {
@@ -138,7 +139,7 @@ public class ShieldsManager : MonoBehaviour
             _playerData.CardsInShields.Add(card);
             if (_playerData.CardsInShields.Count > 5)
             {
-                Shield shield = Instantiate(_shieldPrefab, _holderTransform);
+                ShieldObject shield = Instantiate(_shieldPrefab, _holderTransform);
                 _playerData.Shields.Add(shield);
                 ArrangeShields();
             }
@@ -165,28 +166,32 @@ public class ShieldsManager : MonoBehaviour
 
     #region Transition Methods
 
-    private IEnumerator MoveFromShieldsRoutine(CardManager card)
+    private IEnumerator MoveFromShieldsRoutine(CardInstanceObject cardObj)
     {
-        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Quaternion rotation = _intermediateHolder.rotation;
         if (!_isPlayer)
             rotation *= Quaternion.Euler(0, 0, 180);
-        card.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    private void MoveToShields(CardManager card, Transform holderTransform)
+    private void MoveToShields(CardInstanceObject cardObj, ShieldObject shieldObj)
     {
-        card.transform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        Transform holderTransform = shieldObj.CardHolder;
+        cardObj.transform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        
         Quaternion rotation = holderTransform.rotation;
         if (!_isPlayer)
             rotation = Quaternion.Euler(0, 0, 0);
+        cardObj.transform.DORotateQuaternion(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        
+        cardObj.transform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
-        card.transform.DORotateQuaternion(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.parent = holderTransform;
+        shieldObj.CardObject = cardObj;
+        cardObj.transform.parent = holderTransform;
     }
 
     private IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)

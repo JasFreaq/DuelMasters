@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class CreatureCardManager : CardManager
+public class CreatureInstanceObject : CardInstanceObject
 {
     [SerializeField] private BattleCardLayoutHandler _battleCardLayoutHandler;
 

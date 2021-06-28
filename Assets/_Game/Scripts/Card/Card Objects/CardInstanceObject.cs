@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CardManager : MonoBehaviour
+public class CardInstanceObject : CardBehaviour
 {
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
@@ -18,8 +18,8 @@ public class CardManager : MonoBehaviour
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
-    private Action<CardManager> _onSelect;
-    private Action<CardManager> _onProcessAction;
+    private Action<CardInstanceObject> _onSelect;
+    private Action<CardInstanceObject> _onProcessAction;
 
     //private Guid _uniqueId;
     protected CardZone _currentZone = 0;
@@ -252,22 +252,22 @@ public class CardManager : MonoBehaviour
     
     #region Register Callbacks
     
-    public void RegisterOnProcessAction(Action<CardManager> action)
+    public void RegisterOnProcessAction(Action<CardInstanceObject> action)
     {
         _onProcessAction += action;
     }
 
-    public void DeregisterOnProcessAction(Action<CardManager> action)
+    public void DeregisterOnProcessAction(Action<CardInstanceObject> action)
     {
         _onProcessAction -= action;
     }
     
-    public void RegisterOnSelect(Action<CardManager> action)
+    public void RegisterOnSelect(Action<CardInstanceObject> action)
     {
         _onSelect += action;
     }
 
-    public void DeregisterOnSelect(Action<CardManager> action)
+    public void DeregisterOnSelect(Action<CardInstanceObject> action)
     {
         _onSelect -= action;
     }

@@ -17,7 +17,7 @@ public class MainStep : GameStep
         yield break;
     }
 
-    public override IEnumerator ProcessGameAction(CardManager card, PlayerManager currentPlayer)
+    public override IEnumerator ProcessGameAction(CardInstanceObject card, PlayerManager currentPlayer)
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
         Card cardData = card.CardData;

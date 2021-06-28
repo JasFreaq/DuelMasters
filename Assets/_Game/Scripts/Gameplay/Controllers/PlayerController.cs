@@ -18,8 +18,8 @@ public class PlayerController : MonoBehaviour
     private PlayerManager _manager;
     private Camera _mainCamera = null;
 
-    private CardManager _hoveredCard;
-    private Shield _hoveredShield;
+    private CardInstanceObject _hoveredCard;
+    private ShieldObject _hoveredShield;
 
     private HoverState _hoverState = HoverState.None;
 
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessCardHover(int iD)
     {
-        CardManager tempCard = null;
+        CardInstanceObject tempCard = null;
         if (GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
             tempCard = GameManager.PlayerDataHandler.AllCards[iD];
         else if (GameManager.OpponentDataHandler.AllCards.ContainsKey(iD))
@@ -97,8 +97,8 @@ public class PlayerController : MonoBehaviour
         if (_manager.CurrentlySelected &&
                  _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
         {
-            Shield tempShield = null;
-            foreach (Shield shield in GameManager.OpponentDataHandler.Shields)
+            ShieldObject tempShield = null;
+            foreach (ShieldObject shield in GameManager.OpponentDataHandler.Shields)
             {
                 if (shield.transform.GetInstanceID() == iD)
                 {
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
             if (_manager.CurrentlySelected &&
                 _manager.CurrentlySelected.CurrentZone == CardZone.BattleZone)
             {
-                CreatureCardManager creature = (CreatureCardManager) _manager.CurrentlySelected;
+                CreatureInstanceObject creature = (CreatureInstanceObject) _manager.CurrentlySelected;
                 creature.Attack(target);
             }
         }

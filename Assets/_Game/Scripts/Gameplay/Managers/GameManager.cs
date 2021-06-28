@@ -141,9 +141,9 @@ public class GameManager : MonoBehaviour
 
         void EnableHandInteraction(PlayerDataHandler playerData)
         {
-            foreach (KeyValuePair<int, CardManager> pair in playerData.CardsInHand)
+            foreach (KeyValuePair<int, CardInstanceObject> pair in playerData.CardsInHand)
             {
-                CardManager card = pair.Value;
+                CardInstanceObject card = pair.Value;
                 card.HoverPreviewHandler.PreviewEnabled = true;
                 card.CanDrag = true;
             }
@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void ProcessGameAction(CardManager card)
+    private void ProcessGameAction(CardInstanceObject card)
     {
         int iD = card.transform.GetInstanceID();
         if (_playerTurn)

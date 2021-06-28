@@ -68,7 +68,7 @@ public class HandManager : MonoBehaviour
     
     private void HandleCardDrag(Transform cardTransform)
     {
-        CardManager card = _playerData.CardsInHand[cardTransform.GetInstanceID()];
+        CardInstanceObject card = _playerData.CardsInHand[cardTransform.GetInstanceID()];
         if (card.transform.position.y < _dragArrangeYLimit)
         {
             SetState(false);
@@ -94,7 +94,7 @@ public class HandManager : MonoBehaviour
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
-        CardManager card = _playerData.CardsInHand[iD];
+        CardInstanceObject card = _playerData.CardsInHand[iD];
         card.DragHandler.DeregisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
@@ -114,7 +114,7 @@ public class HandManager : MonoBehaviour
         ArrangeCards();
     }
 
-    private void AddCard(CardManager card)
+    private void AddCard(CardInstanceObject card)
     {
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
@@ -137,7 +137,7 @@ public class HandManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromHandRoutine(CardManager card, bool forShield = false)
+    public IEnumerator MoveFromHandRoutine(CardInstanceObject card, bool forShield = false)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
 
@@ -150,7 +150,7 @@ public class HandManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToHandRoutine(CardManager card)
+    public IEnumerator MoveToHandRoutine(CardInstanceObject card)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();
@@ -210,7 +210,7 @@ public class HandManager : MonoBehaviour
 
             Quaternion cardRot = Quaternion.Euler(rotation);
 
-            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardManager card))
+            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardInstanceObject card))
             {
                 card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
                 if (!_isPlayer && card.IsVisible)
@@ -239,7 +239,7 @@ public class HandManager : MonoBehaviour
         return indexCardTransform;
     }
 
-    private void DragRearrange(CardManager card)
+    private void DragRearrange(CardInstanceObject card)
     {
         int index = card.transform.GetSiblingIndex();
         int siblingIndex = -1;

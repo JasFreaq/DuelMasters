@@ -5,62 +5,62 @@ using UnityEngine;
 
 public class PlayerDataHandler : MonoBehaviour
 {
-    private List<CardManager> _cardsInDeck = new List<CardManager>();
-    private List<CardManager> _cardsInShields = new List<CardManager>();
-    private List<CardManager> _cardsInGraveyard = new List<CardManager>();
+    private List<CardInstanceObject> _cardsInDeck = new List<CardInstanceObject>();
+    private List<CardInstanceObject> _cardsInShields = new List<CardInstanceObject>();
+    private List<CardInstanceObject> _cardsInGraveyard = new List<CardInstanceObject>();
 
-    private Dictionary<int, CardManager> _cardsInHand = new Dictionary<int, CardManager>();
-    private Dictionary<int, CardManager> _cardsInManaZone = new Dictionary<int, CardManager>();
-    private Dictionary<int, CreatureCardManager> _cardsInBattleZone = new Dictionary<int, CreatureCardManager>();
+    private Dictionary<int, CardInstanceObject> _cardsInHand = new Dictionary<int, CardInstanceObject>();
+    private Dictionary<int, CardInstanceObject> _cardsInManaZone = new Dictionary<int, CardInstanceObject>();
+    private Dictionary<int, CreatureInstanceObject> _cardsInBattleZone = new Dictionary<int, CreatureInstanceObject>();
     
-    private List<CardManager> _tappedCards = new List<CardManager>();
-    private List<Shield> _shields = new List<Shield>();
+    private List<CardInstanceObject> _tappedCards = new List<CardInstanceObject>();
+    private List<ShieldObject> _shields = new List<ShieldObject>();
 
-    private Dictionary<int, CardManager> _allCards = new Dictionary<int, CardManager>();
+    private Dictionary<int, CardInstanceObject> _allCards = new Dictionary<int, CardInstanceObject>();
 
     #region Properties
 
-    public List<CardManager> CardsInDeck
+    public List<CardInstanceObject> CardsInDeck
     {
         get { return _cardsInDeck; }
     }
     
-    public List<CardManager> CardsInShields
+    public List<CardInstanceObject> CardsInShields
     {
         get { return _cardsInShields; }
     }
     
-    public List<CardManager> CardsInGrave
+    public List<CardInstanceObject> CardsInGrave
     {
         get { return _cardsInGraveyard; }
     }
 
-    public Dictionary<int, CardManager> CardsInHand
+    public Dictionary<int, CardInstanceObject> CardsInHand
     {
         get { return _cardsInHand; }
     }
     
-    public Dictionary<int, CardManager> CardsInMana
+    public Dictionary<int, CardInstanceObject> CardsInMana
     {
         get { return _cardsInManaZone; }
     }
 
-    public Dictionary<int, CreatureCardManager> CardsInBattle
+    public Dictionary<int, CreatureInstanceObject> CardsInBattle
     {
         get { return _cardsInBattleZone; }
     }
 
-    public List<CardManager> TappedCards
+    public List<CardInstanceObject> TappedCards
     {
         get { return _tappedCards; }
     }
 
-    public List<Shield> Shields
+    public List<ShieldObject> Shields
     {
         get { return _shields; }
     }
 
-    public IReadOnlyDictionary<int, CardManager> AllCards
+    public IReadOnlyDictionary<int, CardInstanceObject> AllCards
     {
         get { return _allCards; }
     }
@@ -69,7 +69,7 @@ public class PlayerDataHandler : MonoBehaviour
 
     public void SetAllCards()
     {
-        foreach (CardManager card in _cardsInDeck)
+        foreach (CardInstanceObject card in _cardsInDeck)
         {
             _allCards.Add(card.transform.GetInstanceID(), card);
         }
@@ -77,18 +77,18 @@ public class PlayerDataHandler : MonoBehaviour
 
     #region Mana Functionality
 
-    private Dictionary<int, List<CardManager>> GetAvailableManaCards()
+    private Dictionary<int, List<CardInstanceObject>> GetAvailableManaCards()
     {
-        Dictionary<int, List<CardManager>> availableMana = new Dictionary<int, List<CardManager>>();
-        foreach (KeyValuePair<int, CardManager> pair in _cardsInManaZone)
+        Dictionary<int, List<CardInstanceObject>> availableMana = new Dictionary<int, List<CardInstanceObject>>();
+        foreach (KeyValuePair<int, CardInstanceObject> pair in _cardsInManaZone)
         {
-            CardManager card = pair.Value;
+            CardInstanceObject card = pair.Value;
             if (!card.IsTapped)
             {
                 int civValue = CardParams.GetCivValue(card.CardData.Civilization);
                 if (!availableMana.ContainsKey(civValue))
                 {
-                    availableMana[civValue] = new List<CardManager>();
+                    availableMana[civValue] = new List<CardInstanceObject>();
                 }
                 availableMana[civValue].Add(card);
             }
@@ -97,10 +97,10 @@ public class PlayerDataHandler : MonoBehaviour
         return availableMana;
     }
     
-    private int GetAvailableMana(Dictionary<int, List<CardManager>> availableMana)
+    private int GetAvailableMana(Dictionary<int, List<CardInstanceObject>> availableMana)
     {
         int mana = 0;
-        foreach (KeyValuePair<int, List<CardManager>> pair in availableMana)
+        foreach (KeyValuePair<int, List<CardInstanceObject>> pair in availableMana)
         {
             mana += pair.Value.Count;
         }
@@ -132,7 +132,7 @@ public class PlayerDataHandler : MonoBehaviour
     
     public bool CanPayCost(CardParams.Civilization[] civilization, int cost)
     {
-        Dictionary<int, List<CardManager>> availableMana = GetAvailableManaCards();
+        Dictionary<int, List<CardInstanceObject>> availableMana = GetAvailableManaCards();
 
         if (GetAvailableMana(availableMana) >= cost) 
         {
@@ -155,9 +155,9 @@ public class PlayerDataHandler : MonoBehaviour
 
     public void PayCost(CardParams.Civilization[] civilization, int cost)
     {
-        Dictionary<int, List<CardManager>> availableMana = GetAvailableManaCards();
+        Dictionary<int, List<CardInstanceObject>> availableMana = GetAvailableManaCards();
 
-        List<List<CardManager>> correspondingCardLists = new List<List<CardManager>>();
+        List<List<CardInstanceObject>> correspondingCardLists = new List<List<CardInstanceObject>>();
         int smallestAvailableCivLen = int.MaxValue;
 
         if (GetAvailableMana(availableMana) >= cost)
@@ -183,7 +183,7 @@ public class PlayerDataHandler : MonoBehaviour
 
             for (int i = 0; i < smallestAvailableCivLen; i++) 
             {
-                foreach (List<CardManager> correspondingCardList in correspondingCardLists)
+                foreach (List<CardInstanceObject> correspondingCardList in correspondingCardLists)
                 {
                     cost--;
                     correspondingCardList[i].ToggleTap();
@@ -194,9 +194,9 @@ public class PlayerDataHandler : MonoBehaviour
                 }
             }
 
-            foreach (List<CardManager> correspondingCardList in correspondingCardLists)
+            foreach (List<CardInstanceObject> correspondingCardList in correspondingCardLists)
             {
-                foreach (CardManager card in correspondingCardList)
+                foreach (CardInstanceObject card in correspondingCardList)
                 {
                     if (!card.IsTapped) 
                     {

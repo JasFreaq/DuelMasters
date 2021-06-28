@@ -56,7 +56,7 @@ public class ManaZoneManager : MonoBehaviour
 
     #region Functionality Methods
 
-    private void AddCard(CardManager card)
+    private void AddCard(CardInstanceObject card)
     {
         _tempCard.parent = transform;
         card.transform.parent = _holderTransform;
@@ -68,7 +68,7 @@ public class ManaZoneManager : MonoBehaviour
     private void RemoveCardAtIndex(int index)
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
-        CardManager card = _playerData.CardsInMana[iD];
+        CardInstanceObject card = _playerData.CardsInMana[iD];
         _playerData.CardsInMana.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
@@ -78,7 +78,7 @@ public class ManaZoneManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromManaZoneRoutine(CardManager card)
+    public IEnumerator MoveFromManaZoneRoutine(CardInstanceObject card)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
 
@@ -90,7 +90,7 @@ public class ManaZoneManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToManaZoneRoutine(CardManager card)
+    public IEnumerator MoveToManaZoneRoutine(CardInstanceObject card)
     {
         _tempCard.parent = _holderTransform;
 
@@ -128,7 +128,7 @@ public class ManaZoneManager : MonoBehaviour
             float currentWidth = cardWidth;
 
             ManaTransform currentManaCard = new ManaTransform(null, false, 0, "");
-            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardManager currentCard))
+            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardInstanceObject currentCard))
             {
                 currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
 
@@ -190,7 +190,7 @@ public class ManaZoneManager : MonoBehaviour
         ManaTransform[] manaTransforms = new ManaTransform[n];
         for (int i = 0; i < n; i++)
         {
-            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardManager card))
+            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardInstanceObject card))
             {
                 manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i), card.IsTapped,
                     CardParams.GetCivValue(card.CardData.Civilization), card.CardData.Name);
