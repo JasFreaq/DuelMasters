@@ -22,6 +22,7 @@ public class CardInstanceObject : CardBehaviour
     private Action<CardInstanceObject> _onProcessAction;
 
     //private Guid _uniqueId;
+    private bool _isPlayer;
     protected CardZone _currentZone = 0;
     
     protected bool _isTapped = false;
@@ -35,6 +36,11 @@ public class CardInstanceObject : CardBehaviour
     private bool _inPlayerHand = false;
     
     #region Properties
+
+    public bool isPlayer
+    {
+        set { _isPlayer = value; }
+    }
 
     public CardLayoutHandler CardLayout
     {
@@ -232,15 +238,26 @@ public class CardInstanceObject : CardBehaviour
     {
         _isTapped = !_isTapped;
         _manaCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
-
         float tapAngle = GameParamsHolder.Instance.TapAngle;
-        
-        Vector3 tapStateRotation = new Vector3(transform.localEulerAngles.x,
-            _isTapped ? tapAngle : 0, transform.localEulerAngles.z);
-        transform.DOLocalRotate(tapStateRotation, GameParamsHolder.Instance.TapTransitionTime).SetEase(Ease.OutQuint);
-        
-        _previewCardLayout.transform.localEulerAngles = new Vector3(_previewCardLayout.transform.localEulerAngles.x,
-            _isTapped ? -tapAngle : 0, _previewCardLayout.transform.localEulerAngles.z);
+        Vector3 tapStateRotation = transform.localEulerAngles;
+        Vector3 previewTapStateRotation = _previewCardLayout.transform.localEulerAngles;
+        PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(_isPlayer);
+
+        if (_isTapped)
+        {
+            tapStateRotation.y = tapAngle;
+            previewTapStateRotation.y = -tapAngle;
+            dataHandler.TappedCards.Add(this);
+        }
+        else
+        {
+            tapStateRotation.y = 0;
+            previewTapStateRotation.y = 0;
+            dataHandler.TappedCards.Remove(this);
+        }
+
+        transform.DOLocalRotateQuaternion(Quaternion.Euler(tapStateRotation), GameParamsHolder.Instance.TapTransitionTime).SetEase(Ease.OutQuint);
+        _previewCardLayout.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
     }
 
     public void SetVisibleIcon(bool visible)
@@ -253,8 +270,15 @@ public class CardInstanceObject : CardBehaviour
         gameObject.SetActive(false);
         ActivateCardLayout();
 
-        PlayerManager manager = GameManager.Instance.GetManager(GameDataHandler.Instance.IsPlayerCard(this));
+        PlayerManager manager = GameManager.Instance.GetManager(_isPlayer);
         manager.GraveyardManager.AddCard(this);
+        switch (_currentZone)
+        {
+            case CardZone.BattleZone:
+                GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle.Remove(transform.GetInstanceID());
+                GameManager.Instance.GetManager(_isPlayer).BattleZoneManager.ArrangeCards();
+                break;
+        }
 
         gameObject.SetActive(true);
     }

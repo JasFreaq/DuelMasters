@@ -37,9 +37,4 @@ public class GameDataHandler : MonoBehaviour
     {
         return isPlayer ? _playerDataHandler : _opponentDataHandler;
     }
-
-    public bool IsPlayerCard(CardBehaviour card)
-    {
-        return _playerDataHandler.AllCards.ContainsKey(card.transform.GetInstanceID());
-    }
 }

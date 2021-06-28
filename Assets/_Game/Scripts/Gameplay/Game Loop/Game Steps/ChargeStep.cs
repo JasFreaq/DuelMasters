@@ -21,7 +21,6 @@ public class ChargeStep : GameStep
         if (card.CardData.Civilization.Length > 1)
         {
             card.ToggleTap();
-            dataHandler.TappedCards.Add(card);
             currentPlayer.ManaZoneManager.ArrangeCards();
         }
 

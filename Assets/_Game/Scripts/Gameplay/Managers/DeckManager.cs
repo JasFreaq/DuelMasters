@@ -37,31 +37,32 @@ public class DeckManager : MonoBehaviour
 
         foreach (CardData cardData in cardList)
         {
-            CardInstanceObject card = null;
+            CardInstanceObject cardObj = null;
             if (cardData is CreatureData)
             {
-                card = Instantiate(_creaturePrefab, transform);
+                cardObj = Instantiate(_creaturePrefab, transform);
             }
             else if (cardData is SpellData)
             {
-                card = Instantiate(_spellPrefab, transform);
+                cardObj = Instantiate(_spellPrefab, transform);
             }
 
-            card.SetupCard(cardData);
-            card.name = cardData.Name;
+            cardObj.SetupCard(cardData);
+            cardObj.name = cardData.Name;
+            cardObj.isPlayer = _isPlayer;
 
-            card.transform.localPosition = new Vector3(card.transform.localPosition.x,
-                lastYPos -= _cardWidth * _cardScale, card.transform.localPosition.z);
-            card.transform.localScale = Vector3.one * _cardScale;
+            cardObj.transform.localPosition = new Vector3(cardObj.transform.localPosition.x,
+                lastYPos -= _cardWidth * _cardScale, cardObj.transform.localPosition.z);
+            cardObj.transform.localScale = Vector3.one * _cardScale;
 
-            card.ActivateCardLayout();
-            card.CardLayout.Canvas.gameObject.SetActive(false);
+            cardObj.ActivateCardLayout();
+            cardObj.CardLayout.Canvas.gameObject.SetActive(false);
 
-            card.RegisterOnProcessAction(processAction);
-            card.RegisterOnSelect(selectAction);
+            cardObj.RegisterOnProcessAction(processAction);
+            cardObj.RegisterOnSelect(selectAction);
 
-            _playerData.CardsInDeck.Add(card);
-            card.CurrentZone = CardZone.Deck;
+            _playerData.CardsInDeck.Add(cardObj);
+            cardObj.CurrentZone = CardZone.Deck;
         }
 
         ShuffleCards();

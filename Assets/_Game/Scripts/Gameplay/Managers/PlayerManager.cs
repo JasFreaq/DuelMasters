@@ -117,7 +117,6 @@ public class PlayerManager : MonoBehaviour
                 switch (GameManager.CurrentStep)
                 {
                     case GameStepType.ChargeStep:
-                    case GameStepType.AttackStep:
                         _currentlySelected.SetHighlight(true);
                         break;
 
@@ -127,6 +126,13 @@ public class PlayerManager : MonoBehaviour
                             if (cardManager != _currentlySelected)
                                 cardManager.SetHighlight(false);
                         }
+                        break;
+
+                    case GameStepType.AttackStep:
+                        if (!_currentlySelected.IsTapped)
+                            _currentlySelected.SetHighlight(true);
+                        else
+                            _currentlySelected = null;
                         break;
                 }
             }

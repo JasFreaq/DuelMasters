@@ -180,7 +180,6 @@ public class PlayerDataHandler : MonoBehaviour
                 {
                     cost--;
                     correspondingCardList[i].ToggleTap();
-                    _tappedCards.Add(correspondingCardList[i]);
 
                     if (cost == 0)
                         return;
@@ -195,7 +194,6 @@ public class PlayerDataHandler : MonoBehaviour
                     {
                         cost--;
                         card.ToggleTap();
-                        _tappedCards.Add(card);
 
                         if (cost == 0)
                             return;

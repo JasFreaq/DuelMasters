@@ -193,62 +193,68 @@ public class PlayerController : MonoBehaviour
         IEnumerator AttemptAttack(CardBehaviour target)
         {
             PlayerManager player = GameManager.Instance.GetManager(true);
-            if (player.CurrentlySelected &&
-                player.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+            CardInstanceObject cardObj = player.CurrentlySelected;
+            if (cardObj && cardObj.CurrentZone == CardZone.BattleZone 
+                && !cardObj.IsTapped)
             {
                 CreatureInstanceObject creatureObj = (CreatureInstanceObject) player.CurrentlySelected;
                 float attackTime = GameParamsHolder.Instance.AttackTime;
                 Vector3 creaturePos = creatureObj.transform.position;
-
-                creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
-                yield return new WaitForSeconds(attackTime);
-
+                
                 if (target is CreatureInstanceObject)
                 {
-                    CreatureData creatureData = (CreatureData) creatureObj.CardData;
-
                     CreatureInstanceObject attackedCreatureObj = (CreatureInstanceObject) target;
-                    CreatureData attackedCreatureData = (CreatureData) attackedCreatureObj.CardData;
-
-                    if (creatureData.Power > attackedCreatureData.Power) 
-                        DestroyAttackedCreature();
-                    else if (creatureData.Power == attackedCreatureData.Power)
+                    if (attackedCreatureObj.IsTapped)
                     {
-                        DestroyCreature();
-                        DestroyAttackedCreature();
-                    }
-                    else
-                        DestroyCreature();
-
-                    #region Local Functions
-
-                    void DestroyCreature()
-                    {
+                        creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
+                        yield return new WaitForSeconds(attackTime);
                         player.DeselectCurrentlySelected();
 
-                        GameDataHandler.Instance.GetDataHandler(true).CardsInBattle.Remove(creatureObj.GetInstanceID());
-                        creatureObj.DestroyCard();
-                        GameManager.Instance.GetManager(true).BattleZoneManager.ArrangeCards();
-                        creatureObj = null;
-                    }
+                        CreatureData creatureData = (CreatureData) creatureObj.CardData;
+                        CreatureData attackedCreatureData = (CreatureData) attackedCreatureObj.CardData;
 
-                    void DestroyAttackedCreature()
-                    {
-                        GameDataHandler.Instance.GetDataHandler(false).CardsInBattle.Remove(attackedCreatureObj.GetInstanceID());
-                        attackedCreatureObj.DestroyCard();
-                        GameManager.Instance.GetManager(false).BattleZoneManager.ArrangeCards();
-                    }
+                        if (creatureData.Power > attackedCreatureData.Power)
+                            attackedCreatureObj.DestroyCard();
+                        else if (creatureData.Power == attackedCreatureData.Power)
+                        {
+                            creatureObj.DestroyCard();
+                            creatureObj = null;
+                            attackedCreatureObj.DestroyCard();
+                        }
+                        else
+                        {
+                            creatureObj.DestroyCard();
+                            creatureObj = null;
+                        }
 
-                    #endregion
+                        yield return ReturnCreature();
+                    }
                 }
                 else if (target is ShieldObject)
                 {
+                    creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
+                    yield return new WaitForSeconds(attackTime);
+                    player.DeselectCurrentlySelected();
+
                     PlayerManager opponent = GameManager.Instance.GetManager(false);
                     StartCoroutine(opponent.BreakShieldRoutine(target.transform.GetSiblingIndex()));
+
+                    yield return ReturnCreature();
                 }
 
-                if (creatureObj)
-                    creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
+                #region Local Functions
+
+                IEnumerator ReturnCreature()
+                {
+                    if (creatureObj)
+                    {
+                        creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
+                        yield return new WaitForSeconds(attackTime);
+                        creatureObj.ToggleTap();
+                    }
+                }
+
+                #endregion
             }
         }
 
