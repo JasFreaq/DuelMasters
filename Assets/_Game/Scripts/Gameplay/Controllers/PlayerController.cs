@@ -47,21 +47,21 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessCardHover(int iD)
     {
-        CardInstanceObject tempCard = null;
+        CardInstanceObject tempCardObj = null;
         if (GameManager.PlayerDataHandler.AllCards.ContainsKey(iD))
-            tempCard = GameManager.PlayerDataHandler.AllCards[iD];
+            tempCardObj = (CardInstanceObject) GameManager.PlayerDataHandler.AllCards[iD];
         else if (GameManager.OpponentDataHandler.AllCards.ContainsKey(iD))
-            tempCard = GameManager.OpponentDataHandler.AllCards[iD];
+            tempCardObj = (CardInstanceObject) GameManager.OpponentDataHandler.AllCards[iD];
 
-        if (tempCard)
+        if (tempCardObj)
         {
-            if (_hoveredCard != tempCard)
+            if (_hoveredCard != tempCardObj)
             {
                 ExitHover();
 
                 if (_hoverState == HoverState.None)
                 {
-                    _hoveredCard = tempCard;
+                    _hoveredCard = tempCardObj;
 
                     //OnMouseEnter
                     _hoveredCard.ProcessMouseEnter();

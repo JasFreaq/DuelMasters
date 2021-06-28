@@ -18,6 +18,7 @@ public class ShieldObject : CardBehaviour
 
     public CardInstanceObject CardObject
     {
+        get { return _cardObject;}
         set { _cardObject = value; }
     }
 

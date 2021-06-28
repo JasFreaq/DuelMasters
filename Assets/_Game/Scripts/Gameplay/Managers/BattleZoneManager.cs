@@ -86,6 +86,7 @@ public class BattleZoneManager : MonoBehaviour
     {
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
+        float arrangeTime = GameParamsHolder.Instance.LayoutsArrangeMoveTime;
         float sizeRatio = cardWidth / _maxCardWidth;
 
         float startOffset = (n % 2) * cardWidth;
@@ -99,10 +100,12 @@ public class BattleZoneManager : MonoBehaviour
             int iD = cardTransform.GetInstanceID();
             if (_playerData.CardsInBattle.ContainsKey(iD))
                 _playerData.CardsInBattle[iD].BattleLayout.Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
+            
             Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y, startPos.z);
+            Vector3 cardScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
 
-            cardTransform.localPosition = cardPos;
-            cardTransform.localScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
+            cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint);
+            cardTransform.DOScale(cardScale,arrangeTime).SetEase(Ease.OutQuint);
         }
     }
 

@@ -54,6 +54,8 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.D))
             StartCoroutine(DrawCardRoutine());
+        if (Input.GetKeyDown(KeyCode.B))
+            StartCoroutine(BreakShieldRoutine(0));
 
         if (_handManager.transform.GetChild(0).childCount > 0) 
         {

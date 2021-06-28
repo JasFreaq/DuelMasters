@@ -40,8 +40,8 @@ public class ShieldsManager : MonoBehaviour
 
         for (int i = 0; i < 5; i++)
         {
-            ShieldObject shield = Instantiate(_shieldPrefab, _holderTransform);
-            _playerData.Shields.Add(shield);
+            ShieldObject shieldObj = Instantiate(_shieldPrefab, _holderTransform);
+            _playerData.Shields.Add(shieldObj);
         }
 
         ArrangeShields();
@@ -75,85 +75,66 @@ public class ShieldsManager : MonoBehaviour
         shieldObj.CardHolder.DOScale(shieldObj.HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
+
+        CardInstanceObject cardObj = shieldObj.CardObject;
+        cardObj.CardLayout.Canvas.sortingOrder = 100;
+        cardObj.transform.parent = transform;
+        //if (_isPlayer)
+            cardObj.CardLayout.Canvas.gameObject.SetActive(true);
+        
         shieldObj.CardObject = null;
+        int n = _playerData.Shields.Count;
+        if (n > 5 && shieldIndex < n)
+        {
+            _playerData.Shields.RemoveAt(shieldIndex);
+            shieldObj.transform.parent = transform;
+            Destroy(shieldObj.gameObject);
+            ArrangeShields();
+        }
 
-        CardInstanceObject card = RemoveShieldAtIndex(shieldIndex);
-        card.CardLayout.Canvas.sortingOrder = 100;
-        if (_isPlayer)
-            card.CardLayout.Canvas.gameObject.SetActive(true);
-
-        yield return StartCoroutine(MoveFromShieldsRoutine(card));
-        if (!_isPlayer)
-            card.CardLayout.Canvas.gameObject.SetActive(true);
+        yield return StartCoroutine(MoveFromShieldsRoutine(cardObj));
+        //if (!_isPlayer)
+        //    cardObj.CardLayout.Canvas.gameObject.SetActive(true);
     }
 
-    public IEnumerator MakeShieldRoutine(CardInstanceObject card)
+    public IEnumerator MakeShieldRoutine(CardInstanceObject cardObj)
     {
         int emptyIndex = GetEmptyIndex();
-        AddShield(emptyIndex, card);
-        MoveToShields(card, _playerData.Shields[emptyIndex]);
+        AddShield(emptyIndex, cardObj);
+        MoveToShields(cardObj, _playerData.Shields[emptyIndex]);
         yield return new WaitForSeconds(_toTransitionTime);
+
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
     }
 
     public CardInstanceObject GetShieldAtIndex(int shieldIndex)
     {
-        return _playerData.CardsInShields[shieldIndex];
+        return _playerData.Shields[shieldIndex].CardObject;
     }
-
-    public CardInstanceObject RemoveShieldAtIndex(int shieldIndex)
+    
+    private void AddShield(int shieldIndex, CardInstanceObject cardObj)
     {
-        int n = _playerData.CardsInShields.Count;
-        CardInstanceObject card = _playerData.CardsInShields[shieldIndex];
-        if (n <= 5)
+        if (_playerData.Shields.Count > shieldIndex)
         {
-            _playerData.CardsInShields[shieldIndex] = null;
+            _playerData.Shields[shieldIndex].CardObject = cardObj;
         }
         else
         {
-            _playerData.CardsInShields.RemoveAt(shieldIndex);
+            ShieldObject shieldObj = Instantiate(_shieldPrefab, _holderTransform);
+            shieldObj.CardObject = cardObj;
+            _playerData.Shields.Add(shieldObj);
+            ArrangeShields(true);
         }
 
-        card.transform.parent = transform;
-        n = _holderTransform.childCount;
-        if (n > 5 && shieldIndex < n)
-        {
-            _playerData.Shields.RemoveAt(shieldIndex);
-            Transform shieldTransform = _holderTransform.GetChild(shieldIndex);
-            shieldTransform.parent = transform;
-            Destroy(shieldTransform.gameObject);
-            ArrangeShields();
-        }
-
-        return card;
-    }
-
-    private void AddShield(int shieldIndex, CardInstanceObject card)
-    {
-        if (_playerData.CardsInShields.Count > shieldIndex)
-        {
-            _playerData.CardsInShields[shieldIndex] = card;
-        }
-        else
-        {
-            _playerData.CardsInShields.Add(card);
-            if (_playerData.CardsInShields.Count > 5)
-            {
-                ShieldObject shield = Instantiate(_shieldPrefab, _holderTransform);
-                _playerData.Shields.Add(shield);
-                ArrangeShields();
-            }
-        }
-
-        card.CurrentZone = CardZone.Shields;
+        cardObj.CurrentZone = CardZone.Shields;
     }
 
     private int GetEmptyIndex()
     {
-        int n = _playerData.CardsInShields.Count;
+        int n = _playerData.Shields.Count;
         for (int i = 0; i < n; i++)
         {
-            if (_playerData.CardsInShields[i] == null)
+            if (_playerData.Shields[i].CardObject == null)
             {
                 return i;
             }
@@ -170,8 +151,6 @@ public class ShieldsManager : MonoBehaviour
     {
         cardObj.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Quaternion rotation = _intermediateHolder.rotation;
-        if (!_isPlayer)
-            rotation *= Quaternion.Euler(0, 0, 180);
         cardObj.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         cardObj.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
@@ -206,10 +185,11 @@ public class ShieldsManager : MonoBehaviour
 
     #region Layout Methods
 
-    private void ArrangeShields()
+    private void ArrangeShields(bool newShield = false)
     {
         int n = _holderTransform.childCount;
         float shieldWidth = Mathf.Min((_shieldAreaWidth * 2) / n, _maxShieldWidth);
+        float arrangeTime = GameParamsHolder.Instance.LayoutsArrangeMoveTime;
         float sizeRatio = (shieldWidth / _maxShieldWidth) * _shieldScale;
 
         float startOffset = (n % 2) * shieldWidth;
@@ -222,9 +202,18 @@ public class ShieldsManager : MonoBehaviour
         {
             Transform shieldTransform = _holderTransform.GetChild(i);
             Vector3 shieldPos = new Vector3(startPos.x + (i - n / 2 + 1) * shieldWidth, startPos.y, startPos.z);
+            Vector3 shieldScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
 
-            shieldTransform.localPosition = shieldPos;
-            shieldTransform.localScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
+            if (i == n - 1 && newShield)
+            {
+                shieldTransform.localPosition = shieldPos;
+                shieldTransform.localScale = shieldScale;
+            }
+            else
+            {
+                shieldTransform.DOLocalMove(shieldPos, arrangeTime).SetEase(Ease.OutQuint);
+                shieldTransform.DOScale(shieldScale, arrangeTime).SetEase(Ease.OutQuint);
+            }
         }
     }
 

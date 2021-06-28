@@ -6,16 +6,14 @@ using UnityEngine;
 public class PlayerDataHandler : MonoBehaviour
 {
     private List<CardInstanceObject> _cardsInDeck = new List<CardInstanceObject>();
-    private List<CardInstanceObject> _cardsInShields = new List<CardInstanceObject>();
     private List<CardInstanceObject> _cardsInGraveyard = new List<CardInstanceObject>();
+    private List<ShieldObject> _shields = new List<ShieldObject>();
 
     private Dictionary<int, CardInstanceObject> _cardsInHand = new Dictionary<int, CardInstanceObject>();
     private Dictionary<int, CardInstanceObject> _cardsInManaZone = new Dictionary<int, CardInstanceObject>();
     private Dictionary<int, CreatureInstanceObject> _cardsInBattleZone = new Dictionary<int, CreatureInstanceObject>();
     
     private List<CardInstanceObject> _tappedCards = new List<CardInstanceObject>();
-    private List<ShieldObject> _shields = new List<ShieldObject>();
-
     private Dictionary<int, CardInstanceObject> _allCards = new Dictionary<int, CardInstanceObject>();
 
     #region Properties
@@ -24,12 +22,12 @@ public class PlayerDataHandler : MonoBehaviour
     {
         get { return _cardsInDeck; }
     }
-    
-    public List<CardInstanceObject> CardsInShields
+
+    public List<ShieldObject> Shields
     {
-        get { return _cardsInShields; }
+        get { return _shields; }
     }
-    
+
     public List<CardInstanceObject> CardsInGrave
     {
         get { return _cardsInGraveyard; }
@@ -54,12 +52,7 @@ public class PlayerDataHandler : MonoBehaviour
     {
         get { return _tappedCards; }
     }
-
-    public List<ShieldObject> Shields
-    {
-        get { return _shields; }
-    }
-
+    
     public IReadOnlyDictionary<int, CardInstanceObject> AllCards
     {
         get { return _allCards; }

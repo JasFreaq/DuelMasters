@@ -178,7 +178,7 @@ public class HandManager : MonoBehaviour
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
         float arrangeTime = GameParamsHolder.Instance.LayoutsArrangeMoveTime;
-
+        
         float startOffset = (n % 2) * cardWidth;
         if (n % 2 == 0)
             startOffset += cardWidth / 2;
@@ -194,7 +194,6 @@ public class HandManager : MonoBehaviour
         {
             Transform cardTransform = _holderTransform.GetChild(i);
             
-
             float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
             
@@ -210,10 +209,10 @@ public class HandManager : MonoBehaviour
 
             Quaternion cardRot = Quaternion.Euler(rotation);
 
-            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardInstanceObject card))
+            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardInstanceObject cardObj))
             {
-                card.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
-                if (!_isPlayer && card.IsVisible)
+                cardObj.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
+                if (!_isPlayer && cardObj.IsVisible)
                 {
                     cardRot *= Quaternion.Euler(0, 0, 180);
                 }
@@ -224,7 +223,7 @@ public class HandManager : MonoBehaviour
                 indexCardTransform.position = cardPos;
                 indexCardTransform.rotation = cardRot;
             }
-            else if (card)
+            else if (cardObj)
             {
                 cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint); 
                 cardTransform.DOLocalRotateQuaternion(cardRot, arrangeTime).SetEase(Ease.OutQuint);
