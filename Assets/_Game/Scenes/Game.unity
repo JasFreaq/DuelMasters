@@ -1533,6 +1533,7 @@ GameObject:
   - component: {fileID: 1167120986}
   - component: {fileID: 1167120988}
   - component: {fileID: 1167120989}
+  - component: {fileID: 1167120990}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1554,6 +1555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerGoesFirst: 1
   _actionMenu: {fileID: 1156849063}
+  _playerController: {fileID: 1042105415}
   _playerManager: {fileID: 1042105413}
   _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
   _opponentManager: {fileID: 1962481310}
@@ -1585,6 +1587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0d079a83051ed4e8e8c15c9ece4c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseCardCount: 5
   _layoutsArrangeMoveTime: 0.5
   _hoverBeforePreviewTime: 0.75
   _previewTransitionTime: 0.25
@@ -1612,6 +1615,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerDataHandler: {fileID: 1042105414}
   _opponentDataHandler: {fileID: 1962481311}
+--- !u!114 &1167120990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167120985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a99f2b08837f4541989e5d825b28f4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _beginningLines: 3
+  _linePrefab: {fileID: 8304558356720618135, guid: b0f652e0075d0994fa6d362bf5058598, type: 3}
 --- !u!1 &1311186675
 GameObject:
   m_ObjectHideFlags: 0

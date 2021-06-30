@@ -18,17 +18,15 @@ public class CardInstanceObject : CardBehaviour
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
 
-    private Action<CardInstanceObject> _onSelect;
     private Action<CardInstanceObject> _onProcessAction;
 
-    //private Guid _uniqueId;
     private bool _isPlayer;
     protected CardZone _currentZone = 0;
     
     protected bool _isTapped = false;
     protected bool _isHighlighted = false;
+    protected bool _isSelected = false;
     private bool _isHighlightBaseColor = true;
-    private bool _isSelected = false;
     private bool _isVisible = false;
     private bool _canDrag = false;
     
@@ -37,7 +35,7 @@ public class CardInstanceObject : CardBehaviour
     
     #region Properties
 
-    public bool isPlayer
+    public bool IsPlayer
     {
         set { _isPlayer = value; }
     }
@@ -69,7 +67,6 @@ public class CardInstanceObject : CardBehaviour
 
     public CardZone CurrentZone
     {
-        get { return _currentZone;}
         set { _currentZone = value; }
     }
 
@@ -119,8 +116,6 @@ public class CardInstanceObject : CardBehaviour
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
         _dragHandler = GetComponent<DragHandler>();
-        
-        //_uniqueId = Guid.NewGuid();
     }
 
     public void ProcessMouseEnter()
@@ -132,7 +127,7 @@ public class CardInstanceObject : CardBehaviour
     {
         if (_currentZone == CardZone.Hand)
         {
-            ToggleSelection();
+            _isSelected = !_isSelected;
 
             if (_canDrag)
             {
@@ -227,13 +222,7 @@ public class CardInstanceObject : CardBehaviour
         _cardLayoutHandler.SetGlow(_isHighlighted);
         _manaCardLayoutHandler.SetGlow(_isHighlighted);
     }
-
-    protected void ToggleSelection()
-    {
-        _onSelect.Invoke(this);
-        _isSelected = !_isSelected;
-    }
-
+    
     public virtual void ToggleTap()
     {
         _isTapped = !_isTapped;
@@ -283,6 +272,11 @@ public class CardInstanceObject : CardBehaviour
         gameObject.SetActive(true);
     }
 
+    public bool InZone(CardZone zone)
+    {
+        return _currentZone == zone;
+    }
+
     #endregion
     
     #region Register Callbacks
@@ -297,15 +291,5 @@ public class CardInstanceObject : CardBehaviour
         _onProcessAction -= action;
     }
     
-    public void RegisterOnSelect(Action<CardInstanceObject> action)
-    {
-        _onSelect += action;
-    }
-
-    public void DeregisterOnSelect(Action<CardInstanceObject> action)
-    {
-        _onSelect -= action;
-    }
-
     #endregion
 }

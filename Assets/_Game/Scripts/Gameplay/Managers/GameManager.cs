@@ -10,13 +10,14 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private ActionMenu _actionMenu;
 
-    [Header("Player Managers")]
+    [Header("Player Managers")] 
+    [SerializeField] private PlayerController _playerController;
     [SerializeField] private PlayerManager _playerManager;
     [SerializeField] private Deck _playerDeck;
     [SerializeField] private PlayerManager _opponentManager;
     [SerializeField] private Deck _opponentDeck;
 
-    private static GameStep _currentStep = null;
+    private GameStep _currentStep = null;
     private Dictionary<GameStepType, GameStep> _gameSteps = new Dictionary<GameStepType, GameStep>();
 
     private bool _endCurrentStep = false;
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour
     private bool _playerTurn = true;
     private bool _gameOver = false;
 
-    public static GameStepType CurrentStep
+    public GameStepType CurrentStep
     {
         get { return _currentStep.StepType; }
     }
@@ -128,29 +129,15 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DrawStartingHandRoutine(_playerManager));
         yield return DrawStartingHandRoutine(_opponentManager);
 
-        EnableHandInteraction(_playerManager.DataHandler);
-        EnableHandInteraction(_opponentManager.DataHandler);
-
-        _playerManager.CanSelect = true;
-        _opponentManager.CanSelect = true;
+        _playerController.CanInteract = true;
 
         #region Local Functions
         
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2/*GameParamsHolder.Instance.BaseCardCount*/; i++)
             {
-                yield return playerManager.DrawCardRoutine(true);
-            }
-        }
-
-        void EnableHandInteraction(PlayerDataHandler playerData)
-        {
-            foreach (KeyValuePair<int, CardInstanceObject> pair in playerData.CardsInHand)
-            {
-                CardInstanceObject card = pair.Value;
-                card.HoverPreviewHandler.PreviewEnabled = true;
-                card.CanDrag = true;
+                yield return playerManager.DrawCardRoutine();
             }
         }
 

@@ -21,11 +21,18 @@ public class PlayerController : MonoBehaviour
     
     private Camera _mainCamera = null;
 
+    private CardInstanceObject _currentlySelected;
     private CardInstanceObject _hoveredCard;
     private ShieldObject _hoveredShield;
 
+    private bool _canInteract = false;
     private HoverState _hoverState = HoverState.None;
-    
+
+    public bool CanInteract
+    {
+        set { _canInteract = value; }
+    }
+
     void Start()
     {
         _mainCamera = Camera.main;
@@ -33,16 +40,94 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (_canInteract) 
         {
-            int iD = hit.transform.GetInstanceID();
-            ProcessCardHover(iD);
-            ProcessShieldHover(iD);
-            ProcessInput(iD);
+            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                int iD = hit.transform.GetInstanceID();
+                ProcessCardHover(iD);
+                ProcessShieldHover(iD);
+                ProcessInput(iD);
+
+                if (GameManager.Instance.CurrentStep == GameStepType.AttackStep)
+                {
+                    if (_currentlySelected && _currentlySelected.InZone(CardZone.BattleZone))
+                    {
+                        TargetingLinesHandler.Instance.SetLine(hit.point);
+                    }
+                }
+            }
         }
     }
 
+    private void SelectCard(CardInstanceObject card)
+    {
+        if (_currentlySelected != card)
+        {
+            _currentlySelected = card;
+
+            switch (GameManager.Instance.CurrentStep)
+            {
+                case GameStepType.ChargeStep:
+                    _currentlySelected.SetHighlight(true);
+                    break;
+
+                case GameStepType.MainStep:
+                    PlayerManager player = GameManager.Instance.GetManager(true);
+                    foreach (CardInstanceObject cardManager in player.PlayableCards)
+                    {
+                        if (cardManager != _currentlySelected)
+                            cardManager.SetHighlight(false);
+                    }
+                    break;
+
+                case GameStepType.AttackStep:
+                    if (!_currentlySelected.IsTapped)
+                    {
+                        _currentlySelected.SetHighlight(true);
+                        TargetingLinesHandler.Instance.EnableLine(_currentlySelected.transform.position);
+                    }
+                    else
+                        _currentlySelected = null;
+                    break;
+            }
+        }
+        else if (_currentlySelected)
+        {
+            DeselectCurrentlySelected();
+        }
+    }
+
+    public void DeselectCurrentlySelected()
+    {
+        switch (GameManager.Instance.CurrentStep)
+        {
+            case GameStepType.ChargeStep:
+            case GameStepType.AttackStep:
+                _currentlySelected.SetHighlight(false);
+                break;
+
+            case GameStepType.MainStep:
+                if (_currentlySelected.ProcessAction)
+                    _currentlySelected.SetHighlight(false);
+                else
+                {
+                    PlayerManager player = GameManager.Instance.GetManager(true);
+                    foreach (CardInstanceObject cardManager in player.PlayableCards)
+                    {
+                        if (cardManager != _currentlySelected)
+                            cardManager.SetHighlight(true);
+                    }
+                }
+                break;
+        }
+
+        TargetingLinesHandler.Instance.DisableLines();
+        _currentlySelected = null;
+    }
+
+    
     private void ProcessCardHover(int iD)
     {
         CardInstanceObject tempCardObj = null;
@@ -66,8 +151,6 @@ public class PlayerController : MonoBehaviour
                 if (_hoverState == HoverState.None)
                 {
                     _hoveredCard = tempCardObj;
-
-                    //OnMouseEnter
                     _hoveredCard.ProcessMouseEnter();
                 }
 
@@ -98,9 +181,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessShieldHover(int iD)
     {
-        PlayerManager player = GameManager.Instance.GetManager(true);
-        if (player.CurrentlySelected &&
-            player.CurrentlySelected.CurrentZone == CardZone.BattleZone)
+        if (_currentlySelected && _currentlySelected.InZone(CardZone.BattleZone))
         {
             ShieldObject tempShield = null;
             foreach (ShieldObject shield in GameDataHandler.Instance.GetDataHandler(false).Shields)
@@ -121,8 +202,6 @@ public class PlayerController : MonoBehaviour
                     if (_hoverState == HoverState.None)
                     {
                         _hoveredShield = tempShield;
-
-                        //OnMouseEnter
                         _hoveredShield.SetHighlight(true);
                     }
 
@@ -159,16 +238,10 @@ public class PlayerController : MonoBehaviour
             {
                 if (GameDataHandler.Instance.GetDataHandler(true).AllCards.ContainsKey(iD))
                 {
-                    //OnMouseOver
-
                     if (Input.GetMouseButtonDown(0))
                     {
-                        //OnMouseDown
                         _hoveredCard.ProcessMouseDown();
-                    }
-                    else if (Input.GetMouseButtonUp(0))
-                    {
-                        //OnMouseOver
+                        SelectCard(_hoveredCard);
                     }
                 }
                 else if (GameDataHandler.Instance.GetDataHandler(false).AllCards.ContainsKey(iD))
@@ -192,12 +265,12 @@ public class PlayerController : MonoBehaviour
 
         IEnumerator AttemptAttack(CardBehaviour target)
         {
-            PlayerManager player = GameManager.Instance.GetManager(true);
-            CardInstanceObject cardObj = player.CurrentlySelected;
-            if (cardObj && cardObj.CurrentZone == CardZone.BattleZone 
-                && !cardObj.IsTapped)
+            if (_currentlySelected && _currentlySelected.InZone(CardZone.BattleZone)
+                                   && !_currentlySelected.IsTapped)
             {
-                CreatureInstanceObject creatureObj = (CreatureInstanceObject) player.CurrentlySelected;
+                TargetingLinesHandler.Instance.DisableLines();
+
+                CreatureInstanceObject creatureObj = (CreatureInstanceObject) _currentlySelected;
                 float attackTime = GameParamsHolder.Instance.AttackTime;
                 Vector3 creaturePos = creatureObj.transform.position;
                 
@@ -208,7 +281,7 @@ public class PlayerController : MonoBehaviour
                     {
                         creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
                         yield return new WaitForSeconds(attackTime);
-                        player.DeselectCurrentlySelected();
+                        DeselectCurrentlySelected();
 
                         CreatureData creatureData = (CreatureData) creatureObj.CardData;
                         CreatureData attackedCreatureData = (CreatureData) attackedCreatureObj.CardData;
@@ -234,7 +307,7 @@ public class PlayerController : MonoBehaviour
                 {
                     creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
                     yield return new WaitForSeconds(attackTime);
-                    player.DeselectCurrentlySelected();
+                    DeselectCurrentlySelected();
 
                     PlayerManager opponent = GameManager.Instance.GetManager(false);
                     StartCoroutine(opponent.BreakShieldRoutine(target.transform.GetSiblingIndex()));

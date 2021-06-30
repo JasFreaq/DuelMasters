@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class GameParamsHolder : MonoBehaviour
 {
+    [Header("Integers")] 
+    [SerializeField] private int _baseCardCount = 5;
+
     [Header("Floats")]
     [SerializeField] private float _layoutsArrangeMoveTime = 0.5f;
     [SerializeField] private float _hoverBeforePreviewTime = 0.5f;
@@ -43,6 +46,15 @@ public class GameParamsHolder : MonoBehaviour
     #endregion
 
     #region Properties
+
+    #region Integer(s)
+
+    public int BaseCardCount
+    {
+        get { return _baseCardCount; }
+    }
+
+    #endregion
 
     #region Float(s)
 

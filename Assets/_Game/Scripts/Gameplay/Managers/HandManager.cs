@@ -74,10 +74,13 @@ public class HandManager : MonoBehaviour
             SetState(false);
             DragRearrange(card);
         }
-        else if (GameManager.CurrentStep == GameStepType.ChargeStep ||
-                 GameManager.CurrentStep == GameStepType.MainStep) 
+        else 
         {
-            SetState(true);
+            GameStepType currentStep = GameManager.Instance.CurrentStep;
+            if (currentStep == GameStepType.ChargeStep || currentStep == GameStepType.MainStep)
+            {
+                SetState(true);
+            }
         }
 
         void SetState(bool state)

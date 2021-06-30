@@ -8,7 +8,6 @@ using DG.Tweening;
 [DisallowMultipleComponent]
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Effect Params")]
     [SerializeField] private bool _isPlayer = true;
 
     [Header("Manager Caches")] 
@@ -22,8 +21,6 @@ public class PlayerManager : MonoBehaviour
     private PlayerDataHandler _playerData;
 
     private List<CardInstanceObject> _playableCards = new List<CardInstanceObject>();
-    private CardInstanceObject _currentlySelected;
-    private bool _canSelect = false;
 
     public PlayerDataHandler DataHandler
     {
@@ -45,16 +42,11 @@ public class PlayerManager : MonoBehaviour
         get { return _graveyardManager; }
     }
 
-    public CardInstanceObject CurrentlySelected
+    public IReadOnlyList<CardInstanceObject> PlayableCards
     {
-        get { return _currentlySelected; }
+        get { return _playableCards; }
     }
-
-    public bool CanSelect
-    {
-        set { _canSelect = value; }
-    }
-
+    
     private void Awake()
     {
         _playerData = GetComponent<PlayerDataHandler>();
@@ -90,7 +82,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Initialize(Deck deck, Action<CardInstanceObject> processAction)
     {
-        _deckManager.Initialize(deck, processAction, SelectCard);
+        _deckManager.Initialize(deck, processAction);
     }
 
     public Coroutine SetupShields()
@@ -104,71 +96,8 @@ public class PlayerManager : MonoBehaviour
 
     #endregion
 
-    #region Interactivity Methods
-
-    private void SelectCard(CardInstanceObject card)
-    {
-        if (_canSelect) 
-        {
-            if (_currentlySelected != card)
-            {
-                _currentlySelected = card;
-
-                switch (GameManager.CurrentStep)
-                {
-                    case GameStepType.ChargeStep:
-                        _currentlySelected.SetHighlight(true);
-                        break;
-
-                    case GameStepType.MainStep:
-                        foreach (CardInstanceObject cardManager in _playableCards)
-                        {
-                            if (cardManager != _currentlySelected)
-                                cardManager.SetHighlight(false);
-                        }
-                        break;
-
-                    case GameStepType.AttackStep:
-                        if (!_currentlySelected.IsTapped)
-                            _currentlySelected.SetHighlight(true);
-                        else
-                            _currentlySelected = null;
-                        break;
-                }
-            }
-            else if (_currentlySelected)
-            {
-                DeselectCurrentlySelected();
-            }
-        }
-    }
-
-    public void DeselectCurrentlySelected()
-    {
-        switch (GameManager.CurrentStep)
-        {
-            case GameStepType.ChargeStep:
-            case GameStepType.AttackStep:
-                _currentlySelected.SetHighlight(false);
-                break;
-
-            case GameStepType.MainStep:
-                if (_currentlySelected.ProcessAction)
-                    _currentlySelected.SetHighlight(false);
-                else
-                {
-                    foreach (CardInstanceObject cardManager in _playableCards)
-                    {
-                        if (cardManager != _currentlySelected)
-                            cardManager.SetHighlight(true);
-                    }
-                }
-                break;
-        }
-
-        _currentlySelected = null;
-    }
-
+    #region Affordance Methods
+    
     public int HighlightPlayableCards()
     {
         _playableCards.Clear();
@@ -185,9 +114,9 @@ public class PlayerManager : MonoBehaviour
 
         return _playableCards.Count;
     }
-
-    #endregion
     
+    #endregion
+
     #region From-Hand Transitions
 
     public IEnumerator ChargeManaRoutine(CardInstanceObject card)
@@ -247,7 +176,7 @@ public class PlayerManager : MonoBehaviour
 
     #region To-Hand Transitions
 
-    public IEnumerator DrawCardRoutine(bool disableInteraction = false)
+    public IEnumerator DrawCardRoutine()
     {
         CardInstanceObject card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
@@ -256,11 +185,8 @@ public class PlayerManager : MonoBehaviour
         yield return _deckManager.MoveFromDeckRoutine(card);
         yield return _handManager.MoveToHandRoutine(card);
 
-        if (!disableInteraction)
-        {
-            card.HoverPreviewHandler.PreviewEnabled = true;
-            card.CanDrag = true;
-        }
+        card.HoverPreviewHandler.PreviewEnabled = true;
+        card.CanDrag = true;
     }
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)

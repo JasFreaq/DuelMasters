@@ -38,7 +38,7 @@ public class ShieldsManager : MonoBehaviour
         _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
         _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < GameParamsHolder.Instance.BaseCardCount; i++)
         {
             ShieldObject shieldObj = Instantiate(_shieldPrefab, _holderTransform);
             _playerData.Shields.Add(shieldObj);
@@ -51,7 +51,8 @@ public class ShieldsManager : MonoBehaviour
 
     public IEnumerator SetupShieldsRoutine(CardInstanceObject[] cards)
     {
-        for (int i = 4; i >= 0; i--)
+        int baseShieldCountMinusOne = GameParamsHolder.Instance.BaseCardCount - 1;
+        for (int i = baseShieldCountMinusOne; i >= 0; i--)
         {
             MoveToShields(cards[i], _playerData.Shields[i]);
             yield return new WaitForSeconds(_pauseTime);
@@ -59,13 +60,13 @@ public class ShieldsManager : MonoBehaviour
 
         yield return new WaitForSeconds(_pauseTime);
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < baseShieldCountMinusOne; i++)
         {
             AddShield(i, cards[i]);
             StartCoroutine(PlayMakeShieldAnimationRoutine(i));
         }
-        AddShield(4, cards[4]);
-        yield return StartCoroutine(PlayMakeShieldAnimationRoutine(4));
+        AddShield(baseShieldCountMinusOne, cards[baseShieldCountMinusOne]);
+        yield return StartCoroutine(PlayMakeShieldAnimationRoutine(baseShieldCountMinusOne));
     }
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
@@ -83,7 +84,7 @@ public class ShieldsManager : MonoBehaviour
         
         shieldObj.CardObject = null;
         int n = _playerData.Shields.Count;
-        if (n > 5 && shieldIndex < n)
+        if (n > GameParamsHolder.Instance.BaseCardCount && shieldIndex < n)
         {
             _playerData.Shields.RemoveAt(shieldIndex);
             shieldObj.transform.parent = transform;

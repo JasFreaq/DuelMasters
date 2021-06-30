@@ -18,7 +18,7 @@ public class CreatureInstanceObject : CardInstanceObject
 
         if (_currentZone == CardZone.BattleZone)
         {
-            ToggleSelection();
+            _isSelected = !_isSelected;
             ProcessMouseExit();
             ProcessMouseEnter();
         }

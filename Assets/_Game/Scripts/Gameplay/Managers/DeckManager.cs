@@ -29,7 +29,7 @@ public class DeckManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public void Initialize(Deck deck, Action<CardInstanceObject> processAction, Action<CardInstanceObject> selectAction)
+    public void Initialize(Deck deck, Action<CardInstanceObject> processAction)
     {
         List<CardData> cardList = deck.GetCards();
 
@@ -49,7 +49,7 @@ public class DeckManager : MonoBehaviour
 
             cardObj.SetupCard(cardData);
             cardObj.name = cardData.Name;
-            cardObj.isPlayer = _isPlayer;
+            cardObj.IsPlayer = _isPlayer;
 
             cardObj.transform.localPosition = new Vector3(cardObj.transform.localPosition.x,
                 lastYPos -= _cardWidth * _cardScale, cardObj.transform.localPosition.z);
@@ -59,7 +59,6 @@ public class DeckManager : MonoBehaviour
             cardObj.CardLayout.Canvas.gameObject.SetActive(false);
 
             cardObj.RegisterOnProcessAction(processAction);
-            cardObj.RegisterOnSelect(selectAction);
 
             _playerData.CardsInDeck.Add(cardObj);
             cardObj.CurrentZone = CardZone.Deck;
