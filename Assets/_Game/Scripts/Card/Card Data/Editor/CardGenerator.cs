@@ -8,7 +8,7 @@ using UnityEngine;
 public class CardGenerator : EditorWindow
 {
     private static string CardsDatabasePath = "Assets/_Game/Data/cardsDatabase.json";
-    private static string CardObjectsPath = "Assets/_Game/Cards/Resources/";
+    public static string CardObjectsPath = "Assets/_Game/Cards/Resources/";
 
     [MenuItem("Window/Card Generator")]
     public static void ShowEditorWindow()

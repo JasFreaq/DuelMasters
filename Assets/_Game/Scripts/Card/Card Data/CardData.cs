@@ -14,6 +14,8 @@ public class CardData : ScriptableObject
     [SerializeField] [TextArea(5, 8)] private string _rulesText;
     [SerializeField] [TextArea(3, 5)] private string _flavorText;
 
+    [HideInInspector] public List<EffectData> ruleEffects = new List<EffectData>();
+
     public string Name
     {
         get { return _name; }

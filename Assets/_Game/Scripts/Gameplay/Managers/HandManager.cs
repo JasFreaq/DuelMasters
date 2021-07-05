@@ -34,10 +34,10 @@ public class HandManager : MonoBehaviour
     [SerializeField] private float _toTransitionTime = 1.5f;
     [SerializeField] private Transform _intermediateHolder;
 
-    [HideInInspector] public Transform _flippedIntermediateHolder;
-    [HideInInspector] public Vector3 _previewTargetPosition = new Vector3(0, -8.25f, -14.5f);
-    [HideInInspector] public Vector3 _previewTargetRotation = new Vector3(-105f, 0, 0);
-    [HideInInspector] public Vector3 _previewTargetScale = new Vector3(1.5f, 1.5f, 1.5f);
+    [HideInInspector] public Transform flippedIntermediateHolder;
+    [HideInInspector] public Vector3 previewTargetPosition = new Vector3(0, -8.25f, -14.5f);
+    [HideInInspector] public Vector3 previewTargetRotation = new Vector3(-105f, 0, 0);
+    [HideInInspector] public Vector3 previewTargetScale = new Vector3(1.5f, 1.5f, 1.5f);
     
     private PlayerDataHandler _playerData;
 
@@ -126,8 +126,8 @@ public class HandManager : MonoBehaviour
         if (_isPlayer)
         {
             card.InPlayerHand = true;
-            card.HoverPreviewHandler.SetPreviewParameters(_previewTargetPosition,
-                Quaternion.Euler(_previewTargetRotation), _previewTargetScale);
+            card.HoverPreviewHandler.SetPreviewParameters(previewTargetPosition,
+                Quaternion.Euler(previewTargetRotation), previewTargetScale);
         }
 
         _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
@@ -146,7 +146,7 @@ public class HandManager : MonoBehaviour
 
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Quaternion rotation = (forShield && !_isPlayer) ? 
-            _flippedIntermediateHolder.rotation : _intermediateHolder.rotation;
+            flippedIntermediateHolder.rotation : _intermediateHolder.rotation;
         card.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 

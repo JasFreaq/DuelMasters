@@ -6,6 +6,56 @@ using UnityEngine;
 
 public static class CardParams
 {
+    #region Rarity
+
+    [System.Serializable]
+    public enum Rarity
+    {
+        Common = 1,
+        Uncommon = 2,
+        Rare = 3,
+        VeryRare = 4,
+        SuperRare = 5
+    }
+
+    public static Rarity RarityFromString(string rarityStr)
+    {
+        switch (rarityStr)
+        {
+            case "Common":
+                return Rarity.Common;
+            case "Uncommon":
+                return Rarity.Uncommon;
+            case "Rare":
+                return Rarity.Rare;
+            case "Very Rare":
+                return Rarity.VeryRare;
+            case "Super Rare":
+                return Rarity.SuperRare;
+            default:
+                return 0;
+        }
+    }
+
+    public static string StringFromRarity(Rarity rarity)
+    {
+        switch (rarity)
+        {
+            case Rarity.Common:
+            case Rarity.Uncommon:
+            case Rarity.Rare:
+                return rarity.ToString();
+            case Rarity.VeryRare:
+                return "Very Rare";
+            case Rarity.SuperRare:
+                return "Super Rare";
+            default:
+                return null;
+        }
+    }
+
+    #endregion
+    
     #region Set
 
     [SerializeField]
@@ -92,119 +142,7 @@ public static class CardParams
     }
 
     #endregion
-
-    #region Civilization
-
-    [System.Serializable]
-    public enum Civilization
-    {
-        Darkness = 1,
-        Fire = 2,
-        Nature = 3,
-        Light = 4,
-        Water = 5
-    }
     
-    public static Civilization CivilizationFromString(string civStr)
-    {
-        switch (civStr)
-        {
-            case "Darkness":
-                return Civilization.Darkness;
-            case "Fire":
-                return Civilization.Fire;
-            case "Nature":
-                return Civilization.Nature;
-            case "Light":
-                return Civilization.Light;
-            case "Water":
-                return Civilization.Water;
-            default:
-                return 0;
-        }
-    }
-
-    public static bool IsCivilizationEqual(Civilization[] civilizationA, Civilization[] civilizationB)
-    {
-        if (civilizationA.Length == civilizationB.Length)
-        {
-            for (int i = 0, n = civilizationA.Length; i < n; i++)
-            {
-                if (civilizationA[i] != civilizationB[i])
-                {
-                    return false;
-                }
-            }
-        }
-        else
-            return false;
-
-        return true;
-    }
-
-    public static int GetCivValue(Civilization[] civilizations)
-    {
-        int value = 0;
-        foreach (Civilization civilization in civilizations)
-        {
-            value += (int)civilization + value * 5;
-        }
-
-        return value;
-    }
-
-    #endregion
-
-    #region Rarity
-
-    [System.Serializable]
-    public enum Rarity
-    {
-        Common = 1,
-        Uncommon = 2,
-        Rare = 3,
-        VeryRare = 4,
-        SuperRare = 5
-    }
-
-    public static Rarity RarityFromString(string rarityStr)
-    {
-        switch (rarityStr)
-        {
-            case "Common":
-                return Rarity.Common;
-            case "Uncommon":
-                return Rarity.Uncommon;
-            case "Rare":
-                return Rarity.Rare;
-            case "Very Rare":
-                return Rarity.VeryRare;
-            case "Super Rare":
-                return Rarity.SuperRare;
-            default:
-                return 0;
-        }
-    }
-
-    public static string StringFromRarity(Rarity rarity)
-    {
-        switch (rarity)
-        {
-            case Rarity.Common:
-            case Rarity.Uncommon:
-            case Rarity.Rare:
-                return rarity.ToString();
-            case Rarity.VeryRare:
-                return "Very Rare";
-            case Rarity.SuperRare:
-                return "Super Rare";
-            default:
-                return null;
-        }
-    }
-
-    #endregion
-
     #region CardType
 
     [System.Serializable]
@@ -245,8 +183,86 @@ public static class CardParams
     }
 
     #endregion
+    
+    #region Civilization
 
-    #region Races
+    [System.Serializable]
+    public enum Civilization
+    {
+        Darkness = 1,
+        Fire = 2,
+        Nature = 3,
+        Light = 4,
+        Water = 5
+    }
+    
+    public static Civilization CivilizationFromString(string civStr)
+    {
+        switch (civStr)
+        {
+            case "Darkness":
+                return Civilization.Darkness;
+            case "Fire":
+                return Civilization.Fire;
+            case "Nature":
+                return Civilization.Nature;
+            case "Light":
+                return Civilization.Light;
+            case "Water":
+                return Civilization.Water;
+            default:
+                return 0;
+        }
+    }
+
+    public static string StringFromCivilization(Civilization[] civilization)
+    {
+        int n = civilization.Length;
+        string str = civilization[0].ToString().ToLower();
+
+        if (n > 1)
+        {
+            for (int i = 1; i < n; i++)
+            {
+                str += $"{civilization[i]}";
+            }
+        }
+
+        return str;
+    }
+
+    public static bool IsCivilizationEqual(Civilization[] civilizationA, Civilization[] civilizationB)
+    {
+        if (civilizationA.Length == civilizationB.Length)
+        {
+            for (int i = 0, n = civilizationA.Length; i < n; i++)
+            {
+                if (civilizationA[i] != civilizationB[i])
+                {
+                    return false;
+                }
+            }
+        }
+        else
+            return false;
+
+        return true;
+    }
+
+    public static int GetCivValue(Civilization[] civilizations)
+    {
+        int value = 0;
+        foreach (Civilization civilization in civilizations)
+        {
+            value += (int)civilization + value * 5;
+        }
+
+        return value;
+    }
+
+    #endregion
+    
+    #region Race
 
     [System.Serializable]
     public enum Race

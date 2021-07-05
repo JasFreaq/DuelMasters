@@ -14,10 +14,10 @@ public class HandManagerEditor : Editor
 
     private void OnEnable()
     {
-        _flippedIntermediateHolder = serializedObject.FindProperty("_flippedIntermediateHolder");
-        _previewTargetPosition = serializedObject.FindProperty("_previewTargetPosition");
-        _previewTargetRotation = serializedObject.FindProperty("_previewTargetRotation");
-        _previewTargetScale = serializedObject.FindProperty("_previewTargetScale");
+        _flippedIntermediateHolder = serializedObject.FindProperty("flippedIntermediateHolder");
+        _previewTargetPosition = serializedObject.FindProperty("previewTargetPosition");
+        _previewTargetRotation = serializedObject.FindProperty("previewTargetRotation");
+        _previewTargetScale = serializedObject.FindProperty("previewTargetScale");
     }
 
     public override void OnInspectorGUI()
