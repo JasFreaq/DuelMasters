@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class EffectCondition
+public class EffectCondition : ScriptableObject
 {
     private EffectConditionType _type;
     private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();

@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class EffectData : ScriptableObject
 {
     private bool _conditionAssigned = false;
-    private EffectCondition _effectCondition = new EffectCondition();
-    private EffectFunctionality _effectFunctionality = new EffectFunctionality();
+    private EffectCondition _effectCondition;
+    private EffectFunctionality _effectFunctionality;
 
 #if UNITY_EDITOR
     [HideInInspector] public bool isBeingEdited = false;
@@ -38,7 +40,7 @@ public class EffectData : ScriptableObject
         set { _effectFunctionality = value; }
 #endif
     }
-
+    
     public override string ToString()
     {
         string str = _conditionAssigned ? $"{_effectCondition}" : "Condition unassigned.";

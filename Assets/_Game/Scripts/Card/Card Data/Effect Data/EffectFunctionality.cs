@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class EffectFunctionality
+public class EffectFunctionality : ScriptableObject
 {
     private EffectFunctionType _type;
     private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();

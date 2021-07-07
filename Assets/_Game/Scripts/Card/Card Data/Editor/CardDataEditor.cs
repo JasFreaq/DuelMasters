@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
-using Cursor = UnityEngine.Cursor;
 
 [CustomEditor(typeof(CardData), true)]
 public class CardDataEditor : Editor
@@ -82,11 +79,32 @@ public class CardDataEditor : Editor
 
             AssetDatabase.AddObjectToAsset(effect, _cardData);
             _cardData.ruleEffects.Add(effect);
+
+            effect.EffectCondition = CreateCondition($"{effect.name}/Effect Cond");
+            effect.EffectFunctionality = CreateFunctionality($"{effect.name}/Effect Func");
         }
 
         GUILayout.EndVertical();
 
         serializedObject.ApplyModifiedProperties();
+    }
+    
+    private EffectCondition CreateCondition(string conditionName)
+    {
+        EffectCondition condition = ScriptableObject.CreateInstance<EffectCondition>();
+        condition.name = conditionName;
+        AssetDatabase.AddObjectToAsset(condition, _cardData);
+
+        return condition;
+    }
+    
+    private EffectFunctionality CreateFunctionality(string functionalityName)
+    {
+        EffectFunctionality functionality = ScriptableObject.CreateInstance<EffectFunctionality>();
+        functionality.name = functionalityName;
+        AssetDatabase.AddObjectToAsset(functionality, _cardData);
+
+        return functionality;
     }
 
     private void DrawCondition(EffectCondition condition)
@@ -142,12 +160,21 @@ public class CardDataEditor : Editor
 
         GUIStyle labelStyle = new GUIStyle {fontStyle = FontStyle.Italic, fontSize = 12};
 
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(15);
+
+        GUILayout.BeginVertical();
+
         DrawCardTypeCondition();
         DrawCivilizationCondition();
         DrawRaceCondition();
         DrawKeywordCondition();
         DrawPowerCondition();
         DrawCardCondition();
+
+        GUILayout.EndVertical();
+
+        GUILayout.EndHorizontal();
         
         #region Local Functions
 
@@ -401,56 +428,84 @@ public class CardDataEditor : Editor
         #endregion
     }
 
-    private void DrawSubCondition(EffectCondition condition)
+    private void DrawSubCondition(EffectCondition parentCondition)
     {
         GUILayout.BeginHorizontal();
         GUILayout.Space(25);
 
         GUILayout.BeginVertical();
 
-        if (condition.SubCondition == null)
+        if (parentCondition.SubCondition == null)
         {
-            if (GUILayout.Button("Add Condition"))
-                condition.SubCondition = new EffectCondition();
+            if (GUILayout.Button("Add Sub Condition"))
+                parentCondition.SubCondition = CreateCondition($"{parentCondition.name}/Sub Cond");
         }
         else
         {
-            DrawCondition(condition.SubCondition);
+            DrawCondition(parentCondition.SubCondition);
 
             EditorGUILayout.Space(5);
-            if (GUILayout.Button("Remove Condition"))
-                condition.SubCondition = null;
+            if (GUILayout.Button("Remove Sub Condition"))
+                RemoveSubCondition(parentCondition);
         }
 
         GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
+
+        #region Local Functions
+
+        void RemoveSubCondition(EffectCondition superCondition)
+        {
+            EffectCondition subCondition = superCondition.SubCondition;
+            if (subCondition.SubCondition) 
+                RemoveSubCondition(subCondition);
+
+            superCondition.SubCondition = null;
+            DestroyImmediate(subCondition, true);
+        }
+
+        #endregion
     }
     
-    private void DrawSubFunctionality(EffectFunctionality functionality)
+    private void DrawSubFunctionality(EffectFunctionality parentFunctionality)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Space(20);
+        GUILayout.Space(25);
 
         GUILayout.BeginVertical();
 
-        if (functionality.SubFunctionality == null) 
+        if (parentFunctionality.SubFunctionality == null) 
         {
-            if (GUILayout.Button("Add Functionality"))
-                functionality.SubFunctionality = new EffectFunctionality();
+            if (GUILayout.Button("Add Sub Functionality"))
+                parentFunctionality.SubFunctionality = CreateFunctionality($"{parentFunctionality.name}/Sub Func");
         }
         else
         {
-            DrawFunctionality(functionality.SubFunctionality);
+            DrawFunctionality(parentFunctionality.SubFunctionality);
 
             EditorGUILayout.Space(5);
-            if (GUILayout.Button("Remove Functionality"))
-                functionality.SubFunctionality = null;
+            if (GUILayout.Button("Remove Sub Functionality"))
+                RemoveSubFunctionality(parentFunctionality);
         }
 
         GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
+
+        #region Local Functions
+
+        void RemoveSubFunctionality(EffectFunctionality superFunctionality)
+        {
+            EffectFunctionality subFunctionality = superFunctionality.SubFunctionality;
+            if (subFunctionality.SubFunctionality)
+                RemoveSubFunctionality(subFunctionality);
+
+            superFunctionality.SubFunctionality = null;
+            DestroyImmediate(subFunctionality, true);
+        }
+
+        #endregion
     }
 
     private T DrawFoldout<T>(T currentValue, int enumIndexAdjustment = 0) where T : Enum
