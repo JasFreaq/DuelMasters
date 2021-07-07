@@ -6,21 +6,6 @@ using UnityEngine;
 #region Helper Data Structures
 
 [System.Serializable]
-public enum ConditionType
-{
-    Check,
-    Count,
-    Affect
-}
-
-[System.Serializable]
-public enum CountType
-{
-    All,
-    Number
-}
-
-[System.Serializable]
 public enum ConnectorType
 {
     And,
@@ -50,63 +35,50 @@ public class RaceCondition
     public ConnectorType connector;
 }
 
+[System.Serializable]
+public class KeywordCondition
+{
+    public bool non = false;
+    public EffectKeywordType keyword;
+    public ConnectorType connector;
+}
+
+[System.Serializable]
+public enum ComparisonType
+{
+    LessThan,
+    GreaterThan,
+    EqualTo,
+    LessThanOrEqualTo,
+    GreaterThanOrEqualTo
+}
+
+[System.Serializable]
+public class PowerCondition
+{
+    public ComparisonType comparator;
+    public int power;
+    public ConnectorType connector;
+}
+
+[System.Serializable]
+public class CardCondition
+{
+    public CardData cardData;
+    public ConnectorType connector;
+}
+
 #endregion
 
 [System.Serializable]
 public class EffectTargetingCondition
 {
-    private ConditionType _type;
-    private CountType _countType;
-    private int _count = 0;
-    private EffectRegionType _region;
-
-    [SerializeField] private CardTypeCondition _cardTypeCondition = new CardTypeCondition();
+    private CardTypeCondition _cardTypeCondition = new CardTypeCondition();
     private List<CivilizationCondition> _civilizationConditions = new List<CivilizationCondition>();
     private List<RaceCondition> _raceConditions = new List<RaceCondition>();
-
-    [HideInInspector] public CardParams.Civilization[] tempCivilization;
-    [HideInInspector] public CardParams.Race tempRace;
-
-    public ConditionType Type
-    {
-        get { return _type; }
-
-#if UNITY_EDITOR
-        set
-        {
-            _type = value;
-            if (_type == ConditionType.Count)
-                _countType = CountType.All;
-        }
-#endif
-    }
-
-    public CountType CountType
-    {
-        get { return _countType; }
-
-#if UNITY_EDITOR
-        set { _countType = value; }
-#endif
-    }
-
-    public int Count
-    {
-        get { return _count; }
-
-#if UNITY_EDITOR
-        set { _count = value; }
-#endif
-    }
-    
-    public EffectRegionType Region
-    {
-        get { return _region; }
-
-#if UNITY_EDITOR
-        set { _region = value; }
-#endif
-    }
+    private List<KeywordCondition> _keywordConditions = new List<KeywordCondition>();
+    private List<PowerCondition> _powerConditions = new List<PowerCondition>();
+    private List<CardCondition> _cardConditions = new List<CardCondition>();
 
     public CardTypeCondition CardTypeCondition
     {
@@ -125,6 +97,21 @@ public class EffectTargetingCondition
     public IReadOnlyList<RaceCondition> RaceConditions
     {
         get { return _raceConditions; }
+    }
+
+    public IReadOnlyList<KeywordCondition> KeywordConditions
+    {
+        get { return _keywordConditions; }
+    }
+    
+    public IReadOnlyList<PowerCondition> PowerConditions
+    {
+        get { return _powerConditions; }
+    }
+
+    public IReadOnlyList<CardCondition> CardConditions
+    {
+        get { return _cardConditions; }
     }
 
 #if UNITY_EDITOR
@@ -147,31 +134,49 @@ public class EffectTargetingCondition
     {
         _raceConditions.Remove(condition);
     }
+
+    public void AddKeywordCondition(KeywordCondition condition)
+    {
+        _keywordConditions.Add(condition);
+    }
+    
+    public void RemoveKeywordCondition(KeywordCondition condition)
+    {
+        _keywordConditions.Remove(condition);
+    }
+    
+    public void AddPowerCondition(PowerCondition condition)
+    {
+        _powerConditions.Add(condition);
+    }
+    
+    public void RemovePowerCondition(PowerCondition condition)
+    {
+        _powerConditions.Remove(condition);
+    }
+    
+    public void AddCardCondition(CardCondition condition)
+    {
+        _cardConditions.Add(condition);
+    }
+    
+    public void RemoveCardCondition(CardCondition condition)
+    {
+        _cardConditions.Remove(condition);
+    }
+    
 #endif
     
     public override string ToString()
     {
-        string str = $"{_type} ";
+        string str = "";
 
-        if (_type != ConditionType.Count)
-        {
-            if (_countType == CountType.Number)
-                str += $"{_count} ";
-            else
-                str += $"{_countType} ";
-        }
-
-        bool writeWhere = true;
-
-        str += $"in {_region}";
         if (_cardTypeCondition.isAssigned)
         {
-            WriteWhere();
             str += $"Card Type is {CardParams.StringFromCardType(_cardTypeCondition.cardType)}\n";
         }
         if (_civilizationConditions.Count > 0)
         {
-            WriteWhere();
             str += "\nCivilization is ";
             for (int i = 0, n = _civilizationConditions.Count; i < n; i++)
             {
@@ -185,7 +190,6 @@ public class EffectTargetingCondition
         }
         if (_raceConditions.Count > 0)
         {
-            WriteWhere();
             str += "\nRace is ";
             for (int i = 0, n = _raceConditions.Count; i < n; i++) 
             {
@@ -199,18 +203,5 @@ public class EffectTargetingCondition
         }
 
         return str;
-
-        #region Local Functions
-
-        void WriteWhere()
-        {
-            if (writeWhere)
-            {
-                str += " where";
-                writeWhere = false;
-            }
-        }
-
-        #endregion
     }
 }

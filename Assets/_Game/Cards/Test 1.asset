@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3450773930509565355
+--- !u!114 &-1145011325163059934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8575307b26687444eb88a73df192f06b, type: 3}
   m_Name: Effect Data 1
   m_EditorClassIdentifier: 
-  isBeingEdited: 0
+  isBeingEdited: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,6 +36,6 @@ MonoBehaviour:
   _flavorText: Liquid People freely control liquid. For them, water is armor and
     shield.
   ruleEffects:
-  - {fileID: -3450773930509565355}
+  - {fileID: -1145011325163059934}
   _race: 37000000
   _power: 2000

@@ -6,7 +6,9 @@ using UnityEngine;
 public class EffectFunctionality
 {
     private EffectFunctionType _type;
+    private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
     private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
+    private EffectFunctionality _subFunctionality = null;
 
     #region Type Specific Members
 
@@ -18,13 +20,22 @@ public class EffectFunctionality
     }
 
     #endregion
-
+    
     public EffectFunctionType Type
     {
         get { return _type; }
 
 #if UNITY_EDITOR
         set { _type = value; }
+#endif
+    }
+
+    public EffectTargetingParameter TargetingParameter
+    {
+        get { return _targetingParameter; }
+
+#if UNITY_EDITOR
+        set { _targetingParameter = value; }
 #endif
     }
 
@@ -37,10 +48,17 @@ public class EffectFunctionality
 #endif
     }
 
+    public EffectFunctionality SubFunctionality
+    {
+        get { return _subFunctionality; }
+
+#if UNITY_EDITOR
+        set { _subFunctionality = value; }
+#endif
+    }
+    
     public override string ToString()
     {
-        string str = $"{_type} ";
-        str += _targetingCondition.ToString();
-        return str;
+        return $"{_type} {_targetingParameter} {_targetingCondition}";
     }
 }

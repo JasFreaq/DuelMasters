@@ -4,15 +4,45 @@ using UnityEngine;
 
 public class EffectData : ScriptableObject
 {
-    public EffectCondition effectCondition = new EffectCondition();
-    public EffectFunctionality effectFunctionality = new EffectFunctionality();
+    private bool _conditionAssigned = false;
+    private EffectCondition _effectCondition = new EffectCondition();
+    private EffectFunctionality _effectFunctionality = new EffectFunctionality();
 
 #if UNITY_EDITOR
-    public bool isBeingEdited = false;
+    [HideInInspector] public bool isBeingEdited = false;
 #endif
+
+    public bool ConditionAssigned
+    {
+        get { return _conditionAssigned; }
+
+#if UNITY_EDITOR
+        set { _conditionAssigned = value; }
+#endif
+    }
+
+    public EffectCondition EffectCondition
+    {
+        get { return _effectCondition; }
+
+#if UNITY_EDITOR
+        set { _effectCondition = value; }
+#endif
+    }
+
+    public EffectFunctionality EffectFunctionality
+    {
+        get { return _effectFunctionality; }
+
+#if UNITY_EDITOR
+        set { _effectFunctionality = value; }
+#endif
+    }
 
     public override string ToString()
     {
-        return $"{effectCondition}\n{effectFunctionality}";
+        string str = _conditionAssigned ? $"{_effectCondition}" : "Condition unassigned.";
+        str += $"\n{_effectFunctionality}";
+        return str;
     }
 }

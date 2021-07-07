@@ -5,26 +5,27 @@ using UnityEngine;
 [System.Serializable]
 public class EffectCondition
 {
-    private bool _isAssigned;
     private EffectConditionType _type;
+    private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
     private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
-    private bool _mayUse;
-
-    public bool IsAssigned
-    {
-        get { return _isAssigned; }
-
-#if UNITY_EDITOR
-        set { _isAssigned = value; }
-#endif
-    }
-
+    private bool _mayUse = false;
+    private EffectCondition _subCondition = null;
+    
     public EffectConditionType Type
     {
         get { return _type; }
 
 #if UNITY_EDITOR
         set { _type = value; }
+#endif
+    }
+
+    public EffectTargetingParameter TargetingParameter
+    {
+        get { return _targetingParameter; }
+
+#if UNITY_EDITOR
+        set { _targetingParameter = value; }
 #endif
     }
 
@@ -46,17 +47,20 @@ public class EffectCondition
 #endif
     }
 
+    public EffectCondition SubCondition
+    {
+        get { return _subCondition; }
+
+#if UNITY_EDITOR
+        set { _subCondition = value; }
+#endif
+    }
+    
     public override string ToString()
     {
-        if (IsAssigned)
-        {
-            string str = $"{_type} ";
-            if (_mayUse)
-                str += "may ";
-            str += _targetingCondition.ToString();
-            return str;
-        }
-
-        return "Condition unassigned.";
+        string str = $"{_type} {_targetingParameter} {_targetingCondition}";
+        if (_mayUse)
+            str += "may";
+        return str;
     }
 }

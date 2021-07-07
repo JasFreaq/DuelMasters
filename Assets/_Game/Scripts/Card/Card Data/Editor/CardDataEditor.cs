@@ -27,21 +27,29 @@ public class CardDataEditor : Editor
         _cardData = (CardData) target;
 
         EditorGUILayout.Space(10);
-        GUIStyle labelStyle = new GUIStyle();
-        labelStyle.fontStyle = FontStyle.BoldAndItalic;
-        labelStyle.fontSize = 16;
+        GUIStyle labelStyle = new GUIStyle {fontStyle = FontStyle.BoldAndItalic, fontSize = 16};
         EditorGUILayout.LabelField("Effect Data", labelStyle);
         GUILayout.BeginVertical();
 
-        List<EffectData> _removedEffects = new List<EffectData>();
+        List<EffectData> removedEffects = new List<EffectData>();
 
         foreach (EffectData effect in _cardData.ruleEffects)
         {
             if (effect.isBeingEdited)
             {
-                DrawCondition(effect);
+                if (effect.ConditionAssigned)
+                {
+                    DrawCondition(effect.EffectCondition);
+
+                    EditorGUILayout.Space(5);
+                    if (GUILayout.Button("Remove Condition"))
+                        effect.ConditionAssigned = false;
+                }
+                else if (GUILayout.Button("Add Condition"))
+                    effect.ConditionAssigned = true;
+
                 EditorGUILayout.Space(5f);
-                DrawFunctionality(effect);
+                DrawFunctionality(effect.EffectFunctionality);
 
                 EditorGUILayout.Space(7.5f);
                 if (GUILayout.Button("End Edit"))
@@ -57,10 +65,10 @@ public class CardDataEditor : Editor
             }
 
             if (GUILayout.Button("Remove Effect"))
-                _removedEffects.Add(effect);
+                removedEffects.Add(effect);
         }
 
-        foreach (EffectData effect in _removedEffects)
+        foreach (EffectData effect in removedEffects)
         {
             _cardData.ruleEffects.Remove(effect);
             DestroyImmediate(effect, true);
@@ -81,76 +89,67 @@ public class CardDataEditor : Editor
         serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawCondition(EffectData effect)
-    {
-        if (effect.effectCondition.IsAssigned)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Effect Condition:", EditorStyles.boldLabel);
-            effect.effectCondition.Type = DrawFoldout(effect.effectCondition.Type);
-            GUILayout.EndHorizontal();
-
-            DrawTargetingCondition(effect.effectCondition.TargetingCondition);
-
-            EditorGUILayout.Space(5);
-            if (GUILayout.Button("Remove Effect Condition"))
-                effect.effectCondition.IsAssigned = false;
-
-        }
-        else
-        {
-            if (GUILayout.Button("Add Effect Condition"))
-                effect.effectCondition.IsAssigned = true;
-        }
-    }
-    
-    private void DrawFunctionality(EffectData effect)
+    private void DrawCondition(EffectCondition condition)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Effect Function:", EditorStyles.boldLabel);
-        effect.effectFunctionality.Type = DrawFoldout(effect.effectFunctionality.Type);
+        GUILayout.Label("Condition:", EditorStyles.boldLabel);
+        condition.Type = DrawFoldout(condition.Type);
+        condition.MayUse = GUILayout.Toggle(condition.MayUse, "may");
         GUILayout.EndHorizontal();
 
-        DrawTargetingCondition(effect.effectFunctionality.TargetingCondition);
+        DrawTargetingParameter(condition.TargetingParameter);
+        DrawTargetingCondition(condition.TargetingCondition);
+        DrawSubCondition(condition);
+    }
+    
+    private void DrawFunctionality(EffectFunctionality functionality)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Function:", EditorStyles.boldLabel);
+        functionality.Type = DrawFoldout(functionality.Type);
+        GUILayout.EndHorizontal();
+
+        DrawTargetingParameter(functionality.TargetingParameter);
+        DrawTargetingCondition(functionality.TargetingCondition);
+        DrawSubFunctionality(functionality);
+    }
+
+    private void DrawTargetingParameter(EffectTargetingParameter parameter)
+    {
+        GUILayout.BeginHorizontal();
+
+        GUILayout.Label("Targeting Parameter:", EditorStyles.boldLabel);
+        parameter.Type = DrawFoldout(parameter.Type);
+        if (parameter.Type != ConditionType.Count)
+        {
+            parameter.CountType = DrawFoldout(parameter.CountType);
+            if (parameter.CountType == CountType.Number)
+            {
+                if (int.TryParse(EditorGUILayout.TextField($"{parameter.Count}"), out int num))
+                    parameter.Count = num;
+            }
+        }
+
+        GUILayout.Label("In");
+        parameter.Region = DrawFoldout(parameter.Region);
+
+        GUILayout.EndHorizontal();
     }
 
     private void DrawTargetingCondition(EffectTargetingCondition condition)
     {
-        EditorGUILayout.LabelField("Effect Targeting Condition:", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Targeting Condition:", EditorStyles.boldLabel);
 
-        GUIStyle labelStyle = new GUIStyle();
-        labelStyle.fontStyle = FontStyle.Italic;
-        labelStyle.fontSize = 12;
+        GUIStyle labelStyle = new GUIStyle {fontStyle = FontStyle.Italic, fontSize = 12};
 
-        DrawTargetingConditionBaseParameters();
         DrawCardTypeCondition();
         DrawCivilizationCondition();
         DrawRaceCondition();
+        DrawKeywordCondition();
+        DrawPowerCondition();
+        DrawCardCondition();
         
         #region Local Functions
-
-        void DrawTargetingConditionBaseParameters()
-        {
-            GUILayout.BeginHorizontal();
-
-            GUILayout.Label("Condition Type:");
-            condition.Type = DrawFoldout(condition.Type);
-            if (condition.Type != ConditionType.Count)
-            {
-                condition.CountType = DrawFoldout(condition.CountType);
-                if (condition.CountType == CountType.Number)
-                {
-                    if (int.TryParse(EditorGUILayout.TextField($"{condition.Count}"), out int num))
-                        condition.Count = num;
-                }
-            }
-
-            GUILayout.Label("In");
-            condition.Region = DrawFoldout(condition.Region);
-            GUILayout.Label("Where");
-
-            GUILayout.EndHorizontal();
-        }
 
         void DrawCardTypeCondition()
         {
@@ -169,11 +168,8 @@ public class CardDataEditor : Editor
                 if (GUILayout.Button("Remove Card Type"))
                     condition.CardTypeCondition.isAssigned = false;
             }
-            else
-            {
-                if (GUILayout.Button("Add Card Type"))
-                    condition.CardTypeCondition.isAssigned = true;
-            }
+            else if (GUILayout.Button("Add Card Type"))
+                condition.CardTypeCondition.isAssigned = true;
 
             GUILayout.EndHorizontal();
         }
@@ -282,8 +278,179 @@ public class CardDataEditor : Editor
                 condition.AddRaceCondition(raceCondition);
             }
         }
+        
+        void DrawKeywordCondition()
+        {
+            if (condition.KeywordConditions.Count > 0)
+            {
+                List<KeywordCondition> removedConditions = new List<KeywordCondition>();
+                GUILayout.Label("Keywords:", labelStyle);
+
+                for (int i = 0, n = condition.KeywordConditions.Count; i < n; i++)
+                {
+                    KeywordCondition keywordCondition = condition.KeywordConditions[i];
+
+                    GUILayout.BeginHorizontal();
+
+                    keywordCondition.non = GUILayout.Toggle(keywordCondition.non, "Non");
+                    keywordCondition.keyword = DrawFoldout(keywordCondition.keyword, 1);
+                    if (n > 1 && i < n - 1)
+                        keywordCondition.connector = DrawFoldout(keywordCondition.connector);
+
+                    GUILayout.EndHorizontal();
+
+                    if (GUILayout.Button("Remove Keyword"))
+                    {
+                        EditorGUILayout.Space(5);
+                        removedConditions.Add(keywordCondition);
+                    }
+                }
+
+                foreach (KeywordCondition keywordCondition in removedConditions)
+                {
+                    condition.RemoveKeywordCondition(keywordCondition);
+                }
+            }
+
+            if (GUILayout.Button("Add Keyword"))
+            {
+                KeywordCondition keywordCondition = new KeywordCondition();
+                condition.AddKeywordCondition(keywordCondition);
+            }
+        }
+        
+        void DrawPowerCondition()
+        {
+            if (condition.PowerConditions.Count > 0)
+            {
+                List<PowerCondition> removedConditions = new List<PowerCondition>();
+                GUILayout.Label("Powers:", labelStyle);
+
+                for (int i = 0, n = condition.PowerConditions.Count; i < n; i++)
+                {
+                    PowerCondition powerCondition = condition.PowerConditions[i];
+
+                    GUILayout.BeginHorizontal();
+
+                    powerCondition.comparator = DrawFoldout(powerCondition.comparator);
+                    powerCondition.power = EditorGUILayout.IntField(powerCondition.power);
+                    if (n > 1 && i < n - 1)
+                        powerCondition.connector = DrawFoldout(powerCondition.connector);
+
+                    GUILayout.EndHorizontal();
+
+                    if (GUILayout.Button("Remove Power"))
+                    {
+                        EditorGUILayout.Space(5);
+                        removedConditions.Add(powerCondition);
+                    }
+                }
+
+                foreach (PowerCondition powerCondition in removedConditions)
+                {
+                    condition.RemovePowerCondition(powerCondition);
+                }
+            }
+
+            if (GUILayout.Button("Add Power"))
+            {
+                PowerCondition powerCondition = new PowerCondition();
+                condition.AddPowerCondition(powerCondition);
+            }
+        }
+        
+        void DrawCardCondition()
+        {
+            if (condition.CardConditions.Count > 0)
+            {
+                List<CardCondition> removedConditions = new List<CardCondition>();
+                GUILayout.Label("Cards:", labelStyle);
+
+                for (int i = 0, n = condition.CardConditions.Count; i < n; i++)
+                {
+                    CardCondition cardCondition = condition.CardConditions[i];
+
+                    GUILayout.BeginHorizontal();
+
+                    cardCondition.cardData = (CardData) EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
+                    if (n > 1 && i < n - 1)
+                        cardCondition.connector = DrawFoldout(cardCondition.connector);
+
+                    GUILayout.EndHorizontal();
+
+                    if (GUILayout.Button("Remove Card"))
+                    {
+                        EditorGUILayout.Space(5);
+                        removedConditions.Add(cardCondition);
+                    }
+                }
+
+                foreach (CardCondition cardCondition in removedConditions)
+                {
+                    condition.RemoveCardCondition(cardCondition);
+                }
+            }
+
+            if (GUILayout.Button("Add Card"))
+            {
+                CardCondition cardCondition = new CardCondition();
+                condition.AddCardCondition(cardCondition);
+            }
+        }
 
         #endregion
+    }
+
+    private void DrawSubCondition(EffectCondition condition)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(25);
+
+        GUILayout.BeginVertical();
+
+        if (condition.SubCondition == null)
+        {
+            if (GUILayout.Button("Add Condition"))
+                condition.SubCondition = new EffectCondition();
+        }
+        else
+        {
+            DrawCondition(condition.SubCondition);
+
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("Remove Condition"))
+                condition.SubCondition = null;
+        }
+
+        GUILayout.EndVertical();
+
+        GUILayout.EndHorizontal();
+    }
+    
+    private void DrawSubFunctionality(EffectFunctionality functionality)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(20);
+
+        GUILayout.BeginVertical();
+
+        if (functionality.SubFunctionality == null) 
+        {
+            if (GUILayout.Button("Add Functionality"))
+                functionality.SubFunctionality = new EffectFunctionality();
+        }
+        else
+        {
+            DrawFunctionality(functionality.SubFunctionality);
+
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("Remove Functionality"))
+                functionality.SubFunctionality = null;
+        }
+
+        GUILayout.EndVertical();
+
+        GUILayout.EndHorizontal();
     }
 
     private T DrawFoldout<T>(T currentValue, int enumIndexAdjustment = 0) where T : Enum
