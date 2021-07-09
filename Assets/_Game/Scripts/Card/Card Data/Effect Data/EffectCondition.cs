@@ -6,9 +6,10 @@ public class EffectCondition : ScriptableObject
 {
     private EffectConditionType _type;
     private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
+    private bool _assignedCondition;
     private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     private bool _mayUse = false;
-    private EffectCondition _subCondition = null;
+    [HideInInspector] [SerializeField] private EffectCondition _subCondition;
     
     public EffectConditionType Type
     {
@@ -25,6 +26,15 @@ public class EffectCondition : ScriptableObject
 
 #if UNITY_EDITOR
         set { _targetingParameter = value; }
+#endif
+    }
+
+    public bool AssignedCondition
+    {
+        get { return _assignedCondition; }
+
+#if UNITY_EDITOR
+        set { _assignedCondition = value; }
 #endif
     }
 

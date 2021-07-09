@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6257843973103881045
+--- !u!114 &-3346057160119510658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,7 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8575307b26687444eb88a73df192f06b, type: 3}
   m_Name: Effect Data 1
   m_EditorClassIdentifier: 
-  isBeingEdited: 0
+  _effectCondition: {fileID: -1451618434674530863}
+  _effectFunctionality: {fileID: 3541289053062524539}
+  isBeingEdited: 1
+--- !u!114 &-1451618434674530863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f2a92b9a0180c469c75fe6eca57cb0, type: 3}
+  m_Name: Effect Data 1/Effect Cond
+  m_EditorClassIdentifier: 
+  _subCondition: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,10 +51,10 @@ MonoBehaviour:
   _flavorText: Liquid People freely control liquid. For them, water is armor and
     shield.
   ruleEffects:
-  - {fileID: -6257843973103881045}
+  - {fileID: -3346057160119510658}
   _race: 37000000
   _power: 2000
---- !u!114 &532054514004845273
+--- !u!114 &3541289053062524539
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,17 +64,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea42dcb84a76db24785ecdd21dcf6a58, type: 3}
-  m_Name: Effect Data 1/Effect Functionality
+  m_Name: Effect Data 1/Effect Func
   m_EditorClassIdentifier: 
---- !u!114 &1574193711943041768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92f2a92b9a0180c469c75fe6eca57cb0, type: 3}
-  m_Name: Effect Data 1/Effect Condition
-  m_EditorClassIdentifier: 
+  _subFunctionality: {fileID: 0}

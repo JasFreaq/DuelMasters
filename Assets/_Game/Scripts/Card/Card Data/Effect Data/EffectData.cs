@@ -7,8 +7,8 @@ using UnityEngine;
 public class EffectData : ScriptableObject
 {
     private bool _conditionAssigned = false;
-    private EffectCondition _effectCondition;
-    private EffectFunctionality _effectFunctionality;
+    [HideInInspector] [SerializeField] private EffectCondition _effectCondition;
+    [HideInInspector] [SerializeField] private EffectFunctionality _effectFunctionality;
 
 #if UNITY_EDITOR
     [HideInInspector] public bool isBeingEdited = false;

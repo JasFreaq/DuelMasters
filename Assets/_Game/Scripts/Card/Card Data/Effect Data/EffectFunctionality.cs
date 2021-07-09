@@ -6,8 +6,9 @@ public class EffectFunctionality : ScriptableObject
 {
     private EffectFunctionType _type;
     private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
+    private bool _assignedCondition;
     private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
-    private EffectFunctionality _subFunctionality = null;
+    [HideInInspector] [SerializeField] private EffectFunctionality _subFunctionality;
 
     #region Type Specific Members
 
@@ -35,6 +36,15 @@ public class EffectFunctionality : ScriptableObject
 
 #if UNITY_EDITOR
         set { _targetingParameter = value; }
+#endif
+    }
+
+    public bool AssignedCondition
+    {
+        get { return _assignedCondition; }
+
+#if UNITY_EDITOR
+        set { _assignedCondition = value; }
 #endif
     }
 

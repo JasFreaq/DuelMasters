@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 #region Helper Data Structures
@@ -25,10 +26,20 @@ public enum CountType
 [System.Serializable]
 public class EffectTargetingParameter
 {
+    private bool _canTargetSelf = true;
     private ConditionType _type;
     private CountType _countType;
     private int _count = 0;
     private EffectRegionType _region;
+
+    public bool CanTargetSelf
+    {
+        get { return _canTargetSelf; }
+
+#if UNITY_EDITOR
+        set { _canTargetSelf = value; }
+#endif
+    }
 
     public ConditionType Type
     {

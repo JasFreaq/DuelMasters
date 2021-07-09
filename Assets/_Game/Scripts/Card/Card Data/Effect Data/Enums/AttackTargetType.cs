@@ -5,8 +5,8 @@ using UnityEngine;
 public enum AttackTargetType
 {
     Normal,
-    IncludingUntapped,
-    OnlyPlayer,
-    OnlyCreatures,
+    AttackUntapped,
+    CantAttackPlayer,
+    CantAttackCreature,
     CantAttack
 }

@@ -1,21 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 [CustomEditor(typeof(CardData), true)]
 public class CardDataEditor : Editor
 {
-    private SerializedProperty _ruleEffects;
     private CardData _cardData;
 
     private void OnEnable()
     {
-        _ruleEffects = serializedObject.FindProperty("ruleEffects");
+        EditorApplication.quitting += ResetCard;
     }
-
+    
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -40,7 +42,10 @@ public class CardDataEditor : Editor
 
                     EditorGUILayout.Space(5);
                     if (GUILayout.Button("Remove Condition"))
+                    {
                         effect.ConditionAssigned = false;
+                        RemoveCondition(effect.EffectCondition.SubCondition);
+                    }
                 }
                 else if (GUILayout.Button("Add Condition"))
                     effect.ConditionAssigned = true;
@@ -68,6 +73,9 @@ public class CardDataEditor : Editor
         foreach (EffectData effect in removedEffects)
         {
             _cardData.ruleEffects.Remove(effect);
+            RemoveCondition(effect.EffectCondition);
+            RemoveFunctionality(effect.EffectFunctionality);
+
             DestroyImmediate(effect, true);
         }
 
@@ -76,37 +84,86 @@ public class CardDataEditor : Editor
         {
             EffectData effect = ScriptableObject.CreateInstance<EffectData>();
             effect.name = $"Effect Data {_cardData.ruleEffects.Count + 1}";
-
-            AssetDatabase.AddObjectToAsset(effect, _cardData);
+            
             _cardData.ruleEffects.Add(effect);
+            AssetDatabase.AddObjectToAsset(effect, _cardData);
 
             effect.EffectCondition = CreateCondition($"{effect.name}/Effect Cond");
             effect.EffectFunctionality = CreateFunctionality($"{effect.name}/Effect Func");
+
+            EditorUtility.SetDirty(effect);
+            AssetDatabase.SaveAssets();
         }
 
         GUILayout.EndVertical();
 
         serializedObject.ApplyModifiedProperties();
     }
+
+    private void OnDisable()
+    {
+        EditorApplication.quitting -= ResetCard;
+    }
     
+    #region Serialization Methods
+
+    private void ResetCard()
+    {
+        if (_cardData) 
+        {
+            foreach (EffectData effect in _cardData.ruleEffects)
+            {
+                effect.isBeingEdited = false;
+            }
+
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+
     private EffectCondition CreateCondition(string conditionName)
     {
-        EffectCondition condition = ScriptableObject.CreateInstance<EffectCondition>();
+        EffectCondition condition = CreateInstance<EffectCondition>();
         condition.name = conditionName;
         AssetDatabase.AddObjectToAsset(condition, _cardData);
+
+        EditorUtility.SetDirty(condition);
+        AssetDatabase.SaveAssets();
 
         return condition;
     }
     
     private EffectFunctionality CreateFunctionality(string functionalityName)
     {
-        EffectFunctionality functionality = ScriptableObject.CreateInstance<EffectFunctionality>();
+        EffectFunctionality functionality = CreateInstance<EffectFunctionality>();
         functionality.name = functionalityName;
         AssetDatabase.AddObjectToAsset(functionality, _cardData);
+
+        EditorUtility.SetDirty(functionality);
+        AssetDatabase.SaveAssets();
 
         return functionality;
     }
 
+    private void RemoveCondition(EffectCondition condition)
+    {
+        if (condition && condition.SubCondition)
+            RemoveCondition(condition.SubCondition);
+
+        DestroyImmediate(condition, true);
+    }
+
+    private void RemoveFunctionality(EffectFunctionality functionality)
+    {
+        if (functionality && functionality)
+            RemoveFunctionality(functionality.SubFunctionality);
+
+        DestroyImmediate(functionality, true);
+    }
+
+    #endregion
+
+    #region Drawing Functions
+    
     private void DrawCondition(EffectCondition condition)
     {
         GUILayout.BeginHorizontal();
@@ -116,7 +173,17 @@ public class CardDataEditor : Editor
         GUILayout.EndHorizontal();
 
         DrawTargetingParameter(condition.TargetingParameter);
-        DrawTargetingCondition(condition.TargetingCondition);
+
+        if (condition.AssignedCondition)
+        {
+            DrawTargetingCondition(condition.TargetingCondition);
+
+            if (GUILayout.Button("Remove Targeting Condition"))
+                condition.AssignedCondition = false;
+        }
+        else if (GUILayout.Button("Add Targeting Condition"))
+            condition.AssignedCondition = true;
+        
         DrawSubCondition(condition);
     }
     
@@ -128,7 +195,17 @@ public class CardDataEditor : Editor
         GUILayout.EndHorizontal();
 
         DrawTargetingParameter(functionality.TargetingParameter);
-        DrawTargetingCondition(functionality.TargetingCondition);
+
+        if (functionality.AssignedCondition)
+        {
+            DrawTargetingCondition(functionality.TargetingCondition);
+
+            if (GUILayout.Button("Remove Targeting Condition"))
+                functionality.AssignedCondition = false;
+        }
+        else if (GUILayout.Button("Add Targeting Condition"))
+            functionality.AssignedCondition = true;
+
         DrawSubFunctionality(functionality);
     }
 
@@ -137,6 +214,8 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
 
         GUILayout.Label("Targeting Parameter:", EditorStyles.boldLabel);
+        parameter.CanTargetSelf = GUILayout.Toggle(parameter.CanTargetSelf, "Can Target Self");
+        GUILayout.Label("|");
         parameter.Type = DrawFoldout(parameter.Type);
         if (parameter.Type != ConditionType.Count)
         {
@@ -431,7 +510,7 @@ public class CardDataEditor : Editor
     private void DrawSubCondition(EffectCondition parentCondition)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Space(25);
+        GUILayout.Space(15);
 
         GUILayout.BeginVertical();
 
@@ -446,32 +525,18 @@ public class CardDataEditor : Editor
 
             EditorGUILayout.Space(5);
             if (GUILayout.Button("Remove Sub Condition"))
-                RemoveSubCondition(parentCondition);
+                RemoveCondition(parentCondition.SubCondition);
         }
 
         GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
-
-        #region Local Functions
-
-        void RemoveSubCondition(EffectCondition superCondition)
-        {
-            EffectCondition subCondition = superCondition.SubCondition;
-            if (subCondition.SubCondition) 
-                RemoveSubCondition(subCondition);
-
-            superCondition.SubCondition = null;
-            DestroyImmediate(subCondition, true);
-        }
-
-        #endregion
     }
     
     private void DrawSubFunctionality(EffectFunctionality parentFunctionality)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Space(25);
+        GUILayout.Space(15);
 
         GUILayout.BeginVertical();
 
@@ -486,26 +551,12 @@ public class CardDataEditor : Editor
 
             EditorGUILayout.Space(5);
             if (GUILayout.Button("Remove Sub Functionality"))
-                RemoveSubFunctionality(parentFunctionality);
+                RemoveFunctionality(parentFunctionality.SubFunctionality);
         }
 
         GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
-
-        #region Local Functions
-
-        void RemoveSubFunctionality(EffectFunctionality superFunctionality)
-        {
-            EffectFunctionality subFunctionality = superFunctionality.SubFunctionality;
-            if (subFunctionality.SubFunctionality)
-                RemoveSubFunctionality(subFunctionality);
-
-            superFunctionality.SubFunctionality = null;
-            DestroyImmediate(subFunctionality, true);
-        }
-
-        #endregion
     }
 
     private T DrawFoldout<T>(T currentValue, int enumIndexAdjustment = 0) where T : Enum
@@ -517,4 +568,6 @@ public class CardDataEditor : Editor
             newInt += enumIndexAdjustment;
         return (T) Enum.Parse(enumType, newInt.ToString());
     }
+
+    #endregion
 }
