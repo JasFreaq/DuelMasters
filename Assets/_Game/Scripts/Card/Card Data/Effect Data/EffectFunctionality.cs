@@ -12,11 +12,55 @@ public class EffectFunctionality : ScriptableObject
 
     #region Type Specific Members
 
-    private EffectRegionType[] _fromToRegions = new EffectRegionType[2];
+    private AttackType _attackType;
+    private TargetBehaviourType _targetBehaviour;
+    private MovementRegionsType _movementRegions;
+    private KeywordType _keyword;
+    private TapStateType _tapState;
 
-    public EffectRegionType[] FromToRegions
+    public AttackType AttackType
     {
-        get { return _fromToRegions; }
+        get { return _attackType; }
+
+#if UNITY_EDITOR
+        set { _attackType = value; }
+#endif
+    }
+
+    public TargetBehaviourType TargetBehaviour
+    {
+        get { return _targetBehaviour; }
+
+#if UNITY_EDITOR
+        set { _targetBehaviour = value; }
+#endif
+    }
+
+    public MovementRegionsType MovementRegions
+    {
+        get { return _movementRegions; }
+
+#if UNITY_EDITOR
+        set { _movementRegions = value; }
+#endif
+    }
+
+    public KeywordType Keyword
+    {
+        get { return _keyword; }
+
+#if UNITY_EDITOR
+        set { _keyword = value; }
+#endif
+    }
+
+    public TapStateType TapState
+    {
+        get { return _tapState; }
+
+#if UNITY_EDITOR
+        set { _tapState = value; }
+#endif
     }
 
     #endregion
@@ -65,7 +109,20 @@ public class EffectFunctionality : ScriptableObject
         set { _subFunctionality = value; }
 #endif
     }
-    
+
+    public bool CheckParameter()
+    {
+        switch (_type)
+        {
+            case EffectFunctionType.AttackTarget:
+            case EffectFunctionType.TargetBehaviour:
+            case EffectFunctionType.Keyword:
+                return false;
+        }
+
+        return true;
+    }
+
     public override string ToString()
     {
         return $"{_type} {_targetingParameter} {_targetingCondition}";

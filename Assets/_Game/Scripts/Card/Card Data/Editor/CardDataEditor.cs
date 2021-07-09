@@ -12,11 +12,6 @@ using UnityEngine.PlayerLoop;
 public class CardDataEditor : Editor
 {
     private CardData _cardData;
-
-    private void OnEnable()
-    {
-        EditorApplication.quitting += ResetCard;
-    }
     
     public override void OnInspectorGUI()
     {
@@ -99,27 +94,9 @@ public class CardDataEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
     }
-
-    private void OnDisable()
-    {
-        EditorApplication.quitting -= ResetCard;
-    }
     
     #region Serialization Methods
-
-    private void ResetCard()
-    {
-        if (_cardData) 
-        {
-            foreach (EffectData effect in _cardData.ruleEffects)
-            {
-                effect.isBeingEdited = false;
-            }
-
-            serializedObject.ApplyModifiedProperties();
-        }
-    }
-
+    
     private EffectCondition CreateCondition(string conditionName)
     {
         EffectCondition condition = CreateInstance<EffectCondition>();
@@ -192,9 +169,34 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
         GUILayout.Label("Function:", EditorStyles.boldLabel);
         functionality.Type = DrawFoldout(functionality.Type);
+
+        switch (functionality.Type)
+        {
+            case EffectFunctionType.AttackTarget:
+                functionality.AttackType = DrawFoldout(functionality.AttackType);
+                break;
+
+            case EffectFunctionType.TargetBehaviour:
+                functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
+                break;
+                
+            case EffectFunctionType.RegionMovement:
+                functionality.MovementRegions = DrawFoldout(functionality.MovementRegions);
+                break;
+            
+            case EffectFunctionType.Keyword:
+                functionality.Keyword = DrawFoldout(functionality.Keyword);
+                break;
+            
+            case EffectFunctionType.ToggleTap:
+                functionality.TapState = DrawFoldout(functionality.TapState);
+                break;
+        }
+
         GUILayout.EndHorizontal();
 
-        DrawTargetingParameter(functionality.TargetingParameter);
+        if (functionality.CheckParameter())
+            DrawTargetingParameter(functionality.TargetingParameter);
 
         if (functionality.AssignedCondition)
         {

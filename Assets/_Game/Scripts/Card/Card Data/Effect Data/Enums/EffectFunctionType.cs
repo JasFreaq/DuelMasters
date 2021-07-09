@@ -5,19 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public enum EffectFunctionType
 {
-    TapCreature,
+    AttackTarget,
+    TargetBehaviour,
+    RegionMovement,
+    Keyword,
+    ToggleTap,
     PowerAttacker,
     MultiBreaker,
     Slayer,
     Destroy,
     FromRegionToRegion,
-    CanAttackUntapped,
     AttacksEachTurnIfAble,
-    CantAttack,
     CantBeBlocked,
     Draw,
     SearchAndShuffle,
     LookAtShield,
-    Untap,
     CostReduction
 }

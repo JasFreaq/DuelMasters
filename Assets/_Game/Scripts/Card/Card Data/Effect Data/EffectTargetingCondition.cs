@@ -39,7 +39,7 @@ public class RaceCondition
 public class KeywordCondition
 {
     public bool non = false;
-    public EffectKeywordType keyword;
+    public KeywordType keyword;
     public ConnectorType connector;
 }
 
