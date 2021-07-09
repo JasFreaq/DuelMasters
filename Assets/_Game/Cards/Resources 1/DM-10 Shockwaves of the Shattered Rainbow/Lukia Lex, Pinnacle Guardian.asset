@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Lukia Lex, Pinnacle Guardian
+  m_EditorClassIdentifier: 
+  _name: Lukia Lex, Pinnacle Guardian
+  _set: 10
+  _civilization: 0400000003000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 3
+  _artworkImage: {fileID: 21300000, guid: a11761299b3484242adb9edcdf976cbc, type: 3}
+  _rulesText: '(This creature is put into your mana zone tapped.)
+
+    Power attacker
+    +3000 (While attacking, this creature gets +3000 power.)
+
+    At the end of each
+    of your turns, you may untap this creature.'
+  _flavorText: They flock to the point where the earth meets the sky.
+  _race: 27000000
+  _power: 2500

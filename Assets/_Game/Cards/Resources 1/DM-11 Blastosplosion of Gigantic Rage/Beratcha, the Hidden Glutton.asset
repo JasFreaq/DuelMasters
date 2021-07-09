@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Beratcha, the Hidden Glutton
+  m_EditorClassIdentifier: 
+  _name: Beratcha, the Hidden Glutton
+  _set: 11
+  _civilization: 01000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: 6cee8b7a19407044aa2ada29bd5ef280, type: 3}
+  _rulesText: Slayer (Whenever this creature battles, destroy the other creature
+    after the battle.)
+  _flavorText: 'It has waited for countless years, endlessly repeating the same silent
+    plea whenever a potential victim passed by its lock: "Open me . . . open me .
+    . . open me . . ."'
+  _race: 00000000
+  _power: 3000

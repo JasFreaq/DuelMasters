@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Armored Scout Gestuchar
+  m_EditorClassIdentifier: 
+  _name: Armored Scout Gestuchar
+  _set: 6
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: 61e938c6c137ec240b37806aaddfc4e6, type: 3}
+  _rulesText: While you have no other fire creatures in the battle zone, this creature
+    has "power attacker +3000" and "double breaker." (A creature that has "power
+    attacker +3000" and "double breaker" gets +3000 power while attacking and breaks
+    2 shields.)
+  _flavorText: 'An Armorloid''s career has two stages: fearsome warrior and scrap
+    metal.'
+  _race: 0f000000
+  _power: 4000

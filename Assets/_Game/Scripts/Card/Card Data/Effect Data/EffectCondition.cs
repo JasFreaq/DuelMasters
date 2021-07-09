@@ -5,10 +5,9 @@ using UnityEngine;
 public class EffectCondition : ScriptableObject
 {
     private EffectConditionType _type;
+    private bool _mayUse = false, _assignedParameter, _assignedCondition;
     private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
-    private bool _assignedCondition;
     private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
-    private bool _mayUse = false;
     [HideInInspector] [SerializeField] private EffectCondition _subCondition;
     
     public EffectConditionType Type
@@ -19,13 +18,13 @@ public class EffectCondition : ScriptableObject
         set { _type = value; }
 #endif
     }
-
-    public EffectTargetingParameter TargetingParameter
+    
+    public bool AssignedParameter
     {
-        get { return _targetingParameter; }
+        get { return _assignedParameter; }
 
 #if UNITY_EDITOR
-        set { _targetingParameter = value; }
+        set { _assignedParameter = value; }
 #endif
     }
 
@@ -35,6 +34,15 @@ public class EffectCondition : ScriptableObject
 
 #if UNITY_EDITOR
         set { _assignedCondition = value; }
+#endif
+    }
+
+    public EffectTargetingParameter TargetingParameter
+    {
+        get { return _targetingParameter; }
+
+#if UNITY_EDITOR
+        set { _targetingParameter = value; }
 #endif
     }
 
@@ -67,9 +75,13 @@ public class EffectCondition : ScriptableObject
     
     public override string ToString()
     {
-        string str = $"{_type} {_targetingParameter} {_targetingCondition}";
+        string str = $"{_type}";
+        if (_assignedParameter)
+            str += $" {_targetingParameter}";
+        if (_assignedCondition)
+            str += $" {_targetingCondition}";
         if (_mayUse)
-            str += "may";
+            str += " may";
         return str;
     }
 }

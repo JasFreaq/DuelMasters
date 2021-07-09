@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Bolgash Dragon
+  m_EditorClassIdentifier: 
+  _name: Bolgash Dragon
+  _set: 5
+  _civilization: 02000000
+  _rarity: 2
+  _cardType: 2
+  _cost: 8
+  _artworkImage: {fileID: 21300000, guid: 14ad7b94d8e4b0044a0c500b24a1803e, type: 3}
+  _rulesText: 'Power attacker +8000 (While attacking, this creature gets +8000 power.)
+
+    Triple
+    breaker (This creature breaks 3 shields.)'
+  _flavorText: Its suit of armor belches out an electric smog cloud that serves as
+    both camouflage and weapon.
+  _race: 0d000000
+  _power: 4000

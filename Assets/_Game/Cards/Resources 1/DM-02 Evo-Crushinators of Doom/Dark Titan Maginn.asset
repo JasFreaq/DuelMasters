@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Dark Titan Maginn
+  m_EditorClassIdentifier: 
+  _name: Dark Titan Maginn
+  _set: 2
+  _civilization: 01000000
+  _rarity: 4
+  _cardType: 2
+  _cost: 6
+  _artworkImage: {fileID: 21300000, guid: 68563ec2763a7614e91d08162f3068a5, type: 3}
+  _rulesText: Whenever this creature attacks, your opponent discards a card at random
+    from his hand.
+  _flavorText: The forces of Darkness began their invasion by turning the Fiana Woods
+    into a nice, comfortable realm of horror.
+  _race: 05000000
+  _power: 4000

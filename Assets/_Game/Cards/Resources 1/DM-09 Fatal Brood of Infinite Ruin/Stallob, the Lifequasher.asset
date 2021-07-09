@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Stallob, the Lifequasher
+  m_EditorClassIdentifier: 
+  _name: Stallob, the Lifequasher
+  _set: 9
+  _civilization: 01000000
+  _rarity: 5
+  _cardType: 2
+  _cost: 8
+  _artworkImage: {fileID: 21300000, guid: 34e6444e5e33c564bb59f8ff3852951a, type: 3}
+  _rulesText: 'Double breaker (This creature breaks 2 shields.)
+
+    When this creature
+    is destroyed, destroy all creatures.'
+  _flavorText: '"You fools. I wasn''t called the Master of Death for nothing! Your
+    victory is your defeat. Your triumph is your coffin. I have voided my own demise,
+    and from the abyss I am reborn. . . ."'
+  _race: 05000000
+  _power: 6000

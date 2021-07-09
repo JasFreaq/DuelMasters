@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Smash Horn Q
+  m_EditorClassIdentifier: 
+  _name: Smash Horn Q
+  _set: 5
+  _civilization: 03000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 3
+  _artworkImage: {fileID: 21300000, guid: 132de48ac4f88954085ff41871c9533b, type: 3}
+  _rulesText: 'Survivor (Each of your Survivors has this creature''s Survivor ability.)
+    : This creature gets +1000 power.'
+  _flavorText: The symbol on its back is proof of its refusal to die.
+  _race: 3f0000001f000000
+  _power: 2000

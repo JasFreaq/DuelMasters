@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -6,7 +5,7 @@ using UnityEngine;
 
 #region Helper Data Structures
 
-[Serializable]
+[System.Serializable]
 public enum ConditionType
 {
     Check,
@@ -14,11 +13,19 @@ public enum ConditionType
     Affect
 }
 
-[Serializable]
+[System.Serializable]
 public enum CountType
 {
     All,
     Number
+}
+
+[System.Serializable]
+public enum CountChoiceType
+{
+    Upto,
+    Exactly,
+    AtLeast
 }
 
 #endregion
@@ -26,21 +33,12 @@ public enum CountType
 [System.Serializable]
 public class EffectTargetingParameter
 {
-    private bool _canTargetSelf = true;
     private ConditionType _type;
     private CountType _countType;
+    private CountChoiceType _countChoice;
     private int _count = 0;
     private EffectRegionType _region;
-
-    public bool CanTargetSelf
-    {
-        get { return _canTargetSelf; }
-
-#if UNITY_EDITOR
-        set { _canTargetSelf = value; }
-#endif
-    }
-
+    
     public ConditionType Type
     {
         get { return _type; }
@@ -54,7 +52,7 @@ public class EffectTargetingParameter
         }
 #endif
     }
-
+    
     public CountType CountType
     {
         get { return _countType; }
@@ -64,6 +62,15 @@ public class EffectTargetingParameter
 #endif
     }
 
+    public CountChoiceType CountChoice
+    {
+        get { return _countChoice; }
+
+#if UNITY_EDITOR
+        set { _countChoice = value; }
+#endif
+    }
+    
     public int Count
     {
         get { return _count; }
@@ -89,7 +96,7 @@ public class EffectTargetingParameter
         if (_type != ConditionType.Count)
         {
             if (_countType == CountType.Number)
-                str += $"{_count} ";
+                str += $"{_countChoice} {_count} ";
             else
                 str += $"{_countType} ";
         }

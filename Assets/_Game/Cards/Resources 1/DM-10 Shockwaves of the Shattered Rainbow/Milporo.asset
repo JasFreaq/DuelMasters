@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Milporo
+  m_EditorClassIdentifier: 
+  _name: Milporo
+  _set: 10
+  _civilization: 05000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: d3d6180092d71c74b8f1a9c90bac4548, type: 3}
+  _rulesText: 'Silent skill (At the start of each of your turns, if this creature
+    is tapped, you may keep it tapped and use its  ability.) : Draw a card.'
+  _flavorText: '"I never would have imagined there was something else hidden on the
+    moon. That makes playing with it even more fun."'
+  _race: 30000000
+  _power: 3000

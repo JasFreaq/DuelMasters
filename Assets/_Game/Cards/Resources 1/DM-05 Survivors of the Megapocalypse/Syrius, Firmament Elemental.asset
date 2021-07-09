@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Syrius, Firmament Elemental
+  m_EditorClassIdentifier: 
+  _name: Syrius, Firmament Elemental
+  _set: 5
+  _civilization: 04000000
+  _rarity: 5
+  _cardType: 2
+  _cost: 11
+  _artworkImage: {fileID: 21300000, guid: d6cd4becd2d8737419d30fc10205e1ac, type: 3}
+  _rulesText: 'Blocker (Whenever an opponent''s creature attacks, you may tap this
+    creature to stop the attack. Then the 2 creatures battle.)
+
+    Triple breaker
+    (This creature breaks 3 shields.)'
+  _flavorText: '"The Megapocalypse is over. But the damage has just begun."'
+  _race: 24000000
+  _power: 12000

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Magris, Vizier of Magnetism
+  m_EditorClassIdentifier: 
+  _name: Magris, Vizier of Magnetism
+  _set: 2
+  _civilization: 04000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 4a52e47cb81dc704cacecbeecd00fb5a, type: 3}
+  _rulesText: When you put this creature into the battle zone, you may draw a card.
+  _flavorText: "\"Vizier of Magnetism, arise. Your wings are a compass that points
+    to the truth.\" \u2014Hanusa, Radiance Elemental"
+  _race: 28000000
+  _power: 3000

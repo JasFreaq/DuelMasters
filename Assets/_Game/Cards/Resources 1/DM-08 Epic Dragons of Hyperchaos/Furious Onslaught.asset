@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Furious Onslaught
+  m_EditorClassIdentifier: 
+  _name: Furious Onslaught
+  _set: 8
+  _civilization: 02000000
+  _rarity: 3
+  _cardType: 1
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 241307f17201a4c43bb964973ca2482b, type: 3}
+  _rulesText: Until the end of the turn, each of your Dragonoids in the battle zone
+    is an Armored Dragon in addition to its other races, gets +4000 power, and has
+    "double breaker (This creature breaks 2 shields)."
+  _flavorText: "\"See what happens when you take your vitamins?\" \u2014Pyrofighter
+    Magnus"

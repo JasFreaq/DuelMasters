@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Uncanny Turnip
+  m_EditorClassIdentifier: 
+  _name: Uncanny Turnip
+  _set: 12
+  _civilization: 03000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: 6e2a130406a368d4882eb34d04b7b93c, type: 3}
+  _rulesText: 'Wave striker (While 2 or more other creatures in the battle zone have
+    "wave striker," this creature has its Wave striker ability.) : When you put this
+    creature into the battle zone, put the top card of your deck into your mana zone.
+    Then put a creature from your mana zone into your hand.'
+  _flavorText: '"Most turnips can''t see the future. Most turnips don''t wear a cape."'
+  _race: 23000000
+  _power: 1000

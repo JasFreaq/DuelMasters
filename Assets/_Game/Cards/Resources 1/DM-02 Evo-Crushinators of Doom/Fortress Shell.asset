@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Fortress Shell
+  m_EditorClassIdentifier: 
+  _name: Fortress Shell
+  _set: 2
+  _civilization: 03000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 9
+  _artworkImage: {fileID: 21300000, guid: 035aba20729cc5a4a99d21cb54a386c8, type: 3}
+  _rulesText: When you put this creature into the battle zone, choose up to 2 cards
+    in your opponent's mana zone and put them into his graveyard.
+  _flavorText: "\"Wow! I can't wait to disassemble this!\" \u2014Nomad Hero Gigio"
+  _race: 1b000000
+  _power: 5000

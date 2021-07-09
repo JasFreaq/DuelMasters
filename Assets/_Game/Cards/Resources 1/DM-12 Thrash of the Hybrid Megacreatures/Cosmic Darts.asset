@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Cosmic Darts
+  m_EditorClassIdentifier: 
+  _name: Cosmic Darts
+  _set: 12
+  _civilization: 04000000
+  _rarity: 3
+  _cardType: 1
+  _cost: 1
+  _artworkImage: {fileID: 21300000, guid: da420a3605e88f243b31a3b901e0d8e5, type: 3}
+  _rulesText: Your opponent chooses one of your shields. Look at it. If it's a spell,
+    you may cast immediately for no cost. If it's not a spell or if you don't cast
+    it, put it back where it was.
+  _flavorText: "\"This is even more fun that Cosmic Tic-Tac-Toe!\" \u2014 Pharzi,
+    the Oracle"

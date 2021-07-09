@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Gigakail
+  m_EditorClassIdentifier: 
+  _name: Gigakail
+  _set: 5
+  _civilization: 01000000
+  _rarity: 2
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: 056d5fda3d58a9342aec77b44e1a1952, type: 3}
+  _rulesText: Nature and light slayer (Whenever this creature battles a nature or
+    light creature, destroy the nature or light creature after the battle.)
+  _flavorText: What it was built out of isn't nearly as disturbing as what was done
+    with the leftovers.
+  _race: 02000000
+  _power: 4000

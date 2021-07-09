@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Kip Chippotto
+  m_EditorClassIdentifier: 
+  _name: Kip Chippotto
+  _set: 5
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: f437ba09af83e2341ba9e955b291979a, type: 3}
+  _rulesText: When one of your Armored Dragons would be destroyed, you may destroy
+    this creature instead.
+  _flavorText: Only the Dragons realize these cute little birds hold the secrets
+    of immortality.
+  _race: 12000000
+  _power: 1000

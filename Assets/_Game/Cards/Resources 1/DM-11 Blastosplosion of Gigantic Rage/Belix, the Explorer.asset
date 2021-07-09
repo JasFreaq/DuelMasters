@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Belix, the Explorer
+  m_EditorClassIdentifier: 
+  _name: Belix, the Explorer
+  _set: 11
+  _civilization: 04000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 2
+  _artworkImage: {fileID: 21300000, guid: 6032be8943885334d90455ae966b23ab, type: 3}
+  _rulesText: 'Blocker (Whenever an opponent''s creature attacks, you may tap this
+    creature to stop the attack. Then the 2 creatures battle.)
+
+    When you put
+    this creature into the battle zone, return a spell from your mana zone to your
+    hand.
+
+    This creature can''t attack players.'
+  _flavorText: It doesn't breathe oxygen-it breathes neon.
+  _race: 26000000
+  _power: 3000

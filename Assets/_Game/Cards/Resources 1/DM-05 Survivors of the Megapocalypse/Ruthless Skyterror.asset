@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Ruthless Skyterror
+  m_EditorClassIdentifier: 
+  _name: Ruthless Skyterror
+  _set: 5
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: a125d2131cd2dd947a02b413fe22a0d4, type: 3}
+  _rulesText: 'This creature can attack untapped water creatures.
+
+    This creature
+    can''t attack players.'
+  _flavorText: '"If you don''t kneel before my wrath, you''ll certainly kneel after
+    it."'
+  _race: 0e000000
+  _power: 6000

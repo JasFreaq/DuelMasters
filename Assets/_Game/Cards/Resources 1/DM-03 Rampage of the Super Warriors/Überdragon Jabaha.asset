@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: "\xDCberdragon Jabaha"
+  m_EditorClassIdentifier: 
+  _name: "\xDCberdragon Jabaha"
+  _set: 3
+  _civilization: 02000000
+  _rarity: 4
+  _cardType: 3
+  _cost: 7
+  _artworkImage: {fileID: 21300000, guid: 3891e9fe3adf73f439fb9acd25f62f92, type: 3}
+  _rulesText: "Evolution\u2014Put on one of your Armored Dragons. Each of your other
+    fire creatures in the battle zone has \"power attacker +2000.\" (While attacking,
+    a creature that has \"power attacker +2000\" gets +2000 power.)\nDouble breaker
+    (This creature breaks 2 shields.)"
+  _flavorText: 
+  _race: 0d000000
+  _power: 11000

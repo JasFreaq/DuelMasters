@@ -5,7 +5,7 @@ using UnityEngine;
 public enum MovementRegionsType
 {
     //Deck To
-    DeckToHand,
+    Draw,
     DeckToShields,
     DeckToGraveyard,
     DeckToMana,

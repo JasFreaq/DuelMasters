@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Megaria, Empress of Dread
+  m_EditorClassIdentifier: 
+  _name: Megaria, Empress of Dread
+  _set: 8
+  _civilization: 01000000
+  _rarity: 4
+  _cardType: 2
+  _cost: 5
+  _artworkImage: {fileID: 21300000, guid: c8d7c7921f99c1449a04d1632944df8c, type: 3}
+  _rulesText: Each creature in the battle zone has "slayer." (Whenever a creature
+    that has "slayer" battles, destroy the other creature after the battle.)
+  _flavorText: Before the eerily silent army, she raised the chalice of souls. "This
+    time," she snarled, "it better be filled with diet souls."
+  _race: 03000000
+  _power: 5000

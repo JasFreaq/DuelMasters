@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Mizoy, the Oracle
+  m_EditorClassIdentifier: 
+  _name: Mizoy, the Oracle
+  _set: 12
+  _civilization: 04000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 3
+  _artworkImage: {fileID: 21300000, guid: e11701384b26d1a4eb8d23bbdbd0ecc8, type: 3}
+  _rulesText: When you put this creature is put into the battle zone, you may choose
+    a darkness or fire creature in the battle zone and tap it.
+  _flavorText: "\"Plasmoparticles are disgusting. Electrification is freaky. Electrofied
+    plasmoparticles? That's just crossing the line.\" \u2014 Death Phoenix, Avatar
+    of Doom"
+  _race: 29000000
+  _power: 2500

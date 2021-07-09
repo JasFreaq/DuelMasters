@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Zagaan, Knight of Darkness
+  m_EditorClassIdentifier: 
+  _name: Zagaan, Knight of Darkness
+  _set: 1
+  _civilization: 01000000
+  _rarity: 5
+  _cardType: 2
+  _cost: 6
+  _artworkImage: {fileID: 21300000, guid: 9918e6e0f3d94d547b8546c0e54da6bd, type: 3}
+  _rulesText: Double breaker (This creature breaks 2 shields.)
+  _flavorText: "\"If I were to send him to the field, he would overwhelm the enemy
+    in an instant. Where is the fun in that?\" \u2014Ballom, Master of Death"
+  _race: 05000000
+  _power: 7000

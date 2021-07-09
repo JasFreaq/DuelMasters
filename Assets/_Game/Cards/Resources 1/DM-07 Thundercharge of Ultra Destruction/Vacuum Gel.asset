@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80684eda481b5de49a381e8255a25b00, type: 3}
+  m_Name: Vacuum Gel
+  m_EditorClassIdentifier: 
+  _name: Vacuum Gel
+  _set: 7
+  _civilization: 01000000
+  _rarity: 1
+  _cardType: 1
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 6cb1c1e8a9884134bb090d9b35434a1f, type: 3}
+  _rulesText: 'Shield trigger (When this spell is put into your hand from your shield
+    zone, you may cast it immediately for no cost.)
+
+    Destroy one of your opponent''s
+    untapped light or untapped nature creatures.'
+  _flavorText: "\"I hope you're not allergic to slime. Nah, I'm just kidding.\" \u2014Mongrel
+    Man"

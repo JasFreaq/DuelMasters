@@ -12,5 +12,5 @@ public enum EffectConditionType
     WhenBlocks,
     WhenAttacks,
     AfterBattle,
-    WhileAll
+    While
 }

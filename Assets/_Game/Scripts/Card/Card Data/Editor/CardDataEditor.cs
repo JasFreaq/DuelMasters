@@ -12,7 +12,7 @@ using UnityEngine.PlayerLoop;
 public class CardDataEditor : Editor
 {
     private CardData _cardData;
-    
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -149,7 +149,15 @@ public class CardDataEditor : Editor
         condition.MayUse = GUILayout.Toggle(condition.MayUse, "may");
         GUILayout.EndHorizontal();
 
-        DrawTargetingParameter(condition.TargetingParameter);
+        if (condition.AssignedParameter)
+        {
+            DrawTargetingParameter(condition.TargetingParameter);
+
+            if (GUILayout.Button("Remove Targeting Parameter"))
+                condition.AssignedParameter = false;
+        }
+        else if (GUILayout.Button("Add Targeting Parameter"))
+            condition.AssignedParameter = true;
 
         if (condition.AssignedCondition)
         {
@@ -172,31 +180,45 @@ public class CardDataEditor : Editor
 
         switch (functionality.Type)
         {
-            case EffectFunctionType.AttackTarget:
+            case EffectFunctionalityType.AttackTarget:
                 functionality.AttackType = DrawFoldout(functionality.AttackType);
                 break;
 
-            case EffectFunctionType.TargetBehaviour:
+            case EffectFunctionalityType.TargetBehaviour:
                 functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
                 break;
                 
-            case EffectFunctionType.RegionMovement:
+            case EffectFunctionalityType.RegionMovement:
                 functionality.MovementRegions = DrawFoldout(functionality.MovementRegions);
                 break;
             
-            case EffectFunctionType.Keyword:
+            case EffectFunctionalityType.Keyword:
                 functionality.Keyword = DrawFoldout(functionality.Keyword);
                 break;
             
-            case EffectFunctionType.ToggleTap:
+            case EffectFunctionalityType.ToggleTap:
                 functionality.TapState = DrawFoldout(functionality.TapState);
+                break;
+
+            case EffectFunctionalityType.PowerAttacker:
+                if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerAttackerBoost}"), out int num1))
+                    functionality.PowerAttackerBoost = num1;
+                break;
+
+            case EffectFunctionalityType.GrantPower:
+                if (int.TryParse(EditorGUILayout.TextField($"{functionality.AttackBoostGrant}"), out int num2))
+                    functionality.AttackBoostGrant = num2;
                 break;
         }
 
+        functionality.TargetSelf = DrawFoldout(functionality.TargetSelf);
         GUILayout.EndHorizontal();
 
         if (functionality.CheckParameter())
-            DrawTargetingParameter(functionality.TargetingParameter);
+        {
+            if (functionality.TargetSelf == FunctionTargetSelfType.TargetOther) 
+                DrawTargetingParameter(functionality.TargetingParameter);
+        }
 
         if (functionality.AssignedCondition)
         {
@@ -216,14 +238,13 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
 
         GUILayout.Label("Targeting Parameter:", EditorStyles.boldLabel);
-        parameter.CanTargetSelf = GUILayout.Toggle(parameter.CanTargetSelf, "Can Target Self");
-        GUILayout.Label("|");
         parameter.Type = DrawFoldout(parameter.Type);
         if (parameter.Type != ConditionType.Count)
         {
             parameter.CountType = DrawFoldout(parameter.CountType);
             if (parameter.CountType == CountType.Number)
             {
+                parameter.CountChoice = DrawFoldout(parameter.CountChoice);
                 if (int.TryParse(EditorGUILayout.TextField($"{parameter.Count}"), out int num))
                     parameter.Count = num;
             }

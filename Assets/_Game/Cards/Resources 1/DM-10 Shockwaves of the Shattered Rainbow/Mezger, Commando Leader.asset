@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Mezger, Commando Leader
+  m_EditorClassIdentifier: 
+  _name: Mezger, Commando Leader
+  _set: 10
+  _civilization: 02000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 148a64d6c24e08b4b899e72fd2fbe47f, type: 3}
+  _rulesText: Speed attacker (This creature doesn't get summoning sickness.)
+  _flavorText: '"What''s the secret to my success? It could be that my parents raised
+    me right and taught me respect. Or it could be the training I got serving with
+    General Bombat. But it''s probably that I''ve got a really big mallet."'
+  _race: 13000000
+  _power: 2000

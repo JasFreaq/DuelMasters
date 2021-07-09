@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Minelord Skyterror
+  m_EditorClassIdentifier: 
+  _name: Minelord Skyterror
+  _set: 10
+  _civilization: 02000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 20d685b4c9a7e574fb1ab382390d5484, type: 3}
+  _rulesText: 'Silent skill (At the start of each of your turns, if this creature
+    is tapped, you may keep it tapped and use its ability.) : Destroy all creatures
+    that have power 3000 or less.'
+  _flavorText: '"Have you met Explosive Dude Joe? He''s a student of mine. I''m proud
+    to say I taught him everything he-" BOOM!'
+  _race: 0e000000
+  _power: 3000

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Terradragon Gamiratar
+  m_EditorClassIdentifier: 
+  _name: Terradragon Gamiratar
+  _set: 8
+  _civilization: 03000000
+  _rarity: 3
+  _cardType: 2
+  _cost: 4
+  _artworkImage: {fileID: 21300000, guid: 6f9dc97ee70610d4b9117dee57846966, type: 3}
+  _rulesText: 'When you put this creature into the battle zone, your opponent may
+    choose a creature in his hand and put it into the battle zone.
+
+    Double breaker
+    (This creature breaks 2 shields.)'
+  _flavorText: Quazla's doomsday device caused the planet's core to crack. That was
+    the alarm clock the Dragons had been waiting for.
+  _race: 1c000000
+  _power: 6000
