@@ -73,12 +73,12 @@ public class CardCondition
 [System.Serializable]
 public class EffectTargetingCondition
 {
-    private CardTypeCondition _cardTypeCondition = new CardTypeCondition();
-    private List<CivilizationCondition> _civilizationConditions = new List<CivilizationCondition>();
-    private List<RaceCondition> _raceConditions = new List<RaceCondition>();
-    private List<KeywordCondition> _keywordConditions = new List<KeywordCondition>();
-    private List<PowerCondition> _powerConditions = new List<PowerCondition>();
-    private List<CardCondition> _cardConditions = new List<CardCondition>();
+    [SerializeReference] private CardTypeCondition _cardTypeCondition = new CardTypeCondition();
+    [SerializeReference] private List<CivilizationCondition> _civilizationConditions = new List<CivilizationCondition>();
+    [SerializeReference] private List<RaceCondition> _raceConditions = new List<RaceCondition>();
+    [SerializeReference] private List<KeywordCondition> _keywordConditions = new List<KeywordCondition>();
+    [SerializeReference] private List<PowerCondition> _powerConditions = new List<PowerCondition>();
+    [SerializeReference] private List<CardCondition> _cardConditions = new List<CardCondition>();
 
     public CardTypeCondition CardTypeCondition
     {
@@ -183,9 +183,9 @@ public class EffectTargetingCondition
                 CivilizationCondition civilizationCondition = _civilizationConditions[i];
                 if (civilizationCondition.non)
                     str += "non-";
-                str += $"{CardParams.StringFromCivilization(civilizationCondition.civilization)} ";
+                str += $"{CardParams.StringFromCivilization(civilizationCondition.civilization)}";
                 if (n > 1 && i < n - 1)
-                    str += $"{_civilizationConditions[i].connector} ";
+                    str += $" {_civilizationConditions[i].connector} ";
             }
         }
         if (_raceConditions.Count > 0)
@@ -196,9 +196,45 @@ public class EffectTargetingCondition
                 RaceCondition raceCondition = _raceConditions[i];
                 if (raceCondition.non)
                     str += "non-";
-                str += $"{CardParams.StringFromRace(raceCondition.race)} ";
+                str += $"{CardParams.StringFromRace(raceCondition.race)}";
                 if (n > 1 && i < n - 1)
-                    str += $"{_raceConditions[i].connector} ";
+                    str += $" {_raceConditions[i].connector} ";
+            }
+        }
+        if (_keywordConditions.Count > 0)
+        {
+            str += "\nKeyword is ";
+            for (int i = 0, n = _keywordConditions.Count; i < n; i++) 
+            {
+                KeywordCondition keywordCondition = _keywordConditions[i];
+                if (keywordCondition.non)
+                    str += "non-";
+                str += $"{keywordCondition.keyword}";
+                if (n > 1 && i < n - 1)
+                    str += $" {_keywordConditions[i].connector} ";
+            }
+        }
+        if (_powerConditions.Count > 0)
+        {
+            str += "\nPower is ";
+            for (int i = 0, n = _powerConditions.Count; i < n; i++) 
+            {
+                PowerCondition powerCondition = _powerConditions[i];
+                str += $"{powerCondition.comparator} ";
+                str += $"{powerCondition.power}";
+                if (n > 1 && i < n - 1)
+                    str += $" {_powerConditions[i].connector} ";
+            }
+        }
+        if (_cardConditions.Count > 0)
+        {
+            str += "\nCard is ";
+            for (int i = 0, n = _cardConditions.Count; i < n; i++) 
+            {
+                CardCondition cardCondition = _cardConditions[i];
+                str += $"{cardCondition.cardData.Name}";
+                if (n > 1 && i < n - 1)
+                    str += $" {_cardConditions[i].connector} ";
             }
         }
 

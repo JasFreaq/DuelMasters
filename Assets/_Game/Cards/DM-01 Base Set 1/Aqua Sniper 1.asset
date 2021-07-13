@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-3077149604205994474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea42dcb84a76db24785ecdd21dcf6a58, type: 3}
+  m_Name: Effect Data 1/Effect Func
+  m_EditorClassIdentifier: 
+  _type: 2
+  _target: 2
+  _targetingParameter: {fileID: 3389263806034575810}
+  _targetingCondition: {fileID: 0}
+  _subFunctionality: {fileID: 0}
+  _attackType: 0
+  _targetBehaviour: 0
+  _movementRegions: 26
+  _keyword: 0
+  _multipleBreaker: 0
+  _tapState: 0
+  _powerAttackerBoost: 0
+  _attackBoostGrant: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Aqua Sniper 1
+  m_EditorClassIdentifier: 
+  _name: Aqua Sniper
+  _set: 1
+  _civilization: 05000000
+  _rarity: 5
+  _cardType: 2
+  _cost: 8
+  _artworkImage: {fileID: 21300000, guid: b08092d34b3df254a8cb38ad70304905, type: 3}
+  _rulesText: When you put this creature into the battle zone, choose up to 2 creatures
+    in the battle zone and return them to their owners' hands.
+  _flavorText: Water surrounds, enfolds, buoys...and attacks.
+  ruleEffects:
+  - {fileID: 8834163086886477026}
+  _race: 37000000
+  _power: 5000
+--- !u!114 &1878143850806746632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f2a92b9a0180c469c75fe6eca57cb0, type: 3}
+  m_Name: Effect Data 1/Effect Cond
+  m_EditorClassIdentifier: 
+  _type: 0
+  _mayUse: 0
+  _targetingParameter: {fileID: 0}
+  _targetingCondition: {fileID: 0}
+  _subCondition: {fileID: 0}
+--- !u!114 &3389263806034575810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f3586ebbb000c4da2d722d0984151e, type: 3}
+  m_Name: Effect Data 1/Effect Func/Target Param
+  m_EditorClassIdentifier: 
+  _type: 2
+  _countType: 1
+  _countChoice: 0
+  _count: 2
+  _region: 12
+--- !u!114 &8834163086886477026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8575307b26687444eb88a73df192f06b, type: 3}
+  m_Name: Effect Data 1
+  m_EditorClassIdentifier: 
+  _effectCondition: {fileID: 1878143850806746632}
+  _effectFunctionality: {fileID: -3077149604205994474}
+  isBeingEdited: 0

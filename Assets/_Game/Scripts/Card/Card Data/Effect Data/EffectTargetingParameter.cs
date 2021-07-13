@@ -33,11 +33,11 @@ public enum CountChoiceType
 [System.Serializable]
 public class EffectTargetingParameter
 {
-    private ConditionType _type;
-    private CountType _countType;
-    private CountChoiceType _countChoice;
-    private int _count = 0;
-    private EffectRegionType _region;
+    [SerializeReference] private ConditionType _type;
+    [SerializeReference] private CountType _countType;
+    [SerializeReference] private CountChoiceType _countChoice;
+    [SerializeReference] private int _count = 0;
+    [SerializeReference] private EffectRegionType _region;
     
     public ConditionType Type
     {

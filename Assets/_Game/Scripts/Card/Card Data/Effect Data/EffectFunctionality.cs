@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class EffectFunctionality : ScriptableObject
 {
-    private EffectFunctionalityType _type;
-    private FunctionTargetType _target;
-    private EffectFunction _effectFunction;
-    private bool _assignedCondition;
-    private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
-    private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
-    [HideInInspector] [SerializeField] private EffectFunctionality _subFunctionality;
+    [SerializeReference] private EffectFunctionalityType _type;
+    [SerializeReference] private FunctionTargetType _target;
+    [SerializeReference] private bool _assignedCondition;
+    [SerializeReference] private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
+    [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
+    [SerializeReference] private EffectFunctionality _subFunctionality;
 
     #region Type Specific Members
 
+    [HideInInspector] [SerializeField]
     private AttackType _attackType;
+    [HideInInspector] [SerializeField]
     private TargetBehaviourType _targetBehaviour;
+    [HideInInspector] [SerializeField]
     private MovementRegionsType _movementRegions;
+    [HideInInspector] [SerializeField]
     private KeywordType _keyword;
+    [HideInInspector] [SerializeField]
+    private MultipleBreakerType _multipleBreaker;
+    [HideInInspector] [SerializeField]
     private TapStateType _tapState;
+    [HideInInspector] [SerializeField]
     private int _powerAttackerBoost;
+    [HideInInspector] [SerializeField]
     private int _attackBoostGrant;
 
     public AttackType AttackType
@@ -55,6 +63,15 @@ public class EffectFunctionality : ScriptableObject
 
 #if UNITY_EDITOR
         set { _keyword = value; }
+#endif
+    }
+
+    public MultipleBreakerType MultipleBreaker
+    {
+        get { return _multipleBreaker; }
+
+#if UNITY_EDITOR
+        set { _multipleBreaker = value; }
 #endif
     }
 
@@ -104,11 +121,10 @@ public class EffectFunctionality : ScriptableObject
         set { _target = value; }
 #endif
     }
-    
+
     public bool AssignedCondition
     {
         get { return _assignedCondition; }
-
 #if UNITY_EDITOR
         set { _assignedCondition = value; }
 #endif
@@ -123,7 +139,6 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
     
-
     public EffectTargetingCondition TargetingCondition
     {
         get { return _targetingCondition; }
@@ -142,13 +157,17 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public bool CheckParameter()
+    public bool TargetUnspecified()
     {
         switch (_type)
         {
             case EffectFunctionalityType.AttackTarget:
             case EffectFunctionalityType.TargetBehaviour:
             case EffectFunctionalityType.Keyword:
+            case EffectFunctionalityType.PowerAttacker:
+            case EffectFunctionalityType.MultipleBreaker:
+                if (_multipleBreaker == MultipleBreakerType.CrewBreaker)
+                    return true;
                 return false;
         }
 
@@ -158,10 +177,10 @@ public class EffectFunctionality : ScriptableObject
     public override string ToString()
     {
         string str = GetTypeRepresentation();
-        if (_target == FunctionTargetType.TargetOther) 
-            str += $" {_targetingParameter}";
-        if (_assignedCondition)
-            str += $" {_targetingCondition}";
+        //if (_target == FunctionTargetType.TargetOther) 
+        //    str += $" {_targetingParameter}";
+        //if (_targetingCondition)
+        //    str += $" {_targetingCondition}";
         return str;
 
         #region Local Functions
@@ -186,17 +205,18 @@ public class EffectFunctionality : ScriptableObject
                 case EffectFunctionalityType.Keyword:
                     return _keyword.ToString();
 
+                case EffectFunctionalityType.MultipleBreaker:
+                    return _multipleBreaker.ToString();
+
                 case EffectFunctionalityType.ToggleTap:
                     return _tapState.ToString();
 
                 case EffectFunctionalityType.PowerAttacker:
-                    return _powerAttackerBoost.ToString();
+                    return $"Power Attacker +{_powerAttackerBoost}";
 
                 case EffectFunctionalityType.GrantPower:
-                    return _attackBoostGrant.ToString();
-
-                case EffectFunctionalityType.MultipleBreaker:
-                    break;
+                    return $"Gets +{_attackBoostGrant}";
+                    
                     //case EffectFunctionType.Destroy:
                     //    break;
                     //case EffectFunctionType.AttacksEachTurnIfAble:
