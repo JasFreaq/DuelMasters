@@ -5,14 +5,15 @@ using UnityEngine;
 [System.Serializable]
 public enum EffectFunctionalityType
 {
+    Keyword,
+    RegionMovement,
+    MultipleBreaker,
     AttackTarget,
     TargetBehaviour,
-    RegionMovement,
-    Keyword,
-    MultipleBreaker,
     ToggleTap,
     PowerAttacker,
     GrantPower,
+    GrantFunction,
     Destroy,
     AttacksEachTurnIfAble,
     CantBeBlocked,

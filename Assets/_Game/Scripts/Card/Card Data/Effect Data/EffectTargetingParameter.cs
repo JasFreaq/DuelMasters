@@ -9,8 +9,8 @@ using UnityEngine;
 public enum ConditionType
 {
     Check,
-    Count,
-    Affect
+    Affect,
+    Count
 }
 
 [System.Serializable]
@@ -38,6 +38,7 @@ public class EffectTargetingParameter
     [SerializeReference] private CountChoiceType _countChoice;
     [SerializeReference] private int _count = 0;
     [SerializeReference] private EffectRegionType _region;
+    [SerializeReference] private bool _cantTargetSelf;
     
     public ConditionType Type
     {
@@ -89,6 +90,15 @@ public class EffectTargetingParameter
 #endif
     }
 
+    public bool CantTargetSelf
+    {
+        get { return _cantTargetSelf; }
+
+#if UNITY_EDITOR
+        set { _cantTargetSelf = value; }
+#endif
+    }
+
     public override string ToString()
     {
         string str = $"{_type} ";
@@ -100,8 +110,13 @@ public class EffectTargetingParameter
             else
                 str += $"{_countType} ";
         }
-
+        
         str += $"in {_region}";
+        
+        if (_type == ConditionType.Affect && _cantTargetSelf)
+        {
+            str += $" except itself";
+        }
 
         return str;
     }

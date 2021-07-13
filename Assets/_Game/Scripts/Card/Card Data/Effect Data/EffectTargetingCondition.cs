@@ -173,7 +173,7 @@ public class EffectTargetingCondition
 
         if (_cardTypeCondition.isAssigned)
         {
-            str += $"Card Type is {CardParams.StringFromCardType(_cardTypeCondition.cardType)}\n";
+            str += $"\nCard Type is {CardParams.StringFromCardType(_cardTypeCondition.cardType)}";
         }
         if (_civilizationConditions.Count > 0)
         {

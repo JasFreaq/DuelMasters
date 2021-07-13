@@ -5,7 +5,7 @@ using UnityEngine;
 public class EffectCondition : ScriptableObject
 {
     [SerializeReference] private EffectConditionType _type;
-    [SerializeReference] private bool _mayUse, _assignedParameter, _assignedCondition;
+    [SerializeReference] private bool _assignedParameter, _assignedCondition;
     [SerializeReference] private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     [SerializeReference] private EffectCondition _subCondition;
@@ -53,15 +53,6 @@ public class EffectCondition : ScriptableObject
 #endif
     }
 
-    public bool MayUse
-    {
-        get { return _mayUse; }
-
-#if UNITY_EDITOR
-        set { _mayUse = value; }
-#endif
-    }
-
     public EffectCondition SubCondition
     {
         get { return _subCondition; }
@@ -74,12 +65,18 @@ public class EffectCondition : ScriptableObject
     public override string ToString()
     {
         string str = $"{_type}";
-        //if (_targetingParameter)
-        //    str += $" {_targetingParameter}";
-        //if (_targetingCondition)
-        //    str += $" {_targetingCondition}";
-        //if (_mayUse)
-        //    str += " may";
+
+        if (_assignedParameter)
+        {
+            str += $" {_targetingParameter}";
+            if (_assignedCondition)
+                str += $" where{_targetingCondition}";
+        }
+        else if (_assignedCondition)
+            str += $" {_targetingCondition}";
+
+        if (_subCondition)
+            str += $" and if\n\t{_subCondition}";
         return str;
     }
 }

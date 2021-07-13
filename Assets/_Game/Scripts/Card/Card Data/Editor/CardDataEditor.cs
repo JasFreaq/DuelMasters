@@ -33,11 +33,12 @@ public class CardDataEditor : Editor
             {
                 if (effect.EffectCondition)
                 {
+                    effect.MayUseCondition = GUILayout.Toggle(effect.MayUseCondition, "May Use");
                     DrawCondition(effect.EffectCondition);
 
                     EditorGUILayout.Space(5);
                     if (GUILayout.Button("Remove Condition"))
-                        RemoveCondition(effect.EffectCondition.SubCondition);
+                        RemoveCondition(effect.EffectCondition);
                 }
                 else if (GUILayout.Button("Add Condition"))
                     effect.EffectCondition = CreateCondition($"{effect.name}/Effect Cond");
@@ -140,7 +141,6 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
         GUILayout.Label("Condition:", EditorStyles.boldLabel);
         condition.Type = DrawFoldout(condition.Type);
-        condition.MayUse = GUILayout.Toggle(condition.MayUse, "may");
         GUILayout.EndHorizontal();
         
         if (condition.AssignedParameter)
@@ -250,10 +250,11 @@ public class CardDataEditor : Editor
 
         GUILayout.Label("In");
         parameter.Region = DrawFoldout(parameter.Region);
+        
+        if (parameter.Type == ConditionType.Affect)
+            parameter.CantTargetSelf = GUILayout.Toggle(parameter.CantTargetSelf, "Cant Target Self");
 
         GUILayout.EndHorizontal();
-
-        //EditorUtility.SetDirty(parameter);
     }
 
     private void DrawTargetingCondition(EffectTargetingCondition condition)

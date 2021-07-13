@@ -6,13 +6,23 @@ using UnityEngine;
 
 public class EffectData : ScriptableObject
 {
+    [HideInInspector] [SerializeField] private bool _mayUseCondition;
     [HideInInspector] [SerializeField] private EffectCondition _effectCondition;
     [HideInInspector] [SerializeField] private EffectFunctionality _effectFunctionality;
 
 #if UNITY_EDITOR
     [HideInInspector] public bool isBeingEdited = false;
 #endif
-    
+
+    public bool MayUseCondition
+    {
+        get { return _mayUseCondition; }
+
+#if UNITY_EDITOR
+        set { _mayUseCondition = value; }
+#endif
+    }
+
     public EffectCondition EffectCondition
     {
         get { return _effectCondition; }
@@ -34,6 +44,8 @@ public class EffectData : ScriptableObject
     public override string ToString()
     {
         string str = _effectCondition ? $"{_effectCondition}\n" : "";
+        if (_mayUseCondition)
+            str += " may";
         str += $"{_effectFunctionality}";
         return str;
     }

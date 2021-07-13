@@ -177,10 +177,18 @@ public class EffectFunctionality : ScriptableObject
     public override string ToString()
     {
         string str = GetTypeRepresentation();
-        //if (_target == FunctionTargetType.TargetOther) 
-        //    str += $" {_targetingParameter}";
-        //if (_targetingCondition)
-        //    str += $" {_targetingCondition}";
+        
+        if (_target == FunctionTargetType.TargetOther)
+        {
+            str += $" {_targetingParameter}";
+            if (_assignedCondition)
+                str += $" where{_targetingCondition}";
+        }
+        else if (_assignedCondition)
+            str += $" {_targetingCondition}";
+
+        if (_subFunctionality)
+            str += $"\n\t{_subFunctionality}";
         return str;
 
         #region Local Functions
@@ -216,9 +224,13 @@ public class EffectFunctionality : ScriptableObject
 
                 case EffectFunctionalityType.GrantPower:
                     return $"Gets +{_attackBoostGrant}";
-                    
-                    //case EffectFunctionType.Destroy:
-                    //    break;
+
+                case EffectFunctionalityType.Destroy:
+                    string str = "Destroy";
+                    if (_target == FunctionTargetType.TargetSelf)
+                        str += " self";
+                    return str;
+
                     //case EffectFunctionType.AttacksEachTurnIfAble:
                     //    break;
                     //case EffectFunctionType.CantBeBlocked:

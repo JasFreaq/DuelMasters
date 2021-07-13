@@ -4,8 +4,10 @@ using UnityEngine;
 
 public enum MovementRegionsType
 {
-    //Deck To
     Draw,
+    ReturnToHand,
+
+    //Deck To
     DeckToShields,
     DeckToGraveyard,
     DeckToMana,
@@ -20,28 +22,24 @@ public enum MovementRegionsType
 
     //Shields To
     ShieldsToDeck,
-    ShieldsToHand,
     ShieldsToGraveyard,
     ShieldsToMana,
     ShieldsToBattle,
 
     //GraveyardTo
     GraveyardToDeck,
-    GraveyardToHand,
     GraveyardToShields,
     GraveyardToMana,
     GraveyardToBattle,
 
     //Mana To
     ManaToDeck,
-    ManaToHand,
     ManaToShields,
     ManaToGraveyard,
     ManaToBattle,
 
     //Battle To
     BattleToDeck,
-    BattleToHand,
     BattleToShields,
     BattleToGraveyard,
     BattleToMana

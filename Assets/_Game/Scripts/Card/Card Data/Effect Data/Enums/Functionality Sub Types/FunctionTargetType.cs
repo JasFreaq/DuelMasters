@@ -4,12 +4,8 @@ using UnityEngine;
 
 public enum FunctionTargetType
 {
-    NoTarget,
     AutoTarget,
+    NoTarget,
     TargetOther,
-    TargetSelf,
-    CanTargetSelf,
-    CantTargetSelf
-
-    //Probably see if count and check needs to be 'Enumed' for the Parameter
+    TargetSelf
 }
