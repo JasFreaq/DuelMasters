@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea42dcb84a76db24785ecdd21dcf6a58, type: 3}
   m_Name: Effect Data 1/Effect Func
   m_EditorClassIdentifier: 
-  _type: 9
+  _type: 7
   _target: 2
   _assignedCondition: 0
   _targetingParameter:
@@ -117,14 +117,14 @@ MonoBehaviour:
   _multipleBreaker: 0
   _tapState: 0
   _powerAttackerBoost: 0
-  _attackBoostGrant: 0
+  _attackBoostGrant: 1000
   references:
     version: 1
     00000000:
       type: {class: EffectTargetingParameter, ns: , asm: Assembly-CSharp}
       data:
-        _type: 0
-        _countType: 0
+        _type: 1
+        _countType: 1
         _countChoice: 0
         _count: 0
         _region: 0
