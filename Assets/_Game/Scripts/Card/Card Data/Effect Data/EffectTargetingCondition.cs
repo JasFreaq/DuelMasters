@@ -6,20 +6,6 @@ using UnityEngine;
 #region Helper Data Structures
 
 [System.Serializable]
-public enum ConnectorType
-{
-    And,
-    Or
-}
-
-[System.Serializable]
-public class CardTypeCondition
-{
-    public bool isAssigned = false;
-    public CardParams.CardType cardType;
-}
-
-[System.Serializable]
 public class CivilizationCondition
 {
     public bool non = false;
@@ -73,14 +59,16 @@ public class CardCondition
 [System.Serializable]
 public class EffectTargetingCondition
 {
-    [SerializeReference] private CardTypeCondition _cardTypeCondition = new CardTypeCondition();
+    [SerializeReference] private bool _assignedCardTypeCondition, _assignedTapCondition;
+    [SerializeReference] private CardParams.CardType _cardTypeCondition;
     [SerializeReference] private List<CivilizationCondition> _civilizationConditions = new List<CivilizationCondition>();
     [SerializeReference] private List<RaceCondition> _raceConditions = new List<RaceCondition>();
     [SerializeReference] private List<KeywordCondition> _keywordConditions = new List<KeywordCondition>();
     [SerializeReference] private List<PowerCondition> _powerConditions = new List<PowerCondition>();
     [SerializeReference] private List<CardCondition> _cardConditions = new List<CardCondition>();
+    [SerializeReference] private TapStateType _tapCondition;
 
-    public CardTypeCondition CardTypeCondition
+    public CardParams.CardType CardTypeCondition
     {
         get { return _cardTypeCondition; }
 
@@ -88,7 +76,34 @@ public class EffectTargetingCondition
         set { _cardTypeCondition = value; }
 #endif
     }
+
+    public bool AssignedCardTypeCondition
+    {
+        get { return _assignedCardTypeCondition; }
+
+#if UNITY_EDITOR
+        set { _assignedCardTypeCondition = value; }
+#endif
+    }
     
+    public bool AssignedTapCondition
+    {
+        get { return _assignedTapCondition; }
+
+#if UNITY_EDITOR
+        set { _assignedTapCondition = value; }
+#endif
+    }
+
+    public TapStateType TapCondition
+    {
+        get { return _tapCondition; }
+
+#if UNITY_EDITOR
+        set { _tapCondition = value; }
+#endif
+    }
+
     public IReadOnlyList<CivilizationCondition> CivilizationConditions
     {
         get { return _civilizationConditions; }
@@ -171,10 +186,11 @@ public class EffectTargetingCondition
     {
         string str = "";
 
-        if (_cardTypeCondition.isAssigned)
+        if (_assignedCardTypeCondition)
         {
-            str += $"\nCard Type is {CardParams.StringFromCardType(_cardTypeCondition.cardType)}";
+            str += $"\nCard Type is {CardParams.StringFromCardType(_cardTypeCondition)}";
         }
+
         if (_civilizationConditions.Count > 0)
         {
             str += "\nCivilization is ";
@@ -188,6 +204,7 @@ public class EffectTargetingCondition
                     str += $" {_civilizationConditions[i].connector} ";
             }
         }
+
         if (_raceConditions.Count > 0)
         {
             str += "\nRace is ";
@@ -201,6 +218,7 @@ public class EffectTargetingCondition
                     str += $" {_raceConditions[i].connector} ";
             }
         }
+
         if (_keywordConditions.Count > 0)
         {
             str += "\nKeyword is ";
@@ -214,6 +232,7 @@ public class EffectTargetingCondition
                     str += $" {_keywordConditions[i].connector} ";
             }
         }
+
         if (_powerConditions.Count > 0)
         {
             str += "\nPower is ";
@@ -226,6 +245,7 @@ public class EffectTargetingCondition
                     str += $" {_powerConditions[i].connector} ";
             }
         }
+
         if (_cardConditions.Count > 0)
         {
             str += "\nCard is ";
@@ -236,6 +256,15 @@ public class EffectTargetingCondition
                 if (n > 1 && i < n - 1)
                     str += $" {_cardConditions[i].connector} ";
             }
+        }
+
+        if (_assignedTapCondition)
+        {
+            str += "\nTap state is ";
+            if (_tapCondition == TapStateType.Tap)
+                str += "tapped";
+            else if (_tapCondition == TapStateType.Untap)
+                str += "untapped";
         }
 
         return str;

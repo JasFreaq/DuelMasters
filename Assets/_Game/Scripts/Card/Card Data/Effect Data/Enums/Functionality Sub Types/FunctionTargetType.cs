@@ -7,5 +7,7 @@ public enum FunctionTargetType
     AutoTarget,
     NoTarget,
     TargetOther,
-    TargetSelf
+    TargetSelf,
+    Player,
+    Opponent
 }

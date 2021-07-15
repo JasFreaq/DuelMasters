@@ -5,20 +5,21 @@ using UnityEngine;
 [System.Serializable]
 public enum EffectFunctionalityType
 {
-    Keyword,
+    GrantFunction,
+    DisableFunction,
     RegionMovement,
+    Keyword,
     MultipleBreaker,
     AttackTarget,
     TargetBehaviour,
     ToggleTap,
-    PowerAttacker,
-    GrantPower,
-    GrantFunction,
     Destroy,
+    Discard,
     AttacksEachTurnIfAble,
-    CantBeBlocked,
-    Draw,
+    AttackThisTurnAsThoughTapped,
     SearchAndShuffle,
     LookAtShield,
-    CostReduction
+    PowerAttacker,
+    GrantPower,
+    CostAdjustment
 }

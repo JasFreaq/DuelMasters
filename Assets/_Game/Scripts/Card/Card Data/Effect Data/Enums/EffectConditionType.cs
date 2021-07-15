@@ -6,12 +6,15 @@ using UnityEngine;
 public enum EffectConditionType
 {
     WhenPutIntoBattle,
-    While,
+    WhileCondition,
     WhenAttacking,
     WhenBlocking,
+    WhenYourCreatureIsBlocked,
     OnShieldTrigger,
     AfterBattle,
+    WhenWouldBeDestroyed,
     WhenDestroyed,
     AtEndOfTurn,
-    UntilEndOfTurn
+    UntilEndOfTurn,
+    WhileTapState
 }

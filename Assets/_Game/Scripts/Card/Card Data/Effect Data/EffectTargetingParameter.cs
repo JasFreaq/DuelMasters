@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -20,14 +21,6 @@ public enum CountType
     Number
 }
 
-[System.Serializable]
-public enum CountChoiceType
-{
-    Upto,
-    Exactly,
-    AtLeast
-}
-
 #endregion
 
 [System.Serializable]
@@ -37,9 +30,15 @@ public class EffectTargetingParameter
     [SerializeReference] private CountType _countType;
     [SerializeReference] private CountChoiceType _countChoice;
     [SerializeReference] private int _count = 0;
-    [SerializeReference] private EffectRegionType _region;
-    [SerializeReference] private bool _cantTargetSelf;
-    
+    [SerializeReference] private GameRegionType _region;
+
+    [SerializeReference] private bool _includeSelf;
+    [SerializeReference] private bool _opponentChooses;
+
+#if UNITY_EDITOR
+    [SerializeReference] public bool ownerIsCreature;
+#endif
+
     public ConditionType Type
     {
         get { return _type; }
@@ -81,7 +80,7 @@ public class EffectTargetingParameter
 #endif
     }
 
-    public EffectRegionType Region
+    public GameRegionType Region
     {
         get { return _region; }
 
@@ -90,12 +89,21 @@ public class EffectTargetingParameter
 #endif
     }
 
-    public bool CantTargetSelf
+    public bool IncludeSelf
     {
-        get { return _cantTargetSelf; }
+        get { return _includeSelf; }
 
 #if UNITY_EDITOR
-        set { _cantTargetSelf = value; }
+        set { _includeSelf = value; }
+#endif
+    }
+    
+    public bool OpponentChooses
+    {
+        get { return _opponentChooses; }
+
+#if UNITY_EDITOR
+        set { _opponentChooses = value; }
 #endif
     }
 
@@ -112,11 +120,14 @@ public class EffectTargetingParameter
         }
         
         str += $"in {_region}";
-        
-        if (_type == ConditionType.Affect && _cantTargetSelf)
+
+        int regionValue = (int) Enum.Parse(typeof(GameRegionType), _region.ToString());
+        if (regionValue < 6 && !_includeSelf && ownerIsCreature) 
         {
-            str += $" except itself";
+            str += " except itself";
         }
+        else if (regionValue > 7 && _opponentChooses)
+            str += " chosen by opponent";
 
         return str;
     }

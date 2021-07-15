@@ -2,33 +2,139 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#region Helper Data Structures
+
+[System.Serializable]
+public enum DeckCardMoveType
+{
+    Top,
+    SearchShuffle
+}
+
+[System.Serializable]
+public class MovementRegions
+{
+    public RegionType fromRegion, toRegion;
+    public DeckCardMoveType deckCardMove;
+    public bool showSearchedCard;
+}
+
+[System.Serializable]
+public class CardMoveParam
+{
+    public int moveCount = 1;
+    public CountChoiceType countChoice;
+
+    public override string ToString()
+    {
+        return $"{countChoice} {moveCount}";
+    }
+}
+
+#endregion
+
 public class EffectFunctionality : ScriptableObject
 {
     [SerializeReference] private EffectFunctionalityType _type;
     [SerializeReference] private FunctionTargetType _target;
-    [SerializeReference] private bool _assignedCondition;
+    [SerializeReference] private bool _assignedCondition, _connectSubFunctionality;
     [SerializeReference] private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
+    [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectFunctionality _subFunctionality;
 
     #region Type Specific Members
 
-    [HideInInspector] [SerializeField]
-    private AttackType _attackType;
-    [HideInInspector] [SerializeField]
-    private TargetBehaviourType _targetBehaviour;
-    [HideInInspector] [SerializeField]
-    private MovementRegionsType _movementRegions;
-    [HideInInspector] [SerializeField]
-    private KeywordType _keyword;
-    [HideInInspector] [SerializeField]
-    private MultipleBreakerType _multipleBreaker;
-    [HideInInspector] [SerializeField]
-    private TapStateType _tapState;
-    [HideInInspector] [SerializeField]
-    private int _powerAttackerBoost;
-    [HideInInspector] [SerializeField]
-    private int _attackBoostGrant;
+    [SerializeReference] private MovementRegions _movementRegions = new MovementRegions();
+    [SerializeReference] private AttackType _attackType;
+    [SerializeReference] private TargetBehaviourType _targetBehaviour;
+    [SerializeReference] private KeywordType _keyword;
+    [SerializeReference] private MultipleBreakerType _multipleBreaker;
+    [SerializeReference] private TapStateType _tapState;
+    [SerializeReference] private DiscardType _discardType;
+    [SerializeReference] private int _powerAttackerBoost;
+    [SerializeReference] private int _attackBoostGrant;
+    [SerializeReference] private int _costAdjustmentAmount;
+
+    [SerializeReference] private CardMoveParam _moveParam = new CardMoveParam();
+    [SerializeReference] private bool _shouldMultiplyVal = false;
+    [SerializeReference] private bool _alterFunctionUntilEndOfTurn = true;
+    [SerializeReference] private int _discardCount = 1;
+    
+    #endregion
+
+    public EffectFunctionalityType Type
+    {
+        get { return _type; }
+
+#if UNITY_EDITOR
+        set { _type = value; }
+#endif
+    }
+
+    public FunctionTargetType Target
+    {
+        get { return _target; }
+
+#if UNITY_EDITOR
+        set { _target = value; }
+#endif
+    }
+
+    public bool AssignedCondition
+    {
+        get { return _assignedCondition; }
+#if UNITY_EDITOR
+        set { _assignedCondition = value; }
+#endif
+    }
+
+    public bool ConnectSubFunctionality
+    {
+        get { return _connectSubFunctionality; }
+
+#if UNITY_EDITOR
+        set { _connectSubFunctionality = value; }
+#endif
+    }
+
+    public EffectTargetingParameter TargetingParameter
+    {
+        get { return _targetingParameter; }
+
+#if UNITY_EDITOR
+        set { _targetingParameter = value; }
+#endif
+    }
+    
+    public EffectTargetingCondition TargetingCondition
+    {
+        get { return _targetingCondition; }
+
+#if UNITY_EDITOR
+        set { _targetingCondition = value; }
+#endif
+    }
+
+    public ConnectorType Connector
+    {
+        get { return _connector; }
+
+#if UNITY_EDITOR
+        set { _connector = value; }
+#endif
+    }
+
+    public EffectFunctionality SubFunctionality
+    {
+        get { return _subFunctionality; }
+
+#if UNITY_EDITOR
+        set { _subFunctionality = value; }
+#endif
+    }
+
+    #region Type Specific Properties
 
     public AttackType AttackType
     {
@@ -48,7 +154,7 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public MovementRegionsType MovementRegions
+    public MovementRegions MovementRegions
     {
         get { return _movementRegions; }
 
@@ -84,6 +190,15 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
+    public DiscardType DiscardType
+    {
+        get { return _discardType; }
+
+#if UNITY_EDITOR
+        set { _discardType = value; }
+#endif
+    }
+
     public int PowerAttackerBoost
     {
         get { return _powerAttackerBoost; }
@@ -101,61 +216,44 @@ public class EffectFunctionality : ScriptableObject
         set { _attackBoostGrant = value; }
 #endif
     }
-
-    #endregion
-
-    public EffectFunctionalityType Type
+    
+    public int CostAdjustmentAmount
     {
-        get { return _type; }
+        get { return _costAdjustmentAmount; }
 
 #if UNITY_EDITOR
-        set { _type = value; }
+        set { _costAdjustmentAmount = value; }
 #endif
     }
 
-    public FunctionTargetType Target
+    public CardMoveParam MoveParam
     {
-        get { return _target; }
+        get { return _moveParam; }
 
 #if UNITY_EDITOR
-        set { _target = value; }
+        set { _moveParam = value; }
 #endif
     }
 
-    public bool AssignedCondition
+    public bool ShouldMultiplyVal
     {
-        get { return _assignedCondition; }
-#if UNITY_EDITOR
-        set { _assignedCondition = value; }
-#endif
-    }
-
-    public EffectTargetingParameter TargetingParameter
-    {
-        get { return _targetingParameter; }
+        get { return _shouldMultiplyVal; }
 
 #if UNITY_EDITOR
-        set { _targetingParameter = value; }
+        set { _shouldMultiplyVal = value; }
 #endif
     }
     
-    public EffectTargetingCondition TargetingCondition
+    public bool AlterFunctionUntilEndOfTurn
     {
-        get { return _targetingCondition; }
+        get { return _alterFunctionUntilEndOfTurn; }
 
 #if UNITY_EDITOR
-        set { _targetingCondition = value; }
+        set { _alterFunctionUntilEndOfTurn = value; }
 #endif
     }
 
-    public EffectFunctionality SubFunctionality
-    {
-        get { return _subFunctionality; }
-
-#if UNITY_EDITOR
-        set { _subFunctionality = value; }
-#endif
-    }
+    #endregion
 
     public bool TargetUnspecified()
     {
@@ -178,17 +276,18 @@ public class EffectFunctionality : ScriptableObject
     {
         string str = GetTypeRepresentation();
         
-        if (_target == FunctionTargetType.TargetOther)
-        {
+        if (_target == FunctionTargetType.TargetOther || _shouldMultiplyVal)
             str += $" {_targetingParameter}";
-            if (_assignedCondition)
-                str += $" where{_targetingCondition}";
-        }
-        else if (_assignedCondition)
-            str += $" {_targetingCondition}";
+        
+        if (_assignedCondition)
+            str += $" where{_targetingCondition}";
+
+        if (_connectSubFunctionality)
+            str += $" {_connector}";
 
         if (_subFunctionality)
             str += $"\n\t{_subFunctionality}";
+
         return str;
 
         #region Local Functions
@@ -197,18 +296,14 @@ public class EffectFunctionality : ScriptableObject
         {
             switch (_type)
             {
+                case EffectFunctionalityType.RegionMovement:
+                    return GetRegionMovementString();
+
                 case EffectFunctionalityType.AttackTarget:
                         return _attackType.ToString();
 
                 case EffectFunctionalityType.TargetBehaviour:
                         return _targetBehaviour.ToString();
-
-                case EffectFunctionalityType.RegionMovement:
-                    if (_movementRegions == MovementRegionsType.Draw)
-                    {
-                        return $"{_movementRegions}";
-                    }
-                    return $"Move target from {_movementRegions}";
 
                 case EffectFunctionalityType.Keyword:
                     return _keyword.ToString();
@@ -224,28 +319,91 @@ public class EffectFunctionality : ScriptableObject
 
                 case EffectFunctionalityType.GrantPower:
                     return $"Gets +{_attackBoostGrant}";
+                
+                case EffectFunctionalityType.GrantFunction:
+                    string str2 = "Grant Function";
+                    if (_alterFunctionUntilEndOfTurn)
+                        str2 += " until the end of turn";
+                    return str2;
 
                 case EffectFunctionalityType.Destroy:
-                    string str = "Destroy";
+                    string str3 = "Destroy";
                     if (_target == FunctionTargetType.TargetSelf)
-                        str += " self";
-                    return str;
+                        str3 += " self";
+                    return str3;
 
-                    //case EffectFunctionType.AttacksEachTurnIfAble:
-                    //    break;
-                    //case EffectFunctionType.CantBeBlocked:
-                    //    break;
-                    //case EffectFunctionType.Draw:
-                    //    break;
-                    //case EffectFunctionType.SearchAndShuffle:
-                    //    break;
-                    //case EffectFunctionType.LookAtShield:
-                    //    break;
-                    //case EffectFunctionType.CostReduction:
-                    //    break;
+                case EffectFunctionalityType.Discard:
+                    return GetDiscardString();
+
+                case EffectFunctionalityType.CostAdjustment:
+                    return $"Adjust cost by {_costAdjustmentAmount}";
+
+                default:
+                    return _type.ToString();
+            }
+        }
+
+        string GetRegionMovementString()
+        {
+            string str1;
+
+            switch (_target)
+            {
+                case FunctionTargetType.Player:
+                    str1 = "Player moves ";
+                    break;
+                case FunctionTargetType.Opponent:
+                    str1 = "Opponent moves ";
+                    break;
+                default:
+                    str1 = "Move ";
+                    break;
             }
 
-            return _type.ToString();
+            str1 += $"{_moveParam.moveCount} ";
+            if (_moveParam.moveCount > 1)
+                str1 += "cards ";
+            else
+                str1 += "card ";
+
+            if (_movementRegions.fromRegion == RegionType.Deck)
+            {
+                if (_movementRegions.deckCardMove == DeckCardMoveType.Top)
+                    return $"Draw {_moveParam}";
+                
+                str1 += $"after searching deck to {_movementRegions.toRegion}";
+                if (_movementRegions.showSearchedCard)
+                    str1 += " and show it to the opponent";
+            }
+            else if (_movementRegions.toRegion == RegionType.Deck)
+            {
+                str1 += $"from {_movementRegions.fromRegion} ";
+                if (_movementRegions.deckCardMove == DeckCardMoveType.Top)
+                    str1 += $"to top of Deck";
+                else
+                    str1 += $"and shuffle into Deck";
+            }
+            else
+                str1 += $"from {_movementRegions.fromRegion} to {_movementRegions.toRegion}";
+            return str1;
+        }
+
+        string GetDiscardString()
+        {
+            string str4 = $"{_target} discards {_discardCount} card ";
+            switch (_discardType)
+            {
+                case DiscardType.Random:
+                    str4 += "at random";
+                    break;
+                case DiscardType.PlayerChoose:
+                    str4 += "chosen by player";
+                    break;
+                case DiscardType.OpponentChoose:
+                    str4 += "chosen by opponent";
+                    break;
+            }
+            return str4;
         }
 
         #endregion

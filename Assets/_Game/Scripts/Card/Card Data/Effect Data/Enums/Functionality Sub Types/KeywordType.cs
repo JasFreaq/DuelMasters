@@ -5,6 +5,7 @@ using UnityEngine;
 public enum KeywordType
 {
     Blocker,
+    ShieldTrigger,
     Slayer,
-    ShieldTrigger
+    SpeedAttacker
 }

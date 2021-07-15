@@ -81,7 +81,6 @@ public class CardDataEditor : Editor
             _cardData.ruleEffects.Add(effect);
             AssetDatabase.AddObjectToAsset(effect, _cardData);
 
-            effect.EffectCondition = CreateCondition($"{effect.name}/Effect Cond");
             effect.EffectFunctionality = CreateFunctionality($"{effect.name}/Effect Func");
 
             EditorUtility.SetDirty(effect);
@@ -100,6 +99,8 @@ public class CardDataEditor : Editor
     {
         EffectCondition condition = CreateInstance<EffectCondition>();
         condition.name = conditionName;
+        condition.TargetingParameter.Type = ConditionType.Check;
+
         AssetDatabase.AddObjectToAsset(condition, _cardData);
         EditorUtility.SetDirty(condition);
         
@@ -134,13 +135,26 @@ public class CardDataEditor : Editor
 
     #endregion
 
-    #region Drawing Functions
+    #region Drawing Methods
 
     private void DrawCondition(EffectCondition condition)
     {
         GUILayout.BeginHorizontal();
+
         GUILayout.Label("Condition:", EditorStyles.boldLabel);
         condition.Type = DrawFoldout(condition.Type);
+
+        switch (condition.Type)
+        {
+            case EffectConditionType.WhileTapState:
+                condition.TapState = DrawFoldout(condition.TapState);
+                break;
+        }
+
+        condition.ConnectSubCondition = GUILayout.Toggle(condition.ConnectSubCondition, "Connect");
+        if (condition.ConnectSubCondition)
+            condition.Connector = DrawFoldout(condition.Connector);
+
         GUILayout.EndHorizontal();
         
         if (condition.AssignedParameter)
@@ -171,8 +185,18 @@ public class CardDataEditor : Editor
         GUILayout.Label("Function:", EditorStyles.boldLabel);
         functionality.Type = DrawFoldout(functionality.Type);
 
+        bool showMultiplyVal = false;
         switch (functionality.Type)
         {
+            case EffectFunctionalityType.GrantFunction:
+            case EffectFunctionalityType.DisableFunction:
+                functionality.AlterFunctionUntilEndOfTurn = GUILayout.Toggle(functionality.AlterFunctionUntilEndOfTurn, "Until End Of Turn");
+                break;
+
+            case EffectFunctionalityType.RegionMovement:
+                DrawMovementRegions();
+                break;
+
             case EffectFunctionalityType.AttackTarget:
                 functionality.AttackType = DrawFoldout(functionality.AttackType);
                 break;
@@ -180,11 +204,7 @@ public class CardDataEditor : Editor
             case EffectFunctionalityType.TargetBehaviour:
                 functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
                 break;
-                
-            case EffectFunctionalityType.RegionMovement:
-                functionality.MovementRegions = DrawFoldout(functionality.MovementRegions);
-                break;
-            
+
             case EffectFunctionalityType.Keyword:
                 functionality.Keyword = DrawFoldout(functionality.Keyword);
                 break;
@@ -197,23 +217,53 @@ public class CardDataEditor : Editor
                 functionality.TapState = DrawFoldout(functionality.TapState);
                 break;
 
+            case EffectFunctionalityType.Discard:
+                functionality.DiscardType = DrawFoldout(functionality.DiscardType);
+                break;
+
             case EffectFunctionalityType.PowerAttacker:
-                if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerAttackerBoost}"), out int num1))
-                    functionality.PowerAttackerBoost = num1;
+                if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerAttackerBoost}"), out int num2))
+                    functionality.PowerAttackerBoost = num2;
                 break;
 
             case EffectFunctionalityType.GrantPower:
-                if (int.TryParse(EditorGUILayout.TextField($"{functionality.AttackBoostGrant}"), out int num2))
-                    functionality.AttackBoostGrant = num2;
+                if (int.TryParse(EditorGUILayout.TextField($"{functionality.AttackBoostGrant}"), out int num3))
+                    functionality.AttackBoostGrant = num3;
+                ShowMultiplyVal();
+                break;
+
+            case EffectFunctionalityType.CostAdjustment:
+                if (int.TryParse(EditorGUILayout.TextField($"{functionality.CostAdjustmentAmount}"), out int num4))
+                    functionality.CostAdjustmentAmount = num4;
                 break;
         }
 
+        FunctionTargetType initialTarget = functionality.Target;
         functionality.Target = DrawFoldout(functionality.Target);
+
+        if (showMultiplyVal) 
+        {
+            bool initialMultiplyVal = functionality.ShouldMultiplyVal;
+            functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
+            if (functionality.ShouldMultiplyVal && !initialMultiplyVal)
+                functionality.TargetingParameter.Type = ConditionType.Count;
+        }
+
+        functionality.ConnectSubFunctionality = GUILayout.Toggle(functionality.ConnectSubFunctionality, "Connect");
+        if (functionality.ConnectSubFunctionality)
+            functionality.Connector = DrawFoldout(functionality.Connector);
+
         GUILayout.EndHorizontal();
+
+        if (initialTarget != FunctionTargetType.TargetOther &&
+            functionality.Target == FunctionTargetType.TargetOther)
+        {
+            functionality.TargetingParameter.Type = ConditionType.Affect;
+        }
 
         if (functionality.TargetUnspecified())
         {
-            if (functionality.Target == FunctionTargetType.TargetOther)
+            if (functionality.Target == FunctionTargetType.TargetOther || functionality.ShouldMultiplyVal)
                 DrawTargetingParameter(functionality.TargetingParameter);
         }
 
@@ -229,6 +279,44 @@ public class CardDataEditor : Editor
         DrawSubFunctionality(functionality);
 
         EditorUtility.SetDirty(functionality);
+
+        #region Local Functions
+
+        void DrawMovementRegions()
+        {
+            MovementRegions movementRegions = functionality.MovementRegions;
+
+            movementRegions.fromRegion = DrawFoldout(movementRegions.fromRegion);
+
+            if (movementRegions.fromRegion == RegionType.Deck)
+            {
+                movementRegions.deckCardMove = DrawFoldout(movementRegions.deckCardMove);
+                if (movementRegions.deckCardMove == DeckCardMoveType.SearchShuffle)
+                    movementRegions.showSearchedCard = GUILayout.Toggle(movementRegions.showSearchedCard, "Show Card");
+            }
+
+            CardMoveParam moveParam = functionality.MoveParam;
+            if (moveParam.moveCount > 1)
+                moveParam.countChoice = DrawFoldout(moveParam.countChoice);
+            if (int.TryParse(EditorGUILayout.TextField($"{moveParam.moveCount}"), out int num1))
+                moveParam.moveCount = num1;
+            functionality.MoveParam = moveParam;
+            
+            movementRegions.toRegion = DrawFoldout(movementRegions.toRegion);
+
+            if (movementRegions.toRegion == RegionType.Deck)
+                movementRegions.deckCardMove = DrawFoldout(movementRegions.deckCardMove);
+
+            functionality.MovementRegions = movementRegions;
+        }
+
+        void ShowMultiplyVal()
+        {
+            showMultiplyVal = true;
+            GUILayout.Label(": val");
+        }
+
+        #endregion
     }
 
     private void DrawTargetingParameter(EffectTargetingParameter parameter)
@@ -236,7 +324,7 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
 
         GUILayout.Label("Targeting Parameter:", EditorStyles.boldLabel);
-        parameter.Type = DrawFoldout(parameter.Type);
+        GUILayout.Label($"{parameter.Type}");
         if (parameter.Type != ConditionType.Count)
         {
             parameter.CountType = DrawFoldout(parameter.CountType);
@@ -250,10 +338,18 @@ public class CardDataEditor : Editor
 
         GUILayout.Label("In");
         parameter.Region = DrawFoldout(parameter.Region);
+        int regionValue = (int) Enum.Parse(typeof(GameRegionType), parameter.Region.ToString());
+        if (regionValue < 6) 
+        {
+            if (_cardData is CreatureData)
+            {
+                parameter.IncludeSelf = GUILayout.Toggle(parameter.IncludeSelf, "Include Self");
+                parameter.ownerIsCreature = true;
+            }
+        }
+        else if (regionValue > 7)
+                parameter.OpponentChooses = GUILayout.Toggle(parameter.OpponentChooses, "Opponent Chooses");
         
-        if (parameter.Type == ConditionType.Affect)
-            parameter.CantTargetSelf = GUILayout.Toggle(parameter.CantTargetSelf, "Cant Target Self");
-
         GUILayout.EndHorizontal();
     }
 
@@ -274,6 +370,7 @@ public class CardDataEditor : Editor
         DrawKeywordCondition();
         DrawPowerCondition();
         DrawCardCondition();
+        DrawTapStateCondition();
 
         GUILayout.EndVertical();
 
@@ -285,21 +382,16 @@ public class CardDataEditor : Editor
         {
             GUILayout.BeginHorizontal();
 
-            if (condition.CardTypeCondition.isAssigned)
+            if (condition.AssignedCardTypeCondition)
             {
                 GUILayout.Label("Card Type:");
-                CardTypeCondition cardTypeCondition = new CardTypeCondition
-                {
-                    isAssigned = true,
-                    cardType = DrawFoldout(condition.CardTypeCondition.cardType)
-                };
-                condition.CardTypeCondition = cardTypeCondition;
+                condition.CardTypeCondition = DrawFoldout(condition.CardTypeCondition, 1);
 
                 if (GUILayout.Button("Remove Card Type"))
-                    condition.CardTypeCondition.isAssigned = false;
+                    condition.AssignedCardTypeCondition = false;
             }
             else if (GUILayout.Button("Add Card Type"))
-                condition.CardTypeCondition.isAssigned = true;
+                condition.AssignedCardTypeCondition = true;
 
             GUILayout.EndHorizontal();
         }
@@ -526,6 +618,24 @@ public class CardDataEditor : Editor
                 CardCondition cardCondition = new CardCondition();
                 condition.AddCardCondition(cardCondition);
             }
+        }
+
+        void DrawTapStateCondition()
+        {
+            GUILayout.BeginHorizontal();
+
+            if (condition.AssignedTapCondition)
+            {
+                GUILayout.Label("Tap State:");
+                condition.TapCondition = DrawFoldout(condition.TapCondition);
+
+                if (GUILayout.Button("Remove Tap State"))
+                    condition.AssignedTapCondition = false;
+            }
+            else if (GUILayout.Button("Add Tap State"))
+                condition.AssignedTapCondition = true;
+
+            GUILayout.EndHorizontal();
         }
 
         #endregion

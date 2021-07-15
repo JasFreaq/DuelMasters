@@ -11,7 +11,7 @@ public class EffectData : ScriptableObject
     [HideInInspector] [SerializeField] private EffectFunctionality _effectFunctionality;
 
 #if UNITY_EDITOR
-    [HideInInspector] public bool isBeingEdited = false;
+    [HideInInspector] [SerializeField] public bool isBeingEdited = false;
 #endif
 
     public bool MayUseCondition
@@ -45,7 +45,7 @@ public class EffectData : ScriptableObject
     {
         string str = _effectCondition ? $"{_effectCondition}\n" : "";
         if (_mayUseCondition)
-            str += " may";
+            str += "May ";
         str += $"{_effectFunctionality}";
         return str;
     }
