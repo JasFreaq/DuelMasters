@@ -6,6 +6,7 @@ using UnityEngine;
 public enum EffectConditionType
 {
     WhenPutIntoBattle,
+    WhenCast,
     WhileCondition,
     WhenAttacking,
     WhenBlocking,
@@ -16,5 +17,6 @@ public enum EffectConditionType
     WhenDestroyed,
     AtEndOfTurn,
     UntilEndOfTurn,
-    WhileTapState
+    WhileTapState,
+    CheckFunction
 }

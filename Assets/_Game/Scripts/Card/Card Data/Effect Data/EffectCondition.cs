@@ -10,10 +10,12 @@ public class EffectCondition : ScriptableObject
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectCondition _subCondition;
+    [SerializeReference] private EffectFunctionality _subFunctionality;
 
     #region Type Specific Members
 
     [SerializeReference] private TapStateType _tapState;
+    [SerializeReference] private bool _checkHasFunction = true;
 
     #endregion
 
@@ -87,12 +89,30 @@ public class EffectCondition : ScriptableObject
 #endif
     }
 
+    public EffectFunctionality SubFunctionality
+    {
+        get { return _subFunctionality; }
+
+#if UNITY_EDITOR
+        set { _subFunctionality = value; }
+#endif
+    }
+
     public TapStateType TapState
     {
         get { return _tapState; }
 
 #if UNITY_EDITOR
         set { _tapState = value; }
+#endif
+    }
+
+    public bool CheckHasFunction
+    {
+        get { return _checkHasFunction; }
+
+#if UNITY_EDITOR
+        set { _checkHasFunction = value; }
 #endif
     }
 
@@ -122,6 +142,12 @@ public class EffectCondition : ScriptableObject
             {
                 case EffectConditionType.WhileTapState:
                     return $"While {_tapState}ped";
+
+                case EffectConditionType.CheckFunction:
+                    string str1 = "Check if target ";
+                    str1 += _checkHasFunction ? "has" : "doesn't have";
+                    str1 += $" function(s)\n\t{_subFunctionality}";
+                    return str1;
 
                 default:
                     return _type.ToString();

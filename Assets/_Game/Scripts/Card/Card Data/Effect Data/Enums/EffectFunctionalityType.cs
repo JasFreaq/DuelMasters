@@ -15,10 +15,10 @@ public enum EffectFunctionalityType
     ToggleTap,
     Destroy,
     Discard,
+    LookAtRegion,
     AttacksEachTurnIfAble,
     AttackThisTurnAsThoughTapped,
     SearchAndShuffle,
-    LookAtShield,
     PowerAttacker,
     GrantPower,
     CostAdjustment

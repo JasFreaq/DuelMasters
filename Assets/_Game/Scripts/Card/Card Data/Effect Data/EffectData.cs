@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class EffectData : ScriptableObject
 {
-    [HideInInspector] [SerializeField] private bool _mayUseCondition;
+    [HideInInspector] [SerializeField] private bool _mayUseFunction, _triggerPenaltyIfUsed;
     [HideInInspector] [SerializeField] private EffectCondition _effectCondition;
     [HideInInspector] [SerializeField] private EffectFunctionality _effectFunctionality;
 
@@ -14,12 +14,21 @@ public class EffectData : ScriptableObject
     [HideInInspector] [SerializeField] public bool isBeingEdited = false;
 #endif
 
-    public bool MayUseCondition
+    public bool MayUseFunction
     {
-        get { return _mayUseCondition; }
+        get { return _mayUseFunction; }
 
 #if UNITY_EDITOR
-        set { _mayUseCondition = value; }
+        set { _mayUseFunction = value; }
+#endif
+    }
+    
+    public bool TriggerPenaltyIfUsed
+    {
+        get { return _triggerPenaltyIfUsed; }
+
+#if UNITY_EDITOR
+        set { _triggerPenaltyIfUsed = value; }
 #endif
     }
 
@@ -44,9 +53,15 @@ public class EffectData : ScriptableObject
     public override string ToString()
     {
         string str = _effectCondition ? $"{_effectCondition}\n" : "";
-        if (_mayUseCondition)
+
+        if (_mayUseFunction)
             str += "May ";
+
         str += $"{_effectFunctionality}";
+
+        if (_triggerPenaltyIfUsed)
+            str += $", if does, then\n{_effectCondition.SubFunctionality}";
+
         return str;
     }
 }

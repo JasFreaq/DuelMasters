@@ -14,13 +14,6 @@ public enum ConditionType
     Count
 }
 
-[System.Serializable]
-public enum CountType
-{
-    All,
-    Number
-}
-
 #endregion
 
 [System.Serializable]

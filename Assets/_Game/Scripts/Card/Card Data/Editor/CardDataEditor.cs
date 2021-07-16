@@ -18,10 +18,10 @@ public class CardDataEditor : Editor
         base.OnInspectorGUI();
         serializedObject.Update();
 
-        _cardData = (CardData) target;
+        _cardData = (CardData)target;
 
         EditorGUILayout.Space(10);
-        GUIStyle labelStyle = new GUIStyle {fontStyle = FontStyle.BoldAndItalic, fontSize = 16};
+        GUIStyle labelStyle = new GUIStyle { fontStyle = FontStyle.BoldAndItalic, fontSize = 16 };
         EditorGUILayout.LabelField("Effect Data", labelStyle);
         GUILayout.BeginVertical();
 
@@ -33,8 +33,23 @@ public class CardDataEditor : Editor
             {
                 if (effect.EffectCondition)
                 {
-                    effect.MayUseCondition = GUILayout.Toggle(effect.MayUseCondition, "May Use");
-                    DrawCondition(effect.EffectCondition);
+                    GUILayout.BeginHorizontal();
+                    effect.MayUseFunction = GUILayout.Toggle(effect.MayUseFunction, "May Use");
+                    if (effect.MayUseFunction)
+                    {
+                        effect.TriggerPenaltyIfUsed = GUILayout.Toggle(effect.TriggerPenaltyIfUsed, "Trigger Penalty If Used");
+                        if (effect.TriggerPenaltyIfUsed && !effect.EffectCondition.SubFunctionality)
+                        {
+                            effect.EffectCondition.SubFunctionality = CreateFunctionality($"{effect.name}/Penalty Func");
+                        }
+                        else if (!effect.TriggerPenaltyIfUsed && effect.EffectCondition.SubFunctionality)
+                        {
+                            RemoveFunctionality(effect.EffectCondition.SubFunctionality);
+                        }
+                    }
+                    GUILayout.EndHorizontal();
+
+                    DrawCondition(effect.EffectCondition, "Condition:");
 
                     EditorGUILayout.Space(5);
                     if (GUILayout.Button("Remove Condition"))
@@ -44,8 +59,8 @@ public class CardDataEditor : Editor
                     effect.EffectCondition = CreateCondition($"{effect.name}/Effect Cond");
 
                 EditorGUILayout.Space(5f);
-                DrawFunctionality(effect.EffectFunctionality);
-
+                DrawFunctionality(effect.EffectFunctionality, "Function:");
+                
                 EditorGUILayout.Space(7.5f);
                 if (GUILayout.Button("End Edit"))
                     effect.isBeingEdited = false;
@@ -77,7 +92,7 @@ public class CardDataEditor : Editor
         {
             EffectData effect = CreateInstance<EffectData>();
             effect.name = $"Effect Data {_cardData.ruleEffects.Count + 1}";
-            
+
             _cardData.ruleEffects.Add(effect);
             AssetDatabase.AddObjectToAsset(effect, _cardData);
 
@@ -89,12 +104,12 @@ public class CardDataEditor : Editor
         GUILayout.EndVertical();
 
         serializedObject.ApplyModifiedProperties();
-        if (GUI.changed) 
+        if (GUI.changed)
             AssetDatabase.SaveAssets();
     }
-    
+
     #region Serialization Methods
-    
+
     private EffectCondition CreateCondition(string conditionName)
     {
         EffectCondition condition = CreateInstance<EffectCondition>();
@@ -103,17 +118,17 @@ public class CardDataEditor : Editor
 
         AssetDatabase.AddObjectToAsset(condition, _cardData);
         EditorUtility.SetDirty(condition);
-        
+
         return condition;
     }
-    
+
     private EffectFunctionality CreateFunctionality(string functionalityName)
     {
         EffectFunctionality functionality = CreateInstance<EffectFunctionality>();
         functionality.name = functionalityName;
         AssetDatabase.AddObjectToAsset(functionality, _cardData);
         EditorUtility.SetDirty(functionality);
-        
+
         return functionality;
     }
 
@@ -129,7 +144,7 @@ public class CardDataEditor : Editor
     {
         if (functionality && functionality.SubFunctionality)
             RemoveFunctionality(functionality.SubFunctionality);
-        
+
         DestroyImmediate(functionality, true);
     }
 
@@ -137,17 +152,21 @@ public class CardDataEditor : Editor
 
     #region Drawing Methods
 
-    private void DrawCondition(EffectCondition condition)
+    private void DrawCondition(EffectCondition condition, string labelText)
     {
         GUILayout.BeginHorizontal();
 
-        GUILayout.Label("Condition:", EditorStyles.boldLabel);
+        GUILayout.Label(labelText, EditorStyles.boldLabel);
         condition.Type = DrawFoldout(condition.Type);
 
         switch (condition.Type)
         {
             case EffectConditionType.WhileTapState:
                 condition.TapState = DrawFoldout(condition.TapState);
+                break;
+
+            case EffectConditionType.CheckFunction:
+                condition.CheckHasFunction = GUILayout.Toggle(condition.CheckHasFunction, "Has Function");
                 break;
         }
 
@@ -156,7 +175,7 @@ public class CardDataEditor : Editor
             condition.Connector = DrawFoldout(condition.Connector);
 
         GUILayout.EndHorizontal();
-        
+
         if (condition.AssignedParameter)
         {
             DrawTargetingParameter(condition.TargetingParameter);
@@ -175,73 +194,28 @@ public class CardDataEditor : Editor
             condition.AssignedCondition = true;
 
         DrawSubCondition(condition);
-        
+        DrawSubFunctionality(condition);
+
         EditorUtility.SetDirty(condition);
     }
-    
-    private void DrawFunctionality(EffectFunctionality functionality)
+
+    private void DrawFunctionality(EffectFunctionality functionality, string labelText)
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Function:", EditorStyles.boldLabel);
+        GUILayout.Label(labelText, EditorStyles.boldLabel);
+        
         functionality.Type = DrawFoldout(functionality.Type);
+        if (functionality.Type == EffectFunctionalityType.RegionMovement &&
+            functionality.Target == FunctionTargetType.TargetOther)
+            functionality.TargetingParameter.Type = ConditionType.Check;
 
         bool showMultiplyVal = false;
-        switch (functionality.Type)
-        {
-            case EffectFunctionalityType.GrantFunction:
-            case EffectFunctionalityType.DisableFunction:
-                functionality.AlterFunctionUntilEndOfTurn = GUILayout.Toggle(functionality.AlterFunctionUntilEndOfTurn, "Until End Of Turn");
-                break;
-
-            case EffectFunctionalityType.RegionMovement:
-                DrawMovementRegions();
-                break;
-
-            case EffectFunctionalityType.AttackTarget:
-                functionality.AttackType = DrawFoldout(functionality.AttackType);
-                break;
-
-            case EffectFunctionalityType.TargetBehaviour:
-                functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
-                break;
-
-            case EffectFunctionalityType.Keyword:
-                functionality.Keyword = DrawFoldout(functionality.Keyword);
-                break;
-
-            case EffectFunctionalityType.MultipleBreaker:
-                functionality.MultipleBreaker = DrawFoldout(functionality.MultipleBreaker);
-                break;
-
-            case EffectFunctionalityType.ToggleTap:
-                functionality.TapState = DrawFoldout(functionality.TapState);
-                break;
-
-            case EffectFunctionalityType.Discard:
-                functionality.DiscardType = DrawFoldout(functionality.DiscardType);
-                break;
-
-            case EffectFunctionalityType.PowerAttacker:
-                if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerAttackerBoost}"), out int num2))
-                    functionality.PowerAttackerBoost = num2;
-                break;
-
-            case EffectFunctionalityType.GrantPower:
-                if (int.TryParse(EditorGUILayout.TextField($"{functionality.AttackBoostGrant}"), out int num3))
-                    functionality.AttackBoostGrant = num3;
-                ShowMultiplyVal();
-                break;
-
-            case EffectFunctionalityType.CostAdjustment:
-                if (int.TryParse(EditorGUILayout.TextField($"{functionality.CostAdjustmentAmount}"), out int num4))
-                    functionality.CostAdjustmentAmount = num4;
-                break;
-        }
+        DrawFunctionTypeSpecificParams();
 
         FunctionTargetType initialTarget = functionality.Target;
         functionality.Target = DrawFoldout(functionality.Target);
 
-        if (showMultiplyVal) 
+        if (showMultiplyVal)
         {
             bool initialMultiplyVal = functionality.ShouldMultiplyVal;
             functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
@@ -258,7 +232,9 @@ public class CardDataEditor : Editor
         if (initialTarget != FunctionTargetType.TargetOther &&
             functionality.Target == FunctionTargetType.TargetOther)
         {
-            functionality.TargetingParameter.Type = ConditionType.Affect;
+            functionality.TargetingParameter.Type = 
+                functionality.Type == EffectFunctionalityType.RegionMovement ? 
+                    ConditionType.Check : ConditionType.Affect;
         }
 
         if (functionality.TargetUnspecified())
@@ -282,6 +258,61 @@ public class CardDataEditor : Editor
 
         #region Local Functions
 
+        void DrawFunctionTypeSpecificParams()
+        {
+            switch (functionality.Type)
+            {
+                case EffectFunctionalityType.GrantFunction:
+                case EffectFunctionalityType.DisableFunction:
+                    functionality.AlterFunctionUntilEndOfTurn = GUILayout.Toggle(functionality.AlterFunctionUntilEndOfTurn, "Until End Of Turn");
+                    break;
+
+                case EffectFunctionalityType.RegionMovement:
+                    DrawMovementRegions();
+                    break;
+
+                case EffectFunctionalityType.AttackTarget:
+                    functionality.AttackType = DrawFoldout(functionality.AttackType);
+                    break;
+
+                case EffectFunctionalityType.TargetBehaviour:
+                    functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
+                    break;
+
+                case EffectFunctionalityType.Keyword:
+                    functionality.Keyword = DrawFoldout(functionality.Keyword);
+                    break;
+
+                case EffectFunctionalityType.MultipleBreaker:
+                    functionality.MultipleBreaker = DrawFoldout(functionality.MultipleBreaker);
+                    break;
+
+                case EffectFunctionalityType.ToggleTap:
+                    functionality.TapState = DrawFoldout(functionality.TapState);
+                    break;
+
+                case EffectFunctionalityType.Discard:
+                    DrawDiscardParam();
+                    break;
+
+                case EffectFunctionalityType.LookAtRegion:
+                    DrawLookAtParam();
+                    break;
+
+                case EffectFunctionalityType.PowerAttacker:
+                case EffectFunctionalityType.GrantPower:
+                    if (int.TryParse(EditorGUILayout.TextField($"{functionality.AttackBoost}"), out int num1))
+                        functionality.AttackBoost = num1;
+                    DrawMultiplyVal();
+                    break;
+
+                case EffectFunctionalityType.CostAdjustment:
+                    if (int.TryParse(EditorGUILayout.TextField($"{functionality.CostAdjustmentAmount}"), out int num2))
+                        functionality.CostAdjustmentAmount = num2;
+                    break;
+            }
+        }
+
         void DrawMovementRegions()
         {
             MovementRegions movementRegions = functionality.MovementRegions;
@@ -295,22 +326,42 @@ public class CardDataEditor : Editor
                     movementRegions.showSearchedCard = GUILayout.Toggle(movementRegions.showSearchedCard, "Show Card");
             }
 
-            CardMoveParam moveParam = functionality.MoveParam;
-            if (moveParam.moveCount > 1)
-                moveParam.countChoice = DrawFoldout(moveParam.countChoice);
-            if (int.TryParse(EditorGUILayout.TextField($"{moveParam.moveCount}"), out int num1))
-                moveParam.moveCount = num1;
-            functionality.MoveParam = moveParam;
-            
+            if (movementRegions.moveCount > 1)
+                movementRegions.countChoice = DrawFoldout(movementRegions.countChoice);
+            if (int.TryParse(EditorGUILayout.TextField($"{movementRegions.moveCount}"), out int num))
+                movementRegions.moveCount = num;
+            DrawMultiplyVal();
+
             movementRegions.toRegion = DrawFoldout(movementRegions.toRegion);
 
             if (movementRegions.toRegion == RegionType.Deck)
                 movementRegions.deckCardMove = DrawFoldout(movementRegions.deckCardMove);
-
-            functionality.MovementRegions = movementRegions;
         }
 
-        void ShowMultiplyVal()
+        void DrawDiscardParam()
+        {
+            DiscardParam discardParam = functionality.DiscardParam;
+            discardParam.countType = DrawFoldout(discardParam.countType);
+            if (discardParam.countType == CountType.Number)
+            {
+                if (int.TryParse(EditorGUILayout.TextField($"{discardParam.discardCount}"), out int num))
+                    discardParam.discardCount = num;
+            }
+        }
+
+        void DrawLookAtParam()
+        {
+            LookAtParam lookAtParam = functionality.LookAtParam;
+            lookAtParam.lookAtRegion = DrawFoldout(lookAtParam.lookAtRegion);
+            lookAtParam.countType = DrawFoldout(lookAtParam.countType);
+            if (lookAtParam.countType == CountType.Number)
+            {
+                if (int.TryParse(EditorGUILayout.TextField($"{lookAtParam.lookCount}"), out int num))
+                    lookAtParam.lookCount = num;
+            }
+        }
+
+        void DrawMultiplyVal()
         {
             showMultiplyVal = true;
             GUILayout.Label(": val");
@@ -338,8 +389,8 @@ public class CardDataEditor : Editor
 
         GUILayout.Label("In");
         parameter.Region = DrawFoldout(parameter.Region);
-        int regionValue = (int) Enum.Parse(typeof(GameRegionType), parameter.Region.ToString());
-        if (regionValue < 6) 
+        int regionValue = (int)Enum.Parse(typeof(GameRegionType), parameter.Region.ToString());
+        if (regionValue < 6)
         {
             if (_cardData is CreatureData)
             {
@@ -348,8 +399,8 @@ public class CardDataEditor : Editor
             }
         }
         else if (regionValue > 7)
-                parameter.OpponentChooses = GUILayout.Toggle(parameter.OpponentChooses, "Opponent Chooses");
-        
+            parameter.OpponentChooses = GUILayout.Toggle(parameter.OpponentChooses, "Opponent Chooses");
+
         GUILayout.EndHorizontal();
     }
 
@@ -357,7 +408,7 @@ public class CardDataEditor : Editor
     {
         EditorGUILayout.LabelField("Targeting Condition:", EditorStyles.boldLabel);
 
-        GUIStyle labelStyle = new GUIStyle {fontStyle = FontStyle.Italic, fontSize = 12};
+        GUIStyle labelStyle = new GUIStyle { fontStyle = FontStyle.Italic, fontSize = 12 };
 
         GUILayout.BeginHorizontal();
         GUILayout.Space(15);
@@ -375,7 +426,7 @@ public class CardDataEditor : Editor
         GUILayout.EndVertical();
 
         GUILayout.EndHorizontal();
-        
+
         #region Local Functions
 
         void DrawCardTypeCondition()
@@ -402,7 +453,7 @@ public class CardDataEditor : Editor
             {
                 List<CivilizationCondition> removedConditions = new List<CivilizationCondition>();
                 GUILayout.Label("Civilizations:", labelStyle);
-                
+
                 for (int i = 0, n = condition.CivilizationConditions.Count; i < n; i++)
                 {
                     CivilizationCondition civilizationCondition = condition.CivilizationConditions[i];
@@ -410,14 +461,14 @@ public class CardDataEditor : Editor
 
                     GUILayout.BeginHorizontal();
                     civilizationCondition.non = GUILayout.Toggle(civilizationCondition.non, "Non");
-                    
+
                     ReorderableList list = new ReorderableList(civilization,
                         typeof(CardParams.Civilization), true, true, true, false);
                     list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
                     {
                         rect.y += 2;
                         Rect elementRect = new Rect(rect.x, rect.y, 120, EditorGUIUtility.singleLineHeight);
-                        civilization[index] = (CardParams.Civilization) EditorGUI.EnumPopup(elementRect, civilization[index]);
+                        civilization[index] = (CardParams.Civilization)EditorGUI.EnumPopup(elementRect, civilization[index]);
                     };
                     list.drawHeaderCallback = (Rect rect) =>
                     {
@@ -433,7 +484,7 @@ public class CardDataEditor : Editor
 
                     civilizationCondition.civilization = civilization;
                     GUILayout.EndHorizontal();
-                    
+
                     if (n > 1 && i < n - 1)
                         civilizationCondition.connector = DrawFoldout(civilizationCondition.connector);
 
@@ -500,7 +551,7 @@ public class CardDataEditor : Editor
                 condition.AddRaceCondition(raceCondition);
             }
         }
-        
+
         void DrawKeywordCondition()
         {
             if (condition.KeywordConditions.Count > 0)
@@ -540,7 +591,7 @@ public class CardDataEditor : Editor
                 condition.AddKeywordCondition(keywordCondition);
             }
         }
-        
+
         void DrawPowerCondition()
         {
             if (condition.PowerConditions.Count > 0)
@@ -580,7 +631,7 @@ public class CardDataEditor : Editor
                 condition.AddPowerCondition(powerCondition);
             }
         }
-        
+
         void DrawCardCondition()
         {
             if (condition.CardConditions.Count > 0)
@@ -594,7 +645,7 @@ public class CardDataEditor : Editor
 
                     GUILayout.BeginHorizontal();
 
-                    cardCondition.cardData = (CardData) EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
+                    cardCondition.cardData = (CardData)EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
                     if (n > 1 && i < n - 1)
                         cardCondition.connector = DrawFoldout(cardCondition.connector);
 
@@ -650,7 +701,7 @@ public class CardDataEditor : Editor
 
         if (parentCondition.SubCondition)
         {
-            DrawCondition(parentCondition.SubCondition);
+            DrawCondition(parentCondition.SubCondition, "Sub-condition:");
 
             EditorGUILayout.Space(5);
             if (GUILayout.Button("Remove Sub Condition"))
@@ -666,26 +717,52 @@ public class CardDataEditor : Editor
 
         GUILayout.EndHorizontal();
     }
-    
-    private void DrawSubFunctionality(EffectFunctionality parentFunctionality)
+
+    private void DrawSubFunctionality(EffectCondition parentCondition)
     {
         GUILayout.BeginHorizontal();
         GUILayout.Space(15);
 
         GUILayout.BeginVertical();
 
-        if (parentFunctionality.SubFunctionality) 
+        if (parentCondition.SubFunctionality)
         {
-            DrawFunctionality(parentFunctionality.SubFunctionality);
+            DrawFunctionality(parentCondition.SubFunctionality, "Sub-function:");
 
             EditorGUILayout.Space(5);
             if (GUILayout.Button("Remove Sub Functionality"))
-                RemoveFunctionality(parentFunctionality.SubFunctionality);
+                RemoveFunctionality(parentCondition.SubFunctionality);
         }
         else
         {
             if (GUILayout.Button("Add Sub Functionality"))
-                parentFunctionality.SubFunctionality = CreateFunctionality($"{parentFunctionality.name}/Sub Func");
+                parentCondition.SubFunctionality = CreateFunctionality($"{parentCondition.name}/Sub Func");
+        }
+
+        GUILayout.EndVertical();
+
+        GUILayout.EndHorizontal();
+    }
+    
+    private void DrawSubFunctionality(EffectFunctionality parentCondition)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(15);
+
+        GUILayout.BeginVertical();
+
+        if (parentCondition.SubFunctionality)
+        {
+            DrawFunctionality(parentCondition.SubFunctionality, "Sub-function:");
+
+            EditorGUILayout.Space(5);
+            if (GUILayout.Button("Remove Sub Functionality"))
+                RemoveFunctionality(parentCondition.SubFunctionality);
+        }
+        else
+        {
+            if (GUILayout.Button("Add Sub Functionality"))
+                parentCondition.SubFunctionality = CreateFunctionality($"{parentCondition.name}/Sub Func");
         }
 
         GUILayout.EndVertical();
@@ -696,11 +773,11 @@ public class CardDataEditor : Editor
     private T DrawFoldout<T>(T currentValue, int enumIndexAdjustment = 0) where T : Enum
     {
         Type enumType = typeof(T);
-        int currentInt = (int) Enum.Parse(enumType, currentValue.ToString());
+        int currentInt = (int)Enum.Parse(enumType, currentValue.ToString());
         int newInt = EditorGUILayout.Popup(currentInt - enumIndexAdjustment, Enum.GetNames(enumType));
         if (currentInt != newInt)
             newInt += enumIndexAdjustment;
-        return (T) Enum.Parse(enumType, newInt.ToString());
+        return (T)Enum.Parse(enumType, newInt.ToString());
     }
 
     #endregion
