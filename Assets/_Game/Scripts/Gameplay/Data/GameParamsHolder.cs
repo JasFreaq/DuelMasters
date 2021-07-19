@@ -29,6 +29,9 @@ public class GameParamsHolder : MonoBehaviour
     [SerializeField] private Material _shieldBaseMat;
     [SerializeField] private Material _shieldHighlightMat;
 
+    [Header("Prefabs")]
+    [SerializeField] private FlavorTextLayoutHandler _flavorTextLayoutPrefab;
+
     #region Static Data Members
 
     private static GameParamsHolder _Instance = null;
@@ -133,6 +136,15 @@ public class GameParamsHolder : MonoBehaviour
     public Material ShieldHighlightMat
     {
         get { return _shieldHighlightMat; }
+    }
+
+    #endregion
+
+    #region Prefab(s)
+
+    public FlavorTextLayoutHandler FlavorTextLayoutPrefab
+    {
+        get { return _flavorTextLayoutPrefab; }
     }
 
     #endregion

@@ -19,6 +19,7 @@ public class CreatureLayoutHandler : CardLayoutHandler
     public override void SetupCard(CardData cardData)
     {
         base.SetupCard(cardData);
+        SetupRulesArea(cardData, true);
 
         CreatureData creatureData = (CreatureData) cardData;
 
@@ -29,10 +30,5 @@ public class CreatureLayoutHandler : CardLayoutHandler
 
         _powerText.text = creatureData.Power.ToString();
         _powerTextShade.text = creatureData.Power.ToString();
-    }
-
-    protected override void SetupRules(string rulesText)
-    {
-        base.SetupRules(rulesText);
     }
 }
