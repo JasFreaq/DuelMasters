@@ -315,27 +315,27 @@ public class CardDataEditor : Editor
 
         void DrawMovementRegions()
         {
-            MovementRegions movementRegions = functionality.MovementRegions;
+            MovementZones movementZones = functionality.MovementZones;
 
-            movementRegions.fromRegion = DrawFoldout(movementRegions.fromRegion);
+            movementZones.fromZone = DrawFoldout(movementZones.fromZone);
 
-            if (movementRegions.fromRegion == RegionType.Deck)
+            if (movementZones.fromZone == CardZoneType.Deck)
             {
-                movementRegions.deckCardMove = DrawFoldout(movementRegions.deckCardMove);
-                if (movementRegions.deckCardMove == DeckCardMoveType.SearchShuffle)
-                    movementRegions.showSearchedCard = GUILayout.Toggle(movementRegions.showSearchedCard, "Show Card");
+                movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
+                if (movementZones.deckCardMove == DeckCardMoveType.SearchShuffle)
+                    movementZones.showSearchedCard = GUILayout.Toggle(movementZones.showSearchedCard, "Show Card");
             }
 
-            if (movementRegions.moveCount > 1)
-                movementRegions.countChoice = DrawFoldout(movementRegions.countChoice);
-            if (int.TryParse(EditorGUILayout.TextField($"{movementRegions.moveCount}"), out int num))
-                movementRegions.moveCount = num;
+            if (movementZones.moveCount > 1)
+                movementZones.countChoice = DrawFoldout(movementZones.countChoice);
+            if (int.TryParse(EditorGUILayout.TextField($"{movementZones.moveCount}"), out int num))
+                movementZones.moveCount = num;
             DrawMultiplyVal();
 
-            movementRegions.toRegion = DrawFoldout(movementRegions.toRegion);
+            movementZones.toZone = DrawFoldout(movementZones.toZone);
 
-            if (movementRegions.toRegion == RegionType.Deck)
-                movementRegions.deckCardMove = DrawFoldout(movementRegions.deckCardMove);
+            if (movementZones.toZone == CardZoneType.Deck)
+                movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
         }
 
         void DrawDiscardParam()
@@ -352,7 +352,7 @@ public class CardDataEditor : Editor
         void DrawLookAtParam()
         {
             LookAtParam lookAtParam = functionality.LookAtParam;
-            lookAtParam.lookAtRegion = DrawFoldout(lookAtParam.lookAtRegion);
+            lookAtParam.lookAtZone = DrawFoldout(lookAtParam.lookAtZone);
             lookAtParam.countType = DrawFoldout(lookAtParam.countType);
             if (lookAtParam.countType == CountType.Number)
             {
@@ -388,8 +388,8 @@ public class CardDataEditor : Editor
         }
 
         GUILayout.Label("In");
-        parameter.Region = DrawFoldout(parameter.Region);
-        int regionValue = (int)Enum.Parse(typeof(GameRegionType), parameter.Region.ToString());
+        parameter.SubZone = DrawFoldout(parameter.SubZone);
+        int regionValue = (int)Enum.Parse(typeof(SubZoneType), parameter.SubZone.ToString());
         if (regionValue < 6)
         {
             if (_cardData is CreatureData)

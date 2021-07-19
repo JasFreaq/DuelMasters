@@ -56,19 +56,19 @@ public class ManaZoneManager : MonoBehaviour
 
     #region Functionality Methods
 
-    private void AddCard(CardInstanceObject card)
+    private void AddCard(CardObject cardObj)
     {
         _tempCard.parent = transform;
-        card.transform.parent = _holderTransform;
+        cardObj.transform.parent = _holderTransform;
 
-        _playerData.CardsInMana.Add(card.transform.GetInstanceID(), card);
-        card.CurrentZone = CardZone.ManaZone;
+        _playerData.CardsInMana.Add(cardObj.transform.GetInstanceID(), cardObj);
+        cardObj.CardInst.SetCurrentZone(CardZoneType.ManaZone);
     }
     
     private void RemoveCardAtIndex(int index)
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
-        CardInstanceObject card = _playerData.CardsInMana[iD];
+        CardObject card = _playerData.CardsInMana[iD];
         _playerData.CardsInMana.Remove(iD);
         card.transform.parent = transform;
         ArrangeCards();
@@ -78,7 +78,7 @@ public class ManaZoneManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromManaZoneRoutine(CardInstanceObject card)
+    public IEnumerator MoveFromManaZoneRoutine(CardObject card)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
 
@@ -90,12 +90,14 @@ public class ManaZoneManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToManaZoneRoutine(CardInstanceObject card)
+    public IEnumerator MoveToManaZoneRoutine(CardObject card)
     {
         _tempCard.parent = _holderTransform;
 
-        _tempManaCard.civValue = CardParams.GetCivValue(card.CardData.Civilization);
-        _tempManaCard.cardName = card.CardData.Name;
+        CardInstance cardInst = card.CardInst;
+        _tempManaCard.civValue = CardParams.GetCivValue(cardInst.CardData.Civilization);
+        _tempManaCard.cardName = cardInst.CardData.Name;
+
         ArrangeCards();
 
         card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
@@ -128,13 +130,13 @@ public class ManaZoneManager : MonoBehaviour
             float currentWidth = cardWidth;
 
             ManaTransform currentManaCard = new ManaTransform(null, false, 0, "");
-            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardInstanceObject currentCard))
+            if (_playerData.CardsInMana.TryGetValue(cardTransform.GetInstanceID(), out CardObject currentCard))
             {
                 currentCard.ManaLayout.Canvas.sortingOrder = _manaZoneSortingLayerFloor + i;
 
                 currentManaCard.transform = currentCard.transform;
-                currentManaCard.isTapped = currentCard.IsTapped;
-                currentManaCard.civValue = CardParams.GetCivValue(currentCard.CardData.Civilization);
+                currentManaCard.isTapped = currentCard.CardInst.IsTapped;
+                currentManaCard.civValue = CardParams.GetCivValue(currentCard.CardInst.CardData.Civilization);
             }
             else
             {
@@ -190,10 +192,11 @@ public class ManaZoneManager : MonoBehaviour
         ManaTransform[] manaTransforms = new ManaTransform[n];
         for (int i = 0; i < n; i++)
         {
-            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardInstanceObject card))
+            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardObject card))
             {
-                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i), card.IsTapped,
-                    CardParams.GetCivValue(card.CardData.Civilization), card.CardData.Name);
+                CardInstance cardInst = card.CardInst;
+                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i), card.CardInst.IsTapped,
+                    CardParams.GetCivValue(cardInst.CardData.Civilization), cardInst.CardData.Name);
             }
             else
             {

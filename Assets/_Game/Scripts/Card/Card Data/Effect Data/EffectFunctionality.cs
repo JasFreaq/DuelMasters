@@ -12,9 +12,9 @@ public enum DeckCardMoveType
 }
 
 [System.Serializable]
-public class MovementRegions
+public class MovementZones
 {
-    public RegionType fromRegion, toRegion;
+    public CardZoneType fromZone, toZone;
     public DeckCardMoveType deckCardMove;
     public bool showSearchedCard;
 
@@ -61,7 +61,7 @@ public class DiscardParam
 [System.Serializable]
 public class LookAtParam
 {
-    public RegionType lookAtRegion;
+    public CardZoneType lookAtZone;
     public CountType countType;
     public int lookCount = 1;
 
@@ -95,7 +95,7 @@ public class EffectFunctionality : ScriptableObject
 
     #region Type Specific Members
 
-    [SerializeReference] private MovementRegions _movementRegions = new MovementRegions();
+    [SerializeReference] private MovementZones _movementZones = new MovementZones();
     [SerializeReference] private AttackType _attackType;
     [SerializeReference] private TargetBehaviourType _targetBehaviour;
     [SerializeReference] private KeywordType _keyword;
@@ -202,12 +202,12 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public MovementRegions MovementRegions
+    public MovementZones MovementZones
     {
-        get { return _movementRegions; }
+        get { return _movementZones; }
 
 #if UNITY_EDITOR
-        set { _movementRegions = value; }
+        set { _movementZones = value; }
 #endif
     }
 
@@ -363,7 +363,7 @@ public class EffectFunctionality : ScriptableObject
                     return $"{_target} {_discardParam}";
 
                 case EffectFunctionalityType.LookAtRegion:
-                    return $"{_lookAtParam} in {_target}'s {_lookAtParam.lookAtRegion}";
+                    return $"{_lookAtParam} in {_target}'s {_lookAtParam.lookAtZone}";
 
                 case EffectFunctionalityType.PowerAttacker:
                     return $"Power Attacker +{_attackBoost}";
@@ -402,29 +402,29 @@ public class EffectFunctionality : ScriptableObject
                     break;
             }
 
-            str1 += $"{_movementRegions.moveCount} card ";
-            if (_movementRegions.moveCount > 1)
+            str1 += $"{_movementZones.moveCount} card ";
+            if (_movementZones.moveCount > 1)
                 str1 += "s ";
 
-            if (_movementRegions.fromRegion == RegionType.Deck)
+            if (_movementZones.fromZone == CardZoneType.Deck)
             {
-                if (_movementRegions.deckCardMove == DeckCardMoveType.Top)
-                    return $"Draw {_movementRegions.countChoice} {_movementRegions.moveCount}";
+                if (_movementZones.deckCardMove == DeckCardMoveType.Top)
+                    return $"Draw {_movementZones.countChoice} {_movementZones.moveCount}";
                 
-                str1 += $"after searching deck to {_movementRegions.toRegion}";
-                if (_movementRegions.showSearchedCard)
+                str1 += $"after searching deck to {_movementZones.toZone}";
+                if (_movementZones.showSearchedCard)
                     str1 += " and show it to the opponent";
             }
-            else if (_movementRegions.toRegion == RegionType.Deck)
+            else if (_movementZones.toZone == CardZoneType.Deck)
             {
-                str1 += $"from {_movementRegions.fromRegion} ";
-                if (_movementRegions.deckCardMove == DeckCardMoveType.Top)
+                str1 += $"from {_movementZones.fromZone} ";
+                if (_movementZones.deckCardMove == DeckCardMoveType.Top)
                     str1 += $"to top of Deck";
                 else
                     str1 += "and shuffle into Deck";
             }
             else
-                str1 += $"from {_movementRegions.fromRegion} to {_movementRegions.toRegion}";
+                str1 += $"from {_movementZones.fromZone} to {_movementZones.toZone}";
             return str1;
         }
 

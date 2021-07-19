@@ -1148,10 +1148,10 @@ MonoBehaviour:
   _fromTransitionTime: 1
   _toTransitionTime: 1
   _intermediateHolder: {fileID: 127403156}
-  _flippedIntermediateHolder: {fileID: 1355605650}
-  _previewTargetPosition: {x: 0, y: 5, z: 15}
-  _previewTargetRotation: {x: 0, y: 0, z: 0}
-  _previewTargetScale: {x: -1.5, y: 1.5, z: -1.5}
+  flippedIntermediateHolder: {fileID: 0}
+  previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
+  previewTargetRotation: {x: -105, y: 0, z: 0}
+  previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
 --- !u!1 &763472560
 GameObject:
   m_ObjectHideFlags: 0
@@ -2662,10 +2662,10 @@ MonoBehaviour:
   _fromTransitionTime: 1
   _toTransitionTime: 1
   _intermediateHolder: {fileID: 893572538}
-  _flippedIntermediateHolder: {fileID: 0}
-  _previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
-  _previewTargetRotation: {x: -105, y: 0, z: 0}
-  _previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
+  flippedIntermediateHolder: {fileID: 0}
+  previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
+  previewTargetRotation: {x: -105, y: 0, z: 0}
+  previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
 --- !u!1 &2133683596
 GameObject:
   m_ObjectHideFlags: 0

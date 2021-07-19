@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
 
     private PlayerDataHandler _playerData;
 
-    private List<CardInstanceObject> _playableCards = new List<CardInstanceObject>();
+    private List<CardObject> _playableCards = new List<CardObject>();
 
     public PlayerDataHandler DataHandler
     {
@@ -42,7 +42,7 @@ public class PlayerManager : MonoBehaviour
         get { return _graveyardManager; }
     }
 
-    public IReadOnlyList<CardInstanceObject> PlayableCards
+    public IReadOnlyList<CardObject> PlayableCards
     {
         get { return _playableCards; }
     }
@@ -61,7 +61,7 @@ public class PlayerManager : MonoBehaviour
 
         if (_handManager.transform.GetChild(0).childCount > 0) 
         {
-            CardInstanceObject card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+            CardObject card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
             if (Input.GetKeyDown(KeyCode.M))
                 StartCoroutine(ChargeManaRoutine(card));
             if (Input.GetKeyDown(KeyCode.P))
@@ -72,7 +72,7 @@ public class PlayerManager : MonoBehaviour
 
         if (_manaZoneManager.transform.GetChild(0).childCount > 0)
         {
-            CardInstanceObject card = _playerData.CardsInMana[_manaZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+            CardObject card = _playerData.CardsInMana[_manaZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
             if (Input.GetKeyDown(KeyCode.N))
                 StartCoroutine(ReturnFromManaRoutine(card));
         }
@@ -80,14 +80,21 @@ public class PlayerManager : MonoBehaviour
 
     #region Setup Methods
 
-    public void Initialize(Deck deck, Action<CardInstanceObject> processAction)
+    public void GenerateDeck(List<CardInstance> cardsInsts, Action<CardObject> processAction)
     {
-        _deckManager.Initialize(deck, processAction);
+        _deckManager.GenerateCardObjects(cardsInsts, processAction);
+        ShuffleDeck();
+    }
+
+    public void ShuffleDeck()
+    {
+        GameDataHandler.Instance.ShuffleCards(_isPlayer);
+        _deckManager.ArrangeCards();
     }
 
     public Coroutine SetupShields()
     {
-        CardInstanceObject[] cards = new CardInstanceObject[5];
+        CardObject[] cards = new CardObject[5];
         for (int i = 0; i < 5; i++)
             cards[i] = _deckManager.RemoveTopCard();
 
@@ -102,13 +109,15 @@ public class PlayerManager : MonoBehaviour
     {
         _playableCards.Clear();
 
-        foreach (KeyValuePair<int, CardInstanceObject> pair in _playerData.CardsInHand)
+        foreach (KeyValuePair<int, CardObject> pair in _playerData.CardsInHand)
         {
-            CardInstanceObject card = pair.Value;
-            if (_playerData.CanPayCost(card.CardData.Civilization, card.CardData.Cost))
+            CardObject cardObj = pair.Value;
+            CardInstance cardInst = cardObj.CardInst;
+
+            if (_playerData.CanPayCost(cardInst.CardData.Civilization, cardInst.CardData.Cost))
             {
-                card.SetHighlight(true);
-                _playableCards.Add(card);
+                cardObj.SetHighlight(true);
+                _playableCards.Add(cardObj);
             }
         }
 
@@ -119,7 +128,7 @@ public class PlayerManager : MonoBehaviour
 
     #region From-Hand Transitions
 
-    public IEnumerator ChargeManaRoutine(CardInstanceObject card)
+    public IEnumerator ChargeManaRoutine(CardObject card)
     {
         card.ManaLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
@@ -133,33 +142,33 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
 
-    public IEnumerator PlayCardRoutine(CardInstanceObject card)
+    public IEnumerator PlayCardRoutine(CardObject card)
     {
         card.HoverPreviewHandler.PreviewEnabled = false;
 
         yield return _handManager.MoveFromHandRoutine(card);
 
-        if (card is CreatureInstanceObject creatureCard)
+        if (card is CreatureObject creatureCard)
             yield return StartCoroutine(SummonCreatureRoutine(creatureCard));
-        else if (card is SpellInstanceObject spellCard)
+        else if (card is SpellObject spellCard)
             yield return StartCoroutine(CastSpellRoutine(spellCard));
     }
 
-    private IEnumerator SummonCreatureRoutine(CreatureInstanceObject creatureCard)
+    private IEnumerator SummonCreatureRoutine(CreatureObject creatureCard)
     {
         creatureCard.ActivateBattleLayout();
         yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard);
         creatureCard.HoverPreviewHandler.PreviewEnabled = true;
     }
 
-    private IEnumerator CastSpellRoutine(SpellInstanceObject spellCard)
+    private IEnumerator CastSpellRoutine(SpellObject spellCard)
     {
         spellCard.DestroyCard();
 
         yield break;
     }
     
-    public IEnumerator MakeShieldFromHandRoutine(CardInstanceObject card)
+    public IEnumerator MakeShieldFromHandRoutine(CardObject card)
     {
         card.CardLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
@@ -178,7 +187,7 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator DrawCardRoutine()
     {
-        CardInstanceObject card = _deckManager.RemoveTopCard();
+        CardObject card = _deckManager.RemoveTopCard();
         card.CardLayout.Canvas.sortingOrder = 100;
         card.CardLayout.Canvas.gameObject.SetActive(true);
 
@@ -191,13 +200,13 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator BreakShieldRoutine(int shieldIndex)
     {
-        CardInstanceObject card = _shieldsManager.GetShieldAtIndex(shieldIndex);
+        CardObject card = _shieldsManager.GetShieldAtIndex(shieldIndex);
         yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
         yield return _handManager.MoveToHandRoutine(card);
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
 
-    public IEnumerator ReturnFromManaRoutine(CardInstanceObject card)
+    public IEnumerator ReturnFromManaRoutine(CardObject card)
     {
         card.CardLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;
@@ -210,7 +219,7 @@ public class PlayerManager : MonoBehaviour
         card.HoverPreviewHandler.PreviewEnabled = true;
     }
     
-    public IEnumerator ReturnFromBattleRoutine(CardInstanceObject card)
+    public IEnumerator ReturnFromBattleRoutine(CardObject card)
     {
         card.CardLayout.Canvas.sortingOrder = 100;
         card.HoverPreviewHandler.PreviewEnabled = false;

@@ -49,7 +49,7 @@ public class ShieldsManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public IEnumerator SetupShieldsRoutine(CardInstanceObject[] cards)
+    public IEnumerator SetupShieldsRoutine(CardObject[] cards)
     {
         int baseShieldCountMinusOne = GameParamsHolder.Instance.BaseCardCount - 1;
         for (int i = baseShieldCountMinusOne; i >= 0; i--)
@@ -77,7 +77,7 @@ public class ShieldsManager : MonoBehaviour
 
         yield return new WaitForSeconds(_animationTime);
 
-        CardInstanceObject cardObj = shieldObj.CardObject;
+        CardObject cardObj = shieldObj.CardObject;
         cardObj.CardLayout.Canvas.sortingOrder = 100;
         cardObj.transform.parent = transform;
         cardObj.CardLayout.Canvas.gameObject.SetActive(true);
@@ -95,7 +95,7 @@ public class ShieldsManager : MonoBehaviour
         yield return StartCoroutine(MoveFromShieldsRoutine(cardObj));
     }
 
-    public IEnumerator MakeShieldRoutine(CardInstanceObject cardObj)
+    public IEnumerator MakeShieldRoutine(CardObject cardObj)
     {
         int emptyIndex = GetEmptyIndex();
         AddShield(emptyIndex, cardObj);
@@ -105,12 +105,12 @@ public class ShieldsManager : MonoBehaviour
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(emptyIndex));
     }
 
-    public CardInstanceObject GetShieldAtIndex(int shieldIndex)
+    public CardObject GetShieldAtIndex(int shieldIndex)
     {
         return _playerData.Shields[shieldIndex].CardObject;
     }
     
-    private void AddShield(int shieldIndex, CardInstanceObject cardObj)
+    private void AddShield(int shieldIndex, CardObject cardObj)
     {
         if (_playerData.Shields.Count > shieldIndex)
         {
@@ -124,7 +124,7 @@ public class ShieldsManager : MonoBehaviour
             ArrangeShields(true);
         }
 
-        cardObj.CurrentZone = CardZone.Shields;
+        cardObj.CardInst.SetCurrentZone(CardZoneType.Shields);
     }
 
     private int GetEmptyIndex()
@@ -145,7 +145,7 @@ public class ShieldsManager : MonoBehaviour
 
     #region Transition Methods
 
-    private IEnumerator MoveFromShieldsRoutine(CardInstanceObject cardObj)
+    private IEnumerator MoveFromShieldsRoutine(CardObject cardObj)
     {
         cardObj.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
         Quaternion rotation = _intermediateHolder.rotation;
@@ -155,7 +155,7 @@ public class ShieldsManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    private void MoveToShields(CardInstanceObject cardObj, ShieldObject shieldObj)
+    private void MoveToShields(CardObject cardObj, ShieldObject shieldObj)
     {
         Transform holderTransform = shieldObj.CardHolder;
         cardObj.transform.transform.DOMove(holderTransform.position, _toTransitionTime).SetEase(Ease.OutQuint);

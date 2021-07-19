@@ -399,7 +399,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3958148146565861390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e450f85ce9faac40aaa32cd6c8bd52d, type: 3}
+  m_Script: {fileID: 11500000, guid: cfe82806ad6bd50489a5ebf019636460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _cardLayoutCollider: {fileID: 3958148146565861389}
@@ -514,7 +514,7 @@ MonoBehaviour:
   _cardTypeTextTransform: {fileID: 5533437898333184841}
   _rulesPanel: {fileID: 5533437896280614387}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
-  _glowFrame: {fileID: 3208046771036485630}
+  _highlightFrame: {fileID: 0}
   _cardFrameDatabase: {fileID: 8015085866577669313}
 --- !u!1 &5533437896280614384
 GameObject:
@@ -1163,6 +1163,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5547265585425964472, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
       propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9214949863522746488, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9214949863522746490, guid: be4861bc10ecd274285f35a0813b13d5, type: 3}

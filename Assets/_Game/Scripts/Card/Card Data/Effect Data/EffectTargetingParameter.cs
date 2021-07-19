@@ -23,7 +23,7 @@ public class EffectTargetingParameter
     [SerializeReference] private CountType _countType;
     [SerializeReference] private CountChoiceType _countChoice;
     [SerializeReference] private int _count = 0;
-    [SerializeReference] private GameRegionType _region;
+    [SerializeReference] private SubZoneType _subZone;
 
     [SerializeReference] private bool _includeSelf;
     [SerializeReference] private bool _opponentChooses;
@@ -73,12 +73,12 @@ public class EffectTargetingParameter
 #endif
     }
 
-    public GameRegionType Region
+    public SubZoneType SubZone
     {
-        get { return _region; }
+        get { return _subZone; }
 
 #if UNITY_EDITOR
-        set { _region = value; }
+        set { _subZone = value; }
 #endif
     }
 
@@ -112,9 +112,9 @@ public class EffectTargetingParameter
                 str += $"{_countType} ";
         }
         
-        str += $"in {_region}";
+        str += $"in {_subZone}";
 
-        int regionValue = (int) Enum.Parse(typeof(GameRegionType), _region.ToString());
+        int regionValue = (int) Enum.Parse(typeof(SubZoneType), _subZone.ToString());
         if (regionValue < 6 && !_includeSelf && ownerIsCreature) 
         {
             str += " except itself";

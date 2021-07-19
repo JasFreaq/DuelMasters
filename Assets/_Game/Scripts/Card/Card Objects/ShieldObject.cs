@@ -9,14 +9,14 @@ public class ShieldObject : CardBehaviour
     [SerializeField] private Transform _cardHolderTransform;
 
     private Animator _animator;
-    private CardInstanceObject _cardObject = null;
+    private CardObject _cardObject = null;
 
     private bool _isHighlighted = false;
     private Vector3 _holderScale;
 
     #region Properties
 
-    public CardInstanceObject CardObject
+    public CardObject CardObject
     {
         get { return _cardObject;}
         set { _cardObject = value; }

@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour
     
     private Camera _mainCamera = null;
 
-    private CardInstanceObject _currentlySelected;
-    private CardInstanceObject _hoveredCard;
+    private CardObject _currentlySelected;
+    private CardObject _hoveredCard;
     private ShieldObject _hoveredShield;
 
     private bool _canInteract = false;
@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
                 if (GameManager.Instance.CurrentStep == GameStepType.AttackStep)
                 {
-                    if (_currentlySelected && _currentlySelected.InZone(CardZone.BattleZone))
+                    if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone))
                     {
                         TargetingLinesHandler.Instance.SetLine(hit.point);
                     }
@@ -61,11 +61,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SelectCard(CardInstanceObject card)
+    private void SelectCard(CardObject cardObj)
     {
-        if (_currentlySelected != card)
+        if (_currentlySelected != cardObj)
         {
-            _currentlySelected = card;
+            _currentlySelected = cardObj;
 
             switch (GameManager.Instance.CurrentStep)
             {
@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
 
                 case GameStepType.MainStep:
                     PlayerManager player = GameManager.Instance.GetManager(true);
-                    foreach (CardInstanceObject cardManager in player.PlayableCards)
+                    foreach (CardObject cardManager in player.PlayableCards)
                     {
                         if (cardManager != _currentlySelected)
                             cardManager.SetHighlight(false);
@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case GameStepType.AttackStep:
-                    if (!_currentlySelected.IsTapped)
+                    if (!_currentlySelected.CardInst.IsTapped)
                     {
                         _currentlySelected.SetHighlight(true);
                         TargetingLinesHandler.Instance.EnableLine(_currentlySelected.transform.position);
@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     PlayerManager player = GameManager.Instance.GetManager(true);
-                    foreach (CardInstanceObject cardManager in player.PlayableCards)
+                    foreach (CardObject cardManager in player.PlayableCards)
                     {
                         if (cardManager != _currentlySelected)
                             cardManager.SetHighlight(true);
@@ -130,16 +130,16 @@ public class PlayerController : MonoBehaviour
     
     private void ProcessCardHover(int iD)
     {
-        CardInstanceObject tempCardObj = null;
+        CardObject tempCardObj = null;
         PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(true);
 
         if (dataHandler.AllCards.ContainsKey(iD))
-            tempCardObj = (CardInstanceObject) dataHandler.AllCards[iD];
+            tempCardObj = (CardObject) dataHandler.AllCards[iD];
         else
         {
             dataHandler = GameDataHandler.Instance.GetDataHandler(false);
             if (dataHandler.AllCards.ContainsKey(iD))
-                tempCardObj = (CardInstanceObject) dataHandler.AllCards[iD];
+                tempCardObj = (CardObject) dataHandler.AllCards[iD];
         }
 
         if (tempCardObj)
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
 
     private void ProcessShieldHover(int iD)
     {
-        if (_currentlySelected && _currentlySelected.InZone(CardZone.BattleZone))
+        if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone))
         {
             ShieldObject tempShield = null;
             foreach (ShieldObject shield in GameDataHandler.Instance.GetDataHandler(false).Shields)
@@ -265,30 +265,30 @@ public class PlayerController : MonoBehaviour
 
         IEnumerator AttemptAttack(CardBehaviour target)
         {
-            if (_currentlySelected && _currentlySelected.InZone(CardZone.BattleZone)
-                                   && !_currentlySelected.IsTapped)
+            if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone)
+                                   && !_currentlySelected.CardInst.IsTapped)
             {
                 TargetingLinesHandler.Instance.DisableLines();
 
-                CreatureInstanceObject creatureObj = (CreatureInstanceObject) _currentlySelected;
+                CreatureObject creatureObj = (CreatureObject) _currentlySelected;
                 float attackTime = GameParamsHolder.Instance.AttackTime;
                 Vector3 creaturePos = creatureObj.transform.position;
                 
-                if (target is CreatureInstanceObject)
+                if (target is CreatureObject)
                 {
-                    CreatureInstanceObject attackedCreatureObj = (CreatureInstanceObject) target;
-                    if (attackedCreatureObj.IsTapped)
+                    CreatureObject attackedCreatureObj = (CreatureObject) target;
+                    if (attackedCreatureObj.CardInst.IsTapped)
                     {
                         creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
                         yield return new WaitForSeconds(attackTime);
                         DeselectCurrentlySelected();
 
-                        CreatureData creatureData = (CreatureData) creatureObj.CardData;
-                        CreatureData attackedCreatureData = (CreatureData) attackedCreatureObj.CardData;
+                        int attackingCraturePower = ((CreatureData) creatureObj.CardInst.CardData).Power;
+                        int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
 
-                        if (creatureData.Power > attackedCreatureData.Power)
+                        if (attackingCraturePower > attackedCreaturePower)
                             attackedCreatureObj.DestroyCard();
-                        else if (creatureData.Power == attackedCreatureData.Power)
+                        else if (attackingCraturePower == attackedCreaturePower)
                         {
                             creatureObj.DestroyCard();
                             creatureObj = null;
@@ -323,7 +323,7 @@ public class PlayerController : MonoBehaviour
                     {
                         creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
                         yield return new WaitForSeconds(attackTime);
-                        creatureObj.ToggleTap();
+                        creatureObj.ToggleTapState();
                     }
                 }
 

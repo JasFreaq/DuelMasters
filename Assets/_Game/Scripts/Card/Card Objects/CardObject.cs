@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 [DisallowMultipleComponent]
-public class CardInstanceObject : CardBehaviour
+public class CardObject : CardBehaviour
 {
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
@@ -14,16 +15,13 @@ public class CardInstanceObject : CardBehaviour
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
     
-    private CardData _cardData;
+    protected CardInstance _cardInst;
+
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
-
-    private Action<CardInstanceObject> _onProcessAction;
+    private Action<CardObject> _onProcessAction;
 
     private bool _isPlayer;
-    protected CardZone _currentZone = 0;
-    
-    protected bool _isTapped = false;
     protected bool _isHighlighted = false;
     protected bool _isSelected = false;
     private bool _isHighlightBaseColor = true;
@@ -50,9 +48,9 @@ public class CardInstanceObject : CardBehaviour
         get { return _manaCardLayoutHandler; }
     }
     
-    public CardData CardData
+    public CardInstance CardInst
     {
-        get { return _cardData; }
+        get { return _cardInst; }
     }
 
     public HoverPreviewHandler HoverPreviewHandler
@@ -63,16 +61,6 @@ public class CardInstanceObject : CardBehaviour
     public DragHandler DragHandler
     {
         get { return _dragHandler; }
-    }
-
-    public CardZone CurrentZone
-    {
-        set { _currentZone = value; }
-    }
-
-    public bool IsTapped
-    {
-        get { return _isTapped; }
     }
     
     public bool IsHighlightBaseColor
@@ -125,7 +113,7 @@ public class CardInstanceObject : CardBehaviour
 
     public virtual void ProcessMouseDown()
     {
-        if (_currentZone == CardZone.Hand)
+        if (_cardInst.CurrentZone == CardZoneType.Hand)
         {
             _isSelected = !_isSelected;
 
@@ -164,14 +152,14 @@ public class CardInstanceObject : CardBehaviour
 
     #region Setup Methods
 
-    public virtual void SetupCard(CardData cardData)
+    public virtual void SetupCard(CardInstance cardInst)
     {
-        _cardData = cardData;
+        _cardInst = cardInst;
         
-        _cardLayoutHandler.SetupCard(cardData);
-        _manaCardLayoutHandler.SetupCard(cardData);
+        _cardLayoutHandler.SetupCard(cardInst.CardData);
+        _manaCardLayoutHandler.SetupCard(cardInst.CardData);
 
-        _previewCardLayout.SetupCard(cardData);
+        _previewCardLayout.SetupCard(cardInst.CardData);
     }
     
     public virtual void ActivateCardLayout()
@@ -223,16 +211,16 @@ public class CardInstanceObject : CardBehaviour
         _manaCardLayoutHandler.SetGlow(_isHighlighted);
     }
     
-    public virtual void ToggleTap()
+    public virtual void ToggleTapState()
     {
-        _isTapped = !_isTapped;
-        _manaCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
+        _cardInst.ToggleTapState();
+        _manaCardLayoutHandler.TappedOverlay.SetActive(_cardInst.IsTapped);
         float tapAngle = GameParamsHolder.Instance.TapAngle;
         Vector3 tapStateRotation = transform.localEulerAngles;
         Vector3 previewTapStateRotation = _previewCardLayout.transform.localEulerAngles;
         PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(_isPlayer);
 
-        if (_isTapped)
+        if (_cardInst.IsTapped)
         {
             tapStateRotation.y = tapAngle;
             previewTapStateRotation.y = -tapAngle;
@@ -261,9 +249,9 @@ public class CardInstanceObject : CardBehaviour
 
         PlayerManager manager = GameManager.Instance.GetManager(_isPlayer);
         manager.GraveyardManager.AddCard(this);
-        switch (_currentZone)
+        switch (_cardInst.CurrentZone)
         {
-            case CardZone.BattleZone:
+            case CardZoneType.BattleZone:
                 GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle.Remove(transform.GetInstanceID());
                 GameManager.Instance.GetManager(_isPlayer).BattleZoneManager.ArrangeCards();
                 break;
@@ -272,21 +260,21 @@ public class CardInstanceObject : CardBehaviour
         gameObject.SetActive(true);
     }
 
-    public bool InZone(CardZone zone)
+    public bool InZone(CardZoneType zone)
     {
-        return _currentZone == zone;
+        return _cardInst.CurrentZone == zone;
     }
 
     #endregion
     
     #region Register Callbacks
     
-    public void RegisterOnProcessAction(Action<CardInstanceObject> action)
+    public void RegisterOnProcessAction(Action<CardObject> action)
     {
         _onProcessAction += action;
     }
 
-    public void DeregisterOnProcessAction(Action<CardInstanceObject> action)
+    public void DeregisterOnProcessAction(Action<CardObject> action)
     {
         _onProcessAction -= action;
     }

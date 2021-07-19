@@ -11,16 +11,16 @@ public class ChargeStep : GameStep
         _updateStep = true;
     }
 
-    public override IEnumerator ProcessGameAction(CardInstanceObject card, PlayerManager currentPlayer)
+    public override IEnumerator ProcessGameAction(CardObject cardObj, PlayerManager currentPlayer)
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
 
-        card.DragHandler.ResetDragging();
-        yield return currentPlayer.ChargeManaRoutine(card);
+        cardObj.DragHandler.ResetDragging();
+        yield return currentPlayer.ChargeManaRoutine(cardObj);
 
-        if (card.CardData.Civilization.Length > 1)
+        if (cardObj.CardInst.CardData.Civilization.Length > 1)
         {
-            card.ToggleTap();
+            cardObj.ToggleTapState();
             currentPlayer.ManaZoneManager.ArrangeCards();
         }
 

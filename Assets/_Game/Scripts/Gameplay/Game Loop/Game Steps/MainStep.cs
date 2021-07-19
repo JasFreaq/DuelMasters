@@ -17,25 +17,25 @@ public class MainStep : GameStep
         yield break;
     }
 
-    public override IEnumerator ProcessGameAction(CardInstanceObject card, PlayerManager currentPlayer)
+    public override IEnumerator ProcessGameAction(CardObject cardObj, PlayerManager currentPlayer)
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
-        CardData cardData = card.CardData;
+        CardData cardData = cardObj.CardInst.CardData;
 
         if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost))
         {
-            card.DragHandler.ResetDragging();
+            cardObj.DragHandler.ResetDragging();
 
             dataHandler.PayCost(cardData.Civilization, cardData.Cost);
             currentPlayer.ManaZoneManager.ArrangeCards();
-            yield return currentPlayer.PlayCardRoutine(card);
+            yield return currentPlayer.PlayCardRoutine(cardObj);
 
             CheckPlayableCards(currentPlayer);
         }
         else
         {
-            card.HoverPreviewHandler.ShouldStopPreview = false;
-            card.DragHandler.EndDragging();
+            cardObj.HoverPreviewHandler.ShouldStopPreview = false;
+            cardObj.DragHandler.EndDragging();
         }
     }
 

@@ -6,19 +6,19 @@ public class Initializer : MonoBehaviour
 {
     [SerializeField] private CardData cardData;
 
-    private CardInstanceObject _cardInstanceObject;
+    private CardObject _cardObject;
 
     void Awake()
     {
-        _cardInstanceObject = GetComponent<CardInstanceObject>();
+        _cardObject = GetComponent<CardObject>();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            _cardInstanceObject.SetupCard(cardData);
-            _cardInstanceObject.ActivateManaLayout();
+            //_cardObject.SetupCard(cardData);
+            _cardObject.ActivateManaLayout();
         }
     }
 }

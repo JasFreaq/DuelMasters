@@ -117,8 +117,9 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameStartRoutine(Deck playerDeck, Deck opponentDeck)
     {
-        _playerManager.Initialize(playerDeck, ProcessGameAction);
-        _opponentManager.Initialize(opponentDeck, ProcessGameAction);
+        _playerManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(playerDeck),
+            ProcessGameAction);
+        _opponentManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(opponentDeck), ProcessGameAction);
 
         _playerManager.DataHandler.SetAllCards();
         _opponentManager.DataHandler.SetAllCards();
@@ -158,7 +159,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void ProcessGameAction(CardInstanceObject card)
+    private void ProcessGameAction(CardObject card)
     {
         int iD = card.transform.GetInstanceID();
         if (_playerTurn)

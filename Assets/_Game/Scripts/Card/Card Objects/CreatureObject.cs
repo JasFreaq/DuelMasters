@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class CreatureInstanceObject : CardInstanceObject
+public class CreatureObject : CardObject
 {
     [SerializeField] private BattleCardLayoutHandler _battleCardLayoutHandler;
 
@@ -16,7 +16,7 @@ public class CreatureInstanceObject : CardInstanceObject
     {
         base.ProcessMouseDown();
 
-        if (_currentZone == CardZone.BattleZone)
+        if (_cardInst.CurrentZone == CardZoneType.BattleZone)
         {
             _isSelected = !_isSelected;
             ProcessMouseExit();
@@ -26,11 +26,11 @@ public class CreatureInstanceObject : CardInstanceObject
 
     #region Setup Methods
 
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(CardInstance cardInst)
     {
-        base.SetupCard(cardData);
+        base.SetupCard(cardInst);
 
-        _battleCardLayoutHandler.SetupCard(cardData);
+        _battleCardLayoutHandler.SetupCard(cardInst.CardData);
     }
 
     public override void ActivateCardLayout()
@@ -65,11 +65,11 @@ public class CreatureInstanceObject : CardInstanceObject
         _battleCardLayoutHandler.SetGlow(_isHighlighted);
     }
 
-    public override void ToggleTap()
+    public override void ToggleTapState()
     {
-        base.ToggleTap();
+        base.ToggleTapState();
 
-        _battleCardLayoutHandler.TappedOverlay.SetActive(_isTapped);
+        _battleCardLayoutHandler.TappedOverlay.SetActive(_cardInst.IsTapped);
     }
 
     public override void SetHighlightColor(bool play)

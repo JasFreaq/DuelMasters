@@ -36,7 +36,7 @@ public abstract class GameStep
         yield break;
     }
 
-    public virtual IEnumerator ProcessGameAction(CardInstanceObject card, PlayerManager currentPlayer)
+    public virtual IEnumerator ProcessGameAction(CardObject cardObj, PlayerManager currentPlayer)
     {
         yield break;
     }

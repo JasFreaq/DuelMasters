@@ -68,7 +68,7 @@ public class HandManager : MonoBehaviour
     
     private void HandleCardDrag(Transform cardTransform)
     {
-        CardInstanceObject card = _playerData.CardsInHand[cardTransform.GetInstanceID()];
+        CardObject card = _playerData.CardsInHand[cardTransform.GetInstanceID()];
         if (card.transform.position.y < _dragArrangeYLimit)
         {
             SetState(false);
@@ -97,7 +97,7 @@ public class HandManager : MonoBehaviour
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
-        CardInstanceObject card = _playerData.CardsInHand[iD];
+        CardObject card = _playerData.CardsInHand[iD];
         card.DragHandler.DeregisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
@@ -117,21 +117,21 @@ public class HandManager : MonoBehaviour
         ArrangeCards();
     }
 
-    private void AddCard(CardInstanceObject card)
+    private void AddCard(CardObject cardObj)
     {
         _tempCard.parent = transform;
-        card.transform.parent = _holderTransform;
-        card.DragHandler.RegisterOnDrag(HandleCardDrag);
+        cardObj.transform.parent = _holderTransform;
+        cardObj.DragHandler.RegisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
         {
-            card.InPlayerHand = true;
-            card.HoverPreviewHandler.SetPreviewParameters(previewTargetPosition,
+            cardObj.InPlayerHand = true;
+            cardObj.HoverPreviewHandler.SetPreviewParameters(previewTargetPosition,
                 Quaternion.Euler(previewTargetRotation), previewTargetScale);
         }
 
-        _playerData.CardsInHand.Add(card.transform.GetInstanceID(), card);
-        card.CurrentZone = CardZone.Hand;
+        _playerData.CardsInHand.Add(cardObj.transform.GetInstanceID(), cardObj);
+        cardObj.CardInst.SetCurrentZone(CardZoneType.Hand);
 
         ArrangeCards();
     }
@@ -140,7 +140,7 @@ public class HandManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromHandRoutine(CardInstanceObject card, bool forShield = false)
+    public IEnumerator MoveFromHandRoutine(CardObject card, bool forShield = false)
     {
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
 
@@ -153,7 +153,7 @@ public class HandManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToHandRoutine(CardInstanceObject card)
+    public IEnumerator MoveToHandRoutine(CardObject card)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();
@@ -212,7 +212,7 @@ public class HandManager : MonoBehaviour
 
             Quaternion cardRot = Quaternion.Euler(rotation);
 
-            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardInstanceObject cardObj))
+            if (_playerData.CardsInHand.TryGetValue(cardTransform.GetInstanceID(), out CardObject cardObj))
             {
                 cardObj.CardLayout.Canvas.sortingOrder = _handSortingLayerFloor + i;
                 if (!_isPlayer && cardObj.IsVisible)
@@ -241,7 +241,7 @@ public class HandManager : MonoBehaviour
         return indexCardTransform;
     }
 
-    private void DragRearrange(CardInstanceObject card)
+    private void DragRearrange(CardObject card)
     {
         int index = card.transform.GetSiblingIndex();
         int siblingIndex = -1;

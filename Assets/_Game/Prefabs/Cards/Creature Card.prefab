@@ -1230,6 +1230,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4488545779044491318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9135805864581426303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41b31b5db7841e4e93a497588e2dfea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardLayoutCollider: {fileID: 9135805864581426300}
+  _compactCardLayoutCollider: {fileID: 9135805864581426301}
+  _visibleEyeIcon: {fileID: 1260659342}
+  _previewCardLayout: {fileID: 1970672085865319466}
+  _cardLayoutHandler: {fileID: 1119139094425481684}
+  _manaCardLayoutHandler: {fileID: 5722507618441204830}
+  _battleCardLayoutHandler: {fileID: 1327950062867778693}
 --- !u!114 &2206084188606242702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1273,25 +1292,6 @@ MonoBehaviour:
   - civilization: 0500000001000000
     cardTypePosY: -85.5
     frameImage: {fileID: 21300000, guid: 1c6bf56866f4bef4d91844e639fc42c4, type: 3}
---- !u!114 &4488545779044491318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9135805864581426303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b41b31b5db7841e4e93a497588e2dfea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cardLayoutCollider: {fileID: 9135805864581426300}
-  _compactCardLayoutCollider: {fileID: 9135805864581426301}
-  _visibleEyeIcon: {fileID: 1260659342}
-  _previewCardLayout: {fileID: 1970672085865319466}
-  _cardLayoutHandler: {fileID: 1119139094425481684}
-  _manaCardLayoutHandler: {fileID: 5722507618441204830}
-  _battleCardLayoutHandler: {fileID: 1327950062867778693}
 --- !u!114 &5065912116969744862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1355,7 +1355,7 @@ MonoBehaviour:
   _cardTypeTextTransform: {fileID: -951726409332857473}
   _rulesPanel: {fileID: -951726423393356814}
   flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
-  _glowFrame: {fileID: -4570352163533976932}
+  _highlightFrame: {fileID: 0}
   _cardFrameDatabase: {fileID: 2206084188606242702}
   _creatureText: {fileID: -951726409332857532}
   _creatureRaceText: {fileID: -6448260732537902794}
