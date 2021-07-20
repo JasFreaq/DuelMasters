@@ -17,8 +17,7 @@ public class Initializer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            //_cardObject.SetupCard(cardData);
-            _cardObject.ActivateManaLayout();
+            _cardObject.SetupCard(new CardInstance(cardData));
         }
     }
 }

@@ -16,10 +16,11 @@ public class CreatureLayoutHandler : CardLayoutHandler
     [SerializeField] private GameObject _survivorIconImage;
     [SerializeField] private GameObject _waveStrikerIconImage;
 
+    private bool _addPlusToPower;
+
     public override void SetupCard(CardData cardData)
     {
         base.SetupCard(cardData);
-        SetupRulesArea(cardData, true);
 
         CreatureData creatureData = (CreatureData) cardData;
 
@@ -30,5 +31,16 @@ public class CreatureLayoutHandler : CardLayoutHandler
 
         _powerText.text = creatureData.Power.ToString();
         _powerTextShade.text = creatureData.Power.ToString();
+
+        if (_addPlusToPower)
+        {
+            _powerText.text += "+";
+            _powerTextShade.text += "+";
+        }
+    }
+
+    public void AddPlusToPower()
+    {
+        _addPlusToPower = true;
     }
 }

@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2009502453230531787, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3216044047385384848, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
       propertyPath: m_Name
       value: Power Attacker
@@ -124,9 +128,41 @@ PrefabInstance:
       value: <indent=50>\u2022 Power Attacker +1000 (While attacking, this creature
         gets +1000 power.)</indent>
       objectReference: {fileID: 0}
+    - target: {fileID: 6224129551105056733, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224129551105056733, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224129551105056733, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 2133.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224129551105056733, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 110.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224129551105056733, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1066.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 6224129551105056733, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -255.125
+      objectReference: {fileID: 0}
+    - target: {fileID: 7222812029227630678, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8329221152336461383, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
       propertyPath: _type
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583698109796773868, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_text
+      value: <space=50>\u2022 Power Attacker +1000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}

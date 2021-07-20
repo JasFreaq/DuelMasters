@@ -32,11 +32,8 @@ public abstract class CardLayoutHandler : MonoBehaviour
         _nameText.text = cardData.Name;
         _costText.text = cardData.Cost.ToString();
         _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, cardFrameData.cardTypePosY);
-    }
 
-    protected void SetupRulesArea(CardData cardData, bool isCreature)
-    {
-        SetupRules(cardData.RulesText, isCreature, _rulesPanel);
+        SetupRules(cardData.RulesText);
         SetupFlavorText(cardData.FlavorText);
     }
 
@@ -50,9 +47,9 @@ public abstract class CardLayoutHandler : MonoBehaviour
         _highlightFrame.color = color;
     }
 
-    #region Static Methods
+    #region Rules Panel Methods
 
-    private static void SetupRules(string rulesText, bool isCreature, Transform panel)
+    private void SetupRules(string rulesText)
     {
         string[] rules = rulesText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
@@ -61,40 +58,55 @@ public abstract class CardLayoutHandler : MonoBehaviour
 
         for (int i = 0, n = rules.Length; i < n; i++)
         {
-            string rule = rules[i].ToLower();
-            rule = Regex.Replace(rule, @"\s", "");
-            
-            KeywordLayoutType type = KeywordLayoutType.Placeholder;
-
-            for (int j = 0, m = keywords.Length; j < m; j++)
-            {
-                string keyword = keywords[i].ToLower();
-                KeywordLayoutType tempType = (KeywordLayoutType) Enum.Parse(enumType, keywords[i]);
-
-                if (isCreature || tempType == KeywordLayoutType.ShieldTrigger ||
-                    tempType == KeywordLayoutType.Placeholder)
-                {
-                    if (rule.Contains(keyword))
-                    {
-                        type = tempType;
-                        break;
-                    }
-                }
-            }
-
-            KeywordLayoutHandler keywordLayoutPrefab = KeywordPrefabHolder.Instance.KeywordPrefabDict[type];
-
-            if (type == KeywordLayoutType.Placeholder)
-                keywordLayoutPrefab.SetDescText(rules[i]);
-
-            KeywordLayoutHandler keywordLayout = Instantiate(keywordLayoutPrefab, panel);
-            keywordLayout.SetDescDisplay();
+            SetupRule(rules[i], enumType, keywords);
         }
     }
 
-    public void SetupFlavorText(string flavorText)
+    private void SetupRule(string rule, Type enumType, string[] keywords)
     {
-        if (!String.IsNullOrWhiteSpace(flavorText))
+        string ruleStr = rule.ToLower();
+        ruleStr = Regex.Replace(ruleStr, @"\s", "");
+
+        KeywordLayoutType type = KeywordLayoutType.Placeholder;
+
+        for (int j = 0, m = keywords.Length; j < m; j++)
+        {
+            string keywordStr = keywords[j].ToLower();
+            KeywordLayoutType tempType = (KeywordLayoutType)Enum.Parse(enumType, keywords[j]);
+
+            bool isCreature = this is CreatureLayoutHandler;
+            if (isCreature || tempType == KeywordLayoutType.ShieldTrigger)
+            {
+                if (isCreature && Regex.Match(rule, @"\+[0-9]+").Success)
+                    ((CreatureLayoutHandler)this).AddPlusToPower();
+
+                if (ruleStr.Contains(keywordStr))
+                {
+                    type = tempType;
+                    break;
+                }
+            }
+        }
+
+        KeywordLayoutHandler keywordLayoutPrefab = KeywordPrefabHolder.Instance.KeywordPrefabDict[type];
+        KeywordLayoutHandler keywordLayout = Instantiate(keywordLayoutPrefab, _rulesPanel);
+
+        switch (type)
+        {
+            case KeywordLayoutType.Placeholder:
+                keywordLayout.SetDescText(rule);
+                break;
+
+            case KeywordLayoutType.PowerAttacker:
+                keywordLayout.SetDescText(Regex.Match(rule, @"[0-9]+").Value);
+                break;
+        }
+        keywordLayout.SetDescDisplay();
+    }
+
+    private void SetupFlavorText(string flavorText)
+    {
+        if (!string.IsNullOrWhiteSpace(flavorText))
         {
             FlavorTextLayoutHandler flavorTextLayout =
                 Instantiate(GameParamsHolder.Instance.FlavorTextLayoutPrefab, _rulesPanel);
