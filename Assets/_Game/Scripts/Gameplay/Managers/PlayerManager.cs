@@ -80,9 +80,9 @@ public class PlayerManager : MonoBehaviour
 
     #region Setup Methods
 
-    public void GenerateDeck(List<CardInstance> cardsInsts, Action<CardObject> processAction)
+    public void GenerateDeck(List<CardInstance> cardsInsts, Action<CardObject> dragAction)
     {
-        _deckManager.GenerateCardObjects(cardsInsts, processAction);
+        _deckManager.GenerateCardObjects(cardsInsts, dragAction);
         ShuffleDeck();
     }
 

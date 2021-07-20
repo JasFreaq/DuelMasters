@@ -9,8 +9,8 @@ public class ActionMenu : MonoBehaviour
     [SerializeField] private Button _actionButton;
     [SerializeField] private TextMeshProUGUI _actionText;
 
-    public void Initialize()
+    public void SetText(string text)
     {
-        //_actionButton.
+        _actionText.text = text;
     }
 }

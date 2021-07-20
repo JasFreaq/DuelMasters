@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -104,9 +105,8 @@ public class GameManager : MonoBehaviour
 
         yield return GameStartRoutine(playerDeck, opponentDeck);
 
-        PlayerManager currentManager;
         _playerTurn = _playerGoesFirst;
-        currentManager = _playerTurn ? _playerManager : _opponentManager;
+        PlayerManager currentManager = _playerTurn ? _playerManager : _opponentManager;
         
         while (!_gameOver)
         {
@@ -117,9 +117,8 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator GameStartRoutine(Deck playerDeck, Deck opponentDeck)
     {
-        _playerManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(playerDeck),
-            ProcessGameAction);
-        _opponentManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(opponentDeck), ProcessGameAction);
+        _playerManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(playerDeck), ProcessDragAction);
+        _opponentManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(opponentDeck), ProcessDragAction);
 
         _playerManager.DataHandler.SetAllCards();
         _opponentManager.DataHandler.SetAllCards();
@@ -136,7 +135,7 @@ public class GameManager : MonoBehaviour
         
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
-            for (int i = 0; i < 2/*GameParamsHolder.Instance.BaseCardCount*/; i++)
+            for (int i = 0; i < GameParamsHolder.Instance.BaseCardCount; i++)
             {
                 yield return playerManager.DrawCardRoutine();
             }
@@ -159,7 +158,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void ProcessGameAction(CardObject card)
+    private void ProcessDragAction(CardObject card)
     {
         int iD = card.transform.GetInstanceID();
         if (_playerTurn)
@@ -172,6 +171,83 @@ public class GameManager : MonoBehaviour
         else if (_opponentManager.DataHandler.AllCards.ContainsKey(iD))
         {
             StartCoroutine(_currentStep.ProcessGameAction(card, _opponentManager));
+        }
+    }
+
+    public void AttemptAttack(BaseController controller, CardBehaviour target)
+    {
+        StartCoroutine(AttemptAttackRoutine(controller, target));
+    }
+
+    private IEnumerator AttemptAttackRoutine(BaseController controller, CardBehaviour target)
+    {
+        if (controller.CurrentlySelected)
+        {
+            CardObject selectedCardObj = controller.CurrentlySelected;
+
+            if (selectedCardObj.InZone(CardZoneType.BattleZone) && !selectedCardObj.CardInst.IsTapped)
+            {
+                TargetingLinesHandler.Instance.DisableLines();
+
+                CreatureObject creatureObj = (CreatureObject) selectedCardObj;
+                float attackTime = GameParamsHolder.Instance.AttackTime;
+                Vector3 creaturePos = creatureObj.transform.position;
+
+                if (target is CreatureObject)
+                {
+                    CreatureObject attackedCreatureObj = (CreatureObject)target;
+                    if (attackedCreatureObj.CardInst.IsTapped)
+                    {
+                        creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
+                        yield return new WaitForSeconds(attackTime);
+                        controller.DeselectCurrentlySelected();
+
+                        int attackingCraturePower = ((CreatureData)creatureObj.CardInst.CardData).Power;
+                        int attackedCreaturePower = ((CreatureData)attackedCreatureObj.CardInst.CardData).Power;
+
+                        if (attackingCraturePower > attackedCreaturePower)
+                            attackedCreatureObj.DestroyCard();
+                        else if (attackingCraturePower == attackedCreaturePower)
+                        {
+                            creatureObj.DestroyCard();
+                            creatureObj = null;
+                            attackedCreatureObj.DestroyCard();
+                        }
+                        else
+                        {
+                            creatureObj.DestroyCard();
+                            creatureObj = null;
+                        }
+
+                        yield return ReturnCreature();
+                    }
+                }
+                else if (target is ShieldObject)
+                {
+                    creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
+                    yield return new WaitForSeconds(attackTime);
+                    controller.DeselectCurrentlySelected();
+
+                    PlayerManager opponent = GameManager.Instance.GetManager(false);
+                    StartCoroutine(opponent.BreakShieldRoutine(target.transform.GetSiblingIndex()));
+
+                    yield return ReturnCreature();
+                }
+
+                #region Local Functions
+
+                IEnumerator ReturnCreature()
+                {
+                    if (creatureObj)
+                    {
+                        creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
+                        yield return new WaitForSeconds(attackTime);
+                        creatureObj.ToggleTapState();
+                    }
+                }
+
+                #endregion
+            }
         }
     }
 
