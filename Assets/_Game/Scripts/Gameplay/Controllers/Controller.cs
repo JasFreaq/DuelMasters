@@ -42,7 +42,7 @@ public class Controller : MonoBehaviour
                     break;
 
                 case GameStepType.AttackStep:
-                    if (!_currentlySelected.CardInst.IsTapped)
+                    if (!_currentlySelected.CardInst.CanAttack())
                     {
                         _currentlySelected.SetHighlight(true);
                         TargetingLinesHandler.Instance.EnableLine(_currentlySelected.transform.position);
@@ -68,7 +68,7 @@ public class Controller : MonoBehaviour
                 break;
 
             case GameStepType.MainStep:
-                if (_currentlySelected.ProcessAction)
+                if (_currentlySelected.ProcessDragRelease)
                     _currentlySelected.SetHighlight(false);
                 else
                 {
@@ -97,13 +97,13 @@ public class Controller : MonoBehaviour
             }
             else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD))
             {
-                if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
+                //if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
                     GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
             }
         }
         else if (_targetedShield)
         {
-            if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
+            //if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
                 GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
         }
     }

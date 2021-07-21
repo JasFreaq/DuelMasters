@@ -28,7 +28,7 @@ public class DeckManager : MonoBehaviour
 
     #region Functionality Methods
 
-    public void GenerateCardObjects(List<CardInstance> cardsInsts, Action<CardObject> processAction)
+    public void GenerateCardObjects(List<CardInstance> cardsInsts, Action<CardObject> dragReleaseAction, Func<CardObject, Coroutine> sendToGraveFunc)
     {
         foreach (CardInstance cardInst in cardsInsts) 
         {
@@ -44,17 +44,12 @@ public class DeckManager : MonoBehaviour
                 cardObj = Instantiate(_spellPrefab, transform);
             }
 
-            cardObj.SetupCard(cardInst);
-            cardObj.name = cardData.Name;
-            cardObj.IsPlayer = _isPlayer;
-            
-            cardObj.ActivateCardLayout();
-            cardObj.CardLayout.Canvas.gameObject.SetActive(false);
+            cardObj.Initialize(cardInst, _isPlayer);
 
-            cardObj.RegisterOnProcessAction(processAction);
+            cardObj.RegisterOnDragRelease(dragReleaseAction);
+            cardObj.RegisterOnSendToGrave(sendToGraveFunc);
 
             _playerData.CardsInDeck.Add(cardObj);
-            cardObj.CardInst.SetCurrentZone(CardZoneType.Deck);
         }
     }
     

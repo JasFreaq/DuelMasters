@@ -26,11 +26,11 @@ public class CreatureObject : CardObject
 
     #region Setup Methods
 
-    public override void SetupCard(CardInstance cardInst)
+    protected override void SetupCard()
     {
-        base.SetupCard(cardInst);
+        base.SetupCard();
 
-        _battleCardLayoutHandler.SetupCard(cardInst.CardData);
+        _battleCardLayoutHandler.SetupCard(_cardInst.CardData);
     }
 
     public override void ActivateCardLayout()

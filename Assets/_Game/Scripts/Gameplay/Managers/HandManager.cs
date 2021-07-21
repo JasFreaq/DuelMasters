@@ -85,8 +85,8 @@ public class HandManager : MonoBehaviour
 
         void SetState(bool state)
         {
-            if (card.ProcessAction != state)
-                card.ProcessAction = state;
+            if (card.ProcessDragRelease != state)
+                card.ProcessDragRelease = state;
 
             if (card.IsHighlightBaseColor == state)
                 card.SetHighlightColor(state);

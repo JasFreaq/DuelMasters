@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Deck _opponentDeck;
 
     private PlayerManager _currentManager;
+    private Coroutine _gameLoopRoutine = null;
 
     private GameStep _currentStep = null;
     private Dictionary<GameStepType, GameStep> _gameSteps = new Dictionary<GameStepType, GameStep>();
@@ -101,9 +102,15 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
             _currentStep = _gameSteps[GameStepType.MainStep];
+        
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+            print(_currentStep);
 
         if (_gameBegun && !_gameOver)
-            StartCoroutine(ProcessGameLoopRoutine());
+        {
+            if (_gameLoopRoutine == null)
+                _gameLoopRoutine = StartCoroutine(ProcessGameLoopRoutine());
+        }
     }
 
     #region Game Loop Handling
@@ -155,6 +162,8 @@ public class GameManager : MonoBehaviour
             if (_endCurrentStep)
                 _endCurrentStep = false;
         }
+
+        _gameLoopRoutine = null;
     }
     
     private void ProcessDragAction(CardObject card)
@@ -217,16 +226,16 @@ public class GameManager : MonoBehaviour
                         int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
 
                         if (attackingCraturePower > attackedCreaturePower)
-                            attackedCreatureObj.DestroyCard();
+                            yield return attackedCreatureObj.SendToGraveyard();
                         else if (attackingCraturePower == attackedCreaturePower)
                         {
-                            creatureObj.DestroyCard();
+                            yield return creatureObj.SendToGraveyard();
                             creatureObj = null;
-                            attackedCreatureObj.DestroyCard();
+                            yield return attackedCreatureObj.SendToGraveyard();
                         }
                         else
                         {
-                            creatureObj.DestroyCard();
+                            yield return creatureObj.SendToGraveyard();
                             creatureObj = null;
                         }
 
@@ -259,6 +268,67 @@ public class GameManager : MonoBehaviour
 
                 #endregion
             }
+        }
+    }
+
+    #endregion
+
+    #region Card Effect Processing
+
+    public Coroutine ProcessRegionMovement(CardObject cardObj, MovementZones movementZones)
+    {
+        return StartCoroutine(ProcessRegionMovementRoutine(cardObj, movementZones));
+    }
+
+    private IEnumerator ProcessRegionMovementRoutine(CardObject cardObj, MovementZones movementZones)
+    {
+        PlayerManager owner = GetManager(cardObj.IsPlayer);
+
+        switch (movementZones.fromZone)
+        {
+            case CardZoneType.Deck:
+                Coroutine<CardObject> routine = owner.StartCoroutine<CardObject>(owner.ChooseDeckMoveCard(DeckCardMoveType.Top));
+                yield return routine.coroutine;
+
+                cardObj = routine.returnVal;
+                yield return owner.MoveFromDeckRoutine(cardObj);
+                break;
+
+            case CardZoneType.Hand:
+                break;
+
+            case CardZoneType.Shields:
+                break;
+            
+            case CardZoneType.Graveyard:
+                break;
+
+            case CardZoneType.ManaZone:
+                break;
+
+            case CardZoneType.BattleZone:
+                break;
+        }
+        
+        switch (movementZones.toZone)
+        {
+            case CardZoneType.Deck:
+                break;
+
+            case CardZoneType.Hand:
+                break;
+
+            case CardZoneType.Shields:
+                break;
+            
+            case CardZoneType.Graveyard:
+                break;
+
+            case CardZoneType.ManaZone:
+                break;
+
+            case CardZoneType.BattleZone:
+                break;
         }
     }
 

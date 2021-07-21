@@ -12,7 +12,7 @@ public class UntapStep : GameStep
 
     public override IEnumerator StartStepRoutine(PlayerManager currentPlayer)
     {
-        List<CardObject> tappedCards = currentPlayer.DataHandler.TappedCards;
+        List<CardObject> tappedCards = new List<CardObject>(currentPlayer.DataHandler.TappedCards);
         foreach (CardObject cardObj in tappedCards)
         {
             cardObj.ToggleTapState();

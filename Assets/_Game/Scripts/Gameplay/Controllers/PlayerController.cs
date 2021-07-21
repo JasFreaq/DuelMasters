@@ -59,12 +59,12 @@ public class PlayerController : Controller
         PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(true);
 
         if (dataHandler.AllCards.ContainsKey(iD))
-            tempCardObj = (CardObject) dataHandler.AllCards[iD];
+            tempCardObj = dataHandler.AllCards[iD];
         else
         {
             dataHandler = GameDataHandler.Instance.GetDataHandler(false);
             if (dataHandler.AllCards.ContainsKey(iD))
-                tempCardObj = (CardObject) dataHandler.AllCards[iD];
+                tempCardObj = dataHandler.AllCards[iD];
         }
 
         if (tempCardObj)

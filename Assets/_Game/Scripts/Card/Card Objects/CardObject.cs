@@ -19,7 +19,9 @@ public class CardObject : CardBehaviour
 
     private HoverPreviewHandler _hoverPreviewHandler;
     private DragHandler _dragHandler;
-    private Action<CardObject> _onProcessAction;
+
+    private Action<CardObject> _onDragReleaseAction;
+    private Func<CardObject, Coroutine> _onSendToGraveFunc;
 
     private bool _isPlayer;
     protected bool _isHighlighted = false;
@@ -28,14 +30,14 @@ public class CardObject : CardBehaviour
     private bool _isVisible = false;
     private bool _canDrag = false;
     
-    private bool _processAction = false;
+    private bool _processDragRelease = false;
     private bool _inPlayerHand = false;
     
     #region Properties
 
     public bool IsPlayer
     {
-        set { _isPlayer = value; }
+        get { return _isPlayer;}
     }
 
     public CardLayoutHandler CardLayout
@@ -79,10 +81,10 @@ public class CardObject : CardBehaviour
         set { _canDrag = value; }
     }
 
-    public bool ProcessAction
+    public bool ProcessDragRelease
     {
-        get { return _processAction;}
-        set { _processAction = value; }
+        get { return _processDragRelease;}
+        set { _processDragRelease = value; }
     }
     
     public bool InPlayerHand
@@ -106,6 +108,19 @@ public class CardObject : CardBehaviour
         _dragHandler = GetComponent<DragHandler>();
     }
 
+    public void Initialize(CardInstance cardInst, bool isPlayer)
+    {
+        _cardInst = cardInst;
+        SetupCard();
+        name = _cardInst.CardData.Name;
+
+        _isPlayer = isPlayer;
+        ActivateCardLayout();
+        _cardLayoutHandler.Canvas.gameObject.SetActive(false);
+
+        CardInst.SetCurrentZone(CardZoneType.Deck);
+    }
+
     public void ProcessMouseEnter()
     {
         _hoverPreviewHandler.BeginPreviewing();
@@ -125,9 +140,9 @@ public class CardObject : CardBehaviour
                 }
                 else
                 {
-                    if (_processAction)
+                    if (_processDragRelease)
                     {
-                        _onProcessAction?.Invoke(this);
+                        _onDragReleaseAction?.Invoke(this);
                     }
                     else
                     {
@@ -152,14 +167,12 @@ public class CardObject : CardBehaviour
 
     #region Setup Methods
 
-    public virtual void SetupCard(CardInstance cardInst)
+    protected virtual void SetupCard()
     {
-        _cardInst = cardInst;
-        
-        _cardLayoutHandler.SetupCard(cardInst.CardData);
-        _manaCardLayoutHandler.SetupCard(cardInst.CardData);
+        _cardLayoutHandler.SetupCard(_cardInst.CardData);
+        _manaCardLayoutHandler.SetupCard(_cardInst.CardData);
 
-        _previewCardLayout.SetupCard(cardInst.CardData);
+        _previewCardLayout.SetupCard(_cardInst.CardData);
     }
     
     public virtual void ActivateCardLayout()
@@ -242,22 +255,9 @@ public class CardObject : CardBehaviour
         _visibleEyeIcon.SetActive(visible);
     }
 
-    public void DestroyCard()
+    public Coroutine SendToGraveyard()
     {
-        gameObject.SetActive(false);
-        ActivateCardLayout();
-
-        PlayerManager manager = GameManager.Instance.GetManager(_isPlayer);
-        manager.GraveyardManager.AddCard(this);
-        switch (_cardInst.CurrentZone)
-        {
-            case CardZoneType.BattleZone:
-                GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle.Remove(transform.GetInstanceID());
-                GameManager.Instance.GetManager(_isPlayer).BattleZoneManager.ArrangeCards();
-                break;
-        }
-
-        gameObject.SetActive(true);
+        return _onSendToGraveFunc.Invoke(this);
     }
 
     public bool InZone(CardZoneType zone)
@@ -269,15 +269,25 @@ public class CardObject : CardBehaviour
     
     #region Register Callbacks
     
-    public void RegisterOnProcessAction(Action<CardObject> action)
+    public void RegisterOnDragRelease(Action<CardObject> action)
     {
-        _onProcessAction += action;
+        _onDragReleaseAction += action;
     }
 
-    public void DeregisterOnProcessAction(Action<CardObject> action)
+    public void DeregisterOnDragRelease(Action<CardObject> action)
     {
-        _onProcessAction -= action;
+        _onDragReleaseAction -= action;
+    }
+
+    public void RegisterOnSendToGrave(Func<CardObject, Coroutine> func)
+    {
+        _onSendToGraveFunc += func;
     }
     
+    public void DeregisterOnSendToGrave(Func<CardObject, Coroutine> func)
+    {
+        _onSendToGraveFunc -= func;
+    }
+
     #endregion
 }

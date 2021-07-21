@@ -14,7 +14,7 @@ public class PlayerDataHandler : MonoBehaviour
     private Dictionary<int, CreatureObject> _cardsInBattleZone = new Dictionary<int, CreatureObject>();
     
     private List<CardObject> _tappedCards = new List<CardObject>();
-    private Dictionary<int, CardBehaviour> _allCards = new Dictionary<int, CardBehaviour>();
+    private Dictionary<int, CardObject> _allCards = new Dictionary<int, CardObject>();
 
     #region Properties
 
@@ -53,7 +53,7 @@ public class PlayerDataHandler : MonoBehaviour
         get { return _tappedCards; }
     }
     
-    public IReadOnlyDictionary<int, CardBehaviour> AllCards
+    public IReadOnlyDictionary<int, CardObject> AllCards
     {
         get { return _allCards; }
     }

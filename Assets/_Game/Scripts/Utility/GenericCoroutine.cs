@@ -8,14 +8,14 @@ public class Coroutine<T>
     public T returnVal;
     public Coroutine coroutine;
 
-    public IEnumerator InternalRoutine(IEnumerator coroutine)
+    public IEnumerator InternalRoutine(IEnumerator iterator)
     {
         while (true)
         {
-            if (!coroutine.MoveNext())
+            if (!iterator.MoveNext())
                 yield break;
 
-            object yielded = coroutine.Current;
+            object yielded = iterator.Current;
             
             if (yielded != null)
             {
@@ -40,7 +40,7 @@ public class Coroutine<T>
                 }
             }
             
-            yield return coroutine.Current;
+            yield return iterator.Current;
         }
     }
 }

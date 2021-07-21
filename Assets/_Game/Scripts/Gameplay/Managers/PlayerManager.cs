@@ -64,16 +64,14 @@ public class PlayerManager : MonoBehaviour
                 StartCoroutine(ChargeManaRoutine(card));
             if (Input.GetKeyDown(KeyCode.P))
                 StartCoroutine(PlayCardRoutine(card));
-            if (Input.GetKeyDown(KeyCode.S))
-                StartCoroutine(MakeShieldFromHandRoutine(card));
         }
     }
 
     #region Setup Methods
 
-    public void GenerateDeck(List<CardInstance> cardsInsts, Action<CardObject> dragAction)
+    public void GenerateDeck(List<CardInstance> cardsInsts, Action<CardObject> dragReleaseAction)
     {
-        _deckManager.GenerateCardObjects(cardsInsts, dragAction);
+        _deckManager.GenerateCardObjects(cardsInsts, dragReleaseAction, MoveToGraveyard);
         ShuffleDeck();
     }
 
@@ -117,7 +115,7 @@ public class PlayerManager : MonoBehaviour
     
     #endregion
 
-    #region From-Hand Moves
+    #region Frequent Region Movements
 
     public IEnumerator ChargeManaRoutine(CardObject cardObj)
     {
@@ -144,21 +142,9 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator CastSpellRoutine(SpellObject spellCard)
     {
-        spellCard.DestroyCard();
-
-        yield break;
+        yield return MoveToGraveyardRoutine(spellCard);
     }
     
-    private IEnumerator MakeShieldFromHandRoutine(CardObject cardObj)
-    {
-        yield return MoveFromHandRoutine(cardObj);
-        yield return MoveToShieldsRoutine(cardObj);
-    }
-
-    #endregion
-
-    #region To-Hand Moves
-
     public IEnumerator DrawCardRoutine()
     {
         Coroutine<CardObject> routine = this.StartCoroutine<CardObject>(ChooseDeckMoveCard(DeckCardMoveType.Top));
@@ -266,7 +252,7 @@ public class PlayerManager : MonoBehaviour
         return StartCoroutine(MoveToGraveyardRoutine(cardObj));
     }
 
-    public IEnumerator MoveToGraveyardRoutine(CardObject cardObj)
+    private IEnumerator MoveToGraveyardRoutine(CardObject cardObj)
     {
         cardObj.gameObject.SetActive(false);
         cardObj.ActivateCardLayout();
