@@ -2,15 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseController : MonoBehaviour
+public class Controller : MonoBehaviour
 {
     protected CardObject _currentlySelected;
     protected CardObject _targetedCard;
     protected ShieldObject _targetedShield;
 
+    protected bool _isPlayer;
+
     public CardObject CurrentlySelected
     {
         get { return _currentlySelected; }
+    }
+
+    public bool IsPlayer
+    {
+        get { return _isPlayer; }
     }
 
     public void SelectCard(CardObject cardObj)
@@ -83,19 +90,21 @@ public class BaseController : MonoBehaviour
     {
         if (_targetedCard)
         {
-            if (GameDataHandler.Instance.GetDataHandler(true).AllCards.ContainsKey(iD))
+            if (GameDataHandler.Instance.GetDataHandler(_isPlayer).AllCards.ContainsKey(iD))
             {
                 _targetedCard.ProcessMouseDown();
                 SelectCard(_targetedCard);
             }
-            else if (GameDataHandler.Instance.GetDataHandler(false).AllCards.ContainsKey(iD))
+            else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD))
             {
-                GameManager.Instance.AttemptAttack(this, _targetedCard);
+                if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
+                    GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
             }
         }
         else if (_targetedShield)
         {
-            GameManager.Instance.AttemptAttack(this, _targetedShield);
+            if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
+                GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
         }
     }
     

@@ -11,16 +11,22 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private ActionMenu _actionMenu;
 
-    [Header("Player Managers")] 
+    [Header("Controllers")] 
     [SerializeField] private PlayerController _playerController;
+    [SerializeField] private AIController _opponentController;
+    [Header("Player Managers")] 
     [SerializeField] private PlayerManager _playerManager;
-    [SerializeField] private Deck _playerDeck;
     [SerializeField] private PlayerManager _opponentManager;
+    [Header("Decks")] 
+    [SerializeField] private Deck _playerDeck;
     [SerializeField] private Deck _opponentDeck;
+
+    private PlayerManager _currentManager;
 
     private GameStep _currentStep = null;
     private Dictionary<GameStepType, GameStep> _gameSteps = new Dictionary<GameStepType, GameStep>();
 
+    private bool _gameBegun = false;
     private bool _endCurrentStep = false;
     private bool _firstTurn = true;
     private bool _playerTurn = true;
@@ -88,35 +94,24 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0.25f;
 
         if (Input.GetKeyDown(KeyCode.Return))
-            StartCoroutine(GameLoopRoutine(_playerDeck, _opponentDeck));
+            StartCoroutine(StartGameRoutine(_playerDeck, _opponentDeck));
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
             _currentStep = _gameSteps[GameStepType.ChargeStep];
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
             _currentStep = _gameSteps[GameStepType.MainStep];
+
+        if (_gameBegun && !_gameOver)
+            StartCoroutine(ProcessGameLoopRoutine());
     }
 
     #region Game Loop Handling
-
-    private IEnumerator GameLoopRoutine(Deck playerDeck, Deck opponentDeck)
+    
+    public IEnumerator StartGameRoutine(Deck playerDeck, Deck opponentDeck)
     {
         _currentStep = _gameSteps[GameStepType.BeginStep];
 
-        yield return GameStartRoutine(playerDeck, opponentDeck);
-
-        _playerTurn = _playerGoesFirst;
-        PlayerManager currentManager = _playerTurn ? _playerManager : _opponentManager;
-        
-        while (!_gameOver)
-        {
-            yield return ProcessGameLoop(currentManager);
-            yield return new WaitForEndOfFrame();
-        }
-    }
-
-    public IEnumerator GameStartRoutine(Deck playerDeck, Deck opponentDeck)
-    {
         _playerManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(playerDeck), ProcessDragAction);
         _opponentManager.GenerateDeck(GameDataHandler.Instance.GenerateCardInstances(opponentDeck), ProcessDragAction);
 
@@ -131,8 +126,12 @@ public class GameManager : MonoBehaviour
 
         _playerController.CanInteract = true;
 
+        _playerTurn = _playerGoesFirst;
+        _currentManager = _playerTurn ? _playerManager : _opponentManager;
+        _gameBegun = true;
+
         #region Local Functions
-        
+
         IEnumerator DrawStartingHandRoutine(PlayerManager playerManager)
         {
             for (int i = 0; i < GameParamsHolder.Instance.BaseCardCount; i++)
@@ -144,14 +143,14 @@ public class GameManager : MonoBehaviour
         #endregion
     }
 
-    private IEnumerator ProcessGameLoop(PlayerManager manager)
+    private IEnumerator ProcessGameLoopRoutine()
     {
         if (!_currentStep.UpdateStep || _endCurrentStep)
         {
             GameStep nextStep = _gameSteps[_currentStep.NextStepType];
-            yield return _currentStep.FinishStepRoutine(manager);
+            yield return _currentStep.FinishStepRoutine(_currentManager);
             _currentStep = nextStep;
-            yield return _currentStep.StartStepRoutine(manager);
+            yield return _currentStep.StartStepRoutine(_currentManager);
 
             if (_endCurrentStep)
                 _endCurrentStep = false;
@@ -174,13 +173,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AttemptAttack(BaseController controller, CardBehaviour target)
+    public void AttemptAttack(bool isPlayer, CardBehaviour target)
     {
-        StartCoroutine(AttemptAttackRoutine(controller, target));
+        StartCoroutine(AttemptAttackRoutine(isPlayer, target));
     }
 
-    private IEnumerator AttemptAttackRoutine(BaseController controller, CardBehaviour target)
+    private IEnumerator AttemptAttackRoutine(bool isPlayer, CardBehaviour target)
     {
+        Controller controller, oppController;
+        if (isPlayer)
+        {
+            controller = _playerController;
+            oppController = _opponentController;
+        }
+        else
+        {
+            controller = _opponentController;
+            oppController = _playerController;
+        }
+
         if (controller.CurrentlySelected)
         {
             CardObject selectedCardObj = controller.CurrentlySelected;
@@ -192,18 +203,18 @@ public class GameManager : MonoBehaviour
                 CreatureObject creatureObj = (CreatureObject) selectedCardObj;
                 float attackTime = GameParamsHolder.Instance.AttackTime;
                 Vector3 creaturePos = creatureObj.transform.position;
-
+                
                 if (target is CreatureObject)
                 {
-                    CreatureObject attackedCreatureObj = (CreatureObject)target;
+                    CreatureObject attackedCreatureObj = (CreatureObject) target;
                     if (attackedCreatureObj.CardInst.IsTapped)
                     {
                         creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
                         yield return new WaitForSeconds(attackTime);
                         controller.DeselectCurrentlySelected();
 
-                        int attackingCraturePower = ((CreatureData)creatureObj.CardInst.CardData).Power;
-                        int attackedCreaturePower = ((CreatureData)attackedCreatureObj.CardInst.CardData).Power;
+                        int attackingCraturePower = ((CreatureData) creatureObj.CardInst.CardData).Power;
+                        int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
 
                         if (attackingCraturePower > attackedCreaturePower)
                             attackedCreatureObj.DestroyCard();
@@ -228,8 +239,8 @@ public class GameManager : MonoBehaviour
                     yield return new WaitForSeconds(attackTime);
                     controller.DeselectCurrentlySelected();
 
-                    PlayerManager opponent = GameManager.Instance.GetManager(false);
-                    StartCoroutine(opponent.BreakShieldRoutine(target.transform.GetSiblingIndex()));
+                    PlayerManager opponent = GetManager(!isPlayer);
+                    StartCoroutine(opponent.BreakShieldRoutine((ShieldObject) target));
 
                     yield return ReturnCreature();
                 }

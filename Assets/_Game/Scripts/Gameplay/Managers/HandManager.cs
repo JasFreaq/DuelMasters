@@ -97,22 +97,22 @@ public class HandManager : MonoBehaviour
     {
         int iD = _holderTransform.GetChild(index).GetInstanceID();
 
-        CardObject card = _playerData.CardsInHand[iD];
-        card.DragHandler.DeregisterOnDrag(HandleCardDrag);
+        CardObject cardObj = _playerData.CardsInHand[iD];
+        cardObj.DragHandler.DeregisterOnDrag(HandleCardDrag);
 
         if (_isPlayer)
         {
-            card.InPlayerHand = false;
-            if (card.IsVisible)
-                card.SetVisibleIcon(false);
+            cardObj.InPlayerHand = false;
+            if (cardObj.IsVisible)
+                cardObj.SetVisibleIcon(false);
         }
 
-        if (card.IsVisible)
-            card.IsVisible = false;
-        card.CanDrag = false;
+        if (cardObj.IsVisible)
+            cardObj.IsVisible = false;
+        cardObj.CanDrag = false;
 
         _playerData.CardsInHand.Remove(iD);
-        card.transform.parent = transform;
+        cardObj.transform.parent = transform;
         
         ArrangeCards();
     }
@@ -130,6 +130,7 @@ public class HandManager : MonoBehaviour
                 Quaternion.Euler(previewTargetRotation), previewTargetScale);
         }
 
+        cardObj.CanDrag = true;
         _playerData.CardsInHand.Add(cardObj.transform.GetInstanceID(), cardObj);
         cardObj.CardInst.SetCurrentZone(CardZoneType.Hand);
 
@@ -153,23 +154,23 @@ public class HandManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToHandRoutine(CardObject card)
+    public IEnumerator MoveToHandRoutine(CardObject cardObj)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();
-        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
 
         Quaternion rotation = _tempCard.rotation;
-        if (!_isPlayer && card.IsVisible)
+        if (!_isPlayer && cardObj.IsVisible)
             rotation *= Quaternion.Euler(0, 0, 180);
-        card.transform.DORotateQuaternion(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DORotateQuaternion(rotation, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);
 
-        if (_isPlayer && card.IsVisible)
-            card.SetVisibleIcon(true);
+        if (_isPlayer && cardObj.IsVisible)
+            cardObj.SetVisibleIcon(true);
         
-        AddCard(card);
+        AddCard(cardObj);
     }
     
     #endregion

@@ -69,9 +69,8 @@ public class ShieldsManager : MonoBehaviour
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(baseShieldCountMinusOne));
     }
 
-    public IEnumerator BreakShieldRoutine(int shieldIndex)
+    public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
-        ShieldObject shieldObj = _playerData.Shields[shieldIndex];
         shieldObj.SetAnimatorTrigger(_shieldBreakTriggerHash);
         shieldObj.CardHolder.DOScale(shieldObj.HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
@@ -83,7 +82,7 @@ public class ShieldsManager : MonoBehaviour
         cardObj.CardLayout.Canvas.gameObject.SetActive(true);
         
         shieldObj.CardObject = null;
-        int n = _playerData.Shields.Count;
+        int n = _playerData.Shields.Count, shieldIndex = shieldObj.transform.GetSiblingIndex();
         if (n > GameParamsHolder.Instance.BaseCardCount && shieldIndex < n)
         {
             _playerData.Shields.RemoveAt(shieldIndex);

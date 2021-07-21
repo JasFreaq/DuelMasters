@@ -1160,7 +1160,7 @@ MonoBehaviour:
   _fromTransitionTime: 1
   _toTransitionTime: 1
   _intermediateHolder: {fileID: 127403156}
-  flippedIntermediateHolder: {fileID: 0}
+  flippedIntermediateHolder: {fileID: 1355605650}
   previewTargetPosition: {x: 0, y: -8.25, z: -14.5}
   previewTargetRotation: {x: -105, y: 0, z: 0}
   previewTargetScale: {x: 1.5, y: 1.5, z: 1.5}
@@ -1569,9 +1569,10 @@ MonoBehaviour:
   _playerGoesFirst: 1
   _actionMenu: {fileID: 1156849063}
   _playerController: {fileID: 1042105415}
+  _opponentController: {fileID: 0}
   _playerManager: {fileID: 1042105413}
-  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
   _opponentManager: {fileID: 1962481310}
+  _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
   _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
 --- !u!4 &1167120987
 Transform:

@@ -56,10 +56,8 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.D))
             StartCoroutine(DrawCardRoutine());
-        if (Input.GetKeyDown(KeyCode.B))
-            StartCoroutine(BreakShieldRoutine(0));
 
-        if (_handManager.transform.GetChild(0).childCount > 0) 
+        if (_handManager.transform.GetChild(0).childCount > 0)
         {
             CardObject card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
             if (Input.GetKeyDown(KeyCode.M))
@@ -68,13 +66,6 @@ public class PlayerManager : MonoBehaviour
                 StartCoroutine(PlayCardRoutine(card));
             if (Input.GetKeyDown(KeyCode.S))
                 StartCoroutine(MakeShieldFromHandRoutine(card));
-        }
-
-        if (_manaZoneManager.transform.GetChild(0).childCount > 0)
-        {
-            CardObject card = _playerData.CardsInMana[_manaZoneManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
-            if (Input.GetKeyDown(KeyCode.N))
-                StartCoroutine(ReturnFromManaRoutine(card));
         }
     }
 
@@ -126,32 +117,22 @@ public class PlayerManager : MonoBehaviour
     
     #endregion
 
-    #region From-Hand Transitions
+    #region From-Hand Moves
 
-    public IEnumerator ChargeManaRoutine(CardObject card)
+    public IEnumerator ChargeManaRoutine(CardObject cardObj)
     {
-        card.ManaLayout.Canvas.sortingOrder = 100;
-        card.HoverPreviewHandler.PreviewEnabled = false;
-        
-        yield return _handManager.MoveFromHandRoutine(card);
-
-        card.ActivateManaLayout();
-
-        yield return _manaZoneManager.MoveToManaZoneRoutine(card);
-
-        card.HoverPreviewHandler.PreviewEnabled = true;
+        yield return MoveFromHandRoutine(cardObj);
+        yield return MoveToManaZoneRoutine(cardObj);
     }
 
-    public IEnumerator PlayCardRoutine(CardObject card)
+    public IEnumerator PlayCardRoutine(CardObject cardObj)
     {
-        card.HoverPreviewHandler.PreviewEnabled = false;
+        yield return MoveFromHandRoutine(cardObj);
 
-        yield return _handManager.MoveFromHandRoutine(card);
-
-        if (card is CreatureObject creatureCard)
-            yield return StartCoroutine(SummonCreatureRoutine(creatureCard));
-        else if (card is SpellObject spellCard)
-            yield return StartCoroutine(CastSpellRoutine(spellCard));
+        if (cardObj is CreatureObject creatureCard)
+            yield return SummonCreatureRoutine(creatureCard);
+        else if (cardObj is SpellObject spellCard)
+            yield return CastSpellRoutine(spellCard);
     }
 
     private IEnumerator SummonCreatureRoutine(CreatureObject creatureCard)
@@ -168,68 +149,148 @@ public class PlayerManager : MonoBehaviour
         yield break;
     }
     
-    public IEnumerator MakeShieldFromHandRoutine(CardObject card)
+    private IEnumerator MakeShieldFromHandRoutine(CardObject cardObj)
     {
-        card.CardLayout.Canvas.sortingOrder = 100;
-        card.HoverPreviewHandler.PreviewEnabled = false;
-
-        yield return _handManager.MoveFromHandRoutine(card, true);
-
-        if (!_isPlayer)
-            card.CardLayout.Canvas.gameObject.SetActive(false);
-        
-        yield return StartCoroutine(_shieldsManager.MakeShieldRoutine(card));
+        yield return MoveFromHandRoutine(cardObj);
+        yield return MoveToShieldsRoutine(cardObj);
     }
 
     #endregion
 
-    #region To-Hand Transitions
+    #region To-Hand Moves
 
     public IEnumerator DrawCardRoutine()
     {
-        CardObject card = _deckManager.RemoveTopCard();
-        card.CardLayout.Canvas.sortingOrder = 100;
-        card.CardLayout.Canvas.gameObject.SetActive(true);
+        Coroutine<CardObject> routine = this.StartCoroutine<CardObject>(ChooseDeckMoveCard(DeckCardMoveType.Top));
+        yield return routine.coroutine;
 
-        yield return _deckManager.MoveFromDeckRoutine(card);
-        yield return _handManager.MoveToHandRoutine(card);
-
-        card.HoverPreviewHandler.PreviewEnabled = true;
-        card.CanDrag = true;
+        CardObject cardObj = routine.returnVal;
+        yield return MoveFromDeckRoutine(cardObj);
+        yield return MoveToHandRoutine(cardObj);
     }
 
-    public IEnumerator BreakShieldRoutine(int shieldIndex)
+    public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
-        CardObject card = _shieldsManager.GetShieldAtIndex(shieldIndex);
-        yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
-        yield return _handManager.MoveToHandRoutine(card);
-        card.HoverPreviewHandler.PreviewEnabled = true;
+        CardObject cardObj = shieldObj.CardObject;
+        yield return _shieldsManager.BreakShieldRoutine(shieldObj);
+        yield return MoveToHandRoutine(cardObj);
     }
 
-    public IEnumerator ReturnFromManaRoutine(CardObject card)
+    #endregion
+
+    #region From Zone Moves
+
+    public IEnumerator ChooseDeckMoveCard(DeckCardMoveType deckCardMove)
     {
-        card.CardLayout.Canvas.sortingOrder = 100;
-        card.HoverPreviewHandler.PreviewEnabled = false;
-        card.IsVisible = true;
+        CardObject cardObj = null;
+        switch (deckCardMove)
+        {
+            case DeckCardMoveType.Top:
+                cardObj = _deckManager.RemoveTopCard();
+                break;
 
-        yield return _manaZoneManager.MoveFromManaZoneRoutine(card);
-        card.ActivateCardLayout();
-        yield return _handManager.MoveToHandRoutine(card);
+            case DeckCardMoveType.SearchShuffle:
+                break;
+        }
 
-        card.HoverPreviewHandler.PreviewEnabled = true;
+        yield return cardObj;
     }
-    
-    public IEnumerator ReturnFromBattleRoutine(CardObject card)
+
+    public IEnumerator MoveFromDeckRoutine(CardObject cardObj)
     {
-        card.CardLayout.Canvas.sortingOrder = 100;
-        card.HoverPreviewHandler.PreviewEnabled = false;
-        card.IsVisible = true;
+        cardObj.CardLayout.Canvas.sortingOrder = 100;
+        cardObj.CardLayout.Canvas.gameObject.SetActive(true);
+        yield return _deckManager.MoveFromDeckRoutine(cardObj);
+    }
 
-        yield return _battleZoneManager.MoveFromBattleZoneRoutine(card);
-        card.ActivateCardLayout();
-        yield return _handManager.MoveToHandRoutine(card);
+    public IEnumerator MoveFromHandRoutine(CardObject cardObj)
+    {
+        cardObj.ManaLayout.Canvas.sortingOrder = 100;
+        cardObj.HoverPreviewHandler.PreviewEnabled = false;
 
-        card.HoverPreviewHandler.PreviewEnabled = true;
+        yield return _handManager.MoveFromHandRoutine(cardObj);
+    }
+
+    //public IEnumerator MoveFromShieldsRoutine(int shieldIndex)
+    //{
+    //    yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
+    //}
+
+    //public IEnumerator MoveFromGraveyard(CardObject cardObj)
+    //{
+
+    //}
+
+    public IEnumerator MoveFromManaZoneRoutine(CardObject cardObj)
+    {
+        cardObj.CardLayout.Canvas.sortingOrder = 100;
+        cardObj.HoverPreviewHandler.PreviewEnabled = false;
+        cardObj.IsVisible = true;
+
+        yield return _manaZoneManager.MoveFromManaZoneRoutine(cardObj);
+    }
+
+    public IEnumerator MoveFromBattleZoneRoutine(CardObject cardObj)
+    {
+        cardObj.CardLayout.Canvas.sortingOrder = 100;
+        cardObj.HoverPreviewHandler.PreviewEnabled = false;
+        cardObj.IsVisible = true;
+
+        yield return _battleZoneManager.MoveFromBattleZoneRoutine(cardObj);
+    }
+
+    #endregion
+
+    #region To Zone Moves
+
+    //public IEnumerator MoveToDeck(CardObject cardObj)
+    //{
+
+    //}
+
+    public IEnumerator MoveToHandRoutine(CardObject cardObj)
+    {
+        cardObj.ActivateCardLayout();
+        yield return _handManager.MoveToHandRoutine(cardObj);
+
+        cardObj.HoverPreviewHandler.PreviewEnabled = true;
+    }
+
+    public IEnumerator MoveToShieldsRoutine(CardObject cardObj)
+    {
+        yield return StartCoroutine(_shieldsManager.MakeShieldRoutine(cardObj));
+    }
+
+    public Coroutine MoveToGraveyard(CardObject cardObj)
+    {
+        return StartCoroutine(MoveToGraveyardRoutine(cardObj));
+    }
+
+    public IEnumerator MoveToGraveyardRoutine(CardObject cardObj)
+    {
+        cardObj.gameObject.SetActive(false);
+        cardObj.ActivateCardLayout();
+
+        PlayerManager manager = GameManager.Instance.GetManager(_isPlayer);
+        manager.GraveyardManager.AddCard(cardObj);
+        switch (cardObj.CardInst.CurrentZone)
+        {
+            case CardZoneType.BattleZone:
+                GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle.Remove(cardObj.transform.GetInstanceID());
+                GameManager.Instance.GetManager(_isPlayer).BattleZoneManager.ArrangeCards();
+                break;
+        }
+
+        cardObj.gameObject.SetActive(true);
+        yield break;
+    }
+
+    public IEnumerator MoveToManaZoneRoutine(CardObject cardObj)
+    {
+        cardObj.ActivateManaLayout();
+        yield return _manaZoneManager.MoveToManaZoneRoutine(cardObj);
+
+        cardObj.HoverPreviewHandler.PreviewEnabled = true;
     }
 
     #endregion

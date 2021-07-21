@@ -1,13 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
-public class PlayerController : BaseController
+public class PlayerController : Controller
 {
     #region Helper Data Structures
 
@@ -32,6 +25,7 @@ public class PlayerController : BaseController
     void Start()
     {
         _mainCamera = Camera.main;
+        _isPlayer = true;
     }
 
     void Update()

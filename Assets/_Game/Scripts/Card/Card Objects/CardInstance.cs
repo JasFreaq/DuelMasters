@@ -9,6 +9,12 @@ public class CardInstance
 
     private bool _isTapped = false;
 
+    #region Effect
+
+    
+
+    #endregion
+
     public CardInstance(CardData cardData)
     {
         _cardData = cardData;
@@ -29,6 +35,22 @@ public class CardInstance
         get { return _isTapped; }
     }
 
+    #region Effect Properties
+
+    public bool CanAttackCreatures
+    {
+        get { return true; }
+    }
+    
+    public bool CanAttackPlayers
+    {
+        get { return true; }
+    }
+
+    //public bool CantBeBlocked
+
+    #endregion
+
     public void SetCurrentZone(CardZoneType currentZone)
     {
         _currentZone = currentZone;
@@ -38,4 +60,6 @@ public class CardInstance
     {
         _isTapped = !_isTapped;
     }
+
+
 }
