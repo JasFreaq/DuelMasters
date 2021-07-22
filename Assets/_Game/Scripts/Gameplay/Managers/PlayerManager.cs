@@ -27,6 +27,11 @@ public class PlayerManager : MonoBehaviour
         get { return _playerData; }
     }
 
+    public DeckManager DeckManager
+    {
+        get { return _deckManager; }
+    }
+
     public ManaZoneManager ManaZoneManager
     {
         get { return _manaZoneManager; }
@@ -112,10 +117,17 @@ public class PlayerManager : MonoBehaviour
 
         return _playableCards.Count;
     }
-    
+
     #endregion
 
     #region Frequent Region Movements
+
+    public IEnumerator DrawCardRoutine()
+    {
+        CardObject cardObj = _deckManager.RemoveTopCard();
+        yield return MoveFromDeckRoutine(cardObj);
+        yield return MoveToHandRoutine(cardObj);
+    }
 
     public IEnumerator ChargeManaRoutine(CardObject cardObj)
     {
@@ -145,16 +157,6 @@ public class PlayerManager : MonoBehaviour
         yield return MoveToGraveyardRoutine(spellCard);
     }
     
-    public IEnumerator DrawCardRoutine()
-    {
-        Coroutine<CardObject> routine = this.StartCoroutine<CardObject>(ChooseDeckMoveCard(DeckCardMoveType.Top));
-        yield return routine.coroutine;
-
-        CardObject cardObj = routine.returnVal;
-        yield return MoveFromDeckRoutine(cardObj);
-        yield return MoveToHandRoutine(cardObj);
-    }
-
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
         CardObject cardObj = shieldObj.CardObject;
@@ -165,34 +167,18 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     #region From Zone Moves
-
-    public IEnumerator ChooseDeckMoveCard(DeckCardMoveType deckCardMove)
-    {
-        CardObject cardObj = null;
-        switch (deckCardMove)
-        {
-            case DeckCardMoveType.Top:
-                cardObj = _deckManager.RemoveTopCard();
-                break;
-
-            case DeckCardMoveType.SearchShuffle:
-                break;
-        }
-
-        yield return cardObj;
-    }
-
+    
     public IEnumerator MoveFromDeckRoutine(CardObject cardObj)
     {
-        cardObj.CardLayout.Canvas.sortingOrder = 100;
+        InitiateMove(cardObj);
         cardObj.CardLayout.Canvas.gameObject.SetActive(true);
+
         yield return _deckManager.MoveFromDeckRoutine(cardObj);
     }
 
     public IEnumerator MoveFromHandRoutine(CardObject cardObj)
     {
-        cardObj.ManaLayout.Canvas.sortingOrder = 100;
-        cardObj.HoverPreviewHandler.PreviewEnabled = false;
+        InitiateMove(cardObj);
 
         yield return _handManager.MoveFromHandRoutine(cardObj);
     }
@@ -209,8 +195,7 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator MoveFromManaZoneRoutine(CardObject cardObj)
     {
-        cardObj.CardLayout.Canvas.sortingOrder = 100;
-        cardObj.HoverPreviewHandler.PreviewEnabled = false;
+        InitiateMove(cardObj);
         cardObj.IsVisible = true;
 
         yield return _manaZoneManager.MoveFromManaZoneRoutine(cardObj);
@@ -218,11 +203,16 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator MoveFromBattleZoneRoutine(CardObject cardObj)
     {
-        cardObj.CardLayout.Canvas.sortingOrder = 100;
-        cardObj.HoverPreviewHandler.PreviewEnabled = false;
+        InitiateMove(cardObj);
         cardObj.IsVisible = true;
 
         yield return _battleZoneManager.MoveFromBattleZoneRoutine(cardObj);
+    }
+
+    private void InitiateMove(CardObject cardObj)
+    {
+        cardObj.CardLayout.Canvas.sortingOrder = 100;
+        cardObj.HoverPreviewHandler.PreviewEnabled = false;
     }
 
     #endregion
@@ -277,6 +267,11 @@ public class PlayerManager : MonoBehaviour
         yield return _manaZoneManager.MoveToManaZoneRoutine(cardObj);
 
         cardObj.HoverPreviewHandler.PreviewEnabled = true;
+    }
+
+    public IEnumerator MoveToBattleZoneRoutine(CardObject cardObj)
+    {
+        yield return SummonCreatureRoutine((CreatureObject) cardObj);
     }
 
     #endregion

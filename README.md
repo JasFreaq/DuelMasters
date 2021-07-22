@@ -18,4 +18,5 @@ The following are the links to the assets/resources used for and during the proj
 - Visible [Eye Icon](https://freeicons.io/user-interface-icons-5/gradient-eye-open-icon-36783#) on Cards from [Muhammad Haq](https://freeicons.io/profile/823)
 - [Shield Model](https://assetstore.unity.com/packages/3d/props/weapons/free-shield-and-sword-asset-pack-128672)
 - [Shield Material](https://assetstore.unity.com/packages/3d/environments/fantasy/translucent-crystals-106274)
+- arrow-right sprite by [Clker-Free-Vector-Images](https://pixabay.com/users/clker-free-vector-images-3736/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=310628) from [Pixabay](https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=310628) 
 

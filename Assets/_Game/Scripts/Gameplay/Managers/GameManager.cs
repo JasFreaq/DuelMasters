@@ -7,10 +7,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private bool _playerGoesFirst = true;
-
-    [Header("UI")]
-    [SerializeField] private ActionMenu _actionMenu;
-
+    
     [Header("Controllers")] 
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private AIController _opponentController;
@@ -20,6 +17,10 @@ public class GameManager : MonoBehaviour
     [Header("Decks")] 
     [SerializeField] private Deck _playerDeck;
     [SerializeField] private Deck _opponentDeck;
+
+    [Header("UI")]
+    [SerializeField] private ActionMenu _actionMenu;
+    [SerializeField] private NumberSelector _numberSelector;
 
     private PlayerManager _currentManager;
     private Coroutine _gameLoopRoutine = null;
@@ -105,6 +106,19 @@ public class GameManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Alpha0))
             print(_currentStep);
+
+        //if (Input.GetKeyDown(KeyCode.Keypad0))
+        //{
+        //    MovementZones movementZones = new MovementZones
+        //    {
+        //        fromZone = CardZoneType.Deck,
+        //        toZone = CardZoneType.Hand,
+        //        deckCardMove = DeckCardMoveType.Top,
+        //        countChoice = CountChoiceType.Upto,
+        //        moveCount = 4
+        //    };
+        //    ProcessRegionMovement(true, movementZones);
+        //}
 
         if (_gameBegun && !_gameOver)
         {
@@ -275,9 +289,42 @@ public class GameManager : MonoBehaviour
 
     #region Card Effect Processing
 
-    public Coroutine ProcessRegionMovement(CardObject cardObj, MovementZones movementZones)
+    public Coroutine ProcessRegionMovement(bool affectPlayer, MovementZones movementZones)
     {
-        return StartCoroutine(ProcessRegionMovementRoutine(cardObj, movementZones));
+        return StartCoroutine(AdjustMovementTargetRoutine(affectPlayer, movementZones));
+    }
+
+    private IEnumerator AdjustMovementTargetRoutine(bool affectPlayer, MovementZones movementZones)
+    {
+        PlayerManager affectedPlayer = GetManager(affectPlayer);
+
+        if (movementZones.fromZone == CardZoneType.Deck)
+        {
+            int moveCount = 0;
+            switch (movementZones.deckCardMove)
+            {
+                case DeckCardMoveType.Top:
+                    if (movementZones.countChoice == CountChoiceType.Upto)
+                    {
+                        Coroutine<int> routine = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(1, movementZones.moveCount));
+                        yield return routine.coroutine;
+                        moveCount = routine.returnVal;
+                    }
+                    else if (movementZones.countChoice == CountChoiceType.Exactly)
+                        moveCount = movementZones.moveCount;
+
+                    for (int i = 0; i < moveCount; i++)
+                    {
+                        CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
+                        yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+                    }
+                    
+                    break;
+
+                case DeckCardMoveType.SearchShuffle:
+                    break;
+            }
+        }
     }
 
     private IEnumerator ProcessRegionMovementRoutine(CardObject cardObj, MovementZones movementZones)
@@ -287,14 +334,11 @@ public class GameManager : MonoBehaviour
         switch (movementZones.fromZone)
         {
             case CardZoneType.Deck:
-                Coroutine<CardObject> routine = owner.StartCoroutine<CardObject>(owner.ChooseDeckMoveCard(DeckCardMoveType.Top));
-                yield return routine.coroutine;
-
-                cardObj = routine.returnVal;
                 yield return owner.MoveFromDeckRoutine(cardObj);
                 break;
 
             case CardZoneType.Hand:
+                yield return owner.MoveFromHandRoutine(cardObj);
                 break;
 
             case CardZoneType.Shields:
@@ -304,9 +348,11 @@ public class GameManager : MonoBehaviour
                 break;
 
             case CardZoneType.ManaZone:
+                yield return owner.MoveFromManaZoneRoutine(cardObj);
                 break;
 
             case CardZoneType.BattleZone:
+                yield return owner.MoveFromBattleZoneRoutine(cardObj);
                 break;
         }
         
@@ -316,18 +362,26 @@ public class GameManager : MonoBehaviour
                 break;
 
             case CardZoneType.Hand:
+                yield return owner.MoveToHandRoutine(cardObj);
                 break;
 
             case CardZoneType.Shields:
+                yield return owner.MoveToShieldsRoutine(cardObj);
                 break;
             
             case CardZoneType.Graveyard:
+                yield return owner.MoveToGraveyard(cardObj);
                 break;
 
             case CardZoneType.ManaZone:
+                yield return owner.MoveToManaZoneRoutine(cardObj);
                 break;
 
             case CardZoneType.BattleZone:
+                if (cardObj is CreatureObject)
+                    yield return owner.MoveToBattleZoneRoutine(cardObj);
+                else
+                    Debug.LogError($"{cardObj} selected to MoveToBattleZone but it is not a creature");
                 break;
         }
     }

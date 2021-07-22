@@ -7,12 +7,11 @@ public class Test : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A)) 
-            Move();
+
     }
 
-    private void Move()
+    public void Tester()
     {
-        print($"{Camera.main.WorldToScreenPoint(transform.position)}");
+        print($"pot");
     }
 }
