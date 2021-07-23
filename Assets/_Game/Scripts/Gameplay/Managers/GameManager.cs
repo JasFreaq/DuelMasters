@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             List<CardObject> cards = new List<CardObject>();
-            int count = 7;
+            int count = 25;
             foreach (CardObject card in GetManager(true).DataHandler.CardsInDeck)
             {
                 cards.Add(card);

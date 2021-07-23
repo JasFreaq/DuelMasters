@@ -15,17 +15,17 @@ public class CardSelectionOverlay : MonoBehaviour
     [SerializeField] private Scrollbar _layoutScroll;
     [SerializeField] private Button _submitButton;
     [SerializeField] private Button _cancelButton;
-    [SerializeField] private TextMeshProUGUI _submitNumText;
+    [SerializeField] private TextMeshProUGUI _submitText;
 
     [Header("Layout")]
     [SerializeField] private float _circleRadius = 150;
     [SerializeField] private float _cardAreaWidth = 28;
-    [SerializeField] private int _maxCardNo = 7;
+    [SerializeField] private int _displayCardsNo = 7;
     [SerializeField] private int _overlaySortingLayerFloor = 100;
     [SerializeField] private float _previewScaleMultiplier = 50;
     [SerializeField] private Transform _holderTransform;
-    
-    private int _selectionNum = 0, _lowerBound, _upperBound;
+
+    private int _selectionNum = 0, _lowerBound, _upperBound, _adjustedDisplayCardsNo;
     private bool _selectionMade = false;
 
     private Vector3 _circleCenter;
@@ -39,6 +39,8 @@ public class CardSelectionOverlay : MonoBehaviour
         _circleCenter = new Vector3(holderPosition.x, holderPosition.y - _circleRadius, holderPosition.z);
         _circleCentralAxis = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
+
+        _adjustedDisplayCardsNo = _displayCardsNo + 1;
     }
 
     public IEnumerator GenerateLayout(int lower, int upper, List<CardObject> cardList)
@@ -99,22 +101,24 @@ public class CardSelectionOverlay : MonoBehaviour
 
     private void ArrangeCards(List<Canvas> previewCanvases)
     {
-        Vector3 holderPosition2 = _holderTransform.localPosition;
-        _circleCenter = new Vector3(holderPosition2.x, holderPosition2.y - _circleRadius, holderPosition2.z);
-        _circleCentralAxis = new Vector3(holderPosition2.x, holderPosition2.y, holderPosition2.z) - _circleCenter;
-        _circleCentralAxis.Normalize();
+        float cardWidth = (_cardAreaWidth * 2) / _adjustedDisplayCardsNo;
+        float startOffset = (_adjustedDisplayCardsNo % 2) * cardWidth;
+        if (_adjustedDisplayCardsNo % 2 == 0)
+            startOffset += cardWidth / 2;
 
-        float cardWidth = (_cardAreaWidth * 2) / _maxCardNo;
-        float startOffset = (_maxCardNo % 2) * cardWidth;
-        
+        float firstOffset = (_adjustedDisplayCardsNo / 2 + 1) * cardWidth;
+        float lastOffset = (previewCanvases.Count - _adjustedDisplayCardsNo / 2) * cardWidth;
+
         Vector3 holderPosition = _holderTransform.localPosition;
         Vector3 startPos = new Vector3(holderPosition.x - startOffset, holderPosition.y, holderPosition.z);
 
-        for (int i = 0, n = previewCanvases.Count; i < n; i++) 
+        int n = previewCanvases.Count, m = n - 1 - _adjustedDisplayCardsNo;
+        float scrollVal = m * _layoutScroll.value;
+        for (int i = 0; i < n; i++)
         {
             Transform cardTransform = previewCanvases[i].transform;
 
-            float offset = (i - n / 2 + 1) * cardWidth;
+            float offset = (i - scrollVal - _adjustedDisplayCardsNo / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
 
             Vector3 relativeVector = cardPos - _circleCenter;
@@ -127,9 +131,22 @@ public class CardSelectionOverlay : MonoBehaviour
             cardPos.y -= _circleRadius;
 
             Quaternion cardRot = Quaternion.Euler(rotation);
-            
-            cardTransform.localPosition = cardPos;
-            cardTransform.localRotation = cardRot;
+
+            if (i <= scrollVal)
+            {
+                cardTransform.gameObject.SetActive(false);
+            }
+            else if (i > scrollVal && i < scrollVal + _adjustedDisplayCardsNo) 
+            {
+                cardTransform.gameObject.SetActive(true);
+
+                cardTransform.localPosition = cardPos;
+                cardTransform.localRotation = cardRot;
+            }
+            else if (i >= scrollVal + _adjustedDisplayCardsNo)
+            {
+                cardTransform.gameObject.SetActive(false);
+            }
         }
     }
 
