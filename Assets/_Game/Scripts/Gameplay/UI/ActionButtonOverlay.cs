@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActionMenu : MonoBehaviour
+public class ActionButtonOverlay : MonoBehaviour
 {
     [SerializeField] private Button _actionButton;
     [SerializeField] private TextMeshProUGUI _actionText;

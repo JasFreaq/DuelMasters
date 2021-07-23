@@ -40,6 +40,11 @@ public class CardObject : CardBehaviour
         get { return _isPlayer;}
     }
 
+    public CardLayoutHandler PreviewCardLayout
+    {
+        get { return _previewCardLayout; }
+    }
+
     public CardLayoutHandler CardLayout
     {
         get { return _cardLayoutHandler; }
@@ -105,6 +110,8 @@ public class CardObject : CardBehaviour
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
+        _hoverPreviewHandler.PreviewLayout = _previewCardLayout;
+
         _dragHandler = GetComponent<DragHandler>();
     }
 

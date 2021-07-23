@@ -19,8 +19,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Deck _opponentDeck;
 
     [Header("UI")]
-    [SerializeField] private ActionMenu _actionMenu;
+    [SerializeField] private ActionButtonOverlay actionButton;
     [SerializeField] private NumberSelector _numberSelector;
+    [SerializeField] private CardSelectionOverlay _cardSelectionOverlay;
 
     private PlayerManager _currentManager;
     private Coroutine _gameLoopRoutine = null;
@@ -119,6 +120,22 @@ public class GameManager : MonoBehaviour
         //    };
         //    ProcessRegionMovement(true, movementZones);
         //}
+
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            List<CardObject> cards = new List<CardObject>();
+            int count = 7;
+            foreach (CardObject card in GetManager(true).DataHandler.CardsInDeck)
+            {
+                cards.Add(card);
+
+                count--;
+                if (count <= 0)
+                    break;
+            }
+
+            StartCoroutine(_cardSelectionOverlay.GenerateLayout(1, 3, cards));
+        }
 
         if (_gameBegun && !_gameOver)
         {

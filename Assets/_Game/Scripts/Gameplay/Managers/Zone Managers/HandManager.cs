@@ -25,7 +25,6 @@ public class HandManager : MonoBehaviour
     [SerializeField] private float _cardAreaWidth = 24;
     [SerializeField] private float _maxCardWidth = 8;
     [SerializeField] private int _handSortingLayerFloor = 50;
-    [SerializeField] private bool _arrangeLeftToRight = true;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
     
@@ -44,9 +43,6 @@ public class HandManager : MonoBehaviour
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
-    private Transform _currentPreviewingCard = null;
-    private Coroutine _previewResetRoutine = null;
-
     public bool IsPlayer
     {
         get { return _isPlayer; }
@@ -56,10 +52,9 @@ public class HandManager : MonoBehaviour
     {
         _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
 
-        _circleCenter = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
-            _holderTransform.localPosition.z - _circleRadius);
-        _circleCentralAxis = new Vector3(_holderTransform.localPosition.x, _holderTransform.localPosition.y,
-            _holderTransform.localPosition.z) - _circleCenter;
+        Vector3 holderPosition = _holderTransform.localPosition;
+        _circleCenter = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z - _circleRadius);
+        _circleCentralAxis = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
 
@@ -186,11 +181,11 @@ public class HandManager : MonoBehaviour
         float startOffset = (n % 2) * cardWidth;
         if (n % 2 == 0)
             startOffset += cardWidth / 2;
-        if (!_arrangeLeftToRight)
+        if (!_isPlayer)
             startOffset = -startOffset;
-        
-        Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset, _holderTransform.localPosition.y,
-            _holderTransform.localPosition.z);
+
+        Vector3 holderPosition = _holderTransform.localPosition;
+        Vector3 startPos = new Vector3(holderPosition.x - startOffset, holderPosition.y, holderPosition.z);
         
         TransformData indexCardTransform = new TransformData();
 
@@ -198,15 +193,16 @@ public class HandManager : MonoBehaviour
         {
             Transform cardTransform = _holderTransform.GetChild(i);
             
-            float offset = _arrangeLeftToRight ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
+            float offset = _isPlayer ? (i - n / 2 + 1) * cardWidth : -(i - n / 2 + 1) * cardWidth;
             Vector3 cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
             
             Vector3 relativeVector = cardPos - _circleCenter;
             relativeVector.Normalize();
 
-            Vector3 rotation = new Vector3(_tempCard.localEulerAngles.x,
+            Vector3 tempEulerAngles = _tempCard.localEulerAngles;
+            Vector3 rotation = new Vector3(tempEulerAngles.x,
                 Vector3.SignedAngle(relativeVector, _circleCentralAxis, _holderTransform.up),
-                _tempCard.localEulerAngles.z);
+                tempEulerAngles.z);
 
             cardPos = relativeVector * _circleRadius;
             cardPos.z -= _circleRadius;
