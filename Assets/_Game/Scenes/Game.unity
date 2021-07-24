@@ -4404,4 +4404,6 @@ MonoBehaviour:
   _displayCardsNo: 7
   _overlaySortingLayerFloor: 100
   _previewScaleMultiplier: 62.5
+  _edgePosAdjustment: {x: 50, y: 50, z: 0}
+  _edgeRotZAdjustment: 15
   _holderTransform: {fileID: 1694079098}

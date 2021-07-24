@@ -178,9 +178,12 @@ public class HandManager : MonoBehaviour
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
         float arrangeTime = GameParamsHolder.Instance.LayoutsArrangeMoveTime;
         
-        float startOffset = (n % 2) * cardWidth;
+        float startOffset;
         if (n % 2 == 0)
-            startOffset += cardWidth / 2;
+            startOffset = cardWidth / 2;
+        else
+            startOffset = cardWidth;
+        
         if (!_isPlayer)
             startOffset = -startOffset;
 
