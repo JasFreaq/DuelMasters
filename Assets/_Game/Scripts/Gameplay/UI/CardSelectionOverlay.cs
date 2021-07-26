@@ -24,6 +24,7 @@ public class CardSelectionOverlay : MonoBehaviour
     [SerializeField] private int _overlaySortingLayerFloor = 100;
     [SerializeField] private float _previewScaleMultiplier = 50;
     [SerializeField] private Vector3 _edgePosAdjustment = new Vector3(50, 50, 0);
+    [SerializeField] private Vector2 _edgePosDeviationRange = new Vector2(10, 10);
     [SerializeField] private float _edgeRotZAdjustment = 15;
     [SerializeField] private Transform _holderTransform;
 
@@ -31,6 +32,8 @@ public class CardSelectionOverlay : MonoBehaviour
 
     private int _selectionNum = 0, _lowerBound, _upperBound, _adjustedDisplayNo;
     private bool _selectionMade = false;
+
+    private List<Vector2> _edgeRandomDeviations = new List<Vector2>();
 
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
@@ -55,7 +58,7 @@ public class CardSelectionOverlay : MonoBehaviour
         _previewCanvases = new List<Canvas>();
         foreach (CardObject cardObj in cardList)
         {
-            Canvas previewCanvas = cardObj.PreviewCardLayout.Canvas;
+            Canvas previewCanvas = cardObj.PreviewHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
 
             previewTransform.SetParent(_holderTransform);
@@ -78,6 +81,9 @@ public class CardSelectionOverlay : MonoBehaviour
             _layoutScroll.gameObject.SetActive(true);
         }
 
+        _edgeRandomDeviations.Add(CalculateDeviation());
+        _edgeRandomDeviations.Add(_edgeRandomDeviations[0] + CalculateDeviation());
+
         _holderCanvas.SetActive(true);
 
         ArrangeCards(_layoutScroll.value);
@@ -88,10 +94,10 @@ public class CardSelectionOverlay : MonoBehaviour
         
         foreach (CardObject cardObj in cardList)
         {
-            Canvas previewCanvas = cardObj.PreviewCardLayout.Canvas;
+            Canvas previewCanvas = cardObj.PreviewHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
 
-            previewTransform.SetParent(cardObj.PreviewCardLayout.transform);
+            previewTransform.SetParent(cardObj.PreviewHandler.transform);
             previewCanvas.renderMode = RenderMode.WorldSpace;
 
             previewTransform.localPosition = Vector3.zero;
@@ -100,6 +106,7 @@ public class CardSelectionOverlay : MonoBehaviour
         }
 
         _previewCanvases.Clear();
+        _edgeRandomDeviations.Clear();
         _selectionMade = false;
 
         //yield return 
@@ -136,9 +143,9 @@ public class CardSelectionOverlay : MonoBehaviour
         for (int i = 0; i < n; i++)
         {
             Transform cardTransform = _previewCanvases[i].transform;
-            Vector3 cardPos = new Vector3();
+            Vector3 cardPos = Vector3.zero;
 
-            Vector3 posAddendum = new Vector3();
+            Vector3 posAddendum = Vector3.zero;
             float rotAddendum = 0;
 
             if (i < adjustedScrollVal)
@@ -146,25 +153,40 @@ public class CardSelectionOverlay : MonoBehaviour
                 cardPos = new Vector3(startPos.x + extremeOffset, startPos.y, startPos.z);
                 cardPos.x = -cardPos.x;
 
+                Vector3 edgePosAdjustment = new Vector3(-_edgePosAdjustment.x, _edgePosAdjustment.y, _edgePosAdjustment.z);
+                Vector3 edgePosAdjustmentA = new Vector3(edgePosAdjustment.x - _edgeRandomDeviations[0].x,
+                    edgePosAdjustment.y + _edgeRandomDeviations[0].y, edgePosAdjustment.z);
+                Vector3 edgePosAdjustmentB = new Vector3(edgePosAdjustmentA.x - _edgeRandomDeviations[1].x,
+                    edgePosAdjustmentA.y + _edgeRandomDeviations[1].y, edgePosAdjustmentA.z);
+
                 float diffVal = Mathf.Abs(i - adjustedScrollVal);
-                if (diffVal > 2)
+
+                if (diffVal >= 4)
                 {
                     if (cardTransform.gameObject.activeInHierarchy)
                         cardTransform.gameObject.SetActive(false);
                 }
-                else if (diffVal <= 2 && diffVal > 1)
+                else if (diffVal < 4 && diffVal > 1)
                 {
                     rotAddendum = _edgeRotZAdjustment;
-                    posAddendum = new Vector3(-_edgePosAdjustment.x, _edgePosAdjustment.y, _edgePosAdjustment.z);
+                    
+                    if (diffVal >= 2)
+                    {
+                        if (diffVal >= 3)
+                            posAddendum = edgePosAdjustmentB;
+                        else
+                            posAddendum = Vector3.Lerp(edgePosAdjustmentA, edgePosAdjustmentB, diffVal - 2);
+                    }
+                    else
+                        posAddendum = Vector3.Lerp(edgePosAdjustment, edgePosAdjustmentA, diffVal - 1);
+                    
 
                     if (!cardTransform.gameObject.activeInHierarchy)
                         cardTransform.gameObject.SetActive(true);
                 }
-                else if (diffVal < 1)
+                else if (diffVal <= 1)
                 {
                     rotAddendum = Mathf.Lerp(0, _edgeRotZAdjustment, diffVal);
-
-                    Vector3 edgePosAdjustment = new Vector3(-_edgePosAdjustment.x, _edgePosAdjustment.y, _edgePosAdjustment.z);
                     posAddendum = Vector3.Lerp(Vector3.zero, edgePosAdjustment, diffVal);
                 }
             }
@@ -186,7 +208,7 @@ public class CardSelectionOverlay : MonoBehaviour
                 else if (diffVal <= 2 && diffVal > 1)
                 {
                     rotAddendum = -_edgeRotZAdjustment;
-                    posAddendum = new Vector3(_edgePosAdjustment.x, _edgePosAdjustment.y, _edgePosAdjustment.z);
+                    posAddendum = _edgePosAdjustment;
 
                     if (!cardTransform.gameObject.activeInHierarchy)
                         cardTransform.gameObject.SetActive(true);
@@ -194,9 +216,7 @@ public class CardSelectionOverlay : MonoBehaviour
                 else if (diffVal < 1) 
                 {
                     rotAddendum = Mathf.Lerp(0, -_edgeRotZAdjustment, diffVal);
-
-                    Vector3 edgePosAdjustment = new Vector3(_edgePosAdjustment.x, _edgePosAdjustment.y, _edgePosAdjustment.z);
-                    posAddendum = Vector3.Lerp(Vector3.zero, edgePosAdjustment, diffVal);
+                    posAddendum = Vector3.Lerp(Vector3.zero, _edgePosAdjustment, diffVal);
                 }
             }
             
@@ -214,6 +234,15 @@ public class CardSelectionOverlay : MonoBehaviour
             cardTransform.localPosition = cardPos + posAddendum;
             cardTransform.localRotation = cardRot;
         }
+    }
+
+    private Vector2 CalculateDeviation()
+    {
+        Vector2 vector2 = new Vector2();
+        vector2.x = Random.Range(_edgePosDeviationRange.x / 2, _edgePosDeviationRange.x);
+        vector2.y = Random.Range(-_edgePosDeviationRange.y, _edgePosDeviationRange.y);
+
+        return vector2;
     }
 
     public void MakeSelection()

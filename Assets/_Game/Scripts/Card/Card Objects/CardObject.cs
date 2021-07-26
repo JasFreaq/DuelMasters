@@ -6,12 +6,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [DisallowMultipleComponent]
-public class CardObject : CardBehaviour
+public abstract class CardObject : CardBehaviour
 {
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
     [SerializeField] private GameObject _visibleEyeIcon;
-    [SerializeField] protected CardLayoutHandler _previewCardLayout;
+    [SerializeField] protected PreviewHandler previewHandler;
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
     
@@ -40,9 +40,9 @@ public class CardObject : CardBehaviour
         get { return _isPlayer;}
     }
 
-    public CardLayoutHandler PreviewCardLayout
+    public PreviewHandler PreviewHandler
     {
-        get { return _previewCardLayout; }
+        get { return previewHandler; }
     }
 
     public CardLayoutHandler CardLayout
@@ -110,7 +110,7 @@ public class CardObject : CardBehaviour
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
-        _hoverPreviewHandler.PreviewLayout = _previewCardLayout;
+        _hoverPreviewHandler.PreviewTransform = previewHandler.transform;
 
         _dragHandler = GetComponent<DragHandler>();
     }
@@ -174,13 +174,7 @@ public class CardObject : CardBehaviour
 
     #region Setup Methods
 
-    protected virtual void SetupCard()
-    {
-        _cardLayoutHandler.SetupCard(_cardInst.CardData);
-        _manaCardLayoutHandler.SetupCard(_cardInst.CardData);
-
-        _previewCardLayout.SetupCard(_cardInst.CardData);
-    }
+    protected abstract void SetupCard();
     
     public virtual void ActivateCardLayout()
     {
@@ -237,7 +231,7 @@ public class CardObject : CardBehaviour
         _manaCardLayoutHandler.TappedOverlay.SetActive(_cardInst.IsTapped);
         float tapAngle = GameParamsHolder.Instance.TapAngle;
         Vector3 tapStateRotation = transform.localEulerAngles;
-        Vector3 previewTapStateRotation = _previewCardLayout.transform.localEulerAngles;
+        Vector3 previewTapStateRotation = previewHandler.transform.localEulerAngles;
         PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(_isPlayer);
 
         if (_cardInst.IsTapped)
@@ -254,7 +248,7 @@ public class CardObject : CardBehaviour
         }
 
         transform.DOLocalRotateQuaternion(Quaternion.Euler(tapStateRotation), GameParamsHolder.Instance.TapTransitionTime).SetEase(Ease.OutQuint);
-        _previewCardLayout.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
+        previewHandler.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
     }
 
     public void SetVisibleIcon(bool visible)

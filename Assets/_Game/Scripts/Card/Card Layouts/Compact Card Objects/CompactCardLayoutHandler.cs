@@ -15,7 +15,6 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
     [SerializeField] private Renderer _bgRenderer;
     [SerializeField] private Image _highlightFrame;
     [SerializeField] private GameObject _tappedOverlay;
-    [SerializeField] private CompactCardFrameDatabase _cardFrameDatabase;
 
     public Canvas Canvas
     {
@@ -27,13 +26,13 @@ public abstract class CompactCardLayoutHandler : MonoBehaviour
         get { return _tappedOverlay; }
     }
 
-    public virtual void SetupCard(CardData cardData)
+    public virtual void SetupCard(CardData cardData, CompactCardFrameData compactFrameData)
     {
         _artworkImage.sprite = cardData.ArtworkImage;
-        CompactCardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
-        _frameImage.sprite = cardFrameData.frameImage;
+        _frameImage.sprite = compactFrameData.frameImage;
         _nameText.text = cardData.Name;
-        _bgRenderer.material = cardFrameData.frameBGMaterial;
+
+        _bgRenderer.material = compactFrameData.frameBGMaterial;
     }
 
     public void SetGlow(bool enableGlow)

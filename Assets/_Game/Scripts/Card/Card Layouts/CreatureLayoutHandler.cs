@@ -18,9 +18,9 @@ public class CreatureLayoutHandler : CardLayoutHandler
 
     private bool _addPlusToPower;
 
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(CardData cardData, CardFrameData cardFrameData)
     {
-        base.SetupCard(cardData);
+        base.SetupCard(cardData, cardFrameData);
 
         CreatureData creatureData = (CreatureData) cardData;
 

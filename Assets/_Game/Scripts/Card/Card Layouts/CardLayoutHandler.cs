@@ -17,20 +17,19 @@ public abstract class CardLayoutHandler : MonoBehaviour
     [SerializeField] private RectTransform _cardTypeTextTransform;
     [SerializeField] protected Transform _rulesPanel;
     [SerializeField] protected Image _highlightFrame;
-    [SerializeField] CardFrameDatabase _cardFrameDatabase;
     
     public Canvas Canvas
     {
         get { return _canvas; }
     }
 
-    public virtual void SetupCard(CardData cardData)
+    public virtual void SetupCard(CardData cardData, CardFrameData cardFrameData)
     {
         _artworkImage.sprite = cardData.ArtworkImage;
-        CardFrameData cardFrameData = _cardFrameDatabase.GetFrame(cardData.Civilization);
-        _frameImage.sprite = cardFrameData.frameImage;
         _nameText.text = cardData.Name;
         _costText.text = cardData.Cost.ToString();
+        
+        _frameImage.sprite = cardFrameData.frameImage;
         _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, cardFrameData.cardTypePosY);
 
         KeywordPrefabHandler.Instance.SetupRules(cardData, this, _rulesPanel);

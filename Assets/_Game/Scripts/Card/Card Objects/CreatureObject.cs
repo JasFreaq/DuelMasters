@@ -28,9 +28,13 @@ public class CreatureObject : CardObject
 
     protected override void SetupCard()
     {
-        base.SetupCard();
+        CardFrameData cardFrameData = GameParamsHolder.Instance.GetCardFrameData(true, _cardInst.CardData.Civilization);
+        _cardLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
+        previewHandler.SetupCard(_cardInst.CardData, cardFrameData);
 
-        _battleCardLayoutHandler.SetupCard(_cardInst.CardData);
+        CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(true, _cardInst.CardData.Civilization);
+        _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
+        _battleCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
     }
 
     public override void ActivateCardLayout()

@@ -9,11 +9,11 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
     [SerializeField] private TextMeshProUGUI _powerText;
     [SerializeField] private TextMeshProUGUI _powerTextShade;
 
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(CardData cardData, CompactCardFrameData compactFrameData)
     {
-        base.SetupCard(cardData);
+        base.SetupCard(cardData, compactFrameData);
 
-        CreatureData creatureData = (CreatureData)cardData;
+        CreatureData creatureData = (CreatureData) cardData;
 
         string raceStr = CardParams.StringFromRace(creatureData.Race[0]);
         if (creatureData.Race.Length == 2)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class CompactCardFrameDatabase : MonoBehaviour
 {
     [SerializeField] private CompactCardFrameData[] _frames = new CompactCardFrameData[10];

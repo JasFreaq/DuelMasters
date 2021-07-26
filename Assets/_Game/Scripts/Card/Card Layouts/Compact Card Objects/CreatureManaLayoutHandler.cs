@@ -7,9 +7,9 @@ public class CreatureManaLayoutHandler : ManaCardLayoutHandler
 {
     [SerializeField] private TextMeshProUGUI _creatureRaceText;
 
-    public override void SetupCard(CardData cardData)
+    public override void SetupCard(CardData cardData, CompactCardFrameData compactFrameData)
     {
-        base.SetupCard(cardData);
+        base.SetupCard(cardData, compactFrameData);
 
         CreatureData creatureData = (CreatureData)cardData;
 

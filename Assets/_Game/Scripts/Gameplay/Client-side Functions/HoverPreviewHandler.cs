@@ -8,7 +8,7 @@ public class HoverPreviewHandler: MonoBehaviour
 {
     private static Camera _MainCamera = null;
     
-    private CardLayoutHandler _previewLayout;
+    private Transform _previewTransform;
     
     private Vector3 _handPreviewPosition = Vector3.zero;
     private Vector3 _handPreviewScale = Vector3.one;
@@ -28,9 +28,9 @@ public class HoverPreviewHandler: MonoBehaviour
     private Coroutine _previewRoutine = null;
     private Coroutine _handPreviewStopRoutine = null;
 
-    public CardLayoutHandler PreviewLayout
+    public Transform PreviewTransform
     {
-        set { _previewLayout = value; }
+        set { _previewTransform = value; }
     }
 
     public bool InPlayerHand
@@ -163,19 +163,19 @@ public class HoverPreviewHandler: MonoBehaviour
                 GameParamsHolder.Instance.PreviewSideBoundFraction) 
                 intermediatePosition.x = -intermediatePosition.x;
 
-            _previewLayout.transform.position = intermediatePosition;
+            _previewTransform.transform.position = intermediatePosition;
             
-            _previewLayout.transform.rotation = hoverIntermediate.rotation;
+            _previewTransform.rotation = hoverIntermediate.rotation;
 
             //Adjust Scale
             Vector3 intermediateLossyScale = hoverIntermediate.lossyScale;
-            _previewLayout.transform.localScale = Vector3.one;
-            Vector3 previewLossyScale = _previewLayout.transform.lossyScale;
+            _previewTransform.localScale = Vector3.one;
+            Vector3 previewLossyScale = _previewTransform.lossyScale;
             
-            _previewLayout.transform.localScale = new Vector3(intermediateLossyScale.x / previewLossyScale.x, 
+            _previewTransform.localScale = new Vector3(intermediateLossyScale.x / previewLossyScale.x, 
                 intermediateLossyScale.y / previewLossyScale.y, intermediateLossyScale.z / previewLossyScale.z);
             
-            _previewLayout.gameObject.SetActive(true);
+            _previewTransform.gameObject.SetActive(true);
         }
     }
 
@@ -206,9 +206,9 @@ public class HoverPreviewHandler: MonoBehaviour
             }
             else
             {
-                _previewLayout.gameObject.SetActive(false);
-                _previewLayout.transform.parent = transform;
-                _previewLayout.transform.localEulerAngles = Vector3.zero;
+                _previewTransform.gameObject.SetActive(false);
+                _previewTransform.parent = transform;
+                _previewTransform.localEulerAngles = Vector3.zero;
                 _isPreviewing = false;
             }
         }

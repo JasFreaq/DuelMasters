@@ -32,6 +32,12 @@ public class GameParamsHolder : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private FlavorTextLayoutHandler _flavorTextLayoutPrefab;
 
+    [Header("Caches")] 
+    [SerializeField] private CardFrameDatabase _creatureCardFrameDatabase;
+    [SerializeField] private CompactCardFrameDatabase _creatureCompactFrameDatabase;
+    [SerializeField] private CardFrameDatabase _spellCardFrameDatabase;
+    [SerializeField] private CompactCardFrameDatabase _spellCompactFrameDatabase;
+
     #region Static Data Members
 
     private static GameParamsHolder _Instance = null;
@@ -158,5 +164,21 @@ public class GameParamsHolder : MonoBehaviour
             Destroy(gameObject);
         else
             _Instance = this;
+    }
+
+    public CardFrameData GetCardFrameData(bool isCreature, CardParams.Civilization[] civilization)
+    {
+        if (isCreature)
+            return _creatureCardFrameDatabase.GetFrame(civilization);
+
+        return _spellCardFrameDatabase.GetFrame(civilization);
+    }
+    
+    public CompactCardFrameData GetCompactFrameData(bool isCreature, CardParams.Civilization[] civilization)
+    {
+        if (isCreature)
+            return _creatureCompactFrameDatabase.GetFrame(civilization);
+
+        return _spellCompactFrameDatabase.GetFrame(civilization);
     }
 }

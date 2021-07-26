@@ -123,6 +123,38 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &37689223
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 37689224}
+  m_Layer: 0
+  m_Name: Frame Databases
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &37689224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37689223}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 658197219}
+  - {fileID: 1399194487}
+  m_Father: {fileID: 510810891}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &57237689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,6 +1140,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476716256}
   m_CullTransparentMesh: 1
+--- !u!1 &510810890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 510810891}
+  - component: {fileID: 510810892}
+  m_Layer: 0
+  m_Name: Params Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &510810891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510810890}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 37689224}
+  m_Father: {fileID: 1167120987}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &510810892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510810890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0d079a83051ed4e8e8c15c9ece4c02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseCardCount: 5
+  _layoutsArrangeMoveTime: 0.5
+  _hoverBeforePreviewTime: 0.75
+  _previewTransitionTime: 0.25
+  _previewSideBoundFraction: 0.651
+  _dragReturnTime: 0.8
+  _tapAngle: 15
+  _tapTransitionTime: 0.5
+  _attackTime: 0.5
+  _hoverIntermediateTransform: {fileID: 1892421610}
+  _baseHighlightColor: {r: 0, g: 1, b: 1, a: 1}
+  _playHighlightColor: {r: 1, g: 0.4117647, b: 0, a: 1}
+  _shieldBaseMat: {fileID: 2100000, guid: fa69f72f41417854cab1c22d84581efd, type: 2}
+  _shieldHighlightMat: {fileID: 2100000, guid: e3857fb2fb3b7654e8a41a52ed3f67fb, type: 2}
+  _flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
+  _creatureCardFrameDatabase: {fileID: 658197221}
+  _creatureCompactFrameDatabase: {fileID: 658197220}
+  _spellCardFrameDatabase: {fileID: 1399194489}
+  _spellCompactFrameDatabase: {fileID: 1399194488}
 --- !u!1 &561292745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1424,6 +1519,124 @@ Transform:
   m_Father: {fileID: 2064906455}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &658197218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 658197219}
+  - component: {fileID: 658197221}
+  - component: {fileID: 658197220}
+  m_Layer: 0
+  m_Name: Creature Databases
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &658197219
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658197218}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 37689224}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &658197220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658197218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c6a7f59c332e3f458cae1da88eaa599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    frameImage: {fileID: 21300000, guid: e7e0128313c2876479e3abfa4c8b71da, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: d4b6ec4acaeb52949a587083a3dd3647, type: 2}
+  - civilization: 0100000002000000
+    frameImage: {fileID: 21300000, guid: 9b64e5833d5d7c34dbe12e1398ec5b14, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: bedab55a212b61b4791db792b782e457, type: 2}
+  - civilization: 02000000
+    frameImage: {fileID: 21300000, guid: a75b5db15ab8e8742bbdd2ba8fbb027b, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: f79d7737c6c60bf4c82791a866952fcb, type: 2}
+  - civilization: 0200000003000000
+    frameImage: {fileID: 21300000, guid: 21e3ab97be35712488a2dbf2df927b87, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 8c0c36c415d0af64d9595510facc0c52, type: 2}
+  - civilization: 04000000
+    frameImage: {fileID: 21300000, guid: cad80ab02f4d38749bdf1a52223d3b48, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 2fbd27980afab2e4a91c9d96e02f15ac, type: 2}
+  - civilization: 0400000003000000
+    frameImage: {fileID: 21300000, guid: a5e6967a1e0694c44a0e56b60b21b3c7, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 619178f5e7268a34d9ca5392b5c140cf, type: 2}
+  - civilization: 0400000005000000
+    frameImage: {fileID: 21300000, guid: 9db8cf45a5517614587fffe9d3c0752f, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 7e009e1c042438f4084d108f9efc0fe8, type: 2}
+  - civilization: 03000000
+    frameImage: {fileID: 21300000, guid: 1818381ca7f12b143b35cd47912e75ca, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 53dc37889dbac4e43b66d79019f5dd7e, type: 2}
+  - civilization: 05000000
+    frameImage: {fileID: 21300000, guid: 67f274699da1a7a4e824cdd7f7ad7ab3, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 2c0ad2e192071af4d9658fccae52dbe3, type: 2}
+  - civilization: 0500000001000000
+    frameImage: {fileID: 21300000, guid: 67f274699da1a7a4e824cdd7f7ad7ab3, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: bfc2891d1f62323438e956db693f172d, type: 2}
+--- !u!114 &658197221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658197218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: 704a13580e426f34ebf82e30b650e8bf, type: 3}
+  - civilization: 0100000002000000
+    cardTypePosY: -85.5
+    frameImage: {fileID: 21300000, guid: b197053852a59134da5e7b1f50f35af8, type: 3}
+  - civilization: 02000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: fb196f1d3e8273d46a3190ef49c1820a, type: 3}
+  - civilization: 0200000003000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: 7e1206da62b0fbb4e8d847de843d61e9, type: 3}
+  - civilization: 04000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 754a65d107b6235499b3b54c243ffc9b, type: 3}
+  - civilization: 0400000003000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 0d3b597b078e88b488cbe17d5866f66e, type: 3}
+  - civilization: 0400000005000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 4847a78e76a5dcb4d97fac1956c65f42, type: 3}
+  - civilization: 03000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: 15d63c232814e40418acf5d8ebd54feb, type: 3}
+  - civilization: 05000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: b2f5ff381f031894ba2076c608163128, type: 3}
+  - civilization: 0500000001000000
+    cardTypePosY: -85.5
+    frameImage: {fileID: 21300000, guid: 1c6bf56866f4bef4d91844e639fc42c4, type: 3}
 --- !u!1 &712870837
 GameObject:
   m_ObjectHideFlags: 0
@@ -2412,7 +2625,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1167120987}
   - component: {fileID: 1167120986}
-  - component: {fileID: 1167120988}
   - component: {fileID: 1167120989}
   - component: {fileID: 1167120990}
   - component: {fileID: 1167120991}
@@ -2456,37 +2668,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 510810891}
   - {fileID: 1892421610}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1167120988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167120985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f0d079a83051ed4e8e8c15c9ece4c02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _baseCardCount: 5
-  _layoutsArrangeMoveTime: 0.5
-  _hoverBeforePreviewTime: 0.75
-  _previewTransitionTime: 0.25
-  _previewSideBoundFraction: 0.651
-  _dragReturnTime: 0.8
-  _tapAngle: 15
-  _tapTransitionTime: 0.5
-  _attackTime: 0.5
-  _hoverIntermediateTransform: {fileID: 1892421610}
-  _baseHighlightColor: {r: 0, g: 1, b: 1, a: 1}
-  _playHighlightColor: {r: 1, g: 0.4117647, b: 0, a: 1}
-  _shieldBaseMat: {fileID: 2100000, guid: fa69f72f41417854cab1c22d84581efd, type: 2}
-  _shieldHighlightMat: {fileID: 2100000, guid: e3857fb2fb3b7654e8a41a52ed3f67fb, type: 2}
-  _flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
 --- !u!114 &1167120989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2764,6 +2950,124 @@ Transform:
   m_Father: {fileID: 127403156}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+--- !u!1 &1399194486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1399194487}
+  - component: {fileID: 1399194489}
+  - component: {fileID: 1399194488}
+  m_Layer: 0
+  m_Name: Spell Databases
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1399194487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399194486}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 37689224}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1399194488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399194486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c6a7f59c332e3f458cae1da88eaa599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    frameImage: {fileID: 21300000, guid: 25c0274cd56fbf5469b29944b62f4156, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: d4b6ec4acaeb52949a587083a3dd3647, type: 2}
+  - civilization: 0100000002000000
+    frameImage: {fileID: 21300000, guid: 97b3905d592d233448dc51d7a800490c, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: bedab55a212b61b4791db792b782e457, type: 2}
+  - civilization: 02000000
+    frameImage: {fileID: 21300000, guid: d0291b83d9f27524884b253b3aae0e1c, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: f79d7737c6c60bf4c82791a866952fcb, type: 2}
+  - civilization: 0200000003000000
+    frameImage: {fileID: 21300000, guid: 86b9b9bcb087f744589d20aa5328d181, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 8c0c36c415d0af64d9595510facc0c52, type: 2}
+  - civilization: 04000000
+    frameImage: {fileID: 21300000, guid: 9d99a1e00722dda4aa6d812678259755, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 2fbd27980afab2e4a91c9d96e02f15ac, type: 2}
+  - civilization: 0400000003000000
+    frameImage: {fileID: 21300000, guid: 2265a1ee3f4687d4e996faeeaff87fc4, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 619178f5e7268a34d9ca5392b5c140cf, type: 2}
+  - civilization: 0400000005000000
+    frameImage: {fileID: 21300000, guid: 04834943b21780c44ade4647632063e4, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 7e009e1c042438f4084d108f9efc0fe8, type: 2}
+  - civilization: 03000000
+    frameImage: {fileID: 21300000, guid: 98f5443f46c03b142a662d8a97cddc41, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 53dc37889dbac4e43b66d79019f5dd7e, type: 2}
+  - civilization: 05000000
+    frameImage: {fileID: 21300000, guid: d617079b5d9053a44ab5a69940df274d, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: 2c0ad2e192071af4d9658fccae52dbe3, type: 2}
+  - civilization: 0500000001000000
+    frameImage: {fileID: 21300000, guid: 97ce971104a78f34599c080fb4cd89bd, type: 3}
+    frameBGMaterial: {fileID: 2100000, guid: bfc2891d1f62323438e956db693f172d, type: 2}
+--- !u!114 &1399194489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399194486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: babb776893a0cb241a016f8c25c1934c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _frames:
+  - civilization: 01000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: 5c726d5dc04e593419a3698c4d8c54a7, type: 3}
+  - civilization: 0100000002000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: 1f3714fc4009d1a4ebe5b96fd1eea463, type: 3}
+  - civilization: 02000000
+    cardTypePosY: -83.5
+    frameImage: {fileID: 21300000, guid: bf24454af2d359a4cbbc6b77aa416612, type: 3}
+  - civilization: 0200000003000000
+    cardTypePosY: -84
+    frameImage: {fileID: 21300000, guid: 4601055ac6b26cd4d95cc08432e2baa8, type: 3}
+  - civilization: 04000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: ea41fedc64f1a6c42a422d76b48341f3, type: 3}
+  - civilization: 0400000003000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: 304bbdc290a8c14438fe2c120e75a43e, type: 3}
+  - civilization: 0400000005000000
+    cardTypePosY: -83.5
+    frameImage: {fileID: 21300000, guid: 2d89a57074bab464b93f425e72d002c0, type: 3}
+  - civilization: 03000000
+    cardTypePosY: -84.75
+    frameImage: {fileID: 21300000, guid: ea2a635ce417e304583f5af642192a73, type: 3}
+  - civilization: 05000000
+    cardTypePosY: -85.75
+    frameImage: {fileID: 21300000, guid: ecd082c2cc071044997a0f179a2b158d, type: 3}
+  - civilization: 0500000001000000
+    cardTypePosY: -84.5
+    frameImage: {fileID: 21300000, guid: bd8ddac60a1cfbe46b92fdd600002a7c, type: 3}
 --- !u!1 &1487125182
 GameObject:
   m_ObjectHideFlags: 0
@@ -3801,7 +4105,7 @@ Transform:
   m_LocalScale: {x: 1.75, y: 1.75, z: 1.75}
   m_Children: []
   m_Father: {fileID: 1167120987}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -105, y: 0, z: 0}
 --- !u!1 &1911336958
 GameObject:
