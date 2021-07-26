@@ -4707,7 +4707,8 @@ MonoBehaviour:
   _cardAreaWidth: 560
   _displayCardsNo: 7
   _overlaySortingLayerFloor: 100
-  _previewScaleMultiplier: 62.5
+  _previewScaleMultiplier: 60
   _edgePosAdjustment: {x: 50, y: 50, z: 0}
+  _edgePosDeviationRange: {x: 50, y: 50}
   _edgeRotZAdjustment: 15
   _holderTransform: {fileID: 1694079098}
