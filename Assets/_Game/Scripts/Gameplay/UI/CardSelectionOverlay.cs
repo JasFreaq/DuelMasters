@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -23,8 +24,7 @@ public class CardSelectionOverlay : MonoBehaviour
     [SerializeField] private int _displayCardsNo = 7;
     [SerializeField] private int _overlaySortingLayerFloor = 100;
     [SerializeField] private float _previewScaleMultiplier = 50;
-    [SerializeField] private Vector3 _edgePosAdjustment = new Vector3(50, 50, 0);
-    [SerializeField] private Vector2 _edgePosDeviationRange = new Vector2(10, 10);
+    [SerializeField] private List<Vector3> _edgePosAdjustments = new List<Vector3>(3);
     [SerializeField] private float _edgeRotZAdjustment = 15;
     [SerializeField] private Transform _holderTransform;
 
@@ -32,9 +32,7 @@ public class CardSelectionOverlay : MonoBehaviour
 
     private int _selectionNum = 0, _lowerBound, _upperBound, _adjustedDisplayNo;
     private bool _selectionMade = false;
-
-    private List<Vector2> _edgeRandomDeviations = new List<Vector2>();
-
+    
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
@@ -42,14 +40,14 @@ public class CardSelectionOverlay : MonoBehaviour
     {
         _holderCanvas.SetActive(false);
 
-        _layoutScroll.onValueChanged.AddListener(ArrangeCards);
+        _layoutScroll.onValueChanged.AddListener(ArrangePreviews);
 
         Vector3 holderPosition = _holderTransform.localPosition;
         _circleCenter = new Vector3(holderPosition.x, holderPosition.y - _circleRadius, holderPosition.z);
         _circleCentralAxis = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
-
+    
     public IEnumerator GenerateLayout(int lower, int upper, List<CardObject> cardList)
     {
         _lowerBound = lower;
@@ -60,14 +58,14 @@ public class CardSelectionOverlay : MonoBehaviour
         {
             Canvas previewCanvas = cardObj.PreviewHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
-
+            
             previewTransform.SetParent(_holderTransform);
             previewTransform.localRotation = Quaternion.Euler(Vector3.zero);
             previewTransform.localScale = OriginalPreviewScale * new Vector2(_previewScaleMultiplier, _previewScaleMultiplier);
-            
+
             _previewCanvases.Add(previewCanvas);
         }
-
+        
         if (_previewCanvases.Count <= _displayCardsNo)
         {
             _adjustedDisplayNo = _previewCanvases.Count;
@@ -80,13 +78,12 @@ public class CardSelectionOverlay : MonoBehaviour
             _layoutScroll.value = 1;
             _layoutScroll.gameObject.SetActive(true);
         }
-
-        _edgeRandomDeviations.Add(CalculateDeviation());
-        _edgeRandomDeviations.Add(_edgeRandomDeviations[0] + CalculateDeviation());
-
+        
         _holderCanvas.SetActive(true);
+        foreach (Canvas previewCanvas in _previewCanvases)
+            previewCanvas.overrideSorting = true;
 
-        ArrangeCards(_layoutScroll.value);
+        ArrangePreviews();
         while (!_selectionMade)
         {
             yield return new WaitForEndOfFrame();
@@ -99,6 +96,7 @@ public class CardSelectionOverlay : MonoBehaviour
 
             previewTransform.SetParent(cardObj.PreviewHandler.transform);
             previewCanvas.renderMode = RenderMode.WorldSpace;
+            previewCanvas.sortingOrder = 0;
 
             previewTransform.localPosition = Vector3.zero;
             previewTransform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
@@ -106,7 +104,6 @@ public class CardSelectionOverlay : MonoBehaviour
         }
 
         _previewCanvases.Clear();
-        _edgeRandomDeviations.Clear();
         _selectionMade = false;
 
         //yield return 
@@ -124,15 +121,17 @@ public class CardSelectionOverlay : MonoBehaviour
         yield return GenerateLayout(lower, upper, cardList);
     }
 
-    private void ArrangeCards(float scrollValue)
+    #region Layout Methods
+
+    private void ArrangePreviews(float scrollValue)
     {
-        ArrangeCards();
+        ArrangePreviews();
     }
 
-    private void ArrangeCards()
+    private void ArrangePreviews()
     {
         float cardWidth = (_cardAreaWidth * 2) / _adjustedDisplayNo;
-        float extremeOffset = ((float) _adjustedDisplayNo / 2 + 1) * cardWidth;
+        float extremeOffset = ((float)_adjustedDisplayNo / 2 + 1) * cardWidth;
 
         Vector3 holderPosition = _holderTransform.localPosition;
         Vector3 startPos = new Vector3(holderPosition.x - cardWidth, holderPosition.y, holderPosition.z);
@@ -142,108 +141,147 @@ public class CardSelectionOverlay : MonoBehaviour
 
         for (int i = 0; i < n; i++)
         {
-            Transform cardTransform = _previewCanvases[i].transform;
-            Vector3 cardPos = Vector3.zero;
+            Canvas previewCanvas = _previewCanvases[i];
+            Transform previewTransform = previewCanvas.transform;
+            Vector3 previewPos = Vector3.zero;
 
             Vector3 posAddendum = Vector3.zero;
             float rotAddendum = 0;
 
             if (i < adjustedScrollVal)
             {
-                cardPos = new Vector3(startPos.x + extremeOffset, startPos.y, startPos.z);
-                cardPos.x = -cardPos.x;
+                previewPos = new Vector3(startPos.x + extremeOffset, startPos.y, startPos.z);
+                previewPos.x = -previewPos.x;
 
-                Vector3 edgePosAdjustment = new Vector3(-_edgePosAdjustment.x, _edgePosAdjustment.y, _edgePosAdjustment.z);
-                Vector3 edgePosAdjustmentA = new Vector3(edgePosAdjustment.x - _edgeRandomDeviations[0].x,
-                    edgePosAdjustment.y + _edgeRandomDeviations[0].y, edgePosAdjustment.z);
-                Vector3 edgePosAdjustmentB = new Vector3(edgePosAdjustmentA.x - _edgeRandomDeviations[1].x,
-                    edgePosAdjustmentA.y + _edgeRandomDeviations[1].y, edgePosAdjustmentA.z);
+                Vector3 edgePosAdjustment = new Vector3(-_edgePosAdjustments[0].x, _edgePosAdjustments[0].y, _edgePosAdjustments[0].z);
+                Vector3 edgePosAdjustmentA = new Vector3(-_edgePosAdjustments[1].x, _edgePosAdjustments[1].y, _edgePosAdjustments[1].z);
+                Vector3 edgePosAdjustmentB = new Vector3(-_edgePosAdjustments[2].x, _edgePosAdjustments[2].y, _edgePosAdjustments[2].z);
 
                 float diffVal = Mathf.Abs(i - adjustedScrollVal);
 
                 if (diffVal >= 4)
                 {
-                    if (cardTransform.gameObject.activeInHierarchy)
-                        cardTransform.gameObject.SetActive(false);
+                    if (previewTransform.gameObject.activeInHierarchy)
+                        previewTransform.gameObject.SetActive(false);
                 }
                 else if (diffVal < 4 && diffVal > 1)
                 {
                     rotAddendum = _edgeRotZAdjustment;
-                    
+
                     if (diffVal >= 2)
                     {
                         if (diffVal >= 3)
+                        {
+                            if (previewCanvas.sortingOrder != _overlaySortingLayerFloor - 3)
+                                previewCanvas.sortingOrder = _overlaySortingLayerFloor - 3;
+
                             posAddendum = edgePosAdjustmentB;
+                        }
                         else
+                        {
+                            if (previewCanvas.sortingOrder != _overlaySortingLayerFloor - 2)
+                                previewCanvas.sortingOrder = _overlaySortingLayerFloor - 2;
+
                             posAddendum = Vector3.Lerp(edgePosAdjustmentA, edgePosAdjustmentB, diffVal - 2);
+                        }
                     }
                     else
-                        posAddendum = Vector3.Lerp(edgePosAdjustment, edgePosAdjustmentA, diffVal - 1);
-                    
+                    {
+                        if (previewCanvas.sortingOrder != _overlaySortingLayerFloor - 1)
+                            previewCanvas.sortingOrder = _overlaySortingLayerFloor - 1;
 
-                    if (!cardTransform.gameObject.activeInHierarchy)
-                        cardTransform.gameObject.SetActive(true);
+                        posAddendum = Vector3.Lerp(edgePosAdjustment, edgePosAdjustmentA, diffVal - 1);
+                    }
+
+                    if (!previewTransform.gameObject.activeInHierarchy)
+                        previewTransform.gameObject.SetActive(true);
                 }
                 else if (diffVal <= 1)
                 {
+                    if (previewCanvas.sortingOrder != _overlaySortingLayerFloor)
+                        previewCanvas.sortingOrder = _overlaySortingLayerFloor;
+
                     rotAddendum = Mathf.Lerp(0, _edgeRotZAdjustment, diffVal);
                     posAddendum = Vector3.Lerp(Vector3.zero, edgePosAdjustment, diffVal);
                 }
             }
             else if (i >= adjustedScrollVal && i <= adjustedScrollVal + _adjustedDisplayNo)
             {
-                float offset = (i - adjustedScrollVal - (float) _adjustedDisplayNo / 2 + 1) * cardWidth;
-                cardPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
+                previewCanvas.sortingOrder = _overlaySortingLayerFloor + i;
+
+                float offset = (i - adjustedScrollVal - (float)_adjustedDisplayNo / 2 + 1) * cardWidth;
+                previewPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
             }
             else if (i > adjustedScrollVal + _adjustedDisplayNo)
             {
-                cardPos = new Vector3(startPos.x + extremeOffset, startPos.y, startPos.z);
+                previewPos = new Vector3(startPos.x + extremeOffset, startPos.y, startPos.z);
 
                 float diffVal = Mathf.Abs(i - (adjustedScrollVal + _adjustedDisplayNo));
-                if (diffVal > 2)
+                if (diffVal >= 4)
                 {
-                    if (cardTransform.gameObject.activeInHierarchy)
-                        cardTransform.gameObject.SetActive(false);
+                    if (previewTransform.gameObject.activeInHierarchy)
+                        previewTransform.gameObject.SetActive(false);
                 }
-                else if (diffVal <= 2 && diffVal > 1)
+                else if (diffVal < 4 && diffVal > 1)
                 {
                     rotAddendum = -_edgeRotZAdjustment;
-                    posAddendum = _edgePosAdjustment;
 
-                    if (!cardTransform.gameObject.activeInHierarchy)
-                        cardTransform.gameObject.SetActive(true);
+                    if (diffVal >= 2)
+                    {
+                        if (diffVal >= 3)
+                        {
+                            if (previewCanvas.sortingOrder != _overlaySortingLayerFloor - 3)
+                                previewCanvas.sortingOrder = _overlaySortingLayerFloor - 3;
+
+                            posAddendum = _edgePosAdjustments[2];
+                        }
+                        else
+                        {
+                            if (previewCanvas.sortingOrder != _overlaySortingLayerFloor - 2)
+                                previewCanvas.sortingOrder = _overlaySortingLayerFloor - 2;
+
+                            posAddendum = Vector3.Lerp(_edgePosAdjustments[1], _edgePosAdjustments[2], diffVal - 2);
+                        }
+                    }
+                    else
+                    {
+                        if (previewCanvas.sortingOrder != _overlaySortingLayerFloor - 1)
+                            previewCanvas.sortingOrder = _overlaySortingLayerFloor - 1;
+
+                        posAddendum = Vector3.Lerp(_edgePosAdjustments[0], _edgePosAdjustments[1], diffVal - 1);
+                    }
+
+
+                    if (!previewTransform.gameObject.activeInHierarchy)
+                        previewTransform.gameObject.SetActive(true);
                 }
-                else if (diffVal < 1) 
+                else if (diffVal <= 1)
                 {
+                    if (previewCanvas.sortingOrder != _overlaySortingLayerFloor)
+                        previewCanvas.sortingOrder = _overlaySortingLayerFloor;
+
                     rotAddendum = Mathf.Lerp(0, -_edgeRotZAdjustment, diffVal);
-                    posAddendum = Vector3.Lerp(Vector3.zero, _edgePosAdjustment, diffVal);
+                    posAddendum = Vector3.Lerp(Vector3.zero, _edgePosAdjustments[0], diffVal);
                 }
             }
-            
-            Vector3 relativeVector = cardPos - _circleCenter;
+
+            Vector3 relativeVector = previewPos - _circleCenter;
             relativeVector.Normalize();
 
             Vector3 rotation = new Vector3(0, 0,
                 Vector3.SignedAngle(relativeVector, _circleCentralAxis, -_holderTransform.forward));
 
-            cardPos = relativeVector * _circleRadius;
-            cardPos.y -= _circleRadius;
+            previewPos = relativeVector * _circleRadius;
+            previewPos.y -= _circleRadius;
 
             Quaternion cardRot = Quaternion.Euler(rotation + new Vector3(0, 0, rotAddendum));
 
-            cardTransform.localPosition = cardPos + posAddendum;
-            cardTransform.localRotation = cardRot;
+            previewTransform.localPosition = previewPos + posAddendum;
+            previewTransform.localRotation = cardRot;
         }
     }
 
-    private Vector2 CalculateDeviation()
-    {
-        Vector2 vector2 = new Vector2();
-        vector2.x = Random.Range(_edgePosDeviationRange.x / 2, _edgePosDeviationRange.x);
-        vector2.y = Random.Range(-_edgePosDeviationRange.y, _edgePosDeviationRange.y);
-
-        return vector2;
-    }
+    #endregion
 
     public void MakeSelection()
     {
