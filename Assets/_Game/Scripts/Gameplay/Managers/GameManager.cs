@@ -114,33 +114,17 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0))
             print(_currentStep);
 
-        //if (Input.GetKeyDown(KeyCode.Keypad0))
-        //{
-        //    MovementZones movementZones = new MovementZones
-        //    {
-        //        fromZone = CardZoneType.Deck,
-        //        toZone = CardZoneType.Hand,
-        //        deckCardMove = DeckCardMoveType.Top,
-        //        countChoice = CountChoiceType.Upto,
-        //        moveCount = 4
-        //    };
-        //    ProcessRegionMovement(true, movementZones);
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Keypad0))
         {
-            List<CardObject> cards = new List<CardObject>();
-            int count = 25;
-            foreach (CardObject card in GetManager(true).DataHandler.CardsInDeck)
+            MovementZones movementZones = new MovementZones
             {
-                cards.Add(card);
-
-                count--;
-                if (count <= 0)
-                    break;
-            }
-
-            StartCoroutine(CardSelectionRoutine(1, 3, cards));
+                fromZone = CardZoneType.Deck,
+                toZone = CardZoneType.Hand,
+                deckCardMove = DeckCardMoveType.SearchShuffle,
+                countChoice = CountChoiceType.Upto,
+                moveCount = 4
+            };
+            ProcessRegionMovement(true, movementZones);
         }
 
         if (_gameBegun && !_gameOver)
@@ -313,45 +297,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList)
-    {
-        List<CardObject> validCards = new List<CardObject>();
-        foreach (CardObject cardObj in cardList)
-        {
-            if (Random.Range(0f, 10f) < 3.5f)
-            {
-                cardObj.PreviewLayoutHandler.SetValidity(true);
-                validCards.Add(cardObj);
-            }
-            else
-                cardObj.PreviewLayoutHandler.SetValidity(false);
-        }
-        
-        foreach (CardObject cardObj in validCards)
-        {
-            cardList.Remove(cardObj);
-        }
-
-        cardList.AddRange(validCards);
-
-        _playerController.EnableFullControl(false);
-
-        yield return _cardSelectionOverlay.GenerateLayout(lower, upper, cardList);
-
-        _playerController.EnableFullControl(true);
-    }
     
-    private IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict)
-    {
-        List<CardObject> cardList = new List<CardObject>();
-        foreach (KeyValuePair<int, CardObject> pair in cardDict)
-        {
-            CardObject cardObj = pair.Value;
-            cardList.Add(cardObj);
-        }
-
-        yield return CardSelectionRoutine(lower, upper, cardList);
-    }
 
     #endregion
 
@@ -374,9 +320,9 @@ public class GameManager : MonoBehaviour
                 case DeckCardMoveType.Top:
                     if (movementZones.countChoice == CountChoiceType.Upto)
                     {
-                        Coroutine<int> routine = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(1, movementZones.moveCount));
-                        yield return routine.coroutine;
-                        moveCount = routine.returnVal;
+                        Coroutine<int> routine1 = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(1, movementZones.moveCount));
+                        yield return routine1.coroutine;
+                        moveCount = routine1.returnVal;
                     }
                     else if (movementZones.countChoice == CountChoiceType.Exactly)
                         moveCount = movementZones.moveCount;
@@ -390,6 +336,13 @@ public class GameManager : MonoBehaviour
                     break;
 
                 case DeckCardMoveType.SearchShuffle:
+                    Coroutine<List<CardObject>> routine2 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(1, movementZones.moveCount, affectedPlayer.DataHandler.CardsInDeck));
+                    yield return routine2.coroutine;
+                    List<CardObject> selectedCards = routine2.returnVal;
+
+                    foreach (CardObject cardObj in selectedCards)
+                        yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+
                     break;
             }
         }
@@ -452,6 +405,51 @@ public class GameManager : MonoBehaviour
                     Debug.LogError($"{cardObj} selected to MoveToBattleZone but it is not a creature");
                 break;
         }
+    }
+
+    private IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList)
+    {
+        List<CardObject> validCards = new List<CardObject>();
+        foreach (CardObject cardObj in cardList)
+        {
+            if (Random.Range(0f, 10f) < 3.5f)
+            {
+                cardObj.PreviewLayoutHandler.SetValidity(true);
+                validCards.Add(cardObj);
+            }
+            else
+                cardObj.PreviewLayoutHandler.SetValidity(false);
+        }
+
+        foreach (CardObject cardObj in validCards)
+        {
+            cardList.Remove(cardObj);
+        }
+
+        cardList.AddRange(validCards);
+
+        _playerController.EnableFullControl(false);
+
+        Coroutine<List<CardObject>> routine = _numberSelector.StartCoroutine<List<CardObject>>(_cardSelectionOverlay.GenerateLayoutRoutine(lower, upper, cardList));
+        yield return routine.coroutine;
+
+        _playerController.EnableFullControl(true);
+
+        yield return routine.returnVal;
+    }
+
+    private IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict)
+    {
+        List<CardObject> cardList = new List<CardObject>();
+        foreach (KeyValuePair<int, CardObject> pair in cardDict)
+        {
+            CardObject cardObj = pair.Value;
+            cardList.Add(cardObj);
+        }
+
+        Coroutine<List<CardObject>> routine = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, cardList));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
     }
 
     #endregion

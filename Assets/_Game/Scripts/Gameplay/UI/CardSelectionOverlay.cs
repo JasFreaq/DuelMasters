@@ -40,7 +40,7 @@ public class CardSelectionOverlay : MonoBehaviour
     private Action<bool> _onToggleTabAction;
 
     private int _lowerBound, _upperBound, _adjustedDisplayNo;
-    private bool _overlayActive, _selectionMade;
+    private bool _selectionMade;
     
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
@@ -56,12 +56,7 @@ public class CardSelectionOverlay : MonoBehaviour
         _circleCentralAxis = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
-
-    public Coroutine GenerateLayout(int lower, int upper, List<CardObject> cardList)
-    {
-        return StartCoroutine(GenerateLayoutRoutine(lower, upper, cardList));
-    }
-
+    
     public void ToggleTab(bool enable)
     {
         _layoutHolder.SetActive(enable);
@@ -82,7 +77,7 @@ public class CardSelectionOverlay : MonoBehaviour
 
     #region Functionality Methods
 
-    private IEnumerator GenerateLayoutRoutine(int lower, int upper, List<CardObject> cardList)
+    public IEnumerator GenerateLayoutRoutine(int lower, int upper, List<CardObject> cardList)
     {
         _lowerBound = lower;
         _upperBound = upper;
@@ -91,7 +86,6 @@ public class CardSelectionOverlay : MonoBehaviour
         _layoutHolder.SetActive(true);
 
         SetCards(cardList);
-        _overlayActive = true;
         
         foreach (Canvas previewCanvas in _previewCanvases)
             previewCanvas.overrideSorting = true;
@@ -109,7 +103,6 @@ public class CardSelectionOverlay : MonoBehaviour
         _selectedCards.Clear();
         _previewCanvases.Clear();
         _selectionMade = false;
-        _overlayActive = false;
 
         yield return selectedCards;
     }
