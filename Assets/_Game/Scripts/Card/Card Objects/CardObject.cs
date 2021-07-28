@@ -11,7 +11,7 @@ public abstract class CardObject : CardBehaviour
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
     [SerializeField] private GameObject _visibleEyeIcon;
-    [SerializeField] protected PreviewHandler previewHandler;
+    [SerializeField] protected PreviewLayoutHandler previewLayoutHandler;
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
     
@@ -40,9 +40,9 @@ public abstract class CardObject : CardBehaviour
         get { return _isPlayer;}
     }
 
-    public PreviewHandler PreviewHandler
+    public PreviewLayoutHandler PreviewLayoutHandler
     {
-        get { return previewHandler; }
+        get { return previewLayoutHandler; }
     }
 
     public CardLayoutHandler CardLayout
@@ -110,7 +110,7 @@ public abstract class CardObject : CardBehaviour
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
-        _hoverPreviewHandler.PreviewTransform = previewHandler.transform;
+        _hoverPreviewHandler.PreviewLayoutHandler = previewLayoutHandler;
 
         _dragHandler = GetComponent<DragHandler>();
     }
@@ -231,7 +231,7 @@ public abstract class CardObject : CardBehaviour
         _manaCardLayoutHandler.TappedOverlay.SetActive(_cardInst.IsTapped);
         float tapAngle = GameParamsHolder.Instance.TapAngle;
         Vector3 tapStateRotation = transform.localEulerAngles;
-        Vector3 previewTapStateRotation = previewHandler.transform.localEulerAngles;
+        Vector3 previewTapStateRotation = previewLayoutHandler.transform.localEulerAngles;
         PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(_isPlayer);
 
         if (_cardInst.IsTapped)
@@ -248,7 +248,7 @@ public abstract class CardObject : CardBehaviour
         }
 
         transform.DOLocalRotateQuaternion(Quaternion.Euler(tapStateRotation), GameParamsHolder.Instance.TapTransitionTime).SetEase(Ease.OutQuint);
-        previewHandler.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
+        previewLayoutHandler.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
     }
 
     public void SetVisibleIcon(bool visible)

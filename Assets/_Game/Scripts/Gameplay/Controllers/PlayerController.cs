@@ -14,12 +14,17 @@ public class PlayerController : Controller
     
     private Camera _mainCamera = null;
 
-    private bool _canInteract = false;
+    private bool _canInteract = false, _canSelect = false;
     private HoverState _hoverState = HoverState.None;
 
     public bool CanInteract
     {
         set { _canInteract = value; }
+    }
+    
+    public bool CanSelect
+    {
+        set { _canSelect = value; }
     }
 
     void Start()
@@ -39,7 +44,7 @@ public class PlayerController : Controller
                 ProcessCardHover(iD);
                 ProcessShieldHover(iD);
 
-                if (_hoverState == HoverState.Hover && Input.GetMouseButtonDown(0))
+                if (_hoverState == HoverState.Hover && _canSelect && Input.GetMouseButtonDown(0))
                     ProcessInput(iD);
 
                 if (GameManager.Instance.CurrentStep == GameStepType.AttackStep)
@@ -52,7 +57,13 @@ public class PlayerController : Controller
             }
         }
     }
-    
+
+    public void EnableFullControl(bool enable)
+    {
+        _canInteract = enable;
+        _canSelect = enable;
+    }
+
     private void ProcessCardHover(int iD)
     {
         CardObject tempCardObj = null;

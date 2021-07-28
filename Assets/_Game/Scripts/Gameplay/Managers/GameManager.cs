@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -70,6 +71,11 @@ public class GameManager : MonoBehaviour
             _Instance = this;
     }
 
+    private void OnEnable()
+    {
+        _cardSelectionOverlay.RegisterOnToggleTab(EnablePlayerControllerInteract);
+    }
+
     private void Start()
     {
         SetupSteps();
@@ -134,7 +140,7 @@ public class GameManager : MonoBehaviour
                     break;
             }
 
-            StartCoroutine(_cardSelectionOverlay.GenerateLayout(1, 3, cards));
+            StartCoroutine(CardSelectionRoutine(1, 3, cards));
         }
 
         if (_gameBegun && !_gameOver)
@@ -142,6 +148,11 @@ public class GameManager : MonoBehaviour
             if (_gameLoopRoutine == null)
                 _gameLoopRoutine = StartCoroutine(ProcessGameLoopRoutine());
         }
+    }
+
+    private void OnDisable()
+    {
+        _cardSelectionOverlay.DeregisterOnToggleTab(EnablePlayerControllerInteract);
     }
 
     #region Game Loop Handling
@@ -162,7 +173,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DrawStartingHandRoutine(_playerManager));
         yield return DrawStartingHandRoutine(_opponentManager);
 
-        _playerController.CanInteract = true;
+        _playerController.EnableFullControl(true);
 
         _playerTurn = _playerGoesFirst;
         _currentManager = _playerTurn ? _playerManager : _opponentManager;
@@ -302,6 +313,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList)
+    {
+        List<CardObject> validCards = new List<CardObject>();
+        foreach (CardObject cardObj in cardList)
+        {
+            if (Random.Range(0f, 10f) < 3.5f)
+            {
+                cardObj.PreviewLayoutHandler.SetValidity(true);
+                validCards.Add(cardObj);
+            }
+            else
+                cardObj.PreviewLayoutHandler.SetValidity(false);
+        }
+        
+        foreach (CardObject cardObj in validCards)
+        {
+            cardList.Remove(cardObj);
+        }
+
+        cardList.AddRange(validCards);
+
+        _playerController.EnableFullControl(false);
+
+        yield return _cardSelectionOverlay.GenerateLayout(lower, upper, cardList);
+
+        _playerController.EnableFullControl(true);
+    }
+    
+    private IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict)
+    {
+        List<CardObject> cardList = new List<CardObject>();
+        foreach (KeyValuePair<int, CardObject> pair in cardDict)
+        {
+            CardObject cardObj = pair.Value;
+            cardList.Add(cardObj);
+        }
+
+        yield return CardSelectionRoutine(lower, upper, cardList);
+    }
+
     #endregion
 
     #region Card Effect Processing
@@ -427,5 +478,10 @@ public class GameManager : MonoBehaviour
     public PlayerManager GetManager(bool isPlayer)
     {
         return isPlayer ? _playerManager : _opponentManager;
+    }
+
+    private void EnablePlayerControllerInteract(bool enable)
+    {
+        _playerController.CanInteract = enable;
     }
 }

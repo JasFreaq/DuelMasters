@@ -30,7 +30,7 @@ public class CreatureObject : CardObject
     {
         CardFrameData cardFrameData = GameParamsHolder.Instance.GetCardFrameData(true, _cardInst.CardData.Civilization);
         _cardLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
-        previewHandler.SetupCard(_cardInst.CardData, cardFrameData);
+        previewLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
 
         CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(true, _cardInst.CardData.Civilization);
         _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);

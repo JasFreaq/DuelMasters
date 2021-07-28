@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CardSelectionOverlay : MonoBehaviour
 {
     private static Vector3 OriginalPreviewScale = new Vector3(0.0184625f, 0.018035f, 1f);
+    private static string SubmitText = "Submit";
 
     [SerializeField] private GameObject _holderCanvas;
+    [SerializeField] private GameObject _layoutHolder;
     [SerializeField] private TextMeshProUGUI _chooseText;
     [SerializeField] private TextMeshProUGUI _targetText;
     [SerializeField] private Scrollbar _layoutScroll;
@@ -23,15 +26,21 @@ public class CardSelectionOverlay : MonoBehaviour
     [SerializeField] private float _cardAreaWidth = 28;
     [SerializeField] private int _displayCardsNo = 7;
     [SerializeField] private int _overlaySortingLayerFloor = 100;
+    [SerializeField] private int _overlaySortingLayerCeiling = 200;
     [SerializeField] private float _previewScaleMultiplier = 50;
     [SerializeField] private List<Vector3> _edgePosAdjustments = new List<Vector3>(3);
     [SerializeField] private float _edgeRotZAdjustment = 15;
     [SerializeField] private Transform _holderTransform;
+    [SerializeField] private float _hoverScaleMultiplier = 1.5f;
+    [SerializeField] private float _resetBufferTime = 0.5f;
 
+    private List<CardObject> _selectedCards = new List<CardObject>();
     private List<Canvas> _previewCanvases = new List<Canvas>();
 
-    private int _selectionNum = 0, _lowerBound, _upperBound, _adjustedDisplayNo;
-    private bool _selectionMade = false;
+    private Action<bool> _onToggleTabAction;
+
+    private int _lowerBound, _upperBound, _adjustedDisplayNo;
+    private bool _overlayActive, _selectionMade;
     
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
@@ -47,25 +56,164 @@ public class CardSelectionOverlay : MonoBehaviour
         _circleCentralAxis = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
+
+    public Coroutine GenerateLayout(int lower, int upper, List<CardObject> cardList)
+    {
+        return StartCoroutine(GenerateLayoutRoutine(lower, upper, cardList));
+    }
+
+    public void ToggleTab(bool enable)
+    {
+        _layoutHolder.SetActive(enable);
+        _onToggleTabAction.Invoke(!enable);
+    }
+
+    public void SubmitSelection()
+    {
+        _holderCanvas.SetActive(false);
+        _selectionMade = true;
+    }
     
-    public IEnumerator GenerateLayout(int lower, int upper, List<CardObject> cardList)
+    public void CancelSelection()
+    {
+        _selectedCards.Clear();
+        SubmitSelection();
+    }
+
+    #region Functionality Methods
+
+    private IEnumerator GenerateLayoutRoutine(int lower, int upper, List<CardObject> cardList)
     {
         _lowerBound = lower;
         _upperBound = upper;
+        _submitText.text = $"{SubmitText} 0";
+        _submitButton.interactable = false;
+        _layoutHolder.SetActive(true);
 
-        _previewCanvases = new List<Canvas>();
+        SetCards(cardList);
+        _overlayActive = true;
+        
+        foreach (Canvas previewCanvas in _previewCanvases)
+            previewCanvas.overrideSorting = true;
+
+        ArrangePreviews();
+        while (!_selectionMade)
+            yield return new WaitForEndOfFrame();
+
+        List<CardObject> selectedCards = new List<CardObject>(_selectedCards);
+        foreach (CardObject cardObj in _selectedCards)
+            cardObj.PreviewLayoutHandler.SetHighlight(false);
+
+        yield return ResetCardsRoutine(cardList);
+        
+        _selectedCards.Clear();
+        _previewCanvases.Clear();
+        _selectionMade = false;
+        _overlayActive = false;
+
+        yield return selectedCards;
+    }
+
+    private void SetCards(List<CardObject> cardList)
+    {
+        Vector3 previewScale = OriginalPreviewScale * new Vector2(_previewScaleMultiplier, _previewScaleMultiplier);
         foreach (CardObject cardObj in cardList)
         {
-            Canvas previewCanvas = cardObj.PreviewHandler.Canvas;
+            cardObj.HoverPreviewHandler.PreviewEnabled = true;
+            cardObj.HoverPreviewHandler.InPlayerHand = false;
+            cardObj.HoverPreviewHandler.InCardSelection = true;
+            cardObj.HoverPreviewHandler.SetPreviewParameters(_overlaySortingLayerCeiling, previewScale,
+                previewScale * _hoverScaleMultiplier);
+
+            cardObj.PreviewLayoutHandler.EnableCanvasEventTrigger(true);
+            cardObj.PreviewLayoutHandler.AddOnClickEvent(SelectCard, cardObj);
+
+            Canvas previewCanvas = cardObj.PreviewLayoutHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
-            
+
             previewTransform.SetParent(_holderTransform);
             previewTransform.localRotation = Quaternion.Euler(Vector3.zero);
-            previewTransform.localScale = OriginalPreviewScale * new Vector2(_previewScaleMultiplier, _previewScaleMultiplier);
+            previewTransform.localScale = previewScale;
 
             _previewCanvases.Add(previewCanvas);
         }
-        
+
+        AdjustLayout();
+
+        _holderCanvas.SetActive(true);
+    }
+
+    private IEnumerator ResetCardsRoutine(List<CardObject> cardList)
+    {
+        foreach (CardObject cardObj in cardList)
+        {
+            cardObj.HoverPreviewHandler.ResetPreviewEnabled();
+            cardObj.HoverPreviewHandler.ResetInPlayerHand();
+            cardObj.HoverPreviewHandler.InCardSelection = false;
+
+            cardObj.PreviewLayoutHandler.ResetStates();
+            cardObj.PreviewLayoutHandler.EnableCanvasEventTrigger(false);
+            cardObj.PreviewLayoutHandler.RemoveOnClickEvent();
+
+            Canvas previewCanvas = cardObj.PreviewLayoutHandler.Canvas;
+            Transform previewTransform = previewCanvas.transform;
+
+            previewTransform.SetParent(cardObj.PreviewLayoutHandler.transform);
+            previewTransform.gameObject.SetActive(false);
+
+            previewCanvas.renderMode = RenderMode.WorldSpace;
+            previewCanvas.sortingOrder = 0;
+        }
+
+        yield return new WaitForSeconds(_resetBufferTime);
+
+        foreach (CardObject cardObj in cardList)
+        {
+            Transform previewTransform = cardObj.PreviewLayoutHandler.Canvas.transform;
+
+            previewTransform.gameObject.SetActive(true);
+            previewTransform.localPosition = Vector3.zero;
+            previewTransform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+            previewTransform.localScale = OriginalPreviewScale;
+        }
+    }
+
+    private void SelectCard(CardObject cardObj)
+    {
+        int selectionCount = _selectedCards.Count;
+
+        PreviewLayoutHandler previewLayout = cardObj.PreviewLayoutHandler;
+        if (previewLayout.IsHighlighted)
+        {
+            previewLayout.SetHighlight(false);
+            _selectedCards.Remove(cardObj);
+        }
+        else if (previewLayout.IsValid && selectionCount < _upperBound) 
+        {
+            previewLayout.SetHighlight(true);
+            _selectedCards.Add(cardObj);
+        }
+
+        selectionCount = _selectedCards.Count;
+        if (selectionCount >= _lowerBound && selectionCount <= _upperBound)
+        {
+            if (!_submitButton.interactable)
+                _submitButton.interactable = true;
+        }
+        else
+        {
+            if (_submitButton.interactable)
+                _submitButton.interactable = false;
+        }
+        _submitText.text = $"{SubmitText} {selectionCount}";
+    }
+
+    #endregion
+
+    #region Layout Methods
+
+    private void AdjustLayout()
+    {
         if (_previewCanvases.Count <= _displayCardsNo)
         {
             _adjustedDisplayNo = _previewCanvases.Count;
@@ -78,50 +226,7 @@ public class CardSelectionOverlay : MonoBehaviour
             _layoutScroll.value = 1;
             _layoutScroll.gameObject.SetActive(true);
         }
-        
-        _holderCanvas.SetActive(true);
-        foreach (Canvas previewCanvas in _previewCanvases)
-            previewCanvas.overrideSorting = true;
-
-        ArrangePreviews();
-        while (!_selectionMade)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        
-        foreach (CardObject cardObj in cardList)
-        {
-            Canvas previewCanvas = cardObj.PreviewHandler.Canvas;
-            Transform previewTransform = previewCanvas.transform;
-
-            previewTransform.SetParent(cardObj.PreviewHandler.transform);
-            previewCanvas.renderMode = RenderMode.WorldSpace;
-            previewCanvas.sortingOrder = 0;
-
-            previewTransform.localPosition = Vector3.zero;
-            previewTransform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
-            previewTransform.localScale = OriginalPreviewScale;
-        }
-
-        _previewCanvases.Clear();
-        _selectionMade = false;
-
-        //yield return 
     }
-
-    public IEnumerator GenerateLayout(int lower, int upper, Dictionary<int, CardObject> cardDict)
-    {
-        List<CardObject> cardList = new List<CardObject>();
-        foreach (KeyValuePair<int, CardObject> pair in cardDict)
-        {
-            CardObject cardObj = pair.Value;
-            cardList.Add(cardObj);
-        }
-
-        yield return GenerateLayout(lower, upper, cardList);
-    }
-
-    #region Layout Methods
 
     private void ArrangePreviews(float scrollValue)
     {
@@ -283,9 +388,13 @@ public class CardSelectionOverlay : MonoBehaviour
 
     #endregion
 
-    public void MakeSelection()
+    public void RegisterOnToggleTab(Action<bool> action)
     {
-        _holderCanvas.SetActive(false);
-        _selectionMade = true;
+        _onToggleTabAction += action;
+    }
+    
+    public void DeregisterOnToggleTab(Action<bool> action)
+    {
+        _onToggleTabAction -= action;
     }
 }
