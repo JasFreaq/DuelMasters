@@ -312,39 +312,74 @@ public class GameManager : MonoBehaviour
     {
         PlayerManager affectedPlayer = GetManager(affectPlayer);
 
-        if (movementZones.fromZone == CardZoneType.Deck)
+        int moveCount = 0, lower = 1, upper = movementZones.moveCount;
+        List<CardObject> selectedCards;
+
+        switch (movementZones.fromZone)
         {
-            int moveCount = 0;
-            switch (movementZones.deckCardMove)
-            {
-                case DeckCardMoveType.Top:
-                    if (movementZones.countChoice == CountChoiceType.Upto)
-                    {
-                        Coroutine<int> routine1 = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(1, movementZones.moveCount));
-                        yield return routine1.coroutine;
-                        moveCount = routine1.returnVal;
-                    }
-                    else if (movementZones.countChoice == CountChoiceType.Exactly)
-                        moveCount = movementZones.moveCount;
+            case CardZoneType.Deck:
 
-                    for (int i = 0; i < moveCount; i++)
-                    {
-                        CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
-                        yield return ProcessRegionMovementRoutine(cardObj, movementZones);
-                    }
+                switch (movementZones.deckCardMove)
+                {
+                    case DeckCardMoveType.Top:
+                        if (movementZones.countChoice == CountChoiceType.Upto)
+                        {
+                            Coroutine<int> routine1 = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(lower, upper));
+                            yield return routine1.coroutine;
+                            moveCount = routine1.returnVal;
+                        }
+                        else if (movementZones.countChoice == CountChoiceType.Exactly)
+                            moveCount = movementZones.moveCount;
+
+                        for (int i = 0; i < moveCount; i++)
+                        {
+                            CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
+                            yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+                        }
+
+                        break;
+
+                    case DeckCardMoveType.SearchShuffle:
+                        Coroutine<List<CardObject>> routine2 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInDeck));
+                        yield return routine2.coroutine;
+                        selectedCards = routine2.returnVal;
+
+                        foreach (CardObject cardObj in selectedCards)
+                            yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+
+                        break;
+                }
+
+                break;
+
+            case CardZoneType.Hand:
+
+                if (affectPlayer) 
+                {
                     
-                    break;
-
-                case DeckCardMoveType.SearchShuffle:
-                    Coroutine<List<CardObject>> routine2 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(1, movementZones.moveCount, affectedPlayer.DataHandler.CardsInDeck));
-                    yield return routine2.coroutine;
-                    List<CardObject> selectedCards = routine2.returnVal;
+                }
+                else
+                {
+                    Coroutine<List<CardObject>> routine3 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInHand));
+                    yield return routine3.coroutine;
+                    selectedCards = routine3.returnVal;
 
                     foreach (CardObject cardObj in selectedCards)
                         yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+                }
 
-                    break;
-            }
+                break;
+            
+            case CardZoneType.Graveyard:
+
+                Coroutine<List<CardObject>> routine4 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInGrave));
+                yield return routine4.coroutine;
+                selectedCards = routine4.returnVal;
+
+                foreach (CardObject cardObj in selectedCards)
+                    yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+
+                break;
         }
     }
 
