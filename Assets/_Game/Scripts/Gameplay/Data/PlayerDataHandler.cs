@@ -22,15 +22,15 @@ public class PlayerDataHandler : MonoBehaviour
     {
         get { return _cardsInDeck; }
     }
+    
+    public List<CardObject> CardsInGrave
+    {
+        get { return _cardsInGraveyard; }
+    }
 
     public List<ShieldObject> Shields
     {
         get { return _shields; }
-    }
-
-    public List<CardObject> CardsInGrave
-    {
-        get { return _cardsInGraveyard; }
     }
 
     public Dictionary<int, CardObject> CardsInHand

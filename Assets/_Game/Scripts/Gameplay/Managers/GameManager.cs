@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
-            Time.timeScale = 0.25f;
+            Time.timeScale = 7.5f;
 
         if (Input.GetKeyDown(KeyCode.Return))
             StartCoroutine(StartGameRoutine(_playerDeck, _opponentDeck));
@@ -118,8 +118,8 @@ public class GameManager : MonoBehaviour
         {
             MovementZones movementZones = new MovementZones
             {
-                fromZone = CardZoneType.Deck,
-                toZone = CardZoneType.Hand,
+                fromZone = CardZoneType.Shields,
+                toZone = CardZoneType.BattleZone,
                 deckCardMove = DeckCardMoveType.SearchShuffle,
                 countChoice = CountChoiceType.Upto,
                 moveCount = 4
@@ -129,8 +129,8 @@ public class GameManager : MonoBehaviour
 
         if (_gameBegun && !_gameOver)
         {
-            if (_gameLoopRoutine == null)
-                _gameLoopRoutine = StartCoroutine(ProcessGameLoopRoutine());
+            _gameLoopRoutine ??= StartCoroutine(ProcessGameLoopRoutine());
+            //print(_currentStep);
         }
     }
 
@@ -246,7 +246,10 @@ public class GameManager : MonoBehaviour
                     {
                         creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
                         yield return new WaitForSeconds(attackTime);
+                        
                         controller.DeselectCurrentlySelected();
+                        if (controller == _playerController)
+                            _playerController.CanSelectShield = false;
 
                         int attackingCraturePower = ((CreatureData) creatureObj.CardInst.CardData).Power;
                         int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
@@ -272,7 +275,10 @@ public class GameManager : MonoBehaviour
                 {
                     creatureObj.transform.DOMove(target.transform.position, attackTime).SetEase(Ease.InCubic);
                     yield return new WaitForSeconds(attackTime);
+                    
                     controller.DeselectCurrentlySelected();
+                    if (controller == _playerController)
+                        _playerController.CanSelectShield = false;
 
                     PlayerManager opponent = GetManager(!isPlayer);
                     StartCoroutine(opponent.BreakShieldRoutine((ShieldObject) target));
@@ -296,9 +302,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     
-
     #endregion
 
     #region Card Effect Processing
@@ -313,12 +317,11 @@ public class GameManager : MonoBehaviour
         PlayerManager affectedPlayer = GetManager(affectPlayer);
 
         int moveCount = 0, lower = 1, upper = movementZones.moveCount;
-        List<CardObject> selectedCards;
+        List<CardBehaviour> selectedCards = null;
 
         switch (movementZones.fromZone)
         {
             case CardZoneType.Deck:
-
                 switch (movementZones.deckCardMove)
                 {
                     case DeckCardMoveType.Top:
@@ -336,79 +339,86 @@ public class GameManager : MonoBehaviour
                             CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
                             yield return ProcessRegionMovementRoutine(cardObj, movementZones);
                         }
-
                         break;
 
                     case DeckCardMoveType.SearchShuffle:
-                        Coroutine<List<CardObject>> routine2 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInDeck));
+                        Coroutine<List<CardBehaviour>> routine2 = this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInDeck));
                         yield return routine2.coroutine;
                         selectedCards = routine2.returnVal;
 
-                        foreach (CardObject cardObj in selectedCards)
-                            yield return ProcessRegionMovementRoutine(cardObj, movementZones);
-
+                        //TODO: Shuffle Deck
                         break;
                 }
-
                 break;
 
             case CardZoneType.Hand:
-
                 if (affectPlayer) 
                 {
-                    
+                    Coroutine<List<CardBehaviour>> routine = _playerController.StartCoroutine<List<CardBehaviour>>(_playerController.SelectCardsRoutine(true, affectedPlayer.DataHandler.CardsInHand));
+                    yield return routine.coroutine;
+                    selectedCards = routine.returnVal;
                 }
                 else
                 {
-                    Coroutine<List<CardObject>> routine3 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInHand));
-                    yield return routine3.coroutine;
-                    selectedCards = routine3.returnVal;
-
-                    foreach (CardObject cardObj in selectedCards)
-                        yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+                    Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInHand));
+                    yield return routine.coroutine;
+                    selectedCards = routine.returnVal;
                 }
-
                 break;
-            
-            case CardZoneType.Graveyard:
 
-                Coroutine<List<CardObject>> routine4 = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInGrave));
+            case CardZoneType.Shields:
+                _playerController.CanSelectShield = true;
+                Coroutine<List<CardBehaviour>> routine3 = _playerController.StartCoroutine<List<CardBehaviour>>(_playerController.SelectCardsRoutine(false, affectedPlayer.DataHandler.Shields));
+                yield return routine3.coroutine;
+                selectedCards = routine3.returnVal;
+                _playerController.CanSelectShield = false;
+                break;
+
+            case CardZoneType.Graveyard:
+                Coroutine<List<CardBehaviour>> routine4 = this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, affectedPlayer.DataHandler.CardsInGrave));
                 yield return routine4.coroutine;
                 selectedCards = routine4.returnVal;
-
-                foreach (CardObject cardObj in selectedCards)
-                    yield return ProcessRegionMovementRoutine(cardObj, movementZones);
-
                 break;
         }
-    }
 
-    private IEnumerator ProcessRegionMovementRoutine(CardObject cardObj, MovementZones movementZones)
+        if (selectedCards != null)
+        {
+            foreach (CardBehaviour card in selectedCards)
+                yield return ProcessRegionMovementRoutine(card, movementZones);
+        }
+    }
+    
+    private IEnumerator ProcessRegionMovementRoutine(CardBehaviour card, MovementZones movementZones)
     {
-        PlayerManager owner = GetManager(cardObj.IsPlayer);
+        PlayerManager owner;
+        if (card is CardObject)
+            owner = GetManager(((CardObject) card).IsPlayer);
+        else
+            owner = GetManager(((ShieldObject)card).CardObject.IsPlayer);
 
         switch (movementZones.fromZone)
         {
             case CardZoneType.Deck:
-                yield return owner.MoveFromDeckRoutine(cardObj);
+                yield return owner.MoveFromDeckRoutine((CardObject) card);
                 break;
 
             case CardZoneType.Hand:
-                yield return owner.MoveFromHandRoutine(cardObj);
+                yield return owner.MoveFromHandRoutine((CardObject) card);
                 break;
 
             case CardZoneType.Shields:
+                yield return owner.BreakShieldRoutine((ShieldObject) card);
                 break;
             
             case CardZoneType.Graveyard:
                 break;
 
             case CardZoneType.ManaZone:
-                yield return owner.MoveFromManaZoneRoutine(cardObj);
+                yield return owner.MoveFromManaZoneRoutine((CardObject) card);
                 break;
 
             case CardZoneType.BattleZone:
-                yield return owner.MoveFromBattleZoneRoutine(cardObj);
+                yield return owner.MoveFromBattleZoneRoutine((CardObject) card);
                 break;
         }
         
@@ -418,30 +428,30 @@ public class GameManager : MonoBehaviour
                 break;
 
             case CardZoneType.Hand:
-                yield return owner.MoveToHandRoutine(cardObj);
+                yield return owner.MoveToHandRoutine((CardObject) card);
                 break;
 
             case CardZoneType.Shields:
-                yield return owner.MoveToShieldsRoutine(cardObj);
+                yield return owner.MoveToShieldsRoutine((CardObject) card);
                 break;
             
             case CardZoneType.Graveyard:
-                yield return owner.MoveToGraveyard(cardObj);
+                yield return owner.MoveToGraveyard((CardObject) card);
                 break;
 
             case CardZoneType.ManaZone:
-                yield return owner.MoveToManaZoneRoutine(cardObj);
+                yield return owner.MoveToManaZoneRoutine((CardObject) card);
                 break;
 
             case CardZoneType.BattleZone:
-                if (cardObj is CreatureObject)
-                    yield return owner.MoveToBattleZoneRoutine(cardObj);
+                if (card is CreatureObject)
+                    yield return owner.MoveToBattleZoneRoutine((CardObject) card);
                 else
-                    Debug.LogError($"{cardObj} selected to MoveToBattleZone but it is not a creature");
+                    Debug.LogError($"{card} selected to MoveToBattleZone but it is not a creature");
                 break;
         }
     }
-
+    
     private IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList)
     {
         List<CardObject> validCards = new List<CardObject>();
@@ -465,7 +475,7 @@ public class GameManager : MonoBehaviour
 
         _playerController.EnableFullControl(false);
 
-        Coroutine<List<CardObject>> routine = _numberSelector.StartCoroutine<List<CardObject>>(_cardSelectionOverlay.GenerateLayoutRoutine(lower, upper, cardList));
+        Coroutine<List<CardBehaviour>> routine = _numberSelector.StartCoroutine<List<CardBehaviour>>(_cardSelectionOverlay.GenerateLayoutRoutine(lower, upper, cardList));
         yield return routine.coroutine;
 
         _playerController.EnableFullControl(true);
@@ -482,7 +492,7 @@ public class GameManager : MonoBehaviour
             cardList.Add(cardObj);
         }
 
-        Coroutine<List<CardObject>> routine = this.StartCoroutine<List<CardObject>>(CardSelectionRoutine(lower, upper, cardList));
+        Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, cardList));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }

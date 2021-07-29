@@ -11,7 +11,7 @@ public class ShieldObject : CardBehaviour
     private Animator _animator;
     private CardObject _cardObject = null;
 
-    private bool _isHighlighted = false;
+    private bool _isHighlighted, _keepHighlighted;
     private Vector3 _holderScale;
 
     #region Properties
@@ -32,6 +32,11 @@ public class ShieldObject : CardBehaviour
         get { return _holderScale; }
     }
 
+    public bool KeepHighlighted
+    {
+        set { _keepHighlighted = value; }
+    }
+
     #endregion
 
     private void Awake()
@@ -42,19 +47,24 @@ public class ShieldObject : CardBehaviour
 
     public void SetHighlight(bool highlight)
     {
-        if (highlight != _isHighlighted)
+        if(!(_isHighlighted && _keepHighlighted))
         {
-            Material meshMat = highlight ? GameParamsHolder.Instance.ShieldHighlightMat
-                : GameParamsHolder.Instance.ShieldBaseMat;
-
-            Material[] shieldMaterials = _shieldRenderer.materials;
-            for (int i = 0, n = shieldMaterials.Length; i < n; i++)
+            if (highlight != _isHighlighted)
             {
-                shieldMaterials[i] = meshMat;
-            }
-            _shieldRenderer.materials = shieldMaterials;
+                Material meshMat = highlight
+                    ? GameParamsHolder.Instance.ShieldHighlightMat
+                    : GameParamsHolder.Instance.ShieldBaseMat;
 
-            _isHighlighted = highlight;
+                Material[] shieldMaterials = _shieldRenderer.materials;
+                for (int i = 0, n = shieldMaterials.Length; i < n; i++)
+                {
+                    shieldMaterials[i] = meshMat;
+                }
+
+                _shieldRenderer.materials = shieldMaterials;
+
+                _isHighlighted = highlight;
+            }
         }
     }
 

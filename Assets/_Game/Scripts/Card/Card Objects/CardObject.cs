@@ -39,7 +39,7 @@ public abstract class CardObject : CardBehaviour
     {
         get { return _isPlayer;}
     }
-
+    
     public PreviewLayoutHandler PreviewLayoutHandler
     {
         get { return previewLayoutHandler; }

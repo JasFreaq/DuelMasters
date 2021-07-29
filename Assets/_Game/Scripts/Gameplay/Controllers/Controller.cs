@@ -19,11 +19,14 @@ public class Controller : MonoBehaviour
     {
         get { return _isPlayer; }
     }
-
+    
     public void SelectCard(CardObject cardObj)
     {
         if (_currentlySelected != cardObj)
         {
+            if (_currentlySelected) 
+                DeselectCurrentlySelected();
+
             _currentlySelected = cardObj;
 
             switch (GameManager.Instance.CurrentStep)
@@ -34,21 +37,23 @@ public class Controller : MonoBehaviour
 
                 case GameStepType.MainStep:
                     PlayerManager player = GameManager.Instance.GetManager(true);
-                    foreach (CardObject cardManager in player.PlayableCards)
+                    foreach (CardObject cardObj0 in player.PlayableCards)
                     {
-                        if (cardManager != _currentlySelected)
-                            cardManager.SetHighlight(false);
+                        if (cardObj0 != _currentlySelected)
+                            cardObj0.SetHighlight(false);
                     }
+
                     break;
 
                 case GameStepType.AttackStep:
-                    if (!_currentlySelected.CardInst.CanAttack())
+                    if (_currentlySelected.CardInst.CanAttack())
                     {
                         _currentlySelected.SetHighlight(true);
                         TargetingLinesHandler.Instance.EnableLine(_currentlySelected.transform.position);
                     }
                     else
                         _currentlySelected = null;
+
                     break;
             }
         }
@@ -57,8 +62,8 @@ public class Controller : MonoBehaviour
             DeselectCurrentlySelected();
         }
     }
-
-    public void DeselectCurrentlySelected()
+    
+    public virtual void DeselectCurrentlySelected()
     {
         switch (GameManager.Instance.CurrentStep)
         {
@@ -85,8 +90,8 @@ public class Controller : MonoBehaviour
         TargetingLinesHandler.Instance.DisableLines();
         _currentlySelected = null;
     }
-
-    protected void ProcessInput(int iD)
+    
+    protected virtual void ProcessInput(int iD)
     {
         if (_targetedCard)
         {
@@ -98,13 +103,13 @@ public class Controller : MonoBehaviour
             else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD))
             {
                 //if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
-                    GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
+                GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
             }
         }
         else if (_targetedShield)
         {
             //if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
-                GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
+            GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
         }
     }
     

@@ -32,7 +32,7 @@ public class CardSelectionOverlay : MonoBehaviour
     [SerializeField] private float _edgeRotZAdjustment = 15;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private float _hoverScaleMultiplier = 1.5f;
-    [SerializeField] private float _resetBufferTime = 0.5f;
+    [SerializeField] private int _resetBufferFrames = 30;
 
     private List<CardObject> _selectedCards = new List<CardObject>();
     private List<Canvas> _previewCanvases = new List<Canvas>();
@@ -94,17 +94,17 @@ public class CardSelectionOverlay : MonoBehaviour
         while (!_selectionMade)
             yield return new WaitForEndOfFrame();
 
-        List<CardObject> selectedCards = new List<CardObject>(_selectedCards);
         foreach (CardObject cardObj in _selectedCards)
             cardObj.PreviewLayoutHandler.SetHighlight(false);
 
         yield return ResetCardsRoutine(cardList);
         
-        _selectedCards.Clear();
         _previewCanvases.Clear();
         _selectionMade = false;
 
-        yield return selectedCards;
+        yield return _selectedCards;
+
+        _selectedCards.Clear();
     }
 
     private void SetCards(List<CardObject> cardList)
@@ -158,7 +158,12 @@ public class CardSelectionOverlay : MonoBehaviour
             previewCanvas.sortingOrder = 0;
         }
 
-        yield return new WaitForSeconds(_resetBufferTime);
+        int count = _resetBufferFrames;
+        while (count > 0)
+        {
+            count--;
+            yield return new WaitForEndOfFrame();
+        }
 
         foreach (CardObject cardObj in cardList)
         {
