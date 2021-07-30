@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardSelectionOverlay : MonoBehaviour
+public class CardBrowserOverlay : MonoBehaviour
 {
     private static Vector3 OriginalPreviewScale = new Vector3(0.0184625f, 0.018035f, 1f);
     private static string SubmitText = "Submit";
@@ -34,8 +34,8 @@ public class CardSelectionOverlay : MonoBehaviour
     [SerializeField] private float _hoverScaleMultiplier = 1.5f;
     [SerializeField] private int _resetBufferFrames = 30;
 
-    private List<CardObject> _selectedCards = new List<CardObject>();
-    private List<Canvas> _previewCanvases = new List<Canvas>();
+    private readonly List<CardBehaviour> _selectedCards = new List<CardBehaviour>();
+    private readonly List<Canvas> _previewCanvases = new List<Canvas>();
 
     private Action<bool> _onToggleTabAction;
 
@@ -85,6 +85,9 @@ public class CardSelectionOverlay : MonoBehaviour
         _submitButton.interactable = false;
         _layoutHolder.SetActive(true);
 
+        if (_selectedCards.Count > 0) 
+            _selectedCards.Clear();
+
         SetCards(cardList);
         
         foreach (Canvas previewCanvas in _previewCanvases)
@@ -94,8 +97,8 @@ public class CardSelectionOverlay : MonoBehaviour
         while (!_selectionMade)
             yield return new WaitForEndOfFrame();
 
-        foreach (CardObject cardObj in _selectedCards)
-            cardObj.PreviewLayoutHandler.SetHighlight(false);
+        foreach (CardBehaviour card in _selectedCards)
+            ((CardObject) card).PreviewLayoutHandler.SetHighlight(false);
 
         yield return ResetCardsRoutine(cardList);
         
@@ -103,8 +106,6 @@ public class CardSelectionOverlay : MonoBehaviour
         _selectionMade = false;
 
         yield return _selectedCards;
-
-        _selectedCards.Clear();
     }
 
     private void SetCards(List<CardObject> cardList)

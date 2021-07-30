@@ -70,6 +70,7 @@ public class Controller : MonoBehaviour
             case GameStepType.ChargeStep:
             case GameStepType.AttackStep:
                 _currentlySelected.SetHighlight(false);
+                _currentlySelected.SetHighlightColor(true);
                 break;
 
             case GameStepType.MainStep:

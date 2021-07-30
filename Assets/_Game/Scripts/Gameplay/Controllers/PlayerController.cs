@@ -13,7 +13,9 @@ public class PlayerController : Controller
     };
 
     #endregion
-    
+
+    [SerializeField] private int _deselectDelayBufferFrames = 30;
+
     private Camera _mainCamera = null;
     private GameManager _gameManager = null;
 
@@ -70,6 +72,9 @@ public class PlayerController : Controller
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            _selectionMade = true;
     }
 
     public void EnableFullControl(bool enable)
@@ -81,7 +86,23 @@ public class PlayerController : Controller
     public override void DeselectCurrentlySelected()
     {
         base.DeselectCurrentlySelected();
-        _canSelectShield = false;
+
+        StartCoroutine(DelayedDeselectRoutine());
+
+        #region Local Functions
+
+        IEnumerator DelayedDeselectRoutine()
+        {
+            int count = _deselectDelayBufferFrames;
+            while (count > 0)
+            {
+                count--;
+                yield return new WaitForEndOfFrame();
+            }
+            _canSelectShield = false;
+        }
+
+        #endregion
     }
 
     private void ProcessCardHover(int iD)
@@ -103,7 +124,7 @@ public class PlayerController : Controller
             if (_targetedCard != tempCardObj)
             {
                 ExitHover();
-
+                
                 if (_hoverState == HoverState.None)
                 {
                     _targetedCard = tempCardObj;
@@ -130,7 +151,7 @@ public class PlayerController : Controller
                     _targetedCard.ProcessMouseExit();
                     _targetedCard = null;
                 }
-
+                
                 _hoverState = HoverState.None;
             }
         }
@@ -186,7 +207,7 @@ public class PlayerController : Controller
                     }
                 }
             }
-            
+
             if (tempShield)
             {
                 if (_targetedShield != tempShield)
@@ -228,28 +249,35 @@ public class PlayerController : Controller
     }
 
     #region Multiple Cards Selection Methods
-
-    public IEnumerator SelectCardsRoutine(bool selectCard, List<CardObject> cardList)
-    {
-        Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(selectCard, new List<CardBehaviour>(cardList)));
-        yield return routine.coroutine;
-        yield return routine.returnVal;
-    }
-
+    
     public IEnumerator SelectCardsRoutine(bool selectCard, List<ShieldObject> shieldList)
     {
         Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(selectCard, new List<CardBehaviour>(shieldList)));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
+    
+    public IEnumerator SelectCardsRoutine(bool selectCard, Dictionary<int, CreatureObject> creatureDict)
+    {
+        List<CardBehaviour> cards = new List<CardBehaviour>();
+        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict)
+        {
+            CardBehaviour card = pair.Value;
+            cards.Add(card);
+        }
 
+        Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(selectCard, cards));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+    
     public IEnumerator SelectCardsRoutine(bool selectCard, Dictionary<int, CardObject> cardDict)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         foreach (KeyValuePair<int, CardObject> pair in cardDict)
         {
-            CardBehaviour cardObj = pair.Value;
-            cards.Add(cardObj);
+            CardBehaviour card = pair.Value;
+            cards.Add(card);
         }
 
         Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(selectCard, cards));
@@ -263,32 +291,36 @@ public class PlayerController : Controller
         _selectCard = selectCard;
         _selectionRange = cards;
 
+        if (_cardSelections.Count > 0) 
+            _cardSelections.Clear();
+        if (_shieldSelections.Count > 0) 
+            _shieldSelections.Clear();
+
         while (!_selectionMade)
             yield return new WaitForEndOfFrame();
 
-        List<CardBehaviour> selectedCards;
         if (_selectCard)
         {
-            selectedCards = new List<CardBehaviour>(_cardSelections);
             foreach (CardObject cardObj in _cardSelections)
                 cardObj.SetHighlight(false);
-            _cardSelections.Clear();
         }
         else
         {
-            selectedCards = new List<CardBehaviour>(_shieldSelections);
             foreach (ShieldObject shieldObj in _shieldSelections)
             {
                 shieldObj.KeepHighlighted = false;
                 shieldObj.SetHighlight(false);
             }
-            _shieldSelections.Clear();
         }
 
         _selectMultiple = false;
+        _selectionMade = false;
         _selectionRange.Clear();
 
-        yield return selectedCards;
+        if (_selectCard)
+            yield return _cardSelections;
+        else
+            yield return _shieldSelections;
     }
 
     #endregion
@@ -305,8 +337,18 @@ public class PlayerController : Controller
                     {
                         if (_targetedCard == card)
                         {
-                            _targetedCard.SetHighlight(true);
-                            _cardSelections.Add(_targetedCard);
+                            if (!_cardSelections.Contains(_targetedCard)) 
+                            {
+                                _targetedCard.SetHighlight(true);
+                                _cardSelections.Add(_targetedCard);
+                                
+                            }
+                            else
+                            {
+                                _targetedCard.SetHighlight(false);
+                                _cardSelections.Remove(_targetedCard);
+                            }
+
                             break;
                         }
                     }
@@ -320,8 +362,17 @@ public class PlayerController : Controller
                     {
                         if (_targetedShield == card)
                         {
-                            _targetedShield.KeepHighlighted = true;
-                            _shieldSelections.Add(_targetedShield);
+                            if (!_shieldSelections.Contains(_targetedShield)) 
+                            {
+                                _targetedShield.KeepHighlighted = true;
+                                _shieldSelections.Add(_targetedShield);
+                            }
+                            else
+                            {
+                                _targetedShield.KeepHighlighted = false;
+                                _shieldSelections.Remove(_targetedShield);
+                            }
+
                             break;
                         }
                     }

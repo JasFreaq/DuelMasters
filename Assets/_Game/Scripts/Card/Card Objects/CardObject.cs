@@ -11,7 +11,7 @@ public abstract class CardObject : CardBehaviour
     [SerializeField] private BoxCollider _cardLayoutCollider;
     [SerializeField] private BoxCollider _compactCardLayoutCollider;
     [SerializeField] private GameObject _visibleEyeIcon;
-    [SerializeField] protected PreviewLayoutHandler previewLayoutHandler;
+    [SerializeField] protected PreviewLayoutHandler _previewLayoutHandler;
     [SerializeField] protected CardLayoutHandler _cardLayoutHandler;
     [SerializeField] protected ManaCardLayoutHandler _manaCardLayoutHandler;
     
@@ -42,7 +42,7 @@ public abstract class CardObject : CardBehaviour
     
     public PreviewLayoutHandler PreviewLayoutHandler
     {
-        get { return previewLayoutHandler; }
+        get { return _previewLayoutHandler; }
     }
 
     public CardLayoutHandler CardLayout
@@ -110,7 +110,7 @@ public abstract class CardObject : CardBehaviour
     private void Awake()
     {
         _hoverPreviewHandler = GetComponent<HoverPreviewHandler>();
-        _hoverPreviewHandler.PreviewLayoutHandler = previewLayoutHandler;
+        _hoverPreviewHandler.PreviewLayoutHandler = _previewLayoutHandler;
 
         _dragHandler = GetComponent<DragHandler>();
     }
@@ -208,11 +208,11 @@ public abstract class CardObject : CardBehaviour
 
     #region State Methods
     
-    public virtual void SetHighlightColor(bool play)
+    public virtual void SetHighlightColor(bool baseColor)
     {
-        _isHighlightBaseColor = !play;
-        Color color = play ? GameParamsHolder.Instance.PlayHighlightColor 
-            : GameParamsHolder.Instance.BaseHighlightColor;
+        _isHighlightBaseColor = baseColor;
+        Color color = baseColor ? GameParamsHolder.Instance.BaseHighlightColor
+                : GameParamsHolder.Instance.PlayHighlightColor;
 
         _cardLayoutHandler.SetHighlightColor(color);
         _manaCardLayoutHandler.SetHighlightColor(color);
@@ -231,7 +231,7 @@ public abstract class CardObject : CardBehaviour
         _manaCardLayoutHandler.TappedOverlay.SetActive(_cardInst.IsTapped);
         float tapAngle = GameParamsHolder.Instance.TapAngle;
         Vector3 tapStateRotation = transform.localEulerAngles;
-        Vector3 previewTapStateRotation = previewLayoutHandler.transform.localEulerAngles;
+        Vector3 previewTapStateRotation = _previewLayoutHandler.transform.localEulerAngles;
         PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(_isPlayer);
 
         if (_cardInst.IsTapped)
@@ -248,7 +248,7 @@ public abstract class CardObject : CardBehaviour
         }
 
         transform.DOLocalRotateQuaternion(Quaternion.Euler(tapStateRotation), GameParamsHolder.Instance.TapTransitionTime).SetEase(Ease.OutQuint);
-        previewLayoutHandler.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
+        _previewLayoutHandler.transform.localRotation = Quaternion.Euler(previewTapStateRotation);
     }
 
     public void SetVisibleIcon(bool visible)

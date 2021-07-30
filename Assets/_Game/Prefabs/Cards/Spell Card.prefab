@@ -90,7 +90,7 @@ MonoBehaviour:
   _cardLayoutCollider: {fileID: 3958148146565861389}
   _compactCardLayoutCollider: {fileID: 3958148146565861388}
   _visibleEyeIcon: {fileID: 3700603356462805462}
-  previewLayoutHandler: {fileID: 8822412986101825686}
+  _previewLayoutHandler: {fileID: 8822412986101825686}
   _cardLayoutHandler: {fileID: 5172767861766778179}
   _manaCardLayoutHandler: {fileID: 3389197699088125356}
 --- !u!114 &3813295192086143219

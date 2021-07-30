@@ -37,16 +37,6 @@ public class PlayerManager : MonoBehaviour
         get { return _manaZoneManager; }
     }
 
-    public BattleZoneManager BattleZoneManager
-    {
-        get { return _battleZoneManager; }
-    }
-
-    public GraveyardManager GraveyardManager
-    {
-        get { return _graveyardManager; }
-    }
-
     public IReadOnlyList<CardObject> PlayableCards
     {
         get { return _playableCards; }
@@ -183,10 +173,12 @@ public class PlayerManager : MonoBehaviour
         yield return _handManager.MoveFromHandRoutine(cardObj);
     }
 
-    //public IEnumerator MoveFromShieldsRoutine(int shieldIndex)
-    //{
-    //    yield return _shieldsManager.BreakShieldRoutine(shieldIndex);
-    //}
+    public IEnumerator MoveFromShieldsRoutine(ShieldObject shieldObj)
+    {
+        InitiateMove(shieldObj.CardObject);
+
+        yield return _shieldsManager.BreakShieldRoutine(shieldObj);
+    }
 
     //public IEnumerator MoveFromGraveyard(CardObject cardObj)
     //{
@@ -246,16 +238,20 @@ public class PlayerManager : MonoBehaviour
     {
         cardObj.gameObject.SetActive(false);
         cardObj.ActivateCardLayout();
-
-        PlayerManager manager = GameManager.Instance.GetManager(_isPlayer);
-        manager.GraveyardManager.AddCard(cardObj);
+        print("pot");
         switch (cardObj.CardInst.CurrentZone)
         {
+            case CardZoneType.Hand:
+                _playerData.CardsInHand.Remove(cardObj.transform.GetInstanceID());
+                _handManager.ArrangeCards();
+                break;
+
             case CardZoneType.BattleZone:
-                GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle.Remove(cardObj.transform.GetInstanceID());
-                GameManager.Instance.GetManager(_isPlayer).BattleZoneManager.ArrangeCards();
+                _playerData.CardsInBattle.Remove(cardObj.transform.GetInstanceID());
+                _battleZoneManager.ArrangeCards();
                 break;
         }
+        _graveyardManager.AddCard(cardObj);
 
         cardObj.gameObject.SetActive(true);
         yield break;

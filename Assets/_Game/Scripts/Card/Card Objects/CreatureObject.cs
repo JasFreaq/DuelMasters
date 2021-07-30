@@ -30,7 +30,7 @@ public class CreatureObject : CardObject
     {
         CardFrameData cardFrameData = GameParamsHolder.Instance.GetCardFrameData(true, _cardInst.CardData.Civilization);
         _cardLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
-        previewLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
+        _previewLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
 
         CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(true, _cardInst.CardData.Civilization);
         _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
@@ -76,12 +76,12 @@ public class CreatureObject : CardObject
         _battleCardLayoutHandler.TappedOverlay.SetActive(_cardInst.IsTapped);
     }
 
-    public override void SetHighlightColor(bool play)
+    public override void SetHighlightColor(bool baseColor)
     {
-        base.SetHighlightColor(play);
+        base.SetHighlightColor(baseColor);
 
-        _battleCardLayoutHandler.SetHighlightColor(play ? GameParamsHolder.Instance.PlayHighlightColor
-            : GameParamsHolder.Instance.BaseHighlightColor);
+        _battleCardLayoutHandler.SetHighlightColor(baseColor ? GameParamsHolder.Instance.BaseHighlightColor
+            : GameParamsHolder.Instance.PlayHighlightColor);
     }
 
     #endregion

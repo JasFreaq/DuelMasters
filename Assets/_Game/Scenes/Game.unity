@@ -1666,6 +1666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1efcbb597dfe02949b01778a662628c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _deselectDelayBufferFrames: 24
 --- !u!1 &1102408664
 GameObject:
   m_ObjectHideFlags: 0
@@ -1786,9 +1787,9 @@ MonoBehaviour:
   _opponentManager: {fileID: 1962481310}
   _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
   _opponentDeck: {fileID: 11400000, guid: 06288bbec65712249b0c0f9fc2daa9db, type: 2}
-  actionButton: {fileID: 0}
+  _actionButton: {fileID: 0}
   _numberSelector: {fileID: 1829933507}
-  _cardSelectionOverlay: {fileID: 2141456923}
+  _cardBrowserOverlay: {fileID: 2141456923}
 --- !u!4 &1167120987
 Transform:
   m_ObjectHideFlags: 0
@@ -3267,7 +3268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3345647308199229427, guid: 7a7e197056aec104cb338499687d3e60, type: 3}
       propertyPath: m_Name
-      value: Card Selection Overlay
+      value: Card Browser Overlay
       objectReference: {fileID: 0}
     - target: {fileID: 3345647309042006878, guid: 7a7e197056aec104cb338499687d3e60, type: 3}
       propertyPath: m_AnchorMax.x

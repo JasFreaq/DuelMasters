@@ -133,7 +133,7 @@ MonoBehaviour:
   _cardLayoutCollider: {fileID: 9135805864581426300}
   _compactCardLayoutCollider: {fileID: 9135805864581426301}
   _visibleEyeIcon: {fileID: 1260659342}
-  previewLayoutHandler: {fileID: 1574951185253863389}
+  _previewLayoutHandler: {fileID: 1574951185253863389}
   _cardLayoutHandler: {fileID: 1119139094425481684}
   _manaCardLayoutHandler: {fileID: 5722507618441204830}
   _battleCardLayoutHandler: {fileID: 1327950062867778693}

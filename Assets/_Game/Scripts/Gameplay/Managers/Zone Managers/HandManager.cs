@@ -9,7 +9,7 @@ public class HandManager : MonoBehaviour
 {
     #region Helper Data Structures
 
-    struct TransformData
+    public struct TransformData
     {
         public Vector3 position;
         public Quaternion rotation;
@@ -78,14 +78,18 @@ public class HandManager : MonoBehaviour
             }
         }
 
+        #region Local Functions
+
         void SetState(bool state)
         {
             if (card.ProcessDragRelease != state)
                 card.ProcessDragRelease = state;
 
             if (card.IsHighlightBaseColor == state)
-                card.SetHighlightColor(state);
+                card.SetHighlightColor(!state);
         }
+
+        #endregion
     }
     
     private void RemoveCardAtIndex(int index)
@@ -141,7 +145,7 @@ public class HandManager : MonoBehaviour
         RemoveCardAtIndex(card.transform.GetSiblingIndex());
 
         card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        Quaternion rotation = (forShield && !_isPlayer) ? 
+        Quaternion rotation = forShield && !_isPlayer ? 
             flippedIntermediateHolder.rotation : _intermediateHolder.rotation;
         card.transform.DORotateQuaternion(rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
         card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
@@ -172,7 +176,7 @@ public class HandManager : MonoBehaviour
     
     #region Layout Methods
 
-    private TransformData ArrangeCards(int index = -1)
+    public TransformData ArrangeCards(int index = -1)
     {
         int n = _holderTransform.childCount;
         float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
