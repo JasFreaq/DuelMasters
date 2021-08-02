@@ -119,25 +119,12 @@ public class GameManager : MonoBehaviour
             MovementZones movementZones = new MovementZones
             {
                 fromZone = CardZoneType.Hand,
-                toZone = CardZoneType.Graveyard,
-                deckCardMove = DeckCardMoveType.SearchShuffle,
-                countChoice = CountChoiceType.Upto,
-                moveCount = 4
-            };
-            ProcessRegionMovement(false, movementZones);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            MovementZones movementZones = new MovementZones
-            {
-                fromZone = CardZoneType.Graveyard,
                 toZone = CardZoneType.ManaZone,
                 deckCardMove = DeckCardMoveType.SearchShuffle,
                 countChoice = CountChoiceType.Upto,
                 moveCount = 4
             };
-            ProcessRegionMovement(false, movementZones);
+            ProcessRegionMovement(true, movementZones);
         }
 
         if (_gameBegun && !_gameOver)

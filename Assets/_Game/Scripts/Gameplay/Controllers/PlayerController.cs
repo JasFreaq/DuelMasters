@@ -298,6 +298,8 @@ public class PlayerController : Controller
 
         _selectMultiple = true;
         _selectCard = selectCard;
+        if (_selectCard)
+            cards = CardInstance.CheckValidity(cards);
         _selectionRange = cards;
         
         _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
@@ -309,9 +311,14 @@ public class PlayerController : Controller
         List<CardBehaviour> selectedCards;
         if (_selectCard)
         {
-            selectedCards = new List<CardBehaviour>(_cardSelections);
-            foreach (CardObject cardObj in _cardSelections)
+            foreach (CardBehaviour card in _selectionRange)
+            {
+                CardObject cardObj = (CardObject) card;
+                cardObj.SetHighlightColor(true);
                 cardObj.SetHighlight(false);
+            }
+                
+            selectedCards = new List<CardBehaviour>(_cardSelections);
             _cardSelections.Clear();
         }
         else
@@ -358,16 +365,16 @@ public class PlayerController : Controller
                 {
                     foreach (CardBehaviour card in _selectionRange)
                     {
-                        if (_targetedCard == card) 
+                        if (_targetedCard == card && _targetedCard.PreviewLayoutHandler.IsValid) 
                         {
                             if (!_cardSelections.Contains(_targetedCard) && _cardSelections.Count < _selectionUpperBound) 
                             {
-                                _targetedCard.SetHighlight(true);
+                                _targetedCard.SetHighlightColor(false);
                                 _cardSelections.Add(_targetedCard);
                             }
                             else
                             {
-                                _targetedCard.SetHighlight(false);
+                                _targetedCard.SetHighlightColor(true);
                                 _cardSelections.Remove(_targetedCard);
                             }
 

@@ -35,7 +35,7 @@ public class CardBrowserOverlay : MonoBehaviour
     [SerializeField] private float _hoverScaleMultiplier = 1.5f;
     [SerializeField] private int _resetBufferFrames = 30;
 
-    private readonly List<CardBehaviour> _selectedCards = new List<CardBehaviour>();
+    private readonly List<CardObject> _selectedCards = new List<CardObject>();
     private readonly List<Canvas> _previewCanvases = new List<Canvas>();
 
     private Action<bool> _onToggleTabAction;
@@ -85,26 +85,10 @@ public class CardBrowserOverlay : MonoBehaviour
         _submitText.text = "Submit 0";
         _submitButton.interactable = false;
 
-        List<CardObject> validCards = new List<CardObject>();
-        foreach (CardObject cardObj in cardList)
-        {
-            if (Random.Range(0f, 10f) < 3.5f)
-            {
-                cardObj.PreviewLayoutHandler.SetValidity(true);
-                validCards.Add(cardObj);
-            }
-            else
-                cardObj.PreviewLayoutHandler.SetValidity(false);
-        }
-        foreach (CardObject cardObj in validCards)
-            cardList.Remove(cardObj);
-        cardList.AddRange(validCards);
+        cardList = CardInstance.CheckValidity(cardList);
         
         _layoutHolder.SetActive(true);
-
-        if (_selectedCards.Count > 0) 
-            _selectedCards.Clear();
-
+        
         SetCards(cardList);
         
         foreach (Canvas previewCanvas in _previewCanvases)
@@ -114,15 +98,17 @@ public class CardBrowserOverlay : MonoBehaviour
         while (!_selectionMade)
             yield return new WaitForEndOfFrame();
 
-        foreach (CardBehaviour card in _selectedCards)
-            ((CardObject) card).PreviewLayoutHandler.SetHighlight(false);
+        foreach (CardObject cardObj in _selectedCards)
+            cardObj.PreviewLayoutHandler.SetHighlight(false);
+        List<CardBehaviour> selectedCards = new List<CardBehaviour>(_selectedCards);
 
         yield return ResetCardsRoutine(cardList);
         
         _previewCanvases.Clear();
+        _selectedCards.Clear();
         _selectionMade = false;
 
-        yield return _selectedCards;
+        yield return selectedCards;
     }
 
     public IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict)
