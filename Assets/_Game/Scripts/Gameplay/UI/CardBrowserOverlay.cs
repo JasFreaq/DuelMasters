@@ -6,11 +6,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class CardBrowserOverlay : MonoBehaviour
 {
     private static Vector3 OriginalPreviewScale = new Vector3(0.0184625f, 0.018035f, 1f);
-    private static string SubmitText = "Submit";
+    
 
     [SerializeField] private GameObject _holderCanvas;
     [SerializeField] private GameObject _layoutHolder;
@@ -77,12 +78,28 @@ public class CardBrowserOverlay : MonoBehaviour
 
     #region Functionality Methods
 
-    public IEnumerator GenerateLayoutRoutine(int lower, int upper, List<CardObject> cardList)
+    public IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList)
     {
         _lowerBound = lower;
         _upperBound = upper;
-        _submitText.text = $"{SubmitText} 0";
+        _submitText.text = "Submit 0";
         _submitButton.interactable = false;
+
+        List<CardObject> validCards = new List<CardObject>();
+        foreach (CardObject cardObj in cardList)
+        {
+            if (Random.Range(0f, 10f) < 3.5f)
+            {
+                cardObj.PreviewLayoutHandler.SetValidity(true);
+                validCards.Add(cardObj);
+            }
+            else
+                cardObj.PreviewLayoutHandler.SetValidity(false);
+        }
+        foreach (CardObject cardObj in validCards)
+            cardList.Remove(cardObj);
+        cardList.AddRange(validCards);
+        
         _layoutHolder.SetActive(true);
 
         if (_selectedCards.Count > 0) 
@@ -106,6 +123,20 @@ public class CardBrowserOverlay : MonoBehaviour
         _selectionMade = false;
 
         yield return _selectedCards;
+    }
+
+    public IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict)
+    {
+        List<CardObject> cardList = new List<CardObject>();
+        foreach (KeyValuePair<int, CardObject> pair in cardDict)
+        {
+            CardObject cardObj = pair.Value;
+            cardList.Add(cardObj);
+        }
+
+        Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, cardList));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
     }
 
     private void SetCards(List<CardObject> cardList)
@@ -204,7 +235,7 @@ public class CardBrowserOverlay : MonoBehaviour
             if (_submitButton.interactable)
                 _submitButton.interactable = false;
         }
-        _submitText.text = $"{SubmitText} {selectionCount}";
+        _submitText.text = $"Submit {selectionCount}";
     }
 
     #endregion

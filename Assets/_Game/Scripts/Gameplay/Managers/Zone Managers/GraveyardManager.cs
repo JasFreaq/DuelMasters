@@ -37,8 +37,9 @@ public class GraveyardManager : MonoBehaviour
         cardObj.CardInst.SetCurrentZone(CardZoneType.Graveyard);
     }
 
-    public CardObject RemoveCardAtIndex(int index)
+    public void RemoveCard(CardObject cardObj)
     {
+        int index = cardObj.transform.GetSiblingIndex();
         if (index == _playerData.CardsInGrave.Count - 1)
         {
             _playerData.CardsInGrave[index].HoverPreviewHandler.PreviewEnabled = false;
@@ -48,21 +49,19 @@ public class GraveyardManager : MonoBehaviour
             }
         }
 
-        CardObject card = _playerData.CardsInGrave[index];
-        _playerData.CardsInGrave.RemoveAt(index);
+        _playerData.CardsInGrave.Remove(cardObj);
         ArrangeCards();
-        return card;
     }
 
     private void ArrangeCards()
     {
         float lastYPos = 0;
 
-        foreach (CardObject card in _playerData.CardsInGrave)
+        foreach (CardObject cardObj in _playerData.CardsInGrave)
         {
-            card.transform.localPosition = new Vector3(0, lastYPos += _cardWidth * _cardScale, 0);
-            card.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            card.transform.localScale = Vector3.one * _cardScale;
+            cardObj.transform.localPosition = new Vector3(0, lastYPos += _cardWidth * _cardScale, 0);
+            cardObj.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            cardObj.transform.localScale = Vector3.one * _cardScale;
         }
 
         _lastYPos = lastYPos;

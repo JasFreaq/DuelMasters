@@ -180,10 +180,11 @@ public class PlayerManager : MonoBehaviour
         yield return _shieldsManager.BreakShieldRoutine(shieldObj);
     }
 
-    //public IEnumerator MoveFromGraveyard(CardObject cardObj)
-    //{
-
-    //}
+    public IEnumerator MoveFromGraveyard(CardObject cardObj)
+    {
+        _graveyardManager.RemoveCard(cardObj);
+        yield break;
+    }
 
     public IEnumerator MoveFromManaZoneRoutine(CardObject cardObj)
     {
@@ -238,7 +239,7 @@ public class PlayerManager : MonoBehaviour
     {
         cardObj.gameObject.SetActive(false);
         cardObj.ActivateCardLayout();
-        print("pot");
+
         switch (cardObj.CardInst.CurrentZone)
         {
             case CardZoneType.Hand:
