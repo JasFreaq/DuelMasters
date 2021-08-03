@@ -260,8 +260,9 @@ public class PlayerController : Controller
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
-    
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CreatureObject> creatureDict)
+
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard,
+        Dictionary<int, CreatureObject> creatureDict, EffectTargetingCondition targetingCondition = null)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         foreach (KeyValuePair<int, CreatureObject> pair in creatureDict)
@@ -271,12 +272,14 @@ public class PlayerController : Controller
         }
 
         Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards));
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
+                targetingCondition));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
-    
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CardObject> cardDict)
+
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CardObject> cardDict,
+        EffectTargetingCondition targetingCondition = null)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         foreach (KeyValuePair<int, CardObject> pair in cardDict)
@@ -286,12 +289,14 @@ public class PlayerController : Controller
         }
 
         Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards));
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
+                targetingCondition));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
 
-    private IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards)
+    private IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
+        EffectTargetingCondition targetingCondition = null)
     {
         _selectionLowerBound = lower;
         _selectionUpperBound = upper;
@@ -299,7 +304,7 @@ public class PlayerController : Controller
         _selectMultiple = true;
         _selectCard = selectCard;
         if (_selectCard)
-            cards = CardInstance.CheckValidity(cards);
+            cards = CardInstance.CheckValidity(cards, targetingCondition);
         _selectionRange = cards;
         
         _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);

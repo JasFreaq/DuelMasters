@@ -52,12 +52,14 @@ public class CardInstance
 
     #region Static Methods
 
-    public static List<CardObject> CheckValidity(List<CardObject> cardList, bool setHighlight = false)
+    public static List<CardObject> CheckValidity(List<CardObject> cardList,
+        EffectTargetingCondition targetingCondition = null, bool setHighlight = false)
     {
         List<CardObject> validCards = new List<CardObject>();
         foreach (CardObject cardObj in cardList)
         {
-            if (Random.Range(0f, 10f) < 5f)
+            if (targetingCondition == null ||
+                CardData.IsTargetingConditionSatisfied(cardObj.CardInst, targetingCondition)) 
             {
                 cardObj.PreviewLayoutHandler.SetValidity(true);
                 if (setHighlight) 
@@ -77,13 +79,13 @@ public class CardInstance
         return cardList;
     }
     
-    public static List<CardBehaviour> CheckValidity(List<CardBehaviour> cards)
+    public static List<CardBehaviour> CheckValidity(List<CardBehaviour> cards, EffectTargetingCondition targetingCondition = null)
     {
         List<CardObject> cardList = new List<CardObject>();
         foreach (CardBehaviour card in cards)
             cardList.Add((CardObject) card);
 
-        return new List<CardBehaviour>(CheckValidity(cardList, true));
+        return new List<CardBehaviour>(CheckValidity(cardList, targetingCondition, true));
     }
     
     #endregion

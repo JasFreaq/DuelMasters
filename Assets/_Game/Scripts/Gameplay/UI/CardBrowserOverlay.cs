@@ -78,15 +78,19 @@ public class CardBrowserOverlay : MonoBehaviour
 
     #region Functionality Methods
 
-    public IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList)
+    public IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList,
+        EffectTargetingCondition targetingCondition = null)
     {
         _lowerBound = lower;
         _upperBound = upper;
+        _chooseText.text = _lowerBound == _upperBound ? $"Choose {_upperBound}" : $"Choose upto {_upperBound}";
+        if (targetingCondition != null)
+            _targetText.text = _upperBound == 1 ? $"Target a{targetingCondition.GetConditionParametersString()}" : $"Target {targetingCondition.GetConditionParametersString()}";
         _submitText.text = "Submit 0";
         _submitButton.interactable = false;
 
-        cardList = CardInstance.CheckValidity(cardList);
-        
+        cardList = CardInstance.CheckValidity(cardList, targetingCondition);
+
         _layoutHolder.SetActive(true);
         
         SetCards(cardList);
@@ -111,7 +115,8 @@ public class CardBrowserOverlay : MonoBehaviour
         yield return selectedCards;
     }
 
-    public IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict)
+    public IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict,
+        EffectTargetingCondition targetingCondition = null)
     {
         List<CardObject> cardList = new List<CardObject>();
         foreach (KeyValuePair<int, CardObject> pair in cardDict)
@@ -120,7 +125,8 @@ public class CardBrowserOverlay : MonoBehaviour
             cardList.Add(cardObj);
         }
 
-        Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, cardList));
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, cardList, targetingCondition));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
@@ -251,8 +257,8 @@ public class CardBrowserOverlay : MonoBehaviour
 
     private void ArrangePreviews()
     {
-        float cardWidth = (_cardAreaWidth * 2) / _adjustedDisplayNo;
-        float extremeOffset = ((float)_adjustedDisplayNo / 2 + 1) * cardWidth;
+        float cardWidth = _cardAreaWidth * 2 / _adjustedDisplayNo;
+        float extremeOffset = ((float) _adjustedDisplayNo / 2 + 1) * cardWidth;
 
         Vector3 holderPosition = _holderTransform.localPosition;
         Vector3 startPos = new Vector3(holderPosition.x - cardWidth, holderPosition.y, holderPosition.z);
@@ -371,8 +377,7 @@ public class CardBrowserOverlay : MonoBehaviour
 
                         posAddendum = Vector3.Lerp(_edgePosAdjustments[0], _edgePosAdjustments[1], diffVal - 1);
                     }
-
-
+                    
                     if (!previewTransform.gameObject.activeInHierarchy)
                         previewTransform.gameObject.SetActive(true);
                 }

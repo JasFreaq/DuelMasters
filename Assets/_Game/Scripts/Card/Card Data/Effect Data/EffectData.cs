@@ -11,7 +11,7 @@ public class EffectData : ScriptableObject
     [HideInInspector] [SerializeField] private EffectFunctionality _effectFunctionality;
 
 #if UNITY_EDITOR
-    [HideInInspector] [SerializeField] public bool isBeingEdited = false;
+    [HideInInspector] public bool isBeingEdited = false;
 #endif
 
     public bool MayUseFunction

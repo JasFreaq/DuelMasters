@@ -6,47 +6,30 @@ using UnityEngine.UIElements;
 
 public class Tester : MonoBehaviour
 {
-    [SerializeField] private Canvas _baseCanvas;
-    [SerializeField] private Canvas _testCanvas;
-
-    private RectTransform _testRect;
-    private RectTransform _testOgRect;
-
-    private void Awake()
-    {
-        _testRect = _testCanvas.GetComponent<RectTransform>();
-    }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T)) 
-            Change();
-        if (Input.GetKeyDown(KeyCode.R)) 
-            Revert();
+        if (Input.GetKeyDown(KeyCode.Keypad0)) 
+            Test();
     }
 
-    private void Change()
+    private void Test()
     {
-        PrintRect(_testRect);
+        MovementZones movementZones = new MovementZones
+        {
+            fromZone = CardZoneType.Deck,
+            toZone = CardZoneType.ManaZone,
+            deckCardMove = DeckCardMoveType.SearchShuffle,
+            countChoice = CountChoiceType.Upto,
+            moveCount = 4
+        };
 
-        _testCanvas.transform.SetParent(_baseCanvas.transform);
-        _testCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        _testRect.position = Vector3.one;
-        _testRect.sizeDelta = new Vector2(350, 345);
-    }
+        EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
+        targetingCondition.AddPowerCondition(new PowerCondition
+        {
+            comparator = ComparisonType.GreaterThan,
+            power = 1000
+        });
 
-    private void Revert()
-    {
-        _testCanvas.transform.SetParent(null);
-        _testCanvas.renderMode = RenderMode.WorldSpace;
-        _testRect.position = new Vector3(0, -2, 235);
-        _testRect.sizeDelta = new Vector2(420, 69);
-    }
-
-    private void PrintRect(RectTransform rect)
-    {
-        print($"Pos: {rect.position}\n" +
-              $"Width: {rect.rect.width} Height: {rect.rect.height}\n" +
-              $"Rotation: {rect.rotation}\nScale: {rect.localScale}");
+        GameManager.Instance.ProcessRegionMovement(true, movementZones, targetingCondition);
     }
 }

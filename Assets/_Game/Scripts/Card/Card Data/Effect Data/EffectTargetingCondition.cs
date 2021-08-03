@@ -179,84 +179,142 @@ public class EffectTargetingCondition
     {
         _cardConditions.Remove(condition);
     }
-    
+
 #endif
+
+    #region String Formatting
+
+    public string GetCardTypeString()
+    {
+        return $" {CardParams.StringFromCardType(_cardTypeCondition)}";
+    }
+
+    public string GetCivilizationString()
+    {
+        string str = "";
+        for (int i = 0, n = _civilizationConditions.Count; i < n; i++)
+        {
+            CivilizationCondition civilizationCondition = _civilizationConditions[i];
+            if (civilizationCondition.non)
+                str += $" non-{CardParams.StringFromCivilization(civilizationCondition.civilization)}";
+            else
+                str += $" {CardParams.StringFromCivilization(civilizationCondition.civilization)}";
+            
+            if (n > 1 && i < n - 1)
+                str += $" {_civilizationConditions[i].connector} ";
+        }
+
+        return str;
+    }
     
+    public string GetRaceString()
+    {
+        string str = "";
+        for (int i = 0, n = _raceConditions.Count; i < n; i++)
+        {
+            RaceCondition raceCondition = _raceConditions[i];
+            if (raceCondition.non)
+                str += $" non-{CardParams.StringFromRace(raceCondition.race)}";
+            else 
+                str += $" {CardParams.StringFromRace(raceCondition.race)}";
+
+            if (n > 1 && i < n - 1)
+                str += $" {_raceConditions[i].connector} ";
+        }
+
+        return str;
+    }
+    
+    public string GetKeywordString()
+    {
+        string str = "";
+        for (int i = 0, n = _keywordConditions.Count; i < n; i++)
+        {
+            KeywordCondition keywordCondition = _keywordConditions[i];
+            if (keywordCondition.non)
+                str += $" non-{keywordCondition.keyword}";
+            else
+                str += $" {keywordCondition.keyword}";
+
+            if (n > 1 && i < n - 1)
+                str += $" {_keywordConditions[i].connector} ";
+        }
+
+        return str;
+    }
+    
+    public string GetPowerString()
+    {
+        string str = "";
+        for (int i = 0, n = _powerConditions.Count; i < n; i++)
+        {
+            PowerCondition powerCondition = _powerConditions[i];
+            str += $" {powerCondition.comparator}";
+            str += $" {powerCondition.power}";
+
+            if (n > 1 && i < n - 1)
+                str += $" {_powerConditions[i].connector} ";
+        }
+
+        return str;
+    }
+    
+    public string GetCardString()
+    {
+        string str = "";
+        for (int i = 0, n = _cardConditions.Count; i < n; i++)
+        {
+            CardCondition cardCondition = _cardConditions[i];
+            str += $" {cardCondition.cardData.Name}";
+
+            if (n > 1 && i < n - 1)
+                str += $" {_cardConditions[i].connector} ";
+        }
+
+        return str;
+    }
+
+    public string GetConditionParametersString()
+    {
+        string str = "";
+
+        if (_assignedCardTypeCondition)
+            str += GetCardTypeString();
+        else if (_civilizationConditions.Count > 0)
+            str += GetCivilizationString() + " card";
+        else if (_raceConditions.Count > 0)
+            str += GetRaceString();
+        else if (_keywordConditions.Count > 0)
+            str += GetKeywordString();
+        else if (_powerConditions.Count > 0)
+            str += $"creature with power {GetPowerString()}";
+        else if (_cardConditions.Count > 0)
+            str += GetCardString();
+
+        return str;
+    }
+
     public override string ToString()
     {
         string str = "";
 
         if (_assignedCardTypeCondition)
-        {
-            str += $"\nCard Type is {CardParams.StringFromCardType(_cardTypeCondition)}";
-        }
+            str += $"\nCard Type is{GetCardTypeString()}";
 
         if (_civilizationConditions.Count > 0)
-        {
-            str += "\nCivilization is ";
-            for (int i = 0, n = _civilizationConditions.Count; i < n; i++)
-            {
-                CivilizationCondition civilizationCondition = _civilizationConditions[i];
-                if (civilizationCondition.non)
-                    str += "non-";
-                str += $"{CardParams.StringFromCivilization(civilizationCondition.civilization)}";
-                if (n > 1 && i < n - 1)
-                    str += $" {_civilizationConditions[i].connector} ";
-            }
-        }
+            str += $"\nCivilization is{GetCivilizationString()}";
 
         if (_raceConditions.Count > 0)
-        {
-            str += "\nRace is ";
-            for (int i = 0, n = _raceConditions.Count; i < n; i++) 
-            {
-                RaceCondition raceCondition = _raceConditions[i];
-                if (raceCondition.non)
-                    str += "non-";
-                str += $"{CardParams.StringFromRace(raceCondition.race)}";
-                if (n > 1 && i < n - 1)
-                    str += $" {_raceConditions[i].connector} ";
-            }
-        }
+            str += $"\nRace is{GetRaceString()}";
 
         if (_keywordConditions.Count > 0)
-        {
-            str += "\nKeyword is ";
-            for (int i = 0, n = _keywordConditions.Count; i < n; i++) 
-            {
-                KeywordCondition keywordCondition = _keywordConditions[i];
-                if (keywordCondition.non)
-                    str += "non-";
-                str += $"{keywordCondition.keyword}";
-                if (n > 1 && i < n - 1)
-                    str += $" {_keywordConditions[i].connector} ";
-            }
-        }
+            str += $"\nKeyword is{GetKeywordString()}";
 
         if (_powerConditions.Count > 0)
-        {
-            str += "\nPower is ";
-            for (int i = 0, n = _powerConditions.Count; i < n; i++) 
-            {
-                PowerCondition powerCondition = _powerConditions[i];
-                str += $"{powerCondition.comparator} ";
-                str += $"{powerCondition.power}";
-                if (n > 1 && i < n - 1)
-                    str += $" {_powerConditions[i].connector} ";
-            }
-        }
+            str += $"\nPower is{GetPowerString()}";
 
         if (_cardConditions.Count > 0)
-        {
-            str += "\nCard is ";
-            for (int i = 0, n = _cardConditions.Count; i < n; i++) 
-            {
-                CardCondition cardCondition = _cardConditions[i];
-                str += $"{cardCondition.cardData.Name}";
-                if (n > 1 && i < n - 1)
-                    str += $" {_cardConditions[i].connector} ";
-            }
-        }
+            str += $"\nCard is{GetCardString()}";
 
         if (_assignedTapCondition)
         {
@@ -269,4 +327,6 @@ public class EffectTargetingCondition
 
         return str;
     }
+
+    #endregion
 }
