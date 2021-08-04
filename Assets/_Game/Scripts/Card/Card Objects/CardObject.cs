@@ -23,15 +23,10 @@ public abstract class CardObject : CardBehaviour
     private Action<CardObject> _onDragReleaseAction;
     private Func<CardObject, Coroutine> _onSendToGraveFunc;
 
-    private bool _isPlayer;
-    protected bool _isHighlighted = false;
-    protected bool _isSelected = false;
-    private bool _isHighlightBaseColor = true;
-    private bool _isVisible = false;
-    private bool _canDrag = false;
+    private bool _isPlayer, _isValid, _isHighlightBaseColor = true, _isVisible = false;
+    private bool _canDrag, _processDragRelease, _inPlayerHand;
     
-    private bool _processDragRelease = false;
-    private bool _inPlayerHand = false;
+    protected bool _isHighlighted, _isSelected;
     
     #region Properties
 
@@ -39,7 +34,18 @@ public abstract class CardObject : CardBehaviour
     {
         get { return _isPlayer;}
     }
-    
+
+    public bool IsValid
+    {
+        get { return _isValid; }
+
+        set
+        {
+            _isValid = value;
+            _previewLayoutHandler.SetInvalidOverlay(_isValid);
+        }
+    }
+
     public PreviewLayoutHandler PreviewLayoutHandler
     {
         get { return _previewLayoutHandler; }

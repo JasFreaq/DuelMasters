@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
                 targetingCondition.AddPowerCondition(new PowerCondition
                 {
                     comparator = ComparisonType.GreaterThan,
-                    power = 1000
+                    power = 3000
                 });
 
                 ProcessRegionMovement(true, movementZones, targetingCondition);
@@ -220,6 +220,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Battle Handling
+
     public void AttemptAttack(bool isPlayer, CardBehaviour target)
     {
         StartCoroutine(AttemptAttackRoutine(isPlayer, target));
@@ -227,17 +231,11 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AttemptAttackRoutine(bool isPlayer, CardBehaviour target)
     {
-        Controller controller, oppController;
+        Controller controller;
         if (isPlayer)
-        {
             controller = _playerController;
-            oppController = _opponentController;
-        }
         else
-        {
             controller = _opponentController;
-            oppController = _playerController;
-        }
 
         if (controller.CurrentlySelected)
         {
@@ -246,72 +244,101 @@ public class GameManager : MonoBehaviour
             if (selectedCardObj.InZone(CardZoneType.BattleZone) && !selectedCardObj.CardInst.IsTapped)
             {
                 TargetingLinesHandler.Instance.DisableLines();
-
-                //TODO: Blocking Implementation
-
+                
                 CreatureObject creatureObj = (CreatureObject) selectedCardObj;
-                float attackTime = GameParamsHolder.Instance.AttackTime;
-                Vector3 creaturePos = creatureObj.transform.position;
+                IEnumerator attackRoutine = null;
                 
                 if (target is CreatureObject attackedCreatureObj)
                 {
                     if (attackedCreatureObj.CardInst.IsTapped)
-                    {
-                        creatureObj.transform.DOMove(attackedCreatureObj.transform.position, attackTime).SetEase(Ease.InCubic);
-                        yield return new WaitForSeconds(attackTime);
-                        
-                        controller.DeselectCurrentlySelected();
-
-                        int attackingCraturePower = ((CreatureData) creatureObj.CardInst.CardData).Power;
-                        int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
-
-                        if (attackingCraturePower > attackedCreaturePower)
-                            yield return attackedCreatureObj.SendToGraveyard();
-                        else if (attackingCraturePower == attackedCreaturePower)
-                        {
-                            yield return creatureObj.SendToGraveyard();
-                            creatureObj = null;
-                            yield return attackedCreatureObj.SendToGraveyard();
-                        }
-                        else
-                        {
-                            yield return creatureObj.SendToGraveyard();
-                            creatureObj = null;
-                        }
-
-                        yield return ReturnCreature();
-                    }
+                        attackRoutine = AttackCreatureRoutine(controller, creatureObj, attackedCreatureObj);
                 }
                 else if (target is ShieldObject shieldObj)
+                    attackRoutine = AttackShieldRoutine(controller, creatureObj, shieldObj, isPlayer);
+
+                bool blocked = false;
+                if (true /*creatureObj can be blocked*/)
                 {
-                    creatureObj.transform.DOMove(shieldObj.transform.position, attackTime).SetEase(Ease.InCubic);
-                    yield return new WaitForSeconds(attackTime);
-                    
-                    controller.DeselectCurrentlySelected();
-
-                    PlayerManager opponent = GetManager(!isPlayer);
-                    StartCoroutine(opponent.BreakShieldRoutine(shieldObj));
-
-                    yield return ReturnCreature();
+                    Coroutine<bool> blockRoutine = this.StartCoroutine<bool>(AttemptBlockRoutine(!isPlayer));
+                    yield return blockRoutine.coroutine;
+                    blocked = blockRoutine.returnVal;
                 }
 
-                #region Local Functions
-
-                IEnumerator ReturnCreature()
-                {
-                    if (creatureObj)
-                    {
-                        creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
-                        yield return new WaitForSeconds(attackTime);
-                        creatureObj.ToggleTapState();
-                    }
-                }
-
-                #endregion
+                if (!blocked)
+                    yield return attackRoutine;
             }
         }
     }
-    
+
+    private IEnumerator AttackCreatureRoutine(Controller controller, CreatureObject creatureObj,
+        CreatureObject attackedCreatureObj)
+    {
+        Vector3 creaturePos = creatureObj.transform.position;
+        float attackTime = GameParamsHolder.Instance.AttackTime;
+
+        creatureObj.transform.DOMove(attackedCreatureObj.transform.position, attackTime).SetEase(Ease.InCubic);
+        yield return new WaitForSeconds(attackTime);
+
+        controller.DeselectCurrentlySelected();
+
+        int attackingCraturePower = ((CreatureData) creatureObj.CardInst.CardData).Power;
+        int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
+
+        if (attackingCraturePower > attackedCreaturePower)
+            yield return attackedCreatureObj.SendToGraveyard();
+        else if (attackingCraturePower == attackedCreaturePower)
+        {
+            yield return creatureObj.SendToGraveyard();
+            creatureObj = null;
+            yield return attackedCreatureObj.SendToGraveyard();
+        }
+        else
+        {
+            yield return creatureObj.SendToGraveyard();
+            creatureObj = null;
+        }
+
+        if (creatureObj)
+            yield return ResetCreaturePosRoutine(creaturePos, creatureObj);
+    }
+
+    private IEnumerator AttackShieldRoutine(Controller controller, CreatureObject creatureObj,
+        ShieldObject shieldObj, bool isPlayer)
+    {
+        float attackTime = GameParamsHolder.Instance.AttackTime;
+        Vector3 creaturePos = creatureObj.transform.position;
+
+        creatureObj.transform.DOMove(shieldObj.transform.position, attackTime).SetEase(Ease.InCubic);
+        yield return new WaitForSeconds(attackTime);
+
+        controller.DeselectCurrentlySelected();
+
+        PlayerManager opponent = GetManager(!isPlayer);
+        StartCoroutine(opponent.BreakShieldRoutine(shieldObj));
+
+        yield return ResetCreaturePosRoutine(creaturePos, creatureObj);
+    }
+
+    private IEnumerator AttemptBlockRoutine(bool isPlayer)
+    {
+        Controller controller;
+        if (isPlayer)
+            controller = _playerController;
+        else
+            controller = _opponentController;
+
+        yield break;
+    }
+
+    private IEnumerator ResetCreaturePosRoutine(Vector3 creaturePos, CreatureObject creatureObj)
+    {
+        float attackTime = GameParamsHolder.Instance.AttackTime;
+
+        creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
+        yield return new WaitForSeconds(attackTime);
+        creatureObj.ToggleTapState();
+    }
+
     #endregion
 
     #region Card Effect Processing

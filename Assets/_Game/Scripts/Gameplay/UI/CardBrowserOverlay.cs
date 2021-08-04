@@ -49,15 +49,19 @@ public class CardBrowserOverlay : MonoBehaviour
     private void Start()
     {
         _holderCanvas.SetActive(false);
-
-        _layoutScroll.onValueChanged.AddListener(ArrangePreviews);
-
+        
         Vector3 holderPosition = _holderTransform.localPosition;
         _circleCenter = new Vector3(holderPosition.x, holderPosition.y - _circleRadius, holderPosition.z);
         _circleCentralAxis = new Vector3(holderPosition.x, holderPosition.y, holderPosition.z) - _circleCenter;
         _circleCentralAxis.Normalize();
     }
-    
+
+    private void Update()
+    {
+        if (_holderCanvas.activeInHierarchy) 
+            ArrangePreviews();
+    }
+
     public void ToggleTab(bool enable)
     {
         _layoutHolder.SetActive(enable);
@@ -88,7 +92,9 @@ public class CardBrowserOverlay : MonoBehaviour
             _targetText.text = _upperBound == 1 ? $"Target a{targetingCondition.GetConditionParametersString()}" : $"Target {targetingCondition.GetConditionParametersString()}";
         _submitText.text = "Submit 0";
         _submitButton.interactable = false;
-
+        
+        foreach (CardObject cardObj in cardList)
+            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
         cardList = CardInstance.CheckValidity(cardList, targetingCondition);
 
         _layoutHolder.SetActive(true);
@@ -210,7 +216,7 @@ public class CardBrowserOverlay : MonoBehaviour
             previewLayout.SetHighlight(false);
             _selectedCards.Remove(cardObj);
         }
-        else if (previewLayout.IsValid && selectionCount < _upperBound) 
+        else if (cardObj.IsValid && selectionCount < _upperBound) 
         {
             previewLayout.SetHighlight(true);
             _selectedCards.Add(cardObj);
@@ -249,12 +255,7 @@ public class CardBrowserOverlay : MonoBehaviour
             _layoutScroll.gameObject.SetActive(true);
         }
     }
-
-    private void ArrangePreviews(float scrollValue)
-    {
-        ArrangePreviews();
-    }
-
+    
     private void ArrangePreviews()
     {
         float cardWidth = _cardAreaWidth * 2 / _adjustedDisplayNo;
@@ -330,6 +331,9 @@ public class CardBrowserOverlay : MonoBehaviour
 
                     rotAddendum = Mathf.Lerp(0, _edgeRotZAdjustment, diffVal);
                     posAddendum = Vector3.Lerp(Vector3.zero, edgePosAdjustment, diffVal);
+
+                    if (!previewTransform.gameObject.activeInHierarchy)
+                        previewTransform.gameObject.SetActive(true);
                 }
             }
             else if (i >= adjustedScrollVal && i <= adjustedScrollVal + _adjustedDisplayNo)
@@ -338,6 +342,9 @@ public class CardBrowserOverlay : MonoBehaviour
 
                 float offset = (i - adjustedScrollVal - (float)_adjustedDisplayNo / 2 + 1) * cardWidth;
                 previewPos = new Vector3(startPos.x + offset, startPos.y, startPos.z);
+
+                if (!previewTransform.gameObject.activeInHierarchy)
+                    previewTransform.gameObject.SetActive(true);
             }
             else if (i > adjustedScrollVal + _adjustedDisplayNo)
             {
@@ -385,6 +392,9 @@ public class CardBrowserOverlay : MonoBehaviour
                 {
                     if (previewCanvas.sortingOrder != _overlaySortingLayerFloor)
                         previewCanvas.sortingOrder = _overlaySortingLayerFloor;
+                    
+                    if (!previewTransform.gameObject.activeInHierarchy)
+                        previewTransform.gameObject.SetActive(true);
 
                     rotAddendum = Mathf.Lerp(0, -_edgeRotZAdjustment, diffVal);
                     posAddendum = Vector3.Lerp(Vector3.zero, _edgePosAdjustments[0], diffVal);

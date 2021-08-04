@@ -59,16 +59,16 @@ public class CardInstance
         foreach (CardObject cardObj in cardList)
         {
             if (targetingCondition == null ||
-                CardData.IsTargetingConditionSatisfied(cardObj.CardInst, targetingCondition)) 
+                CardData.IsTargetingConditionSatisfied(cardObj.CardInst, targetingCondition))
             {
-                cardObj.PreviewLayoutHandler.SetValidity(true);
+                cardObj.IsValid = true;
                 if (setHighlight) 
                     cardObj.SetHighlight(true);
 
                 validCards.Add(cardObj);
             }
             else
-                cardObj.PreviewLayoutHandler.SetValidity(false);
+                cardObj.IsValid = false;
         }
         
         foreach (CardObject cardObj in validCards)

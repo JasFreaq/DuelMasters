@@ -8,7 +8,7 @@ public class Controller : MonoBehaviour
     protected CardObject _targetedCard;
     protected ShieldObject _targetedShield;
 
-    protected bool _isPlayer;
+    protected bool _isPlayer, _attemptBlock;
 
     public CardObject CurrentlySelected
     {
@@ -114,5 +114,9 @@ public class Controller : MonoBehaviour
             GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
         }
     }
-    
+
+    protected virtual void ProcessBlocking()
+    {
+
+    }
 }

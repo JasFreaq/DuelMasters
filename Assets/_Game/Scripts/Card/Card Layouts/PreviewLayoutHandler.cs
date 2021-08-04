@@ -11,18 +11,12 @@ public class PreviewLayoutHandler : MonoBehaviour
 
     private CardLayoutHandler _cardLayoutHandler;
     private EventTrigger _canvasEventTrigger;
-
-    private bool _isValid;
-    private bool _isHighlighted;
+    
+    private bool _activeInCardBrowser, _isHighlighted;
     
     public Canvas Canvas
     {
         get { return _cardLayoutHandler.Canvas; }
-    }
-
-    public bool IsValid
-    {
-        get { return _isValid; }
     }
     
     public bool IsHighlighted
@@ -45,11 +39,16 @@ public class PreviewLayoutHandler : MonoBehaviour
     {
         _cardLayoutHandler.SetupCard(cardData, cardFrameData);
     }
-    
-    public void SetValidity(bool isValid)
+
+    public void SetActiveInBrowser()
     {
-        _isValid = isValid;
-        _invalidOverlay.SetActive(!isValid);
+        _activeInCardBrowser = true;
+    }
+
+    public void SetInvalidOverlay(bool isValid)
+    {
+        if (_activeInCardBrowser)
+            _invalidOverlay.SetActive(!isValid);
     }
 
     public void SetHighlight(bool highlight)
@@ -60,11 +59,14 @@ public class PreviewLayoutHandler : MonoBehaviour
 
     public void ResetStates()
     {
-        _isValid = false;
-        _invalidOverlay.SetActive(false);
+        if (_activeInCardBrowser)
+        {
+            _activeInCardBrowser = false;
+            _invalidOverlay.SetActive(false);
 
-        _isHighlighted = false;
-        _cardLayoutHandler.SetGlow(false);
+            _isHighlighted = false;
+            _cardLayoutHandler.SetGlow(false);
+        }
     }
 
     #region Event Trigger Methods

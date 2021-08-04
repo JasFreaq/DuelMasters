@@ -366,7 +366,7 @@ public class PlayerController : Controller
                 {
                     foreach (CardBehaviour card in _selectionRange)
                     {
-                        if (_targetedCard == card && _targetedCard.PreviewLayoutHandler.IsValid) 
+                        if (_targetedCard == card && _targetedCard.IsValid) 
                         {
                             if (!_cardSelections.Contains(_targetedCard) && _cardSelections.Count < _selectionUpperBound) 
                             {
