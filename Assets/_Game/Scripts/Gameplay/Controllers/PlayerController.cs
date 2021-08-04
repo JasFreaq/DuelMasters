@@ -64,19 +64,14 @@ public class PlayerController : Controller
 
                 if (_hoverState == HoverState.Hover && _canSelect && Input.GetMouseButtonDown(0))
                     ProcessInput(iD);
-
+                
                 if (_gameManager.CurrentStep == GameStepType.AttackStep)
                 {
                     if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone))
-                    {
                         TargetingLinesHandler.Instance.SetLine(hit.point);
-                    }
                 }
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-            _selectionMade = true;
     }
 
     public void EnableFullControl(bool enable)
@@ -89,6 +84,7 @@ public class PlayerController : Controller
     {
         base.DeselectCurrentlySelected();
 
+        //TargetingLinesHandler.Instance.DisableLines();
         StartCoroutine(DelayedDeselectRoutine());
 
         #region Local Functions

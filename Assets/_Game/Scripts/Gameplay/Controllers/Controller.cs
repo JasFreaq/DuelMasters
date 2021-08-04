@@ -49,7 +49,8 @@ public class Controller : MonoBehaviour
                     if (_currentlySelected.CardInst.CanAttack())
                     {
                         _currentlySelected.SetHighlight(true);
-                        TargetingLinesHandler.Instance.EnableLine(_currentlySelected.transform.position);
+                        if (_currentlySelected.InZone(CardZoneType.BattleZone))
+                            TargetingLinesHandler.Instance.EnableLine(_currentlySelected.transform.position);
                     }
                     else
                         _currentlySelected = null;

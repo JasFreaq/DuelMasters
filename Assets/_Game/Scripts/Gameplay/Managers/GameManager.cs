@@ -247,6 +247,8 @@ public class GameManager : MonoBehaviour
             {
                 TargetingLinesHandler.Instance.DisableLines();
 
+                //TODO: Blocking Implementation
+
                 CreatureObject creatureObj = (CreatureObject) selectedCardObj;
                 float attackTime = GameParamsHolder.Instance.AttackTime;
                 Vector3 creaturePos = creatureObj.transform.position;

@@ -80,8 +80,6 @@ public class TargetingLinesHandler : MonoBehaviour
             linePositions[count - 1] = endPosition;
             _activeLine.SetPositions(linePositions);
         }
-        else
-            Debug.LogError("Attempt to set line rendered end position without an active line.");
     }
 
     public void DisableLines()
@@ -90,17 +88,13 @@ public class TargetingLinesHandler : MonoBehaviour
         if (n > _beginningLines) 
         {
             for (int i = _beginningLines; i < n; i++)
-            {
                 Destroy(_lines[i].gameObject);
-            }
 
             _lines.RemoveRange(_beginningLines, n);
         }
 
         foreach (LineRenderer line in _lines)
-        {
             line.gameObject.SetActive(false);
-        }
 
         _activeLine = null;
     }
