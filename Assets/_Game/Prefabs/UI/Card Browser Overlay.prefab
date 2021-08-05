@@ -701,7 +701,7 @@ MonoBehaviour:
   _layoutHolder: {fileID: 3345647308296180244}
   _chooseText: {fileID: 3345647307552796686}
   _targetText: {fileID: 3345647309055980979}
-  _layoutScroll: {fileID: 3345647308412493662}
+  _layoutScroll: {fileID: 1603021943}
   _submitButton: {fileID: 3345647309444978571}
   _cancelButton: {fileID: 3345647308774236424}
   _submitText: {fileID: 3345647307680026004}
@@ -719,6 +719,7 @@ MonoBehaviour:
   _holderTransform: {fileID: 3345647308110390672}
   _hoverScaleMultiplier: 1.5
   _resetBufferFrames: 24
+  _previewsBufferFrames: 3
 --- !u!1 &3345647308296180244
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,7 +774,7 @@ GameObject:
   - component: {fileID: 3345647308412493657}
   - component: {fileID: 3345647308412493660}
   - component: {fileID: 3345647308412493663}
-  - component: {fileID: 3345647308412493662}
+  - component: {fileID: 1603021943}
   m_Layer: 5
   m_Name: Layout Scrollbar
   m_TagString: Untagged
@@ -839,7 +840,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3345647308412493662
+--- !u!114 &1603021943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -848,7 +849,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3345647308412493656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+  m_Script: {fileID: 11500000, guid: bc58bbb8f89fc404086b0efbad4ab573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -882,7 +883,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3345647309042006879}
   m_HandleRect: {fileID: 3345647309042006878}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.2
   m_NumberOfSteps: 0
   m_OnValueChanged:

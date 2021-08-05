@@ -70,3 +70,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 /[Aa]ssets/[Mm]irror/[Ee]xamples
+
+#Test Folder
+/[Aa]ssets/_[Gg]ame/_[Tt]est/
+/[Aa]ssets/_[Gg]ame/_[Tt]est.meta

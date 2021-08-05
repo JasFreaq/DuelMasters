@@ -145,9 +145,6 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
                 case CardParams.CardType.EvolutionCreature:
                     switch (cardData.CardType)
                     {
-                        case CardParams.CardType.EvolutionCreature:
-                            result = true;
-                            break;
                         case CardParams.CardType.Creature:
                         case CardParams.CardType.Spell:
                             result = false;
@@ -158,10 +155,6 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
                 case CardParams.CardType.Creature:
                     switch (cardData.CardType)
                     {
-                        case CardParams.CardType.EvolutionCreature:
-                        case CardParams.CardType.Creature:
-                            result = true;
-                            break;
                         case CardParams.CardType.Spell:
                             result = false;
                             break;
@@ -175,13 +168,9 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
                         case CardParams.CardType.Creature:
                             result = false;
                             break;
-                        case CardParams.CardType.Spell:
-                            result = true;
-                            break;
                     }
                     break;
             }
-            result = cardData.CardType == targetingCondition.CardTypeCondition;
         }
 
         if (targetingCondition.CivilizationConditions.Count > 0)

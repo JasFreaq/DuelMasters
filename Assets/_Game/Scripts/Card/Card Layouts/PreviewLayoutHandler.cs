@@ -75,8 +75,36 @@ public class PreviewLayoutHandler : MonoBehaviour
     {
         _canvasEventTrigger.enabled = enable;
     }
-    
-    public void AddOnClickEvent(Action<CardObject> action, CardObject cardObj)
+
+    public void AddCanvasEventTriggers(Action<CardObject> enterAction, Action<CardObject> clickAction, Action<CardObject> exitAction,
+        CardObject cardObj)
+    {
+        AddOnEnterEvent(enterAction, cardObj);
+        AddOnClickEvent(clickAction, cardObj);
+        AddOnExitEvent(exitAction, cardObj);
+    }
+
+    public void RemoveCanvasEventTriggers()
+    {
+        RemoveOnEnterEvent();
+        RemoveOnClickEvent();
+        RemoveOnExitEvent();
+    }
+
+    private void AddOnEnterEvent(Action<CardObject> action, CardObject cardObj)
+    {
+        if (TriggerContainsOnEnter() == null)
+        {
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerEnter
+            };
+            entry.callback.AddListener(arg0 => action.Invoke(cardObj));
+            _canvasEventTrigger.triggers.Add(entry);
+        }
+    }
+
+    private void AddOnClickEvent(Action<CardObject> action, CardObject cardObj)
     {
         if (TriggerContainsOnClick() == null) 
         {
@@ -89,19 +117,76 @@ public class PreviewLayoutHandler : MonoBehaviour
         }
     }
 
-    public void RemoveOnClickEvent()
+    private void AddOnExitEvent(Action<CardObject> action, CardObject cardObj)
+    {
+        if (TriggerContainsOnExit() == null)
+        {
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerExit
+            };
+            entry.callback.AddListener(arg0 => action.Invoke(cardObj));
+            _canvasEventTrigger.triggers.Add(entry);
+        }
+    }
+
+    private void RemoveOnEnterEvent()
+    {
+        EventTrigger.Entry entry = TriggerContainsOnEnter();
+        if (entry != null)
+            _canvasEventTrigger.triggers.Remove(entry);
+    }
+
+    private void RemoveOnClickEvent()
     {
         EventTrigger.Entry entry = TriggerContainsOnClick();
         if (entry != null)
             _canvasEventTrigger.triggers.Remove(entry);
     }
+
+    private void RemoveOnExitEvent()
+    {
+        EventTrigger.Entry entry = TriggerContainsOnExit();
+        if (entry != null)
+            _canvasEventTrigger.triggers.Remove(entry);
+    }
     
+    private EventTrigger.Entry TriggerContainsOnEnter()
+    {
+        EventTrigger.Entry entry = null;
+        foreach (EventTrigger.Entry entryTrigger in _canvasEventTrigger.triggers)
+        {
+            if (entryTrigger.eventID == EventTriggerType.PointerEnter)
+            {
+                entry = entryTrigger;
+                break;
+            }
+        }
+
+        return entry;
+    }
+
     private EventTrigger.Entry TriggerContainsOnClick()
     {
         EventTrigger.Entry entry = null;
         foreach (EventTrigger.Entry entryTrigger in _canvasEventTrigger.triggers)
         {
             if (entryTrigger.eventID == EventTriggerType.PointerClick)
+            {
+                entry = entryTrigger;
+                break;
+            }
+        }
+
+        return entry;
+    }
+
+    private EventTrigger.Entry TriggerContainsOnExit()
+    {
+        EventTrigger.Entry entry = null;
+        foreach (EventTrigger.Entry entryTrigger in _canvasEventTrigger.triggers)
+        {
+            if (entryTrigger.eventID == EventTriggerType.PointerExit)
             {
                 entry = entryTrigger;
                 break;

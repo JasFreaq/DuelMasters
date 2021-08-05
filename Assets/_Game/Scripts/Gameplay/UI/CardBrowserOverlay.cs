@@ -12,12 +12,11 @@ public class CardBrowserOverlay : MonoBehaviour
 {
     private static Vector3 OriginalPreviewScale = new Vector3(0.0184625f, 0.018035f, 1f);
     
-
     [SerializeField] private GameObject _holderCanvas;
     [SerializeField] private GameObject _layoutHolder;
     [SerializeField] private TextMeshProUGUI _chooseText;
     [SerializeField] private TextMeshProUGUI _targetText;
-    [SerializeField] private Scrollbar _layoutScroll;
+    [SerializeField] private ExtendedScrollbar _layoutScroll;
     [SerializeField] private Button _submitButton;
     [SerializeField] private Button _cancelButton;
     [SerializeField] private TextMeshProUGUI _submitText;
@@ -34,6 +33,7 @@ public class CardBrowserOverlay : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private float _hoverScaleMultiplier = 1.5f;
     [SerializeField] private int _resetBufferFrames = 30;
+    [SerializeField] private int _previewsBufferFrames = 3;
 
     private readonly List<CardObject> _selectedCards = new List<CardObject>();
     private readonly List<Canvas> _previewCanvases = new List<Canvas>();
@@ -46,9 +46,13 @@ public class CardBrowserOverlay : MonoBehaviour
     private Vector3 _circleCenter;
     private Vector3 _circleCentralAxis;
 
+    private Coroutine _rearrangePreviewsRoutine = null;
+
     private void Start()
     {
         _holderCanvas.SetActive(false);
+        
+        _layoutScroll.onValueChanged.AddListener(ArrangePreviews);
         
         Vector3 holderPosition = _holderTransform.localPosition;
         _circleCenter = new Vector3(holderPosition.x, holderPosition.y - _circleRadius, holderPosition.z);
@@ -56,12 +60,8 @@ public class CardBrowserOverlay : MonoBehaviour
         _circleCentralAxis.Normalize();
     }
 
-    private void Update()
-    {
-        if (_holderCanvas.activeInHierarchy) 
-            ArrangePreviews();
-    }
-
+    #region UI Methods
+    
     public void ToggleTab(bool enable)
     {
         _layoutHolder.SetActive(enable);
@@ -79,6 +79,8 @@ public class CardBrowserOverlay : MonoBehaviour
         _selectedCards.Clear();
         SubmitSelection();
     }
+
+    #endregion
 
     #region Functionality Methods
 
@@ -143,12 +145,9 @@ public class CardBrowserOverlay : MonoBehaviour
             cardObj.PreviewLayoutHandler.SetActiveInBrowser();
             cardObj.SetValidity(targetingCondition);
             if (cardObj.IsValid)
-            {
-                cardObj.SetHighlight(true);
                 validCards.Add(cardObj);
-            }
         }
-        
+
         foreach (CardObject cardObj in validCards)
             cardList.Remove(cardObj);
 
@@ -167,7 +166,8 @@ public class CardBrowserOverlay : MonoBehaviour
                 previewScale * _hoverScaleMultiplier);
 
             cardObj.PreviewLayoutHandler.EnableCanvasEventTrigger(true);
-            cardObj.PreviewLayoutHandler.AddOnClickEvent(SelectCard, cardObj);
+            cardObj.PreviewLayoutHandler.AddCanvasEventTriggers(OnEnterCard, OnClickCard, 
+                OnExitCard, cardObj);
 
             Canvas previewCanvas = cardObj.PreviewLayoutHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
@@ -194,7 +194,7 @@ public class CardBrowserOverlay : MonoBehaviour
 
             cardObj.PreviewLayoutHandler.ResetStates();
             cardObj.PreviewLayoutHandler.EnableCanvasEventTrigger(false);
-            cardObj.PreviewLayoutHandler.RemoveOnClickEvent();
+            cardObj.PreviewLayoutHandler.RemoveCanvasEventTriggers();
 
             Canvas previewCanvas = cardObj.PreviewLayoutHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
@@ -224,7 +224,13 @@ public class CardBrowserOverlay : MonoBehaviour
         }
     }
 
-    private void SelectCard(CardObject cardObj)
+    private void OnEnterCard(CardObject cardObj)
+    {
+        if (!_layoutScroll.IsPressed) 
+            cardObj.ProcessMouseEnter();
+    }
+    
+    private void OnClickCard(CardObject cardObj)
     {
         int selectionCount = _selectedCards.Count;
 
@@ -254,6 +260,12 @@ public class CardBrowserOverlay : MonoBehaviour
         _submitText.text = $"Submit {selectionCount}";
     }
 
+    private void OnExitCard(CardObject cardObj)
+    {
+        if (!_layoutScroll.IsPressed)
+            cardObj.ProcessMouseExit();
+    }
+
     #endregion
 
     #region Layout Methods
@@ -273,7 +285,28 @@ public class CardBrowserOverlay : MonoBehaviour
             _layoutScroll.gameObject.SetActive(true);
         }
     }
-    
+
+    private void ArrangePreviews(float value)
+    {
+        ArrangePreviews();
+
+        if (_rearrangePreviewsRoutine == null)
+            _rearrangePreviewsRoutine = StartCoroutine(RearrangePreviewsRoutine());
+    }
+
+    IEnumerator RearrangePreviewsRoutine()
+    {
+        int count = _previewsBufferFrames;
+        while (count > 0)
+        {
+            count--;
+            yield return new WaitForEndOfFrame();
+            ArrangePreviews();
+        }
+
+        _rearrangePreviewsRoutine = null;
+    }
+
     private void ArrangePreviews()
     {
         float cardWidth = _cardAreaWidth * 2 / _adjustedDisplayNo;
