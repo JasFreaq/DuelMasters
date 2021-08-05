@@ -83,7 +83,7 @@ public class CardBrowserOverlay : MonoBehaviour
     #region Functionality Methods
 
     public IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList,
-        EffectTargetingCondition targetingCondition = null)
+        EffectTargetingCondition targetingCondition)
     {
         _lowerBound = lower;
         _upperBound = upper;
@@ -92,11 +92,9 @@ public class CardBrowserOverlay : MonoBehaviour
             _targetText.text = _upperBound == 1 ? $"Target a{targetingCondition.GetConditionParametersString()}" : $"Target {targetingCondition.GetConditionParametersString()}";
         _submitText.text = "Submit 0";
         _submitButton.interactable = false;
-        
-        foreach (CardObject cardObj in cardList)
-            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
-        cardList = CardInstance.CheckValidity(cardList, targetingCondition);
 
+        CheckAndArrangeValidCards(cardList, targetingCondition);
+        
         _layoutHolder.SetActive(true);
         
         SetCards(cardList);
@@ -122,7 +120,7 @@ public class CardBrowserOverlay : MonoBehaviour
     }
 
     public IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict,
-        EffectTargetingCondition targetingCondition = null)
+        EffectTargetingCondition targetingCondition)
     {
         List<CardObject> cardList = new List<CardObject>();
         foreach (KeyValuePair<int, CardObject> pair in cardDict)
@@ -137,6 +135,26 @@ public class CardBrowserOverlay : MonoBehaviour
         yield return routine.returnVal;
     }
 
+    private void CheckAndArrangeValidCards(List<CardObject> cardList, EffectTargetingCondition targetingCondition)
+    {
+        List<CardObject> validCards = new List<CardObject>();
+        foreach (CardObject cardObj in cardList)
+        {
+            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
+            cardObj.SetValidity(targetingCondition);
+            if (cardObj.IsValid)
+            {
+                cardObj.SetHighlight(true);
+                validCards.Add(cardObj);
+            }
+        }
+        
+        foreach (CardObject cardObj in validCards)
+            cardList.Remove(cardObj);
+
+        cardList.AddRange(validCards);
+    }
+
     private void SetCards(List<CardObject> cardList)
     {
         Vector3 previewScale = OriginalPreviewScale * new Vector2(_previewScaleMultiplier, _previewScaleMultiplier);
@@ -144,7 +162,7 @@ public class CardBrowserOverlay : MonoBehaviour
         {
             cardObj.HoverPreviewHandler.PreviewEnabled = true;
             cardObj.HoverPreviewHandler.InPlayerHand = false;
-            cardObj.HoverPreviewHandler.InCardSelection = true;
+            cardObj.HoverPreviewHandler.InCardBrowser = true;
             cardObj.HoverPreviewHandler.SetPreviewParameters(_overlaySortingLayerCeiling, previewScale,
                 previewScale * _hoverScaleMultiplier);
 
@@ -172,7 +190,7 @@ public class CardBrowserOverlay : MonoBehaviour
         {
             cardObj.HoverPreviewHandler.ResetPreviewEnabled();
             cardObj.HoverPreviewHandler.ResetInPlayerHand();
-            cardObj.HoverPreviewHandler.InCardSelection = false;
+            cardObj.HoverPreviewHandler.InCardBrowser = false;
 
             cardObj.PreviewLayoutHandler.ResetStates();
             cardObj.PreviewLayoutHandler.EnableCanvasEventTrigger(false);

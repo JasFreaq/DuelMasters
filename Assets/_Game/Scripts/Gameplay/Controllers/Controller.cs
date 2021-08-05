@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,15 @@ public class Controller : MonoBehaviour
     protected CardObject _currentlySelected;
     protected CardObject _targetedCard;
     protected ShieldObject _targetedShield;
+    protected bool _isPlayer;
 
-    protected bool _isPlayer, _attemptBlock;
+    protected bool _attemptBlock;
+
+    protected List<CardBehaviour> _selectionRange;
+    protected List<CardObject> _cardSelections = new List<CardObject>();
+    protected List<ShieldObject> _shieldSelections = new List<ShieldObject>();
+    protected int _selectionLowerBound, _selectionUpperBound;
+    protected bool _selectMultiple, _selectCard = true, _selectionMade;
 
     public CardObject CurrentlySelected
     {
@@ -26,12 +34,11 @@ public class Controller : MonoBehaviour
         {
             if (_currentlySelected) 
                 DeselectCurrentlySelected();
-
-            _currentlySelected = cardObj;
-
+            
             switch (GameManager.Instance.CurrentStep)
             {
                 case GameStepType.ChargeStep:
+                    _currentlySelected = cardObj;
                     _currentlySelected.SetHighlight(true);
                     break;
 
@@ -39,13 +46,16 @@ public class Controller : MonoBehaviour
                     PlayerManager player = GameManager.Instance.GetManager(true);
                     foreach (CardObject cardObj0 in player.PlayableCards)
                     {
-                        if (cardObj0 != _currentlySelected)
+                        if (cardObj0 == _currentlySelected)
+                            _currentlySelected = cardObj;
+                        else
                             cardObj0.SetHighlight(false);
                     }
 
                     break;
 
                 case GameStepType.AttackStep:
+                    _currentlySelected = cardObj;
                     if (_currentlySelected.CardInst.CanAttack())
                     {
                         _currentlySelected.SetHighlight(true);
@@ -102,21 +112,146 @@ public class Controller : MonoBehaviour
                 _targetedCard.ProcessMouseDown();
                 SelectCard(_targetedCard);
             }
-            else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD))
+            else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD)
+                     && GameManager.Instance.CurrentStep == GameStepType.AttackStep) 
             {
                 //if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
                 GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
             }
         }
-        else if (_targetedShield)
+        else if (_targetedShield && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
         {
             //if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
             GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
         }
     }
 
-    protected virtual void ProcessBlocking()
+    public IEnumerator ProcessBlockingRoutine()
     {
+        List<CreatureObject> blockers = GameDataHandler.Instance.GetDataHandler(_isPlayer).BlockersInBattle;
+        List<CardBehaviour> selectedCards;
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(1, 1, true, new List<CardBehaviour>(blockers), null));
+        yield return routine.coroutine;
+        selectedCards = routine.returnVal;
 
+        if (selectedCards.Count == 1)
+            yield return (CreatureObject) selectedCards[0];
+        else
+            yield return null;
     }
+
+    #region Multiple Card Selection Methods
+
+    public void SubmitSelection()
+    {
+        _selectionMade = true;
+    }
+
+    public void CancelSelection()
+    {
+        _cardSelections.Clear();
+        _shieldSelections.Clear();
+        SubmitSelection();
+    }
+
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<ShieldObject> shieldList)
+    {
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
+                new List<CardBehaviour>(shieldList), null));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard,
+        Dictionary<int, CreatureObject> creatureDict, EffectTargetingCondition targetingCondition)
+    {
+        List<CardBehaviour> cards = new List<CardBehaviour>();
+        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict)
+        {
+            CardBehaviour card = pair.Value;
+            cards.Add(card);
+        }
+
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
+                targetingCondition));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CardObject> cardDict,
+        EffectTargetingCondition targetingCondition)
+    {
+        List<CardBehaviour> cards = new List<CardBehaviour>();
+        foreach (KeyValuePair<int, CardObject> pair in cardDict)
+        {
+            CardBehaviour card = pair.Value;
+            cards.Add(card);
+        }
+
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
+                targetingCondition));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+
+    protected virtual IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
+        EffectTargetingCondition targetingCondition)
+    {
+        _selectionLowerBound = lower;
+        _selectionUpperBound = upper;
+
+        _selectMultiple = true;
+        _selectCard = selectCard;
+        if (_selectCard)
+        {
+            foreach (CardBehaviour card in cards)
+            {
+                CardObject cardObj = (CardObject) card;
+                cardObj.SetValidity(targetingCondition);
+                if (cardObj.IsValid)
+                    cardObj.SetHighlight(true);
+            }
+        }
+        _selectionRange = cards;
+        
+        while (!_selectionMade)
+            yield return new WaitForEndOfFrame();
+
+        List<CardBehaviour> selectedCards;
+        if (_selectCard)
+        {
+            foreach (CardBehaviour card in _selectionRange)
+            {
+                CardObject cardObj = (CardObject) card;
+                cardObj.SetHighlightColor(true);
+                cardObj.SetHighlight(false);
+            }
+
+            selectedCards = new List<CardBehaviour>(_cardSelections);
+            _cardSelections.Clear();
+        }
+        else
+        {
+            foreach (ShieldObject shieldObj in _shieldSelections)
+            {
+                shieldObj.KeepHighlighted = false;
+                shieldObj.SetHighlight(false);
+            }
+            
+            selectedCards = new List<CardBehaviour>(_shieldSelections);
+            _shieldSelections.Clear();
+        }
+
+        _selectMultiple = false;
+        _selectionMade = false;
+        _selectionRange.Clear();
+        
+        yield return selectedCards;
+    }
+    
+    #endregion
 }

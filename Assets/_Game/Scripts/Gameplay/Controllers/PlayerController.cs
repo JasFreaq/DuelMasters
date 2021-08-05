@@ -15,20 +15,14 @@ public class PlayerController : Controller
     #endregion
 
     [SerializeField] private ActionButtonOverlay _actionOverlay;
-    [SerializeField] private int _deselectDelayBufferFrames = 30;
+    [SerializeField] private int _deselectDelayBufferFrames = 24;
 
     private Camera _mainCamera = null;
     private GameManager _gameManager = null;
 
     private bool _canInteract, _canSelect, _canSelectShield;
     private HoverState _hoverState = HoverState.None;
-
-    private List<CardBehaviour> _selectionRange = new List<CardBehaviour>();
-    private List<CardObject> _cardSelections = new List<CardObject>();
-    private List<ShieldObject> _shieldSelections = new List<ShieldObject>();
-    private int _selectionLowerBound, _selectionUpperBound;
-    private bool _selectMultiple, _selectCard = true, _selectionMade;
-
+    
     public bool CanInteract
     {
         set { _canInteract = value; }
@@ -245,117 +239,7 @@ public class PlayerController : Controller
 
         #endregion
     }
-
-    #region Multiple Cards Selection Methods
     
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<ShieldObject> shieldList)
-    {
-        Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
-                new List<CardBehaviour>(shieldList)));
-        yield return routine.coroutine;
-        yield return routine.returnVal;
-    }
-
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard,
-        Dictionary<int, CreatureObject> creatureDict, EffectTargetingCondition targetingCondition = null)
-    {
-        List<CardBehaviour> cards = new List<CardBehaviour>();
-        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict)
-        {
-            CardBehaviour card = pair.Value;
-            cards.Add(card);
-        }
-
-        Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
-                targetingCondition));
-        yield return routine.coroutine;
-        yield return routine.returnVal;
-    }
-
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CardObject> cardDict,
-        EffectTargetingCondition targetingCondition = null)
-    {
-        List<CardBehaviour> cards = new List<CardBehaviour>();
-        foreach (KeyValuePair<int, CardObject> pair in cardDict)
-        {
-            CardBehaviour card = pair.Value;
-            cards.Add(card);
-        }
-
-        Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
-                targetingCondition));
-        yield return routine.coroutine;
-        yield return routine.returnVal;
-    }
-
-    private IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
-        EffectTargetingCondition targetingCondition = null)
-    {
-        _selectionLowerBound = lower;
-        _selectionUpperBound = upper;
-
-        _selectMultiple = true;
-        _selectCard = selectCard;
-        if (_selectCard)
-            cards = CardInstance.CheckValidity(cards, targetingCondition);
-        _selectionRange = cards;
-        
-        _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
-        _actionOverlay.AdjustCardSelectionButtons(_selectionLowerBound, _selectionUpperBound, 0);
-
-        while (!_selectionMade)
-            yield return new WaitForEndOfFrame();
-
-        List<CardBehaviour> selectedCards;
-        if (_selectCard)
-        {
-            foreach (CardBehaviour card in _selectionRange)
-            {
-                CardObject cardObj = (CardObject) card;
-                cardObj.SetHighlightColor(true);
-                cardObj.SetHighlight(false);
-            }
-                
-            selectedCards = new List<CardBehaviour>(_cardSelections);
-            _cardSelections.Clear();
-        }
-        else
-        {
-            selectedCards = new List<CardBehaviour>(_shieldSelections);
-            foreach (ShieldObject shieldObj in _shieldSelections)
-            {
-                shieldObj.KeepHighlighted = false;
-                shieldObj.SetHighlight(false);
-            }
-            _shieldSelections.Clear();
-        }
-
-        _selectMultiple = false;
-        _selectionMade = false;
-        _selectionRange.Clear();
-
-        _actionOverlay.DeactivateButtons();
-
-        yield return selectedCards;
-    }
-
-    private void SubmitSelection()
-    {
-        _selectionMade = true;
-    }
-
-    private void CancelSelection()
-    {
-        _cardSelections.Clear();
-        _shieldSelections.Clear();
-        SubmitSelection();
-    }
-
-    #endregion
-
     protected override void ProcessInput(int iD)
     {
         if (_selectMultiple)
@@ -419,4 +303,24 @@ public class PlayerController : Controller
         else
             base.ProcessInput(iD);
     }
+
+    #region Multiple Cards Selection Methods
+
+    protected override IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
+        EffectTargetingCondition targetingCondition = null)
+    {
+        _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
+        _actionOverlay.AdjustCardSelectionButtons(lower, upper, 0);
+
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(base.SelectCardsRoutine(lower, upper, selectCard, cards,
+                targetingCondition));
+        yield return routine.coroutine;
+
+        _actionOverlay.DeactivateButtons();
+
+        yield return routine.returnVal;
+    }
+    
+    #endregion
 }

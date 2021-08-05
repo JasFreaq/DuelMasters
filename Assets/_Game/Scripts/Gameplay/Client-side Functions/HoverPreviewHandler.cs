@@ -21,10 +21,8 @@ public class HoverPreviewHandler: MonoBehaviour
     private int _cardSelectionMaxSortOrder, _cardSelectionOriginalSortOrder;
 
     private bool _previewEnabled, _previewWasEnabled;
-    private bool _inPlayerHand, _wasInPlayerHand;
-    private bool _inCardSelection;
-    private bool _isPreviewing;
-    private bool _shouldStopPreview = true;
+    private bool _inPlayerHand, _wasInPlayerHand, _inCardBrowser;
+    private bool _isPreviewing, _shouldStopPreview = true;
 
     private Action _onBeginPlayerHandPreview;
 
@@ -46,9 +44,9 @@ public class HoverPreviewHandler: MonoBehaviour
         }
     }
     
-    public bool InCardSelection
+    public bool InCardBrowser
     {
-        set { _inCardSelection = value; }
+        set { _inCardBrowser = value; }
     }
 
     public bool ShouldStopPreview
@@ -133,7 +131,7 @@ public class HoverPreviewHandler: MonoBehaviour
 
     private IEnumerator StartPreviewRoutine()
     {
-        if (!(_inPlayerHand || _inCardSelection)) 
+        if (!(_inPlayerHand || _inCardBrowser)) 
             yield return new WaitForSeconds(GameParamsHolder.Instance.HoverBeforePreviewTime);
         
         // save this HoverPreview as current
@@ -167,12 +165,12 @@ public class HoverPreviewHandler: MonoBehaviour
 
             Vector3 previewPosition = _handPreviewPosition;
             previewPosition.x = transform.position.x;
-
+            
             transform.DOMove(previewPosition, transitionTime).SetEase(Ease.OutSine);
             transform.DORotateQuaternion(_handPreviewRotation, transitionTime).SetEase(Ease.OutSine);
             transform.DOScale(_handPreviewScale, transitionTime).SetEase(Ease.OutSine);
         }
-        else if (_inCardSelection)
+        else if (_inCardBrowser)
         {
             Canvas previewCanvas = _previewLayoutHandler.Canvas;
             Transform previewTransform = previewCanvas.transform;
@@ -195,7 +193,7 @@ public class HoverPreviewHandler: MonoBehaviour
         {
             if (!_isPreviewing)
                 _isPreviewing = true;
-            
+
             Transform hoverIntermediate = GameParamsHolder.Instance.HoverIntermediateTransform;
 
             //Flip X of position if Preview overlaps transform in ScreenPoint
@@ -240,7 +238,7 @@ public class HoverPreviewHandler: MonoBehaviour
 
                 _previewStopRoutine = StartCoroutine(StopPreviewRoutine(transitionTime));
             }
-            else if (_inCardSelection)
+            else if (_inCardBrowser)
             {
                 _previewLayoutHandler.Canvas.sortingOrder = _cardSelectionOriginalSortOrder;
 

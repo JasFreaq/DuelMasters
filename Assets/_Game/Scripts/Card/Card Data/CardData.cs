@@ -1,9 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CardData : ScriptableObject, ISerializationCallbackReceiver
 {
+    #region Static Data Members
+
+    public static EffectTargetingCondition BlockerCondition = new EffectTargetingCondition();
+
+    #endregion
+
     [SerializeField] private string _name;
     [SerializeField] private CardParams.Set _set;
     [SerializeField] private CardParams.Civilization[] _civilization;
@@ -16,6 +23,8 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
 
     [HideInInspector] public List<EffectData> ruleEffects = new List<EffectData>();
     [HideInInspector] [SerializeField] private KeywordType[] _keywords;
+
+    #region Properties
 
     public string Name
     {
@@ -94,6 +103,14 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         get { return _keywords; }
     }
 
+    #endregion
+
+    private void Awake()
+    {
+        if (BlockerCondition.KeywordConditions.Count == 0)
+            BlockerCondition.AddKeywordCondition(new KeywordCondition { keyword = KeywordType.Blocker });
+    }
+
     public void OnBeforeSerialize()
     {
         List<KeywordType> keywordTypes = new List<KeywordType>();
@@ -122,7 +139,50 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         CardData cardData = cardInst.CardData;
 
         if (targetingCondition.AssignedCardTypeCondition)
+        {
+            switch (targetingCondition.CardTypeCondition)
+            {
+                case CardParams.CardType.EvolutionCreature:
+                    switch (cardData.CardType)
+                    {
+                        case CardParams.CardType.EvolutionCreature:
+                            result = true;
+                            break;
+                        case CardParams.CardType.Creature:
+                        case CardParams.CardType.Spell:
+                            result = false;
+                            break;
+                    }
+                    break;
+
+                case CardParams.CardType.Creature:
+                    switch (cardData.CardType)
+                    {
+                        case CardParams.CardType.EvolutionCreature:
+                        case CardParams.CardType.Creature:
+                            result = true;
+                            break;
+                        case CardParams.CardType.Spell:
+                            result = false;
+                            break;
+                    }
+                    break;
+
+                case CardParams.CardType.Spell:
+                    switch (cardData.CardType)
+                    {
+                        case CardParams.CardType.EvolutionCreature:
+                        case CardParams.CardType.Creature:
+                            result = false;
+                            break;
+                        case CardParams.CardType.Spell:
+                            result = true;
+                            break;
+                    }
+                    break;
+            }
             result = cardData.CardType == targetingCondition.CardTypeCondition;
+        }
 
         if (targetingCondition.CivilizationConditions.Count > 0)
         {

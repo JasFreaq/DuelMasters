@@ -38,12 +38,6 @@ public abstract class CardObject : CardBehaviour
     public bool IsValid
     {
         get { return _isValid; }
-
-        set
-        {
-            _isValid = value;
-            _previewLayoutHandler.SetInvalidOverlay(_isValid);
-        }
     }
 
     public PreviewLayoutHandler PreviewLayoutHandler
@@ -213,7 +207,13 @@ public abstract class CardObject : CardBehaviour
     #endregion
 
     #region State Methods
-    
+
+    public void SetValidity(EffectTargetingCondition targetingCondition)
+    {
+        _isValid = targetingCondition == null || CardData.IsTargetingConditionSatisfied(_cardInst, targetingCondition);
+        _previewLayoutHandler.SetInvalidOverlay(_isValid);
+    }
+
     public virtual void SetHighlightColor(bool baseColor)
     {
         _isHighlightBaseColor = baseColor;

@@ -34,6 +34,14 @@ public class CardInstance
     {
         get { return _isTapped; }
     }
+    
+    public bool IsBlocker
+    {
+        get
+        {
+            return CardData.IsTargetingConditionSatisfied(this, CardData.BlockerCondition);
+        }
+    }
 
     public void SetCurrentZone(CardZoneType currentZone)
     {
@@ -49,44 +57,4 @@ public class CardInstance
     {
         return !_isTapped;
     }
-
-    #region Static Methods
-
-    public static List<CardObject> CheckValidity(List<CardObject> cardList,
-        EffectTargetingCondition targetingCondition = null, bool setHighlight = false)
-    {
-        List<CardObject> validCards = new List<CardObject>();
-        foreach (CardObject cardObj in cardList)
-        {
-            if (targetingCondition == null ||
-                CardData.IsTargetingConditionSatisfied(cardObj.CardInst, targetingCondition))
-            {
-                cardObj.IsValid = true;
-                if (setHighlight) 
-                    cardObj.SetHighlight(true);
-
-                validCards.Add(cardObj);
-            }
-            else
-                cardObj.IsValid = false;
-        }
-        
-        foreach (CardObject cardObj in validCards)
-            cardList.Remove(cardObj);
-
-        cardList.AddRange(validCards);
-
-        return cardList;
-    }
-    
-    public static List<CardBehaviour> CheckValidity(List<CardBehaviour> cards, EffectTargetingCondition targetingCondition = null)
-    {
-        List<CardObject> cardList = new List<CardObject>();
-        foreach (CardBehaviour card in cards)
-            cardList.Add((CardObject) card);
-
-        return new List<CardBehaviour>(CheckValidity(cardList, targetingCondition, true));
-    }
-    
-    #endregion
 }

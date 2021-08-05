@@ -1955,7 +1955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerGoesFirst: 1
   _playerController: {fileID: 1042105415}
-  _opponentController: {fileID: 0}
+  _opponentController: {fileID: 1962481312}
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
   _playerDeck: {fileID: 11400000, guid: ec0f4140a9a0cb747803972283981e7d, type: 2}
@@ -3082,6 +3082,7 @@ GameObject:
   - component: {fileID: 1962481309}
   - component: {fileID: 1962481310}
   - component: {fileID: 1962481311}
+  - component: {fileID: 1962481312}
   m_Layer: 0
   m_Name: Opponent
   m_TagString: Untagged
@@ -3139,6 +3140,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8bf282189e5cb84992dc01064fca5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1962481312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962481308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 065bff73d24a97345b9f422eeb0287c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1986497835

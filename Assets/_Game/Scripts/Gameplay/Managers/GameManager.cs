@@ -119,6 +119,9 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Alpha2))
                 _currentStep = _gameSteps[GameStepType.MainStep];
+            
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+                _currentStep = _gameSteps[GameStepType.AttackStep];
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
                 print(_currentStep);
@@ -127,19 +130,38 @@ public class GameManager : MonoBehaviour
             {
                 MovementZones movementZones = new MovementZones
                 {
-                    fromZone = CardZoneType.Deck,
+                    fromZone = CardZoneType.Hand,
                     toZone = CardZoneType.ManaZone,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
-                    countChoice = CountChoiceType.Exactly,
-                    moveCount = 6
+                    countChoice = CountChoiceType.Upto,
+                    moveCount = 3
+                };
+
+                EffectTargetingCondition targetingCondition = null;
+                //EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
+                //targetingCondition.AddPowerCondition(new PowerCondition
+                //{
+                //    comparator = ComparisonType.GreaterThan,
+                //    power = 1
+                //});
+
+                ProcessRegionMovement(true, movementZones, targetingCondition);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                MovementZones movementZones = new MovementZones
+                {
+                    fromZone = CardZoneType.Deck,
+                    toZone = CardZoneType.BattleZone,
+                    deckCardMove = DeckCardMoveType.SearchShuffle,
+                    countChoice = CountChoiceType.Upto,
+                    moveCount = 4
                 };
 
                 EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
-                targetingCondition.AddPowerCondition(new PowerCondition
-                {
-                    comparator = ComparisonType.GreaterThan,
-                    power = 3000
-                });
+                targetingCondition.AssignedCardTypeCondition = true;
+                targetingCondition.CardTypeCondition = CardParams.CardType.Creature;
 
                 ProcessRegionMovement(true, movementZones, targetingCondition);
             }
@@ -256,16 +278,18 @@ public class GameManager : MonoBehaviour
                 else if (target is ShieldObject shieldObj)
                     attackRoutine = AttackShieldRoutine(controller, creatureObj, shieldObj, isPlayer);
 
-                bool blocked = false;
+                CreatureObject blockingCreatureObj;
                 if (true /*creatureObj can be blocked*/)
                 {
-                    Coroutine<bool> blockRoutine = this.StartCoroutine<bool>(AttemptBlockRoutine(!isPlayer));
+                    Coroutine<CreatureObject> blockRoutine = this.StartCoroutine<CreatureObject>(AttemptBlockRoutine(!isPlayer));
                     yield return blockRoutine.coroutine;
-                    blocked = blockRoutine.returnVal;
+                    blockingCreatureObj = blockRoutine.returnVal;
                 }
 
-                if (!blocked)
-                    yield return attackRoutine;
+                if (blockingCreatureObj)
+                    attackRoutine = AttackCreatureRoutine(controller, creatureObj, blockingCreatureObj);
+                
+                yield return attackRoutine;
             }
         }
     }
@@ -327,7 +351,13 @@ public class GameManager : MonoBehaviour
         else
             controller = _opponentController;
 
-        yield break;
+        CreatureObject blockingCard;
+        Coroutine<CreatureObject> routine =
+            controller.StartCoroutine<CreatureObject>(controller.ProcessBlockingRoutine());
+        yield return routine.coroutine;
+        blockingCard = routine.returnVal;
+
+        yield return blockingCard;
     }
 
     private IEnumerator ResetCreaturePosRoutine(Vector3 creaturePos, CreatureObject creatureObj)
@@ -343,12 +373,12 @@ public class GameManager : MonoBehaviour
 
     #region Card Effect Processing
 
-    public Coroutine ProcessRegionMovement(bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition = null)
+    public Coroutine ProcessRegionMovement(bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
     {
         return StartCoroutine(AdjustMovementTargetRoutine(affectPlayer, movementZones, targetingCondition));
     }
 
-    private IEnumerator AdjustMovementTargetRoutine(bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition = null)
+    private IEnumerator AdjustMovementTargetRoutine(bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
     {
         PlayerManager affectedPlayer = GetManager(affectPlayer);
 
