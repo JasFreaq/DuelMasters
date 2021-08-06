@@ -23,7 +23,7 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
 
     [HideInInspector] public List<EffectData> ruleEffects = new List<EffectData>();
     [HideInInspector] [SerializeField] private KeywordType[] _keywords;
-
+    
     #region Properties
 
     public string Name
@@ -104,13 +104,7 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
     }
 
     #endregion
-
-    private void Awake()
-    {
-        if (BlockerCondition.KeywordConditions.Count == 0)
-            BlockerCondition.AddKeywordCondition(new KeywordCondition { keyword = KeywordType.Blocker });
-    }
-
+    
     public void OnBeforeSerialize()
     {
         List<KeywordType> keywordTypes = new List<KeywordType>();

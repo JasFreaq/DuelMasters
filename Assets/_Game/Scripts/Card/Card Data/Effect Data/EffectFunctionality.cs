@@ -23,6 +23,12 @@ public class MovementZones
 }
 
 [System.Serializable]
+public class RaceHolder
+{
+    public CardParams.Race race;
+}
+
+[System.Serializable]
 public class DiscardParam
 {
     public DiscardType discardType;
@@ -106,9 +112,10 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private int _attackBoost;
     [SerializeReference] private int _costAdjustmentAmount;
 
+    [SerializeReference] private List<RaceHolder> _vortexRaces = new List<RaceHolder>();
     [SerializeReference] private bool _shouldMultiplyVal = false;
     [SerializeReference] private bool _alterFunctionUntilEndOfTurn = true;
-    
+
     #endregion
 
     public EffectFunctionalityType Type
@@ -273,7 +280,12 @@ public class EffectFunctionality : ScriptableObject
         set { _costAdjustmentAmount = value; }
 #endif
     }
-    
+
+    public List<RaceHolder> VortexRaces
+    {
+        get { return _vortexRaces; }
+    }
+
     public bool ShouldMultiplyVal
     {
         get { return _shouldMultiplyVal; }

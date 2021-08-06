@@ -6,6 +6,8 @@ public enum KeywordType
 {
     Blocker,
     ShieldTrigger,
+    Evolution,
+    VortexEvolution,
     Slayer,
     SpeedAttacker
 }

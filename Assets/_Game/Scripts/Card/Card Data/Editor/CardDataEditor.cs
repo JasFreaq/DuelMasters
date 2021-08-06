@@ -281,6 +281,8 @@ public class CardDataEditor : Editor
 
                 case EffectFunctionalityType.Keyword:
                     functionality.Keyword = DrawFoldout(functionality.Keyword);
+                    if (functionality.Keyword == KeywordType.VortexEvolution)
+                        DrawVortexRaces();
                     break;
 
                 case EffectFunctionalityType.MultipleBreaker:
@@ -336,6 +338,47 @@ public class CardDataEditor : Editor
 
             if (movementZones.toZone == CardZoneType.Deck)
                 movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
+        }
+
+        void DrawVortexRaces()
+        {
+            GUILayout.BeginVertical();
+            
+            if (functionality.VortexRaces.Count > 0)
+            {
+                List<RaceHolder> removedConditions = new List<RaceHolder>();
+                GUILayout.Label("Races:");
+
+                for (int i = 0, n = functionality.VortexRaces.Count; i < n; i++)
+                {
+                    RaceHolder raceHolder = functionality.VortexRaces[i];
+
+                    GUILayout.BeginHorizontal();
+
+                    raceHolder.race = DrawFoldout(raceHolder.race, 1);
+
+                    GUILayout.EndHorizontal();
+
+                    if (GUILayout.Button("Remove Race"))
+                    {
+                        EditorGUILayout.Space(5);
+                        removedConditions.Add(raceHolder);
+                    }
+                }
+
+                foreach (RaceHolder raceHolder in removedConditions)
+                {
+                    functionality.VortexRaces.Remove(raceHolder);
+                }
+            }
+
+            if (GUILayout.Button("Add Race"))
+            {
+                RaceHolder raceHolder = new RaceHolder();
+                functionality.VortexRaces.Add(raceHolder);
+            }
+            
+            GUILayout.EndVertical();
         }
 
         void DrawDiscardParam()
@@ -691,7 +734,7 @@ public class CardDataEditor : Editor
 
         #endregion
     }
-
+    
     private void DrawSubCondition(EffectCondition parentCondition)
     {
         GUILayout.BeginHorizontal();
