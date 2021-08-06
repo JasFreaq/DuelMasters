@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         else
             _Instance = this;
+
+        if (CardData.BlockerCondition.KeywordConditions.Count == 0)
+            CardData.BlockerCondition.AddKeywordCondition(new KeywordCondition { keyword = KeywordType.Blocker });
     }
 
     private void OnEnable()

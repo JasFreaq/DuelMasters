@@ -242,66 +242,27 @@ public class PlayerController : Controller
     
     protected override void ProcessInput(int iD)
     {
+        base.ProcessInput(iD);
+
         if (_selectMultiple)
         {
             if (_targetedCard)
             {
                 if (_selectCard)
                 {
-                    foreach (CardBehaviour card in _selectionRange)
-                    {
-                        if (_targetedCard == card && _targetedCard.IsValid) 
-                        {
-                            if (!_cardSelections.Contains(_targetedCard) && _cardSelections.Count < _selectionUpperBound) 
-                            {
-                                _targetedCard.SetHighlightColor(false);
-                                _cardSelections.Add(_targetedCard);
-                            }
-                            else
-                            {
-                                _targetedCard.SetHighlightColor(true);
-                                _cardSelections.Remove(_targetedCard);
-                            }
-
-                            _actionOverlay.AdjustCardSelectionButtons(_selectionLowerBound, _selectionUpperBound,
-                                _cardSelections.Count);
-
-                            break;
-                        }
-                    }
+                    _actionOverlay.AdjustCardSelectionButtons(_selectionLowerBound, _selectionUpperBound,
+                        _cardSelections.Count);
                 }
             }
             else if (_targetedShield)
             {
                 if (!_selectCard)
                 {
-                    foreach (CardBehaviour card in _selectionRange)
-                    {
-                        if (_targetedShield == card &&
-                            _shieldSelections.Count >= _selectionLowerBound && _shieldSelections.Count <= _selectionUpperBound)
-                        {
-                            if (!_shieldSelections.Contains(_targetedShield)) 
-                            {
-                                _targetedShield.KeepHighlighted = true;
-                                _shieldSelections.Add(_targetedShield);
-                            }
-                            else
-                            {
-                                _targetedShield.KeepHighlighted = false;
-                                _shieldSelections.Remove(_targetedShield);
-                            }
-
-                            _actionOverlay.AdjustCardSelectionButtons(_selectionLowerBound, _selectionUpperBound,
-                                _shieldSelections.Count);
-
-                            break;
-                        }
-                    }
+                    _actionOverlay.AdjustCardSelectionButtons(_selectionLowerBound, _selectionUpperBound,
+                        _shieldSelections.Count);
                 }
             }
         }
-        else
-            base.ProcessInput(iD);
     }
 
     #region Multiple Cards Selection Methods

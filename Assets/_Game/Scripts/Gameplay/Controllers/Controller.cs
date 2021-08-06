@@ -9,9 +9,7 @@ public class Controller : MonoBehaviour
     protected CardObject _targetedCard;
     protected ShieldObject _targetedShield;
     protected bool _isPlayer;
-
-    protected bool _attemptBlock;
-
+    
     protected List<CardBehaviour> _selectionRange;
     protected List<CardObject> _cardSelections = new List<CardObject>();
     protected List<ShieldObject> _shieldSelections = new List<ShieldObject>();
@@ -105,24 +103,79 @@ public class Controller : MonoBehaviour
     
     protected virtual void ProcessInput(int iD)
     {
-        if (_targetedCard)
+        if (_selectMultiple)
         {
-            if (GameDataHandler.Instance.GetDataHandler(_isPlayer).AllCards.ContainsKey(iD))
+            if (_targetedCard)
             {
-                _targetedCard.ProcessMouseDown();
-                SelectCard(_targetedCard);
+                if (_selectCard)
+                {
+                    foreach (CardBehaviour card in _selectionRange)
+                    {
+                        if (_targetedCard == card && _targetedCard.IsValid)
+                        {
+                            if (!_cardSelections.Contains(_targetedCard) && _cardSelections.Count < _selectionUpperBound)
+                            {
+                                _targetedCard.SetHighlightColor(false);
+                                _cardSelections.Add(_targetedCard);
+                            }
+                            else
+                            {
+                                _targetedCard.SetHighlightColor(true);
+                                _cardSelections.Remove(_targetedCard);
+                            }
+
+                            break;
+                        }
+                    }
+                }
             }
-            else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD)
-                     && GameManager.Instance.CurrentStep == GameStepType.AttackStep) 
+            else if (_targetedShield)
             {
-                //if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
-                GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
+                if (!_selectCard)
+                {
+                    foreach (CardBehaviour card in _selectionRange)
+                    {
+                        if (_targetedShield == card &&
+                            _shieldSelections.Count >= _selectionLowerBound && _shieldSelections.Count <= _selectionUpperBound)
+                        {
+                            if (!_shieldSelections.Contains(_targetedShield))
+                            {
+                                _targetedShield.KeepHighlighted = true;
+                                _shieldSelections.Add(_targetedShield);
+                            }
+                            else
+                            {
+                                _targetedShield.KeepHighlighted = false;
+                                _shieldSelections.Remove(_targetedShield);
+                            }
+
+                            break;
+                        }
+                    }
+                }
             }
         }
-        else if (_targetedShield && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
+        else
         {
-            //if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
-            GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
+            if (_targetedCard)
+            {
+                if (GameDataHandler.Instance.GetDataHandler(_isPlayer).AllCards.ContainsKey(iD))
+                {
+                    _targetedCard.ProcessMouseDown();
+                    SelectCard(_targetedCard);
+                }
+                else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD)
+                         && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
+                {
+                    //if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
+                    GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
+                }
+            }
+            else if (_targetedShield && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
+            {
+                //if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
+                GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
+            }
         }
     }
 
@@ -212,7 +265,7 @@ public class Controller : MonoBehaviour
             {
                 CardObject cardObj = (CardObject) card;
                 cardObj.SetValidity(targetingCondition);
-                if (cardObj.IsValid)
+                if (cardObj.IsValid && _isPlayer)
                     cardObj.SetHighlight(true);
             }
         }
