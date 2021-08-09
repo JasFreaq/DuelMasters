@@ -113,6 +113,9 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.T))
                 Time.timeScale = 7.5f;
+            
+            if (Input.GetKeyDown(KeyCode.Y))
+                Time.timeScale = 1f;
 
             if (Input.GetKeyDown(KeyCode.Return))
                 StartCoroutine(StartGameRoutine(_playerDeck, _opponentDeck));
@@ -256,11 +259,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AttemptAttackRoutine(bool isPlayer, CardBehaviour target)
     {
-        Controller controller;
-        if (isPlayer)
-            controller = _playerController;
-        else
-            controller = _opponentController;
+        Controller controller = GetController(isPlayer);
 
         if (controller.CurrentlySelected)
         {
@@ -308,12 +307,12 @@ public class GameManager : MonoBehaviour
 
         controller.DeselectCurrentlySelected();
 
-        int attackingCraturePower = ((CreatureData) creatureObj.CardInst.CardData).Power;
-        int attackedCreaturePower = ((CreatureData) attackedCreatureObj.CardInst.CardData).Power;
+        int attackingCreaturePower = creatureObj.CardData.Power;
+        int attackedCreaturePower = attackedCreatureObj.CardData.Power;
 
-        if (attackingCraturePower > attackedCreaturePower)
+        if (attackingCreaturePower > attackedCreaturePower)
             yield return attackedCreatureObj.SendToGraveyard();
-        else if (attackingCraturePower == attackedCreaturePower)
+        else if (attackingCreaturePower == attackedCreaturePower)
         {
             yield return creatureObj.SendToGraveyard();
             creatureObj = null;
@@ -348,17 +347,12 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AttemptBlockRoutine(bool isPlayer)
     {
-        Controller controller;
-        if (isPlayer)
-            controller = _playerController;
-        else
-            controller = _opponentController;
+        Controller controller = GetController(isPlayer);
 
-        CreatureObject blockingCard;
         Coroutine<CreatureObject> routine =
             controller.StartCoroutine<CreatureObject>(controller.ProcessBlockingRoutine());
         yield return routine.coroutine;
-        blockingCard = routine.returnVal;
+        CreatureObject blockingCard = routine.returnVal;
 
         yield return blockingCard;
     }
@@ -586,6 +580,14 @@ public class GameManager : MonoBehaviour
     public PlayerManager GetManager(bool isPlayer)
     {
         return isPlayer ? _playerManager : _opponentManager;
+    }
+    
+    public Controller GetController(bool isPlayer)
+    {
+        if (isPlayer)
+            return _playerController;
+
+        return _opponentController;
     }
 
     private void EnablePlayerControllerInteract(bool enable)

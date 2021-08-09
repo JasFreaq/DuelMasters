@@ -90,23 +90,22 @@ public class ManaZoneManager : MonoBehaviour
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToManaZoneRoutine(CardObject card)
+    public IEnumerator MoveToManaZoneRoutine(CardObject cardObj)
     {
         _tempCard.parent = _holderTransform;
 
-        CardInstance cardInst = card.CardInst;
-        _tempManaCard.civValue = CardParams.GetCivValue(cardInst.CardData.Civilization);
-        _tempManaCard.cardName = cardInst.CardData.Name;
+        _tempManaCard.civValue = CardParams.GetCivValue(cardObj.CardData.Civilization);
+        _tempManaCard.cardName = cardObj.CardData.Name;
 
         ArrangeCards();
 
-        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotateQuaternion(_tempCard.rotation, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DORotateQuaternion(_tempCard.rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOScale(transform.localScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);
 
-        AddCard(card);
+        AddCard(cardObj);
     }
     
     #endregion
@@ -136,7 +135,7 @@ public class ManaZoneManager : MonoBehaviour
 
                 currentManaCard.transform = currentCard.transform;
                 currentManaCard.isTapped = currentCard.CardInst.IsTapped;
-                currentManaCard.civValue = CardParams.GetCivValue(currentCard.CardInst.CardData.Civilization);
+                currentManaCard.civValue = CardParams.GetCivValue(currentCard.CardData.Civilization);
             }
             else
             {
@@ -192,11 +191,10 @@ public class ManaZoneManager : MonoBehaviour
         ManaTransform[] manaTransforms = new ManaTransform[n];
         for (int i = 0; i < n; i++)
         {
-            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardObject card))
+            if (_playerData.CardsInMana.TryGetValue(_holderTransform.GetChild(i).GetInstanceID(), out CardObject cardObj))
             {
-                CardInstance cardInst = card.CardInst;
-                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i), card.CardInst.IsTapped,
-                    CardParams.GetCivValue(cardInst.CardData.Civilization), cardInst.CardData.Name);
+                manaTransforms[i] = new ManaTransform(_holderTransform.GetChild(i), cardObj.CardInst.IsTapped,
+                    CardParams.GetCivValue(cardObj.CardData.Civilization), cardObj.CardData.Name);
             }
             else
             {

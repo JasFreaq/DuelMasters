@@ -18,6 +18,7 @@ public class BattleZoneManager : MonoBehaviour
     [Header("Transition")]
     [SerializeField] private float _fromTransitionTime = 1f;
     [SerializeField] private float _toTransitionTime = 1f;
+    [SerializeField] private int _evolutionTransitionFramesBuffer = 5;
     [SerializeField] private Transform _intermediateHolder;
     
     private PlayerDataHandler _playerData;
@@ -59,30 +60,48 @@ public class BattleZoneManager : MonoBehaviour
 
     #region Transition Methods
 
-    public IEnumerator MoveFromBattleZoneRoutine(CardObject card)
+    public IEnumerator MoveFromBattleZoneRoutine(CardObject cardObj)
     {
-        RemoveCardAtIndex(card.transform.GetSiblingIndex());
+        RemoveCardAtIndex(cardObj.transform.GetSiblingIndex());
 
-        card.transform.parent = _intermediateHolder;
-        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.parent = _intermediateHolder;
+        cardObj.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
     }
 
-    public IEnumerator MoveToBattleZoneRoutine(CreatureObject card)
+    public IEnumerator MoveToBattleZoneRoutine(CreatureObject creatureObj)
     {
         _tempCard.parent = _holderTransform;
         ArrangeCards();
 
-        card.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotateQuaternion(_tempCard.rotation, _toTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(_tempCard.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
+        creatureObj.transform.DOMove(_tempCard.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        creatureObj.transform.DORotateQuaternion(_tempCard.rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        creatureObj.transform.DOScale(_tempCard.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_toTransitionTime);
 
-        AddCard(card);
+        AddCard(creatureObj);
+    }
+    
+    public IEnumerator MoveToBattleZoneRoutine(CreatureObject evolvingCreatureObj, CreatureObject creatureObj)
+    {
+        int originalIndex = creatureObj.transform.GetSiblingIndex();
+
+        evolvingCreatureObj.transform.DOMove(creatureObj.transform.position, _toTransitionTime).SetEase(Ease.OutQuint);
+        evolvingCreatureObj.transform.DORotateQuaternion(creatureObj.transform.rotation, _toTransitionTime).SetEase(Ease.OutQuint);
+        evolvingCreatureObj.transform.DOScale(creatureObj.transform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
+
+        float transitionBufferTime = _evolutionTransitionFramesBuffer * Time.deltaTime;
+        yield return new WaitForSeconds(_toTransitionTime - transitionBufferTime);
+        creatureObj.gameObject.SetActive(false);
+        yield return new WaitForSeconds(transitionBufferTime);
+
+        RemoveCardAtIndex(originalIndex);
+        AddCard(evolvingCreatureObj);
+        evolvingCreatureObj.transform.SetSiblingIndex(originalIndex);
     }
     
     #endregion

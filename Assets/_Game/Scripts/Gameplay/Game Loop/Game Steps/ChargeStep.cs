@@ -13,12 +13,10 @@ public class ChargeStep : GameStep
 
     public override IEnumerator ProcessGameAction(CardObject cardObj, PlayerManager currentPlayer)
     {
-        PlayerDataHandler dataHandler = currentPlayer.DataHandler;
-
         cardObj.DragHandler.ResetDragging();
         yield return currentPlayer.ChargeManaRoutine(cardObj);
 
-        if (cardObj.CardInst.CardData.Civilization.Length > 1)
+        if (cardObj.CardData.Civilization.Length > 1)
         {
             cardObj.ToggleTapState();
             currentPlayer.ManaZoneManager.ArrangeCards();

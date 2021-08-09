@@ -82,11 +82,10 @@ public class PlayerDataHandler : MonoBehaviour
         foreach (KeyValuePair<int, CardObject> pair in _cardsInManaZone)
         {
             CardObject cardObj = pair.Value;
-            CardInstance cardInst = cardObj.CardInst;
 
-            if (!cardInst.IsTapped)
+            if (!cardObj.CardInst.IsTapped)
             {
-                int civValue = CardParams.GetCivValue(cardInst.CardData.Civilization);
+                int civValue = CardParams.GetCivValue(cardObj.CardData.Civilization);
                 if (!availableMana.ContainsKey(civValue))
                 {
                     availableMana[civValue] = new List<CardObject>();
@@ -221,7 +220,7 @@ public class PlayerDataHandler : MonoBehaviour
         foreach (KeyValuePair<int, CreatureObject> pair in _cardsInBattleZone)
         {
             CreatureObject creatureObj = pair.Value;
-            CardParams.Race[] races = ((CreatureData) creatureObj.CardInst.CardData).Race;
+            CardParams.Race[] races = creatureObj.CardData.Race;
             foreach (CardParams.Race race in races)
             {
                 bool matched = false;

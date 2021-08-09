@@ -9,11 +9,16 @@ public class CreatureObject : CardObject
 
     private List<CreatureObject> _creaturesUnderEvolution = new List<CreatureObject>();
 
+    public new CreatureData CardData
+    {
+        get { return (CreatureData) _cardInst.CardData; }
+    }
+
     public bool IsEvolutionCreature
     {
         get { return _cardInst.CardData.CardType == CardParams.CardType.EvolutionCreature; }
     }
-
+    
     public List<CreatureObject> CreaturesUnderEvolution
     {
         get { return _creaturesUnderEvolution; }

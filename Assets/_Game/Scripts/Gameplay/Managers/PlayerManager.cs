@@ -96,22 +96,23 @@ public class PlayerManager : MonoBehaviour
         foreach (KeyValuePair<int, CardObject> pair in _playerDataHandler.CardsInHand)
         {
             CardObject cardObj = pair.Value;
-            CardInstance cardInst = cardObj.CardInst;
 
-            if (_playerDataHandler.CanPayCost(cardInst.CardData.Civilization, cardInst.CardData.Cost))
+            if (_playerDataHandler.CanPayCost(cardObj.CardData.Civilization, cardObj.CardData.Cost))
             {
                 if (cardObj is CreatureObject creatureObj && creatureObj.IsEvolutionCreature)
                 {
-                    CardParams.Race[] races = ((CreatureData) creatureObj.CardInst.CardData).Race;
+                    CardParams.Race[] races = creatureObj.CardData.Race;
                     if (_playerDataHandler.CheckCreaturesInBattle(races))
                     {
-                        cardObj.SetHighlight(true);
+                        if (_isPlayer)
+                            cardObj.SetHighlight(true);
                         _playableCards.Add(cardObj);
                     }
                 }
                 else
                 {
-                    cardObj.SetHighlight(true);
+                    if (_isPlayer)
+                        cardObj.SetHighlight(true);
                     _playableCards.Add(cardObj);
                 }
             }
@@ -147,16 +148,41 @@ public class PlayerManager : MonoBehaviour
             yield return CastSpellRoutine(spellCard);
     }
 
-    private IEnumerator SummonCreatureRoutine(CreatureObject creatureCard)
+    private IEnumerator SummonCreatureRoutine(CreatureObject creatureObj)
     {
-        creatureCard.ActivateBattleLayout();
-        yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureCard);
-        creatureCard.HoverPreviewHandler.PreviewEnabled = true;
+        if (creatureObj.IsEvolutionCreature)
+        {
+            Controller controller = GameManager.Instance.GetController(_isPlayer);
+
+            Coroutine<CreatureObject> routine =
+                controller.StartCoroutine<CreatureObject>(controller.ProcessEvolvingRoutine(creatureObj.CardData.Race));
+            yield return routine.coroutine;
+            CreatureObject underEvolvingCard = routine.returnVal;
+
+            if (underEvolvingCard)
+            {
+                creatureObj.ActivateBattleLayout();
+                yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj, underEvolvingCard);
+                
+                creatureObj.CreaturesUnderEvolution.Add(underEvolvingCard);
+                underEvolvingCard.transform.SetParent(creatureObj.transform);
+                
+                creatureObj.HoverPreviewHandler.PreviewEnabled = true;
+            }
+            else
+                yield return MoveToHandRoutine(creatureObj);
+        }
+        else
+        {
+            creatureObj.ActivateBattleLayout();
+            yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj);
+            creatureObj.HoverPreviewHandler.PreviewEnabled = true;
+        }
     }
 
-    private IEnumerator CastSpellRoutine(SpellObject spellCard)
+    private IEnumerator CastSpellRoutine(SpellObject spellObj)
     {
-        yield return MoveToGraveyardRoutine(spellCard);
+        yield return MoveToGraveyardRoutine(spellObj);
     }
     
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)

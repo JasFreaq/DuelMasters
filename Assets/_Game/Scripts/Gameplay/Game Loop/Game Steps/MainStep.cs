@@ -20,13 +20,12 @@ public class MainStep : GameStep
     public override IEnumerator ProcessGameAction(CardObject cardObj, PlayerManager currentPlayer)
     {
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
-        CardData cardData = cardObj.CardInst.CardData;
 
         if (currentPlayer.PlayableCards.Contains(cardObj)) 
         {
             cardObj.DragHandler.ResetDragging();
 
-            dataHandler.PayCost(cardData.Civilization, cardData.Cost);
+            dataHandler.PayCost(cardObj.CardData.Civilization, cardObj.CardData.Cost);
             currentPlayer.ManaZoneManager.ArrangeCards();
             yield return currentPlayer.PlayCardRoutine(cardObj);
 

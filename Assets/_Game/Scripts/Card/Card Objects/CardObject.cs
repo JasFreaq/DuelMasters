@@ -60,6 +60,11 @@ public abstract class CardObject : CardBehaviour
         get { return _cardInst; }
     }
 
+    public CardData CardData
+    {
+        get { return _cardInst.CardData; }
+    }
+
     public HoverPreviewHandler HoverPreviewHandler
     {
         get { return _hoverPreviewHandler; }

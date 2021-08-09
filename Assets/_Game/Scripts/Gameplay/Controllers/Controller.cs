@@ -152,6 +152,48 @@ public class Controller : MonoBehaviour
 
         yield return null;
     }
+    
+    public IEnumerator ProcessEvolvingRoutine(CardParams.Race[] races)
+    {
+        List<CreatureObject> matchingCreatures = new List<CreatureObject>();
+
+        EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
+        foreach (CardParams.Race race in races)
+        {
+            targetingCondition.AddRaceCondition(new RaceCondition
+            {
+                connector = ConnectorType.Or,
+                race = race
+            });
+        }
+        
+        Dictionary<int, CreatureObject> battleCreatures = GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle;
+        foreach (KeyValuePair<int, CreatureObject> pair in battleCreatures)
+        {
+            CreatureObject creatureObj = pair.Value;
+            if (CardData.IsTargetingConditionSatisfied(creatureObj.CardInst, targetingCondition)) 
+            {
+                matchingCreatures.Add(creatureObj);
+            }
+        }
+
+        if (matchingCreatures.Count > 0) 
+        {
+            List<CardBehaviour> selectedCards;
+            Coroutine<List<CardBehaviour>> routine =
+                this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(1, 1, true,
+                    new List<CardBehaviour>(matchingCreatures), null));
+            yield return routine.coroutine;
+            selectedCards = routine.returnVal;
+
+            if (selectedCards.Count == 1)
+                yield return (CreatureObject) selectedCards[0];
+            else
+                yield return null;
+        }
+
+        yield return null;
+    }
 
     #region Multiple Card Selection Methods
 
