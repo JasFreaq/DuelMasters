@@ -68,6 +68,41 @@ public class PlayerController : Controller
         }
     }
 
+    public override void SelectCard(CardObject cardObj)
+    {
+        if (_currentlySelected != cardObj)
+        {
+            switch (GameManager.Instance.CurrentStep)
+            {
+                case GameStepType.ChargeStep:
+                    cardObj.SetHighlight(true);
+                    break;
+
+                case GameStepType.MainStep:
+                    PlayerManager player = GameManager.Instance.GetManager(_isPlayer);
+                    foreach (CardObject cardObj0 in player.PlayableCards)
+                    {
+                        if (cardObj0 != cardObj)
+                            cardObj0.SetHighlight(false);
+                    }
+
+                    break;
+
+                case GameStepType.AttackStep:
+                    if (cardObj.CardInst.CanAttack())
+                    {
+                        cardObj.SetHighlight(true);
+                        if (cardObj.InZone(CardZoneType.BattleZone))
+                            TargetingLinesHandler.Instance.EnableLine(cardObj.transform.position);
+                    }
+
+                    break;
+            }
+        }
+
+        base.SelectCard(cardObj);
+    }
+
     public void EnableFullControl(bool enable)
     {
         _canInteract = enable;
@@ -76,9 +111,34 @@ public class PlayerController : Controller
 
     public override void DeselectCurrentlySelected()
     {
+        switch (GameManager.Instance.CurrentStep)
+        {
+            case GameStepType.ChargeStep:
+            case GameStepType.AttackStep:
+                _currentlySelected.SetHighlight(false);
+                _currentlySelected.SetHighlightColor(true);
+                break;
+
+            case GameStepType.MainStep:
+                if (_currentlySelected.ProcessDragRelease)
+                    _currentlySelected.SetHighlight(false);
+                else
+                {
+                    PlayerManager player = GameManager.Instance.GetManager(true);
+                    foreach (CardObject cardManager in player.PlayableCards)
+                    {
+                        if (cardManager != _currentlySelected)
+                            cardManager.SetHighlight(true);
+                    }
+                }
+
+                break;
+        }
+
+        TargetingLinesHandler.Instance.DisableLines();
+        
         base.DeselectCurrentlySelected();
 
-        //TargetingLinesHandler.Instance.DisableLines();
         StartCoroutine(DelayedDeselectRoutine());
 
         #region Local Functions

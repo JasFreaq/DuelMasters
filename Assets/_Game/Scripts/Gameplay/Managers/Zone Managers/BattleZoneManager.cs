@@ -110,7 +110,7 @@ public class BattleZoneManager : MonoBehaviour
             int iD = cardTransform.GetInstanceID();
             if (_playerData.CardsInBattle.ContainsKey(iD))
             {
-                _playerData.CardsInBattle[iD].BattleLayout.Canvas.sortingOrder = _battleZoneSortingLayerFloor + i;
+                _playerData.CardsInBattle[iD].BattleLayoutCanvas.sortingOrder = _battleZoneSortingLayerFloor + i;
                 cardTransform.DOLocalMove(cardPos, arrangeTime).SetEase(Ease.OutQuint);
                 cardTransform.DOScale(cardScale, arrangeTime).SetEase(Ease.OutQuint);
             }

@@ -212,4 +212,41 @@ public class PlayerDataHandler : MonoBehaviour
     }
 
     #endregion
+
+    #region Battle Functionality
+
+    public List<CreatureObject> GetCreaturesInBattle(CardParams.Race[] checkRaces)
+    {
+        List<CreatureObject> validCreatures = new List<CreatureObject>();
+        foreach (KeyValuePair<int, CreatureObject> pair in _cardsInBattleZone)
+        {
+            CreatureObject creatureObj = pair.Value;
+            CardParams.Race[] races = ((CreatureData) creatureObj.CardInst.CardData).Race;
+            foreach (CardParams.Race race in races)
+            {
+                bool matched = false;
+                foreach (CardParams.Race checkRace in checkRaces)
+                {
+                    if (race == checkRace)
+                    {
+                        validCreatures.Add(creatureObj);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (matched)
+                    break;
+            }
+        }
+
+        return validCreatures;
+    }
+
+    public bool CheckCreaturesInBattle(CardParams.Race[] checkRaces)
+    {
+        return GetCreaturesInBattle(checkRaces).Count > 0;
+    }
+
+    #endregion
 }

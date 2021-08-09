@@ -7,9 +7,21 @@ public class CreatureObject : CardObject
 {
     [SerializeField] private BattleCardLayoutHandler _battleCardLayoutHandler;
 
-    public BattleCardLayoutHandler BattleLayout
+    private List<CreatureObject> _creaturesUnderEvolution = new List<CreatureObject>();
+
+    public bool IsEvolutionCreature
     {
-        get { return _battleCardLayoutHandler; }
+        get { return _cardInst.CardData.CardType == CardParams.CardType.EvolutionCreature; }
+    }
+
+    public List<CreatureObject> CreaturesUnderEvolution
+    {
+        get { return _creaturesUnderEvolution; }
+    }
+
+    public Canvas BattleLayoutCanvas
+    {
+        get { return _battleCardLayoutHandler.Canvas; }
     }
     
     public override void ProcessMouseDown()

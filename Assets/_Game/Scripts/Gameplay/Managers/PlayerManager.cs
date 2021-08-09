@@ -18,13 +18,13 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private BattleZoneManager _battleZoneManager;
     [SerializeField] private GraveyardManager _graveyardManager;
 
-    private PlayerDataHandler _playerData;
+    private PlayerDataHandler _playerDataHandler;
 
     private List<CardObject> _playableCards = new List<CardObject>();
 
     public PlayerDataHandler DataHandler
     {
-        get { return _playerData; }
+        get { return _playerDataHandler; }
     }
 
     public DeckManager DeckManager
@@ -37,14 +37,14 @@ public class PlayerManager : MonoBehaviour
         get { return _manaZoneManager; }
     }
 
-    public IReadOnlyList<CardObject> PlayableCards
+    public List<CardObject> PlayableCards
     {
         get { return _playableCards; }
     }
     
     private void Awake()
     {
-        _playerData = GetComponent<PlayerDataHandler>();
+        _playerDataHandler = GetComponent<PlayerDataHandler>();
     }
 
     private void Update()
@@ -54,7 +54,7 @@ public class PlayerManager : MonoBehaviour
 
         if (_handManager.transform.GetChild(0).childCount > 0)
         {
-            CardObject card = _playerData.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+            CardObject card = _playerDataHandler.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
             if (Input.GetKeyDown(KeyCode.M))
                 StartCoroutine(ChargeManaRoutine(card));
             if (Input.GetKeyDown(KeyCode.P))
@@ -89,19 +89,31 @@ public class PlayerManager : MonoBehaviour
 
     #region Affordance Methods
     
-    public int HighlightPlayableCards()
+    public int SetPlayableCards()
     {
         _playableCards.Clear();
 
-        foreach (KeyValuePair<int, CardObject> pair in _playerData.CardsInHand)
+        foreach (KeyValuePair<int, CardObject> pair in _playerDataHandler.CardsInHand)
         {
             CardObject cardObj = pair.Value;
             CardInstance cardInst = cardObj.CardInst;
 
-            if (_playerData.CanPayCost(cardInst.CardData.Civilization, cardInst.CardData.Cost))
+            if (_playerDataHandler.CanPayCost(cardInst.CardData.Civilization, cardInst.CardData.Cost))
             {
-                cardObj.SetHighlight(true);
-                _playableCards.Add(cardObj);
+                if (cardObj is CreatureObject creatureObj && creatureObj.IsEvolutionCreature)
+                {
+                    CardParams.Race[] races = ((CreatureData) creatureObj.CardInst.CardData).Race;
+                    if (_playerDataHandler.CheckCreaturesInBattle(races))
+                    {
+                        cardObj.SetHighlight(true);
+                        _playableCards.Add(cardObj);
+                    }
+                }
+                else
+                {
+                    cardObj.SetHighlight(true);
+                    _playableCards.Add(cardObj);
+                }
             }
         }
 
@@ -243,12 +255,12 @@ public class PlayerManager : MonoBehaviour
         switch (cardObj.CardInst.CurrentZone)
         {
             case CardZoneType.Hand:
-                _playerData.CardsInHand.Remove(cardObj.transform.GetInstanceID());
+                _playerDataHandler.CardsInHand.Remove(cardObj.transform.GetInstanceID());
                 _handManager.ArrangeCards();
                 break;
 
             case CardZoneType.BattleZone:
-                _playerData.CardsInBattle.Remove(cardObj.transform.GetInstanceID());
+                _playerDataHandler.CardsInBattle.Remove(cardObj.transform.GetInstanceID());
                 _battleZoneManager.ArrangeCards();
                 break;
         }

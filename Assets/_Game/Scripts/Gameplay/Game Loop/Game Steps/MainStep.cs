@@ -22,7 +22,7 @@ public class MainStep : GameStep
         PlayerDataHandler dataHandler = currentPlayer.DataHandler;
         CardData cardData = cardObj.CardInst.CardData;
 
-        if (dataHandler.CanPayCost(cardData.Civilization, cardData.Cost))
+        if (currentPlayer.PlayableCards.Contains(cardObj)) 
         {
             cardObj.DragHandler.ResetDragging();
 
@@ -41,7 +41,7 @@ public class MainStep : GameStep
 
     private void CheckPlayableCards(PlayerManager currentPlayer)
     {
-        int playableCards = currentPlayer.HighlightPlayableCards();
+        int playableCards = currentPlayer.SetPlayableCards();
         if (playableCards == 0)
         {
             _gameManager.EndCurrentStep();

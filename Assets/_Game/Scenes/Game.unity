@@ -1963,8 +1963,8 @@ MonoBehaviour:
   _opponentController: {fileID: 1962481312}
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
-  _playerDeck: {fileID: 11400000, guid: ad508f18e61da7f4d986df4244172f2b, type: 2}
-  _opponentDeck: {fileID: 11400000, guid: e17d643326b2e5f48879261d72a289b6, type: 2}
+  _playerDeck: {fileID: 11400000, guid: e17d643326b2e5f48879261d72a289b6, type: 2}
+  _opponentDeck: {fileID: 11400000, guid: ad508f18e61da7f4d986df4244172f2b, type: 2}
   _actionOverlay: {fileID: 0}
   _numberSelector: {fileID: 1829933507}
   _cardBrowserOverlay: {fileID: 2141456923}
