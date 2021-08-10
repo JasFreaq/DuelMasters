@@ -53,7 +53,6 @@ public class BattleZoneManager : MonoBehaviour
             _playerData.BlockersInBattle.Remove(creatureObj);
 
         creatureObj.transform.parent = transform;
-        ArrangeCards();
     }
 
     #endregion
@@ -63,6 +62,7 @@ public class BattleZoneManager : MonoBehaviour
     public IEnumerator MoveFromBattleZoneRoutine(CardObject cardObj)
     {
         RemoveCardAtIndex(cardObj.transform.GetSiblingIndex());
+        ArrangeCards();
 
         cardObj.transform.parent = _intermediateHolder;
         cardObj.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
@@ -100,6 +100,9 @@ public class BattleZoneManager : MonoBehaviour
         yield return new WaitForSeconds(transitionBufferTime);
 
         RemoveCardAtIndex(originalIndex);
+        evolvingCreatureObj.CreaturesUnderEvolution.Add(creatureObj);
+        creatureObj.transform.SetParent(evolvingCreatureObj.transform);
+
         AddCard(evolvingCreatureObj);
         evolvingCreatureObj.transform.SetSiblingIndex(originalIndex);
     }

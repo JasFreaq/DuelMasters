@@ -140,12 +140,15 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator PlayCardRoutine(CardObject cardObj)
     {
+        HoverPreviewHandler.FlipPreviewLocation = true;
         yield return MoveFromHandRoutine(cardObj);
 
         if (cardObj is CreatureObject creatureCard)
             yield return SummonCreatureRoutine(creatureCard);
         else if (cardObj is SpellObject spellCard)
             yield return CastSpellRoutine(spellCard);
+
+        HoverPreviewHandler.FlipPreviewLocation = false;
     }
 
     private IEnumerator SummonCreatureRoutine(CreatureObject creatureObj)
@@ -163,10 +166,6 @@ public class PlayerManager : MonoBehaviour
             {
                 creatureObj.ActivateBattleLayout();
                 yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj, underEvolvingCard);
-                
-                creatureObj.CreaturesUnderEvolution.Add(underEvolvingCard);
-                underEvolvingCard.transform.SetParent(creatureObj.transform);
-                
                 creatureObj.HoverPreviewHandler.PreviewEnabled = true;
             }
             else

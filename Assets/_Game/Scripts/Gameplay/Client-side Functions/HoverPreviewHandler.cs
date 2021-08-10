@@ -6,7 +6,15 @@ using DG.Tweening;
 
 public class HoverPreviewHandler: MonoBehaviour
 {
+    #region Static Data Members
+
     private static Camera _MainCamera = null;
+    private static HoverPreviewHandler _CurrentlyViewing = null;
+    private static HoverPreviewHandler[] _AllHoverPreviews = null;
+
+    public static bool FlipPreviewLocation = false;
+
+    #endregion
     
     private PreviewLayoutHandler _previewLayoutHandler;
     
@@ -66,14 +74,7 @@ public class HoverPreviewHandler: MonoBehaviour
                 StopThisPreview();
         }
     }
-
-    #region Static Data Members
-
-    private static HoverPreviewHandler _CurrentlyViewing = null;
-    private static HoverPreviewHandler[] _AllHoverPreviews = null;
     
-    #endregion
-
     private void Start()
     {
         if (_AllHoverPreviews == null)
@@ -199,7 +200,7 @@ public class HoverPreviewHandler: MonoBehaviour
             //Flip X of position if Preview overlaps transform in ScreenPoint
             Vector3 intermediatePosition = hoverIntermediate.position;
             if (_MainCamera.WorldToScreenPoint(transform.position).x / Screen.width >
-                GameParamsHolder.Instance.PreviewSideBoundFraction) 
+                GameParamsHolder.Instance.PreviewSideBoundFraction || FlipPreviewLocation) 
                 intermediatePosition.x = -intermediatePosition.x;
 
             Transform previewTransform = _previewLayoutHandler.transform;
