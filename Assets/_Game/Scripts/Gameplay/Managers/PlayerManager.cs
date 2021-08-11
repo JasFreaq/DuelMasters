@@ -59,6 +59,8 @@ public class PlayerManager : MonoBehaviour
                 StartCoroutine(ChargeManaRoutine(card));
             if (Input.GetKeyDown(KeyCode.P))
                 StartCoroutine(PlayCardRoutine(card));
+            if (Input.GetKeyDown(KeyCode.O))
+                StartCoroutine(MoveFromHandRoutine(card));
         }
     }
 

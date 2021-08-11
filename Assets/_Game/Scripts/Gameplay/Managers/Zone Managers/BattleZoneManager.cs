@@ -3,14 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 
 public class BattleZoneManager : MonoBehaviour
 {
+    private const int _LayoutRows = 2;
+
     [SerializeField] private bool _isPlayer = true;
     
     [Header("Layout")]
-    [SerializeField] private float _cardAreaWidth = 28;
+    [SerializeField] private float _cardAreaWidth = 20f;
     [SerializeField] private float _maxCardWidth = 10.25f;
+    [SerializeField] private float _rowVerticalPosAdjustment = 1f;
+    [SerializeField] private float _secondRowPos = 9.5f;
+    [SerializeField] [Range(0f, 1f)] private float _sizeAdjustmentFactor = 0.5f;
+    [SerializeField] private int _maxCardsInRow = 5;
     [SerializeField] private int _battleZoneSortingLayerFloor = 0;
     [SerializeField] private Transform _holderTransform;
     [SerializeField] private Transform _tempCard;
@@ -27,7 +34,7 @@ public class BattleZoneManager : MonoBehaviour
     {
         _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
     }
-
+    
     #region Functionality Methods
 
     public void AddCard(CreatureObject cardObj)
@@ -114,19 +121,41 @@ public class BattleZoneManager : MonoBehaviour
     public void ArrangeCards()
     {
         int n = _holderTransform.childCount;
-        float cardWidth = Mathf.Min((_cardAreaWidth * 2) / n, _maxCardWidth);
         float arrangeTime = GameParamsHolder.Instance.LayoutsArrangeMoveTime;
-        float sizeRatio = cardWidth / _maxCardWidth;
-
-        float startOffset = (n % 2) * cardWidth;
-        if (n % 2 == 0)
-            startOffset += cardWidth / 2;
-        Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset, _holderTransform.localPosition.y, _holderTransform.localPosition.z);
 
         for (int i = 0; i < n; i++)
         {
+            int maxCardsInRow = _maxCardsInRow;
+            if (n > _maxCardsInRow)
+            {
+                maxCardsInRow = n / _LayoutRows;
+                if (maxCardsInRow <= (i / maxCardsInRow + 1) * maxCardsInRow)
+                    maxCardsInRow += n % _LayoutRows;
+            }
+            int cardsInRow, columnFactor = (i / maxCardsInRow + 1) * maxCardsInRow;
+            if (n >= columnFactor)
+                cardsInRow = maxCardsInRow;
+            else
+                cardsInRow = maxCardsInRow + n - columnFactor;
+
+            float cardWidth = Mathf.Min((_cardAreaWidth * 2) / cardsInRow, _maxCardWidth);
+            float sizeRatio = cardWidth / _maxCardWidth;
+
+            Vector2 startOffset = new Vector2((cardsInRow % 2) * cardWidth, 0);
+            if (cardsInRow % 2 == 0)
+                startOffset.x += cardWidth / 2;
+            if (n > _maxCardsInRow)
+            {
+                sizeRatio *= _sizeAdjustmentFactor;
+                startOffset.y = _rowVerticalPosAdjustment * sizeRatio;
+            }
+            Vector3 startPos = new Vector3(_holderTransform.localPosition.x - startOffset.x,
+                _holderTransform.localPosition.y, _holderTransform.localPosition.z - startOffset.y);
+
             Transform cardTransform = _holderTransform.GetChild(i);
-            Vector3 cardPos = new Vector3(startPos.x + (i - n / 2 + 1) * cardWidth, startPos.y, startPos.z);
+            float heightAdjuster = i / maxCardsInRow == 0 ? 0 : _secondRowPos * sizeRatio;
+            Vector3 cardPos = new Vector3(startPos.x + (i % maxCardsInRow - cardsInRow / 2 + 1) * cardWidth,
+                startPos.y, startPos.z + heightAdjuster);
             Vector3 cardScale = new Vector3(sizeRatio, sizeRatio, sizeRatio);
             
             int iD = cardTransform.GetInstanceID();
@@ -141,7 +170,6 @@ public class BattleZoneManager : MonoBehaviour
                 cardTransform.localPosition = cardPos;
                 cardTransform.localScale = cardScale;
             }
-            
         }
     }
 
