@@ -207,6 +207,29 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
                             res0 = true;
                             break;
                         }
+                        
+                        bool breakLoop = false;
+                        switch (race)
+                        {
+                            case CardParams.Race.ArmoredDragon:
+                            case CardParams.Race.EarthDragon:
+                            case CardParams.Race.VolcanoDragon:
+                            case CardParams.Race.ZombieDragon:
+                                switch (raceCondition.race)
+                                {
+                                    case CardParams.Race.ArmoredDragon:
+                                    case CardParams.Race.EarthDragon:
+                                    case CardParams.Race.VolcanoDragon:
+                                    case CardParams.Race.ZombieDragon:
+                                        res0 = true;
+                                        breakLoop = true;
+                                        break;
+                                }
+                                break;
+                        }
+
+                        if (breakLoop)
+                            break;
                     }
 
                     if (raceCondition.non)

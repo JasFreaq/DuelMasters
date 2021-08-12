@@ -42,51 +42,62 @@ public class KeywordPrefabHandler : MonoBehaviour
 
     public void SetupRules(CardData cardData, CardLayoutHandler layoutHandler, Transform rulesPanel)
     {
-        string[] rules = cardData.RulesText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-
-        Type enumType = typeof(KeywordLayoutType);
-        string[] keywords = Enum.GetNames(enumType);
-
-        for (int i = 0, n = rules.Length; i < n; i++)
+        if (!string.IsNullOrWhiteSpace(cardData.RulesText)) 
         {
-            string ruleStr = rules[i].ToLower();
-            ruleStr = Regex.Replace(ruleStr, @"\s", "");
+            string[] rules = cardData.RulesText.Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
 
-            KeywordLayoutType type = KeywordLayoutType.Placeholder;
+            Type enumType = typeof(KeywordLayoutType);
+            string[] keywords = Enum.GetNames(enumType);
 
-            for (int j = 0, m = keywords.Length; j < m; j++)
+            for (int i = 0, n = rules.Length; i < n; i++)
             {
-                string keywordStr = keywords[j].ToLower();
-                KeywordLayoutType tempType = (KeywordLayoutType) Enum.Parse(enumType, keywords[j]);
+                string ruleStr = rules[i].ToLower();
+                ruleStr = Regex.Replace(ruleStr, @"\s", "");
 
-                bool isCreature = layoutHandler is CreatureLayoutHandler;
-                if (isCreature || tempType == KeywordLayoutType.ShieldTrigger)
+                KeywordLayoutType type = KeywordLayoutType.Placeholder;
+
+                for (int j = 0, m = keywords.Length; j < m; j++)
                 {
-                    if (isCreature && Regex.Match(rules[i], @"\+[0-9]+").Success)
-                        ((CreatureLayoutHandler) layoutHandler).AddPlusToPower();
+                    string keywordStr = Regex.Replace(keywords[j], "([a-z])([A-Z])", "$1 $2");
+                    keywordStr = keywordStr.Substring(0, 1) + keywordStr.Substring(1).ToLower();
+                    KeywordLayoutType tempType = (KeywordLayoutType) Enum.Parse(enumType, keywords[j]);
 
-                    if (ruleStr.Contains(keywordStr))
+                    bool isCreature = cardData is CreatureData;
+                    if (isCreature || tempType == KeywordLayoutType.ShieldTrigger)
                     {
-                        type = tempType;
-                        break;
+                        if (isCreature && Regex.Match(rules[i], @"\+[0-9]+").Success)
+                            ((CreatureLayoutHandler) layoutHandler).AddPlusToPower();
+
+                        //if (ruleStr.Contains(keywordStr))
+                        //{
+                        //    type = tempType;
+                        //    break;
+                        //}
+
+                        if (rules[i].StartsWith(keywordStr))
+                        {
+                            type = tempType;
+                            break;
+                        }
                     }
                 }
+
+                KeywordLayoutHandler keywordLayoutPrefab = _keywordPrefabDict[type];
+                KeywordLayoutHandler keywordLayout = Instantiate(keywordLayoutPrefab, rulesPanel);
+
+                switch (type)
+                {
+                    case KeywordLayoutType.Placeholder:
+                        keywordLayout.SetDescText(rules[i]);
+                        break;
+
+                    case KeywordLayoutType.PowerAttacker:
+                        keywordLayout.SetDescText(Regex.Match(rules[i], @"[0-9]+").Value);
+                        break;
+                }
+
+                keywordLayout.SetDescDisplay();
             }
-
-            KeywordLayoutHandler keywordLayoutPrefab = _keywordPrefabDict[type];
-            KeywordLayoutHandler keywordLayout = Instantiate(keywordLayoutPrefab, rulesPanel);
-
-            switch (type)
-            {
-                case KeywordLayoutType.Placeholder:
-                    keywordLayout.SetDescText(rules[i]);
-                    break;
-
-                case KeywordLayoutType.PowerAttacker:
-                    keywordLayout.SetDescText(Regex.Match(rules[i], @"[0-9]+").Value);
-                    break;
-            }
-            keywordLayout.SetDescDisplay();
         }
     }
 }
