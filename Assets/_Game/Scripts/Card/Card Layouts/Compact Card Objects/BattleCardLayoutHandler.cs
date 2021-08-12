@@ -9,6 +9,8 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
     [SerializeField] private TextMeshProUGUI _powerText;
     [SerializeField] private TextMeshProUGUI _powerTextShade;
 
+    private bool _addPlusToPower;
+
     public override void SetupCard(CardData cardData, CompactCardFrameData compactFrameData)
     {
         base.SetupCard(cardData, compactFrameData);
@@ -22,5 +24,16 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
 
         _powerText.text = creatureData.Power.ToString();
         _powerTextShade.text = creatureData.Power.ToString();
+
+        if (_addPlusToPower)
+        {
+            _powerText.text += "+";
+            _powerTextShade.text += "+";
+        }
+    }
+
+    public void AddPlusToPower()
+    {
+        _addPlusToPower = true;
     }
 }

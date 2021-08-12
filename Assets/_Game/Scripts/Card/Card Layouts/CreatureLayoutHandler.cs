@@ -18,11 +18,11 @@ public class CreatureLayoutHandler : CardLayoutHandler
 
     private bool _addPlusToPower;
 
-    public override void SetupCard(CardData cardData, CardFrameData cardFrameData)
+    public override void SetupCard(CardObject cardObj, CardFrameData cardFrameData)
     {
-        base.SetupCard(cardData, cardFrameData);
+        base.SetupCard(cardObj, cardFrameData);
 
-        CreatureData creatureData = (CreatureData) cardData;
+        CreatureData creatureData = (CreatureData) cardObj.CardData;
 
         string raceStr = CardParams.StringFromRace(creatureData.Race[0]);
         if (creatureData.Race.Length == 2)

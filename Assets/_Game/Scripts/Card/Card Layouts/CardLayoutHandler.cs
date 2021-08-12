@@ -23,8 +23,9 @@ public abstract class CardLayoutHandler : MonoBehaviour
         get { return _canvas; }
     }
 
-    public virtual void SetupCard(CardData cardData, CardFrameData cardFrameData)
+    public virtual void SetupCard(CardObject cardObj, CardFrameData cardFrameData)
     {
+        CardData cardData = cardObj.CardData;
         _artworkImage.sprite = cardData.ArtworkImage;
         _nameText.text = cardData.Name;
         _costText.text = cardData.Cost.ToString();
@@ -32,9 +33,12 @@ public abstract class CardLayoutHandler : MonoBehaviour
         _frameImage.sprite = cardFrameData.frameImage;
         _cardTypeTextTransform.localPosition = new Vector2(_cardTypeTextTransform.localPosition.x, cardFrameData.cardTypePosY);
 
-        KeywordPrefabHandler.Instance.SetupRules(cardData, this, _rulesPanel);
+        if (cardObj is CreatureObject creatureObj)
+            KeywordPrefabHandler.Instance.SetupRules(creatureObj, _rulesPanel);
+        else if (cardObj is SpellObject spellObj)
+            KeywordPrefabHandler.Instance.SetupRules(spellObj, _rulesPanel);
 
-        if(!string.IsNullOrWhiteSpace(cardData.FlavorText))
+        if (!string.IsNullOrWhiteSpace(cardData.FlavorText))
         {
             FlavorTextLayoutHandler flavorTextLayout =
                 Instantiate(GameParamsHolder.Instance.FlavorTextLayoutPrefab, _rulesPanel);

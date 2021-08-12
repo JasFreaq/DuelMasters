@@ -7,8 +7,8 @@ public class SpellObject : CardObject
     protected override void SetupCard()
     {
         CardFrameData cardFrameData = GameParamsHolder.Instance.GetCardFrameData(false, _cardInst.CardData.Civilization);
-        _cardLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
-        _previewLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
+        _cardLayoutHandler.SetupCard(this, cardFrameData);
+        _previewLayoutHandler.SetupCard(this, cardFrameData);
 
         CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(false, _cardInst.CardData.Civilization);
         _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);

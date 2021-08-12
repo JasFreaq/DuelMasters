@@ -40,18 +40,16 @@ public class KeywordPrefabHandler : MonoBehaviour
         }
     }
 
-    public void SetupRules(CardData cardData, CardLayoutHandler layoutHandler, Transform rulesPanel)
+    public void SetupRules(CreatureObject creatureObj, Transform rulesPanel)
     {
-        if (!string.IsNullOrWhiteSpace(cardData.RulesText)) 
+        CreatureData creatureData = creatureObj.CardData;
+        if (!string.IsNullOrWhiteSpace(creatureData.RulesText)) 
         {
-            string[] rules = cardData.RulesText.Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
+            string[] rules = creatureData.RulesText.Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
 
             Type enumType = typeof(KeywordLayoutType);
             string[] keywords = Enum.GetNames(enumType);
-
-            CreatureData creatureData = cardData as CreatureData;
-            bool isCreature = creatureData;
-
+            
             for (int i = 0, n = rules.Length; i < n; i++)
             {
                 KeywordLayoutType type = KeywordLayoutType.Placeholder;
@@ -62,16 +60,13 @@ public class KeywordPrefabHandler : MonoBehaviour
                     keywordStr = keywordStr.Substring(0, 1) + keywordStr.Substring(1).ToLower();
                     KeywordLayoutType tempType = (KeywordLayoutType) Enum.Parse(enumType, keywords[j]);
 
-                    if (isCreature || tempType == KeywordLayoutType.ShieldTrigger)
+                    if (Regex.Match(rules[i], @"\+[0-9]+").Success)
+                        creatureObj.AddPlusToPower();
+                    
+                    if (rules[i].StartsWith(keywordStr))
                     {
-                        if (isCreature && Regex.Match(rules[i], @"\+[0-9]+").Success)
-                            ((CreatureLayoutHandler) layoutHandler).AddPlusToPower();
-                        
-                        if (rules[i].StartsWith(keywordStr))
-                        {
-                            type = tempType;
-                            break;
-                        }
+                        type = tempType;
+                        break;
                     }
                 }
 
@@ -107,6 +102,47 @@ public class KeywordPrefabHandler : MonoBehaviour
                             itr++;
                         }
                         keywordLayout.SetDescText(ruleStrings2);
+                        break;
+                }
+
+                keywordLayout.SetDescDisplay();
+            }
+        }
+    }
+    
+    public void SetupRules(SpellObject spellObj, Transform rulesPanel)
+    {
+        CardData cardData = spellObj.CardInst.CardData;
+        if (!string.IsNullOrWhiteSpace(cardData.RulesText)) 
+        {
+            string[] rules = cardData.RulesText.Split(new[] {"\r\n", "\r", "\n"}, StringSplitOptions.None);
+
+            Type enumType = typeof(KeywordLayoutType);
+            string[] keywords = Enum.GetNames(enumType);
+            
+            for (int i = 0, n = rules.Length; i < n; i++)
+            {
+                KeywordLayoutType type = KeywordLayoutType.Placeholder;
+
+                for (int j = 0, m = keywords.Length; j < m; j++)
+                {
+                    string keywordStr = Regex.Replace(keywords[j], "([a-z])([A-Z])", "$1 $2");
+                    keywordStr = keywordStr.Substring(0, 1) + keywordStr.Substring(1).ToLower();
+                    KeywordLayoutType tempType = (KeywordLayoutType) Enum.Parse(enumType, keywords[j]);
+
+                    if (tempType == KeywordLayoutType.ShieldTrigger && rules[i].StartsWith(keywordStr))
+                    {
+                        type = tempType;
+                        break;
+                    }
+                }
+
+                KeywordLayoutHandler keywordLayout = Instantiate(_keywordPrefabDict[type], rulesPanel);
+
+                switch (type)
+                {
+                    case KeywordLayoutType.Placeholder:
+                        keywordLayout.SetDescText(rules[i]);
                         break;
                 }
 

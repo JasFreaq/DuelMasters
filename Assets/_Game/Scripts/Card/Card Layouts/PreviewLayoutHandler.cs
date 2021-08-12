@@ -13,7 +13,12 @@ public class PreviewLayoutHandler : MonoBehaviour
     private EventTrigger _canvasEventTrigger;
     
     private bool _activeInCardBrowser, _isHighlighted;
-    
+
+    public CardLayoutHandler CardLayout
+    {
+        get { return _cardLayoutHandler; }
+    }
+
     public Canvas Canvas
     {
         get { return _cardLayoutHandler.Canvas; }
@@ -35,9 +40,9 @@ public class PreviewLayoutHandler : MonoBehaviour
         _canvasEventTrigger.enabled = false;
     }
 
-    public void SetupCard(CardData cardData, CardFrameData cardFrameData)
+    public void SetupCard(CardObject cardObj, CardFrameData cardFrameData)
     {
-        _cardLayoutHandler.SetupCard(cardData, cardFrameData);
+        _cardLayoutHandler.SetupCard(cardObj, cardFrameData);
     }
 
     public void SetActiveInBrowser()

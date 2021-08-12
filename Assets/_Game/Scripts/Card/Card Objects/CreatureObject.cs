@@ -14,6 +14,11 @@ public class CreatureObject : CardObject
         get { return (CreatureData) _cardInst.CardData; }
     }
 
+    public new CreatureLayoutHandler CardLayout
+    {
+        get { return (CreatureLayoutHandler) _cardLayoutHandler; }
+    }
+
     public bool IsEvolutionCreature
     {
         get { return _cardInst.CardData.CardType == CardParams.CardType.EvolutionCreature; }
@@ -22,6 +27,11 @@ public class CreatureObject : CardObject
     public List<CreatureObject> CreaturesUnderEvolution
     {
         get { return _creaturesUnderEvolution; }
+    }
+
+    public BattleCardLayoutHandler BattleLayout
+    {
+        get { return _battleCardLayoutHandler; }
     }
 
     public Canvas BattleLayoutCanvas
@@ -46,8 +56,8 @@ public class CreatureObject : CardObject
     protected override void SetupCard()
     {
         CardFrameData cardFrameData = GameParamsHolder.Instance.GetCardFrameData(true, _cardInst.CardData.Civilization);
-        _cardLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
-        _previewLayoutHandler.SetupCard(_cardInst.CardData, cardFrameData);
+        _cardLayoutHandler.SetupCard(this, cardFrameData);
+        _previewLayoutHandler.SetupCard(this, cardFrameData);
 
         CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(true, _cardInst.CardData.Civilization);
         _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
@@ -73,6 +83,13 @@ public class CreatureObject : CardObject
         _battleCardLayoutHandler.gameObject.SetActive(true);
 
         ActivateCompactCardCollider();
+    }
+
+    public void AddPlusToPower()
+    {
+        ((CreatureLayoutHandler) _cardLayoutHandler).AddPlusToPower();
+        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).AddPlusToPower();
+        _battleCardLayoutHandler.AddPlusToPower();
     }
 
     #endregion
