@@ -49,11 +49,11 @@ public class KeywordPrefabHandler : MonoBehaviour
             Type enumType = typeof(KeywordLayoutType);
             string[] keywords = Enum.GetNames(enumType);
 
+            CreatureData creatureData = cardData as CreatureData;
+            bool isCreature = creatureData;
+
             for (int i = 0, n = rules.Length; i < n; i++)
             {
-                string ruleStr = rules[i].ToLower();
-                ruleStr = Regex.Replace(ruleStr, @"\s", "");
-
                 KeywordLayoutType type = KeywordLayoutType.Placeholder;
 
                 for (int j = 0, m = keywords.Length; j < m; j++)
@@ -62,18 +62,11 @@ public class KeywordPrefabHandler : MonoBehaviour
                     keywordStr = keywordStr.Substring(0, 1) + keywordStr.Substring(1).ToLower();
                     KeywordLayoutType tempType = (KeywordLayoutType) Enum.Parse(enumType, keywords[j]);
 
-                    bool isCreature = cardData is CreatureData;
                     if (isCreature || tempType == KeywordLayoutType.ShieldTrigger)
                     {
                         if (isCreature && Regex.Match(rules[i], @"\+[0-9]+").Success)
                             ((CreatureLayoutHandler) layoutHandler).AddPlusToPower();
-
-                        //if (ruleStr.Contains(keywordStr))
-                        //{
-                        //    type = tempType;
-                        //    break;
-                        //}
-
+                        
                         if (rules[i].StartsWith(keywordStr))
                         {
                             type = tempType;
@@ -82,17 +75,38 @@ public class KeywordPrefabHandler : MonoBehaviour
                     }
                 }
 
-                KeywordLayoutHandler keywordLayoutPrefab = _keywordPrefabDict[type];
-                KeywordLayoutHandler keywordLayout = Instantiate(keywordLayoutPrefab, rulesPanel);
+                KeywordLayoutHandler keywordLayout = Instantiate(_keywordPrefabDict[type], rulesPanel);
 
+                int itr = 0;
                 switch (type)
                 {
                     case KeywordLayoutType.Placeholder:
                         keywordLayout.SetDescText(rules[i]);
                         break;
 
+                    case KeywordLayoutType.Evolution:
+                        string[] ruleStrings1 = new string[creatureData.Race.Length];
+                        foreach (CardParams.Race race in creatureData.Race)
+                        {
+                            ruleStrings1[itr] = CardParams.PluralStringFromRace(race);
+                            itr++;
+                        }
+                        keywordLayout.SetDescText(ruleStrings1);
+                        break;
+
                     case KeywordLayoutType.PowerAttacker:
                         keywordLayout.SetDescText(Regex.Match(rules[i], @"[0-9]+").Value);
+                        break;
+
+                    case KeywordLayoutType.VortexEvolution:
+                        CardParams.Race[] vortexRaces = creatureData.GetVortexEvolutionRaces();
+                        string[] ruleStrings2 = new string[vortexRaces.Length];
+                        foreach (CardParams.Race race in vortexRaces)
+                        {
+                            ruleStrings2[itr] = CardParams.PluralStringFromRace(race);
+                            itr++;
+                        }
+                        keywordLayout.SetDescText(ruleStrings2);
                         break;
                 }
 

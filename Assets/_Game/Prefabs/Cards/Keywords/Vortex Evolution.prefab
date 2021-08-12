@@ -133,11 +133,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3216044048584861266, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
       propertyPath: m_text
-      value: <space=50>\u2022 Vortex Evolution - {Race} and {Race}
+      value: <space=50>\u2022 Vortex Evolution - Put on one of your {Race1} and one
+        of your {Race2}
       objectReference: {fileID: 0}
     - target: {fileID: 8329221152336461383, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
       propertyPath: _type
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583698109796773868, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}
+      propertyPath: m_text
+      value: <space=50>\u2022 Vortex Evolution - {Race} and {Race}
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d6b283a4bca708489fadbf6ed41ea1e, type: 3}

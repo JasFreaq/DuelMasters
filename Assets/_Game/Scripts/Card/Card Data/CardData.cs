@@ -104,7 +104,30 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
     }
 
     #endregion
-    
+
+    public CardParams.Race[] GetVortexEvolutionRaces()
+    {
+        List<CardParams.Race> races = new List<CardParams.Race>();
+        foreach (EffectData effectData in ruleEffects)
+        {
+            if (effectData.EffectFunctionality.Type == EffectFunctionalityType.Keyword)
+            {
+                if (effectData.EffectFunctionality.Keyword == KeywordType.VortexEvolution)
+                {
+                    List<RaceHolder> raceHolders = effectData.EffectFunctionality.VortexRaces;
+                    foreach (RaceHolder raceHolder in raceHolders)
+                    {
+                        races.Add(raceHolder.race);
+                    }
+                    
+                    break;
+                }
+            }
+        }
+
+        return races.ToArray();
+    }
+
     public void OnBeforeSerialize()
     {
         List<KeywordType> keywordTypes = new List<KeywordType>();
