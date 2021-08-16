@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class AIController : Controller
 {
+    private int _numSelection = 0, _lowerBound, _upperBound;
+    private bool _numSelectionMade;
+
     void Start()
     {
         _isPlayer = false;
@@ -51,4 +54,37 @@ public class AIController : Controller
             SubmitSelection();
         }
     }
+
+    #region Number Selection Methods
+
+    public IEnumerator GetNumberSelectionRoutine(int lower, int upper)
+    {
+        _numSelection = _lowerBound = lower;
+        _upperBound = upper;
+
+        while (!_numSelectionMade)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        _numSelectionMade = false;
+        yield return _numSelection;
+    }
+
+    public void DecreaseSelection()
+    {
+        _numSelection = Mathf.Max(_numSelection - 1, _lowerBound);
+    }
+
+    public void IncreaseSelection()
+    {
+        _numSelection = Mathf.Min(_numSelection + 1, _upperBound);
+    }
+
+    public void MakeSelection()
+    {
+        _numSelectionMade = true;
+    }
+
+    #endregion
 }

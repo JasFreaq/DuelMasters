@@ -62,8 +62,10 @@ public class CreatureObject : CardObject
         CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(true, _cardInst.CardData.Civilization);
         _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
         _battleCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
-    }
 
+        base.SetupCard();
+    }
+    
     public override void ActivateCardLayout()
     {
         base.ActivateCardLayout();

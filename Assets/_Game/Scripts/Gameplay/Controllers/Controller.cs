@@ -14,7 +14,10 @@ public class Controller : MonoBehaviour
     protected List<CardObject> _cardSelections = new List<CardObject>();
     protected List<ShieldObject> _shieldSelections = new List<ShieldObject>();
     protected int _selectionLowerBound, _selectionUpperBound;
-    protected bool _selectMultiple, _selectCard = true, _selectionMade;
+    protected bool _selectMultiple, _selectCard = true;
+    private bool _selectionMade;
+    
+    private bool _choosingEffectActivation, _activateEffect;
 
     public CardObject CurrentlySelected
     {
@@ -195,20 +198,54 @@ public class Controller : MonoBehaviour
         yield return null;
     }
 
+    #region May Activate Effect Methods
+
+    public virtual IEnumerator ChooseEffectActivationRoutine()
+    {
+        _choosingEffectActivation = true;
+        while (_choosingEffectActivation) 
+            yield return new WaitForEndOfFrame();
+
+        yield return _activateEffect;
+    }
+
+    public void ActivateEffectActivation()
+    {
+        _activateEffect = true;
+        _choosingEffectActivation = false;
+    }
+
+    public void CancelEffectActivation()
+    {
+        _activateEffect = false;
+        _choosingEffectActivation = false;
+    }
+
+    #endregion
+
     #region Multiple Card Selection Methods
 
-    public void SubmitSelection()
+    protected void SubmitSelection()
     {
         _selectionMade = true;
     }
 
-    public void CancelSelection()
+    protected void CancelSelection()
     {
         _cardSelections.Clear();
         _shieldSelections.Clear();
         SubmitSelection();
     }
 
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardObject> CardList)
+    {
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
+                new List<CardBehaviour>(CardList), null));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+    
     public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<ShieldObject> shieldList)
     {
         Coroutine<List<CardBehaviour>> routine =

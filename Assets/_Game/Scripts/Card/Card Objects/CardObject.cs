@@ -179,7 +179,10 @@ public abstract class CardObject : CardBehaviour
 
     #region Setup Methods
 
-    protected abstract void SetupCard();
+    protected virtual void SetupCard()
+    {
+        _cardInst.SetupRuleEffects();
+    }
     
     public virtual void ActivateCardLayout()
     {

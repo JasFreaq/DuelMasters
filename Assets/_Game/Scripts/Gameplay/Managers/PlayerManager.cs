@@ -167,6 +167,7 @@ public class PlayerManager : MonoBehaviour
                 creatureObj.ActivateBattleLayout();
                 yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj, underEvolvingCard);
                 creatureObj.HoverPreviewHandler.PreviewEnabled = true;
+                creatureObj.CardInst.TriggerWhenPutIntoBattle();
             }
             else
                 yield return MoveToHandRoutine(creatureObj);
@@ -176,6 +177,7 @@ public class PlayerManager : MonoBehaviour
             creatureObj.ActivateBattleLayout();
             yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj);
             creatureObj.HoverPreviewHandler.PreviewEnabled = true;
+            creatureObj.CardInst.TriggerWhenPutIntoBattle();
         }
     }
 

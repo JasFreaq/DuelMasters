@@ -6,12 +6,10 @@ using UnityEngine;
 public enum EffectConditionType
 {
     WhenPutIntoBattle,
-    WhenCast,
     WhileCondition,
     WhenAttacking,
     WhenBlocking,
     WhenYourCreatureIsBlocked,
-    OnShieldTrigger,
     AfterBattle,
     WhenWouldBeDestroyed,
     WhenDestroyed,

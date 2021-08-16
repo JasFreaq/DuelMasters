@@ -29,6 +29,29 @@ public class RaceHolder
 }
 
 [System.Serializable]
+public class DestroyParam
+{
+    public CardZoneType destroyZone;
+    public CountType countType;
+    public int lookCount = 1;
+
+    public override string ToString()
+    {
+        string str = "Destroy ";
+        if (countType == CountType.All)
+            str += "all cards";
+        else
+        {
+            str += $"{lookCount} card";
+            if (lookCount > 1)
+                str += "s ";
+        }
+
+        return str;
+    }
+}
+
+[System.Serializable]
 public class DiscardParam
 {
     public DiscardType discardType;
@@ -92,7 +115,9 @@ public class LookAtParam
 public class EffectFunctionality : ScriptableObject
 {
     [SerializeReference] private EffectFunctionalityType _type;
-    [SerializeReference] private FunctionTargetType _target;
+    [SerializeReference] private CardTargetType _targetCard;
+    [SerializeReference] private PlayerTargetType _choosingPlayer;
+    [SerializeReference] private PlayerTargetType _targetPlayer;
     [SerializeReference] private bool _assignedCondition, _connectSubFunctionality;
     [SerializeReference] private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
@@ -107,6 +132,7 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private KeywordType _keyword;
     [SerializeReference] private MultipleBreakerType _multipleBreaker;
     [SerializeReference] private TapStateType _tapState;
+    [SerializeReference] private DestroyParam _destroyParam = new DestroyParam();
     [SerializeReference] private DiscardParam _discardParam = new DiscardParam();
     [SerializeReference] private LookAtParam _lookAtParam = new LookAtParam();
     [SerializeReference] private int _attackBoost;
@@ -127,12 +153,30 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public FunctionTargetType Target
+    public CardTargetType TargetCard
     {
-        get { return _target; }
+        get { return _targetCard; }
 
 #if UNITY_EDITOR
-        set { _target = value; }
+        set { _targetCard = value; }
+#endif
+    }
+
+    public PlayerTargetType ChoosingPlayer
+    {
+        get { return _choosingPlayer; }
+
+#if UNITY_EDITOR
+        set { _choosingPlayer = value; }
+#endif
+    }
+
+    public PlayerTargetType TargetPlayer
+    {
+        get { return _targetPlayer; }
+
+#if UNITY_EDITOR
+        set { _targetPlayer = value; }
 #endif
     }
 
@@ -245,6 +289,15 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
+    public DestroyParam DestroyParam
+    {
+        get { return _destroyParam; }
+
+#if UNITY_EDITOR
+        set { _destroyParam = value; }
+#endif
+    }
+    
     public DiscardParam DiscardParam
     {
         get { return _discardParam; }
@@ -327,7 +380,7 @@ public class EffectFunctionality : ScriptableObject
     {
         string str = GetTypeRepresentation();
         
-        if (_target == FunctionTargetType.TargetOther || _shouldMultiplyVal)
+        if (_targetCard == CardTargetType.TargetOther || _shouldMultiplyVal)
             str += $" {_targetingParameter}";
         
         if (_assignedCondition)
@@ -367,15 +420,15 @@ public class EffectFunctionality : ScriptableObject
 
                 case EffectFunctionalityType.Destroy:
                     string str3 = "Destroy";
-                    if (_target == FunctionTargetType.TargetSelf)
+                    if (_targetCard == CardTargetType.TargetSelf)
                         str3 += " self";
                     return str3;
 
                 case EffectFunctionalityType.Discard:
-                    return $"{_target} {_discardParam}";
+                    return $"{_targetCard} {_discardParam}";
 
                 case EffectFunctionalityType.LookAtRegion:
-                    return $"{_lookAtParam} in {_target}'s {_lookAtParam.lookAtZone}";
+                    return $"{_lookAtParam} in {_targetCard}'s {_lookAtParam.lookAtZone}";
 
                 case EffectFunctionalityType.PowerAttacker:
                     return $"Power Attacker +{_attackBoost}";
@@ -399,18 +452,15 @@ public class EffectFunctionality : ScriptableObject
 
         string GetRegionMovementString()
         {
-            string str1;
+            string str1 = "";
 
-            switch (_target)
+            switch (_targetPlayer)
             {
-                case FunctionTargetType.Player:
+                case PlayerTargetType.TargetPlayer:
                     str1 = "Player moves ";
                     break;
-                case FunctionTargetType.Opponent:
+                case PlayerTargetType.TargetOpponent:
                     str1 = "Opponent moves ";
-                    break;
-                default:
-                    str1 = "Move ";
                     break;
             }
 

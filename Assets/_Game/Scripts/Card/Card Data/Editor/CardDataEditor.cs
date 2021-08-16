@@ -205,15 +205,18 @@ public class CardDataEditor : Editor
         GUILayout.Label(labelText, EditorStyles.boldLabel);
         
         functionality.Type = DrawFoldout(functionality.Type);
-        if (functionality.Type == EffectFunctionalityType.RegionMovement &&
-            functionality.Target == FunctionTargetType.TargetOther)
-            functionality.TargetingParameter.Type = ConditionType.Check;
 
         bool showMultiplyVal = false;
         DrawFunctionTypeSpecificParams();
 
-        FunctionTargetType initialTarget = functionality.Target;
-        functionality.Target = DrawFoldout(functionality.Target);
+        functionality.TargetCard = DrawFoldout(functionality.TargetCard);
+        if (functionality.TargetCard == CardTargetType.TargetOther)
+        {
+            GUILayout.Label("Chooser:");
+            functionality.ChoosingPlayer = DrawFoldout(functionality.ChoosingPlayer);
+            GUILayout.Label("Target:");
+            functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
+        }
 
         if (showMultiplyVal)
         {
@@ -229,19 +232,8 @@ public class CardDataEditor : Editor
 
         GUILayout.EndHorizontal();
 
-        if (initialTarget != FunctionTargetType.TargetOther &&
-            functionality.Target == FunctionTargetType.TargetOther)
-        {
-            functionality.TargetingParameter.Type = 
-                functionality.Type == EffectFunctionalityType.RegionMovement ? 
-                    ConditionType.Check : ConditionType.Affect;
-        }
-
-        if (functionality.TargetUnspecified())
-        {
-            if (functionality.Target == FunctionTargetType.TargetOther || functionality.ShouldMultiplyVal)
-                DrawTargetingParameter(functionality.TargetingParameter);
-        }
+        if (functionality.TargetUnspecified() && functionality.ShouldMultiplyVal)
+            DrawTargetingParameter(functionality.TargetingParameter);
 
         if (functionality.AssignedCondition)
         {
@@ -291,6 +283,10 @@ public class CardDataEditor : Editor
 
                 case EffectFunctionalityType.ToggleTap:
                     functionality.TapState = DrawFoldout(functionality.TapState);
+                    break;
+
+                case EffectFunctionalityType.Destroy:
+                    DrawDestroyParam();
                     break;
 
                 case EffectFunctionalityType.Discard:
@@ -379,6 +375,18 @@ public class CardDataEditor : Editor
             }
             
             GUILayout.EndVertical();
+        }
+
+        void DrawDestroyParam()
+        {
+            DestroyParam destroyParam = functionality.DestroyParam;
+            destroyParam.destroyZone = DrawFoldout(destroyParam.destroyZone);
+            destroyParam.countType = DrawFoldout(destroyParam.countType);
+            if (destroyParam.countType == CountType.Number)
+            {
+                if (int.TryParse(EditorGUILayout.TextField($"{destroyParam.lookCount}"), out int num))
+                    destroyParam.lookCount = num;
+            }
         }
 
         void DrawDiscardParam()

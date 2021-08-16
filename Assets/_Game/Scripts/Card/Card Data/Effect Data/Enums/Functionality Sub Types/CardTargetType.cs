@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FunctionTargetType
+public enum CardTargetType
 {
     AutoTarget,
     NoTarget,
     TargetOther,
-    TargetSelf,
-    Player,
-    Opponent
+    TargetSelf
 }

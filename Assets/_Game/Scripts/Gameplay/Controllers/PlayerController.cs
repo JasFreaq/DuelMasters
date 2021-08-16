@@ -325,10 +325,26 @@ public class PlayerController : Controller
         }
     }
 
+    #region May Activate Effect Methods
+
+    public override IEnumerator ChooseEffectActivationRoutine()
+    {
+        _actionOverlay.ActivateMayUseEffectButton(ActivateEffectActivation,CancelEffectActivation);
+        
+        Coroutine<bool> routine = this.StartCoroutine<bool>(base.ChooseEffectActivationRoutine());
+        yield return routine.coroutine;
+
+        _actionOverlay.DeactivateButtons();
+
+        yield return routine.returnVal;
+    }
+
+    #endregion
+
     #region Multiple Cards Selection Methods
 
     protected override IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
-        EffectTargetingCondition targetingCondition = null)
+        EffectTargetingCondition targetingCondition)
     {
         _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
         _actionOverlay.AdjustCardSelectionButtons(lower, upper, 0);

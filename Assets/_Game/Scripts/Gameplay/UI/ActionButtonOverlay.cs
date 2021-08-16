@@ -41,6 +41,29 @@ public class ActionButtonOverlay : MonoBehaviour
         }
     }
 
+    public void ActivateMayUseEffectButton(UnityAction activateAction, UnityAction cancelAction)
+    {
+        ActionButton activateButton = _actionButtons[0];
+        if (!activateButton.gameObject.activeInHierarchy)
+        {
+            activateButton.button.onClick.RemoveAllListeners();
+            activateButton.button.onClick.AddListener(activateAction);
+            activateButton.text.text = "Activate Effect";
+            activateButton.button.gameObject.SetActive(true);
+        }
+
+        ActionButton cancelButton = _actionButtons[1];
+        if (!cancelButton.gameObject.activeInHierarchy)
+        {
+            cancelButton.button.onClick.RemoveAllListeners();
+            cancelButton.button.onClick.AddListener(cancelAction);
+            cancelButton.text.text = "Cancel";
+            cancelButton.button.gameObject.SetActive(true);
+        }
+    }
+
+    #region Card Selection Methods
+
     public void ActivateCardSelectionButtons(UnityAction submitAction, UnityAction cancelAction)
     {
         ActionButton submitButton = _actionButtons[0];
@@ -76,6 +99,8 @@ public class ActionButtonOverlay : MonoBehaviour
         }
         submitButton.text.text = $"Submit {selected}";
     }
+
+    #endregion
 
     public void DeactivateButtons()
     {

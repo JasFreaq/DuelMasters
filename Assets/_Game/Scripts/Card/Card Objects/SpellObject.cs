@@ -12,5 +12,7 @@ public class SpellObject : CardObject
 
         CompactCardFrameData compactFrameData = GameParamsHolder.Instance.GetCompactFrameData(false, _cardInst.CardData.Civilization);
         _manaCardLayoutHandler.SetupCard(_cardInst.CardData, compactFrameData);
+
+        base.SetupCard();
     }
 }
