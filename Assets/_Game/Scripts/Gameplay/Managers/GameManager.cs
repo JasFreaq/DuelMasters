@@ -527,9 +527,18 @@ public class GameManager : MonoBehaviour
                 break;
             
             case CardZoneType.BattleZone:
-                Coroutine<List<CardBehaviour>> routine6 =
-                    choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true, 
-                        affectedPlayer.DataHandler.CardsInBattle, targetingCondition));
+                Coroutine<List<CardBehaviour>> routine6;
+                if (movementZones.fromBothPlayers)
+                {
+                    routine6 = choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true,
+                        _playerManager.DataHandler.CardsInBattle, _opponentManager.DataHandler.CardsInBattle, targetingCondition));
+                }
+                else
+                {
+                    routine6 = choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true,
+                            affectedPlayer.DataHandler.CardsInBattle, targetingCondition));
+                }
+                 
                 yield return routine6.coroutine;
                 selectedCards = routine6.returnVal;
                 break;

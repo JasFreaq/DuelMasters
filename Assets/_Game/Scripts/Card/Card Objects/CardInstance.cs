@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CardInstance
 {
-    private CardBehaviour _card;
+    private CardObject _cardObj;
     private CardData _cardData;
     private CardZoneType _currentZone = CardZoneType.Deck;
 
@@ -15,6 +15,8 @@ public class CardInstance
 
     private Action _whenPlayed;
     private Action _whenPutIntoBattle;
+    private Action _whenDestroyed;
+    private Action _whenWouldBeDestroyed;
 
     #endregion
 
@@ -23,9 +25,9 @@ public class CardInstance
         _cardData = cardData;
     }
 
-    public CardBehaviour Card
+    public CardObject CardObj
     {
-        set { _card = value; }
+        set { _cardObj = value; }
     }
 
     public CardData CardData
@@ -107,17 +109,59 @@ public class CardInstance
             case EffectConditionType.WhenPutIntoBattle:
                 _whenPutIntoBattle += function;
                 break;
+
+            case EffectConditionType.WhenDestroyed:
+                _whenDestroyed += function;
+                break;
+
+            case EffectConditionType.WhenWouldBeDestroyed:
+                _whenWouldBeDestroyed += function;
+                break;
         }
     }
     
-    public void TriggerWhenPlayed()
+    public bool TriggerWhenPlayed()
     {
-        _whenPlayed?.Invoke();
+        if (_whenPlayed != null)
+        {
+            _whenPlayed.Invoke();
+            return true;
+        }
+
+        return false;
     }
     
-    public void TriggerWhenPutIntoBattle()
+    public bool TriggerWhenPutIntoBattle()
     {
-        _whenPutIntoBattle?.Invoke();
+        if (_whenPutIntoBattle != null)
+        {
+            _whenPutIntoBattle.Invoke();
+            return true;
+        }
+
+        return false;
+    }
+    
+    public bool TriggerWhenDestroyed()
+    {
+        if (_whenDestroyed != null)
+        {
+            _whenDestroyed.Invoke();
+            return true;
+        }
+
+        return false;
+    }
+    
+    public bool TriggerWhenWouldBeDestroyed()
+    {
+        if (_whenWouldBeDestroyed != null)
+        {
+            _whenWouldBeDestroyed.Invoke();
+            return true;
+        }
+
+        return false;
     }
 
     private void ProcessRegionMovementFunctionality(EffectFunctionality functionality, bool mayUse)
@@ -130,14 +174,13 @@ public class CardInstance
                 break;
 
             case CardTargetType.TargetSelf:
-                GameManager.Instance.ProcessRegionMovement(_card, functionality.MovementZones);
+                GameManager.Instance.ProcessRegionMovement(_cardObj, functionality.MovementZones);
                 break;
 
             case CardTargetType.TargetOther:
-                bool playerChooses = functionality.ChoosingPlayer == PlayerTargetType.TargetPlayer ? true : false;
-                bool affectPlayer = functionality.TargetPlayer == PlayerTargetType.TargetPlayer ? true : false;
-                GameManager.Instance.ProcessRegionMovement(playerChooses, affectPlayer, functionality.MovementZones,
-                    functionality.TargetingCondition, mayUse);
+                GameManager.Instance.ProcessRegionMovement(functionality.ChoosingPlayer == PlayerTargetType.TargetPlayer,
+                    functionality.TargetPlayer == PlayerTargetType.TargetPlayer, 
+                    functionality.MovementZones, functionality.TargetingCondition, mayUse);
                 break;
         }
     }

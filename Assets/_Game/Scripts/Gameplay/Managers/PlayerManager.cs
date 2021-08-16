@@ -271,7 +271,10 @@ public class PlayerManager : MonoBehaviour
 
     public Coroutine MoveToGraveyard(CardObject cardObj)
     {
-        return StartCoroutine(MoveToGraveyardRoutine(cardObj));
+        if (!cardObj.CardInst.TriggerWhenWouldBeDestroyed()) 
+            return StartCoroutine(MoveToGraveyardRoutine(cardObj));
+
+        return null;
     }
 
     private IEnumerator MoveToGraveyardRoutine(CardObject cardObj)
@@ -294,6 +297,8 @@ public class PlayerManager : MonoBehaviour
         _graveyardManager.AddCard(cardObj);
 
         cardObj.gameObject.SetActive(true);
+
+        cardObj.CardInst.TriggerWhenDestroyed();
         yield break;
     }
 

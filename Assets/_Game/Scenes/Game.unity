@@ -1585,7 +1585,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893572537}
   m_LocalRotation: {x: -0.7933534, y: 0, z: 0, w: 0.6087614}
-  m_LocalPosition: {x: 15, y: 2.85, z: -26}
+  m_LocalPosition: {x: 13.5, y: 2.85, z: -26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1042105412}
@@ -1969,7 +1969,7 @@ MonoBehaviour:
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
   _playerDeck: {fileID: 11400000, guid: 615ab36afa02f2547bb4ee3aa3d2e43c, type: 2}
-  _opponentDeck: {fileID: 11400000, guid: ad508f18e61da7f4d986df4244172f2b, type: 2}
+  _opponentDeck: {fileID: 11400000, guid: 889dc1febc334be479bcd52e9096e2a2, type: 2}
   _actionOverlay: {fileID: 0}
   _numberSelector: {fileID: 1829933507}
   _cardBrowserOverlay: {fileID: 2141456923}

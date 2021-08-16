@@ -237,11 +237,11 @@ public class Controller : MonoBehaviour
         SubmitSelection();
     }
 
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardObject> CardList)
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardObject> cardList)
     {
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
-                new List<CardBehaviour>(CardList), null));
+                new List<CardBehaviour>(cardList), null));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
@@ -260,6 +260,28 @@ public class Controller : MonoBehaviour
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         foreach (KeyValuePair<int, CreatureObject> pair in creatureDict)
+        {
+            CardBehaviour card = pair.Value;
+            cards.Add(card);
+        }
+
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
+                targetingCondition));
+        yield return routine.coroutine;
+        yield return routine.returnVal;
+    }
+
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CreatureObject> creatureDict1,
+        Dictionary<int, CreatureObject> creatureDict2, EffectTargetingCondition targetingCondition)
+    {
+        List<CardBehaviour> cards = new List<CardBehaviour>();
+        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict1)
+        {
+            CardBehaviour card = pair.Value;
+            cards.Add(card);
+        }
+        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict2)
         {
             CardBehaviour card = pair.Value;
             cards.Add(card);
