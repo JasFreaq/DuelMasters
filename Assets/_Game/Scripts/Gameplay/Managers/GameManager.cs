@@ -302,13 +302,21 @@ public class GameManager : MonoBehaviour
         Vector3 creaturePos = creatureObj.transform.position;
         float attackTime = GameParamsHolder.Instance.AttackTime;
 
+        int attackingCreaturePower = creatureObj.CardData.Power;
+        if (creatureObj.CardInst.IsPowerAttacker)
+        {
+            attackingCreaturePower += creatureObj.CardInst.PowerBoost;
+            creatureObj.DisplayPowerAttack(attackingCreaturePower);
+        }
+        int attackedCreaturePower = attackedCreatureObj.CardData.Power;
+
         creatureObj.transform.DOMove(attackedCreatureObj.transform.position, attackTime).SetEase(Ease.InCubic);
         yield return new WaitForSeconds(attackTime);
 
         controller.DeselectCurrentlySelected();
 
-        int attackingCreaturePower = creatureObj.CardData.Power;
-        int attackedCreaturePower = attackedCreatureObj.CardData.Power;
+        if (creatureObj.CardInst.IsPowerAttacker)
+            creatureObj.ResetPowerAttack();
 
         if (attackingCreaturePower > attackedCreaturePower)
             yield return attackedCreatureObj.SendToGraveyard();

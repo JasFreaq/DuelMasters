@@ -1364,7 +1364,6 @@ MonoBehaviour:
   _bgRenderer: {fileID: 7332533856434192645}
   _highlightFrame: {fileID: 2356031955993564043}
   _tappedOverlay: {fileID: 7332533856521770066}
-  _cardFrameDatabase: {fileID: 0}
   _creatureRaceText: {fileID: 7332533856762865641}
   _powerText: {fileID: 7332533856390485416}
   _powerTextShade: {fileID: 5433087541058582856}

@@ -135,7 +135,7 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private DestroyParam _destroyParam = new DestroyParam();
     [SerializeReference] private DiscardParam _discardParam = new DiscardParam();
     [SerializeReference] private LookAtParam _lookAtParam = new LookAtParam();
-    [SerializeReference] private int _attackBoost;
+    [SerializeReference] private int _powerBoost;
     [SerializeReference] private int _costAdjustmentAmount;
 
     [SerializeReference] private List<RaceHolder> _vortexRaces = new List<RaceHolder>();
@@ -316,12 +316,12 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
     
-    public int AttackBoost
+    public int PowerBoost
     {
-        get { return _attackBoost; }
+        get { return _powerBoost; }
 
 #if UNITY_EDITOR
-        set { _attackBoost = value; }
+        set { _powerBoost = value; }
 #endif
     }
     
@@ -431,10 +431,10 @@ public class EffectFunctionality : ScriptableObject
                     return $"{_lookAtParam} in {_targetCard}'s {_lookAtParam.lookAtZone}";
 
                 case EffectFunctionalityType.PowerAttacker:
-                    return $"Power Attacker +{_attackBoost}";
+                    return $"Power Attacker +{_powerBoost}";
 
                 case EffectFunctionalityType.GrantPower:
-                    return $"Gets +{_attackBoost}";
+                    return $"Gets +{_powerBoost}";
                 
                 case EffectFunctionalityType.GrantFunction:
                     string str2 = "Grant Function";

@@ -8,6 +8,7 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
     #region Static Data Members
 
     public static EffectTargetingCondition BlockerCondition = new EffectTargetingCondition();
+    public static EffectTargetingCondition PowerAttackerCondition = new EffectTargetingCondition();
 
     #endregion
 

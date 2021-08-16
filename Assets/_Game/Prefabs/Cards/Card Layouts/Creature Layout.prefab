@@ -571,9 +571,7 @@ MonoBehaviour:
   _costText: {fileID: 3066916610602583761}
   _cardTypeTextTransform: {fileID: 3066916610537768396}
   _rulesPanel: {fileID: 3066916608685474678}
-  flavorTextLayoutPrefab: {fileID: 2915732731467405920, guid: 05af3ca0a52150b429491288330fbfc5, type: 3}
   _highlightFrame: {fileID: 5386337665500828027}
-  _cardFrameDatabase: {fileID: 0}
   _creatureText: {fileID: 3066916610537768395}
   _creatureRaceText: {fileID: 5098640856492570479}
   _powerText: {fileID: 9192050661014457760}

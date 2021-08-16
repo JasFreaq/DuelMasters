@@ -87,14 +87,33 @@ public class CreatureObject : CardObject
         ActivateCompactCardCollider();
     }
 
+    #endregion
+
+    #region Power Adjustment Methods
+
     public void AddPlusToPower()
     {
         ((CreatureLayoutHandler) _cardLayoutHandler).AddPlusToPower();
-        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).AddPlusToPower();
+        ((CreatureLayoutHandler) _previewLayoutHandler.CardLayout).AddPlusToPower();
         _battleCardLayoutHandler.AddPlusToPower();
     }
 
+    public void DisplayPowerAttack(int updatedPower)
+    {
+        ((CreatureLayoutHandler)_cardLayoutHandler).DisplayPowerAttack(updatedPower);
+        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).DisplayPowerAttack(updatedPower);
+        _battleCardLayoutHandler.DisplayPowerAttack(updatedPower);
+    }
+
+    public void ResetPowerAttack()
+    {
+        ((CreatureLayoutHandler)_cardLayoutHandler).ResetPowerAttack();
+        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).ResetPowerAttack();
+        _battleCardLayoutHandler.ResetPowerAttack();
+    }
+
     #endregion
+
 
     #region State Methods
 

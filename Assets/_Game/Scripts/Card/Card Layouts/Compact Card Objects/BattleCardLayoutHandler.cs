@@ -10,6 +10,7 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
     [SerializeField] private TextMeshProUGUI _powerTextShade;
 
     private bool _addPlusToPower;
+    private string _originalPowerString;
 
     public override void SetupCard(CardData cardData, CompactCardFrameData compactFrameData)
     {
@@ -32,8 +33,25 @@ public class BattleCardLayoutHandler : CompactCardLayoutHandler
         }
     }
 
+    #region Power Adjustment Methods
+
     public void AddPlusToPower()
     {
         _addPlusToPower = true;
     }
+
+    public void DisplayPowerAttack(int updatedPower)
+    {
+        _originalPowerString = _powerText.text;
+        _powerText.text = updatedPower.ToString();
+        _powerTextShade.text = updatedPower.ToString();
+    }
+
+    public void ResetPowerAttack()
+    {
+        _powerText.text = _originalPowerString;
+        _powerTextShade.text = _originalPowerString;
+    }
+
+    #endregion
 }

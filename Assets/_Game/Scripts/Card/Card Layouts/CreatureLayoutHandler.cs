@@ -17,6 +17,7 @@ public class CreatureLayoutHandler : CardLayoutHandler
     [SerializeField] private GameObject _waveStrikerIconImage;
 
     private bool _addPlusToPower;
+    private string _originalPowerString;
 
     public override void SetupCard(CardObject cardObj, CardFrameData cardFrameData)
     {
@@ -39,8 +40,25 @@ public class CreatureLayoutHandler : CardLayoutHandler
         }
     }
 
+    #region Power Adjustment Methods
+
     public void AddPlusToPower()
     {
         _addPlusToPower = true;
     }
+
+    public void DisplayPowerAttack(int updatedPower)
+    {
+        _originalPowerString = _powerText.text;
+        _powerText.text = updatedPower.ToString();
+        _powerTextShade.text = updatedPower.ToString();
+    }
+
+    public void ResetPowerAttack()
+    {
+        _powerText.text = _originalPowerString;
+        _powerTextShade.text = _originalPowerString;
+    }
+
+    #endregion
 }

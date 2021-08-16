@@ -9,7 +9,10 @@ public class CardInstance
     private CardData _cardData;
     private CardZoneType _currentZone = CardZoneType.Deck;
 
-    private bool _isTapped = false;
+    private bool _isTapped;
+    private readonly bool _isBlocker;
+    private bool _isPowerAttacker;
+    private int _powerBoost;
 
     #region Effect Data Members
 
@@ -23,6 +26,22 @@ public class CardInstance
     public CardInstance(CardData cardData)
     {
         _cardData = cardData;
+        foreach (EffectData effectData in cardData.ruleEffects)
+        {
+            EffectFunctionality functionality = effectData.EffectFunctionality;
+            switch (functionality.Type)
+            {
+                case EffectFunctionalityType.Keyword:
+                    if (functionality.Keyword == KeywordType.Blocker)
+                        _isBlocker = true;
+                    break;
+
+                case EffectFunctionalityType.PowerAttacker:
+                    _isPowerAttacker = true;
+                    _powerBoost = functionality.PowerBoost;
+                    break;
+            }
+        }
     }
 
     public CardObject CardObj
@@ -47,10 +66,17 @@ public class CardInstance
     
     public bool IsBlocker
     {
-        get
-        {
-            return CardData.IsTargetingConditionSatisfied(this, CardData.BlockerCondition);
-        }
+        get { return _isBlocker; }
+    }
+    
+    public bool IsPowerAttacker
+    {
+        get { return _isPowerAttacker; }
+    }
+
+    public int PowerBoost
+    {
+        get { return _powerBoost; }
     }
 
     public void SetCurrentZone(CardZoneType currentZone)

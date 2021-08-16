@@ -304,8 +304,8 @@ public class CardDataEditor : Editor
 
                 case EffectFunctionalityType.PowerAttacker:
                 case EffectFunctionalityType.GrantPower:
-                    if (int.TryParse(EditorGUILayout.TextField($"{functionality.AttackBoost}"), out int num1))
-                        functionality.AttackBoost = num1;
+                    if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerBoost}"), out int num1))
+                        functionality.PowerBoost = num1;
                     DrawMultiplyVal();
                     break;
 
