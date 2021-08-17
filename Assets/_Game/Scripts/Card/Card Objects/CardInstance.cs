@@ -11,10 +11,14 @@ public class CardInstance
 
     private bool _isTapped;
     private readonly bool _isBlocker;
+    
+    #region Effect Data Members
+
+    private bool _isMultipleBreaker;
+    private MultipleBreakerType _multipleBreakerType;
+
     private bool _isPowerAttacker;
     private int _powerBoost;
-
-    #region Effect Data Members
 
     private Action _whenPlayed;
     private Action _whenPutIntoBattle;
@@ -22,7 +26,7 @@ public class CardInstance
     private Action _whenWouldBeDestroyed;
 
     #endregion
-
+    
     public CardInstance(CardData cardData)
     {
         _cardData = cardData;
@@ -31,14 +35,47 @@ public class CardInstance
             EffectFunctionality functionality = effectData.EffectFunctionality;
             switch (functionality.Type)
             {
+                case EffectFunctionalityType.GrantFunction:
+                case EffectFunctionalityType.DisableFunction:
+                    break;
+
+                case EffectFunctionalityType.RegionMovement:
+                    break;
+
+                case EffectFunctionalityType.AttackTarget:
+                    break;
+
+                case EffectFunctionalityType.TargetBehaviour:
+                    break;
+
                 case EffectFunctionalityType.Keyword:
                     if (functionality.Keyword == KeywordType.Blocker)
                         _isBlocker = true;
                     break;
 
+                case EffectFunctionalityType.MultipleBreaker:
+                    _isMultipleBreaker = true;
+                    _multipleBreakerType = functionality.MultipleBreaker;
+                    break;
+
+                case EffectFunctionalityType.ToggleTap:
+                    break;
+
+                case EffectFunctionalityType.Destroy:
+                    break;
+
+                case EffectFunctionalityType.Discard:
+                    break;
+
+                case EffectFunctionalityType.LookAtRegion:
+                    break;
+
                 case EffectFunctionalityType.PowerAttacker:
                     _isPowerAttacker = true;
                     _powerBoost = functionality.PowerBoost;
+                    break;
+
+                case EffectFunctionalityType.CostAdjustment:
                     break;
             }
         }
@@ -68,7 +105,19 @@ public class CardInstance
     {
         get { return _isBlocker; }
     }
-    
+
+    #region Effect Data Properties
+
+    public bool IsMultipleBreaker
+    {
+        get { return _isMultipleBreaker; }
+    }
+
+    public MultipleBreakerType MultipleBreakerType
+    {
+        get { return _multipleBreakerType; }
+    }
+
     public bool IsPowerAttacker
     {
         get { return _isPowerAttacker; }
@@ -78,6 +127,8 @@ public class CardInstance
     {
         get { return _powerBoost; }
     }
+
+    #endregion
 
     public void SetCurrentZone(CardZoneType currentZone)
     {
@@ -200,11 +251,11 @@ public class CardInstance
                 break;
 
             case CardTargetType.TargetSelf:
-                GameManager.Instance.ProcessRegionMovement(_cardObj, functionality.MovementZones);
+                CardEffectsManager.Instance.ProcessRegionMovement(_cardObj, functionality.MovementZones);
                 break;
 
             case CardTargetType.TargetOther:
-                GameManager.Instance.ProcessRegionMovement(functionality.ChoosingPlayer == PlayerTargetType.TargetPlayer,
+                CardEffectsManager.Instance.ProcessRegionMovement(functionality.ChoosingPlayer == PlayerTargetType.TargetPlayer,
                     functionality.TargetPlayer == PlayerTargetType.TargetPlayer, 
                     functionality.MovementZones, functionality.TargetingCondition, mayUse);
                 break;

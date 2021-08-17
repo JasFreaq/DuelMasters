@@ -12,8 +12,6 @@ public class DeckManager : MonoBehaviour
     [Header("Layout")]
     [SerializeField] private float _cardWidth = 0.05f;
     [SerializeField] [Range(0f, 1f)] private float _cardScale = 0.5f;
-    [SerializeField] private CreatureObject _creaturePrefab;
-    [SerializeField] private SpellObject _spellPrefab;
     
     [Header("Transition")]
     [SerializeField] private float _fromTransitionTime = 1.5f;
@@ -30,6 +28,9 @@ public class DeckManager : MonoBehaviour
 
     public void GenerateCardObjects(List<CardInstance> cardsInsts, Action<CardObject> dragReleaseAction, Func<CardObject, Coroutine> sendToGraveFunc)
     {
+        CreatureObject creaturePrefab = GameParamsHolder.Instance.CreaturePrefab;
+        SpellObject spellPrefab = GameParamsHolder.Instance.SpellPrefab;
+
         foreach (CardInstance cardInst in cardsInsts) 
         {
             CardData cardData = cardInst.CardData;
@@ -37,11 +38,11 @@ public class DeckManager : MonoBehaviour
             CardObject cardObj = null;
             if (cardData is CreatureData)
             {
-                cardObj = Instantiate(_creaturePrefab, transform);
+                cardObj = Instantiate(creaturePrefab, transform);
             }
             else if (cardData is SpellData)
             {
-                cardObj = Instantiate(_spellPrefab, transform);
+                cardObj = Instantiate(spellPrefab, transform);
             }
 
             cardObj.Initialize(cardInst, _isPlayer);

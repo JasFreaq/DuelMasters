@@ -15,7 +15,7 @@ public class Controller : MonoBehaviour
     protected List<ShieldObject> _shieldSelections = new List<ShieldObject>();
     protected int _selectionLowerBound, _selectionUpperBound;
     protected bool _selectMultiple, _selectCard = true;
-    private bool _selectionMade;
+    private bool _reachedSelectionRange, _selectionMade;
     
     private bool _choosingEffectActivation, _activateEffect;
 
@@ -61,37 +61,35 @@ public class Controller : MonoBehaviour
     {
         if (_selectMultiple)
         {
-            if (_targetedCard)
+            if (_targetedCard && _selectCard)
             {
-                if (_selectCard)
+                foreach (CardBehaviour card in _selectionRange)
                 {
-                    foreach (CardBehaviour card in _selectionRange)
+                    if (_targetedCard == card && _targetedCard.IsValid)
                     {
-                        if (_targetedCard == card && _targetedCard.IsValid)
+                        if (!_cardSelections.Contains(_targetedCard) && _cardSelections.Count < _selectionUpperBound)
                         {
-                            if (!_cardSelections.Contains(_targetedCard) && _cardSelections.Count < _selectionUpperBound)
-                            {
-                                _targetedCard.SetHighlightColor(false);
-                                _cardSelections.Add(_targetedCard);
-                            }
-                            else
-                            {
-                                _targetedCard.SetHighlightColor(true);
-                                _cardSelections.Remove(_targetedCard);
-                            }
-
-                            break;
+                            _targetedCard.SetHighlightColor(false);
+                            _cardSelections.Add(_targetedCard);
                         }
+                        else
+                        {
+                            _targetedCard.SetHighlightColor(true);
+                            _cardSelections.Remove(_targetedCard);
+                        }
+
+                        break;
                     }
                 }
+                
             }
-            else if (_targetedShield)
+            else if (_targetedShield && !_selectCard)
             {
-                if (!_selectCard)
+                foreach (CardBehaviour card in _selectionRange)
                 {
-                    foreach (CardBehaviour card in _selectionRange)
+                    if (_targetedShield == card)
                     {
-                        if (_targetedShield == card &&
+                        if (!_reachedSelectionRange ||
                             _shieldSelections.Count >= _selectionLowerBound && _shieldSelections.Count <= _selectionUpperBound)
                         {
                             if (!_shieldSelections.Contains(_targetedShield))
@@ -105,8 +103,13 @@ public class Controller : MonoBehaviour
                                 _shieldSelections.Remove(_targetedShield);
                             }
 
-                            break;
+                            if (!_reachedSelectionRange && _shieldSelections.Count >= _selectionLowerBound)
+                                _reachedSelectionRange = true;
+                            else if (_reachedSelectionRange && _shieldSelections.Count < _selectionLowerBound)
+                                _reachedSelectionRange = false;
                         }
+
+                        break;
                     }
                 }
             }
@@ -123,14 +126,33 @@ public class Controller : MonoBehaviour
                 else if (GameDataHandler.Instance.GetDataHandler(!_isPlayer).AllCards.ContainsKey(iD)
                          && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
                 {
-                    //if (_currentlySelected && _currentlySelected.CardInst.CanAttackCreatures)
-                    GameManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
+                    BattleManager.Instance.AttemptAttack(_isPlayer, _targetedCard);
                 }
             }
             else if (_targetedShield && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
             {
-                //if (_currentlySelected && _currentlySelected.CardInst.CanAttackPlayers)
-                GameManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
+                if (_currentlySelected.CardInst.IsMultipleBreaker)
+                {
+                    int shieldsToBreak = 0;
+                    switch (_currentlySelected.CardInst.MultipleBreakerType)
+                    {
+                        case MultipleBreakerType.DoubleBreaker:
+                            shieldsToBreak = 2;
+                            break;
+
+                        case MultipleBreakerType.TripleBreaker:
+                            shieldsToBreak = 3;
+                            break;
+
+                        case MultipleBreakerType.CrewBreaker:
+                            break;
+                    }
+
+                    StartCoroutine(ProcessMultipleShieldBreakRoutine(shieldsToBreak));
+                    ProcessInput(_targetedShield.GetInstanceID());
+                }
+                else
+                    BattleManager.Instance.AttemptAttack(_isPlayer, _targetedShield);
             }
         }
     }
@@ -196,6 +218,23 @@ public class Controller : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    private IEnumerator ProcessMultipleShieldBreakRoutine(int shieldsToBreak)
+    {
+        Coroutine<List<CardBehaviour>> routine =
+            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(shieldsToBreak, shieldsToBreak, false,
+                GameDataHandler.Instance.GetDataHandler(!_isPlayer).Shields));
+        yield return routine.coroutine;
+        
+        List<CardBehaviour> targetedShields = routine.returnVal;
+        for (int i = 0, n = targetedShields.Count; i < n; i++)
+        {
+            if (i != n - 1)
+                yield return BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i], true);
+            else
+                BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i]);
+        }
     }
 
     #region Number Selection Methods
@@ -323,8 +362,8 @@ public class Controller : MonoBehaviour
     protected virtual IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
         EffectTargetingCondition targetingCondition)
     {
-        _selectionLowerBound = lower;
-        _selectionUpperBound = upper;
+        _selectionLowerBound = Mathf.Min(lower, cards.Count);
+        _selectionUpperBound = Mathf.Min(upper, cards.Count);
 
         _selectMultiple = true;
         _selectCard = selectCard;
@@ -369,6 +408,7 @@ public class Controller : MonoBehaviour
         }
 
         _selectMultiple = false;
+        _reachedSelectionRange = false;
         _selectionMade = false;
         _selectionRange.Clear();
         

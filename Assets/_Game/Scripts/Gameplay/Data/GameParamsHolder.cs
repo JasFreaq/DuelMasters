@@ -30,6 +30,8 @@ public class GameParamsHolder : MonoBehaviour
     [SerializeField] private Material _shieldHighlightMat;
 
     [Header("Prefabs")]
+    [SerializeField] private CreatureObject _creaturePrefab;
+    [SerializeField] private SpellObject _spellPrefab;
     [SerializeField] private FlavorTextLayoutHandler _flavorTextLayoutPrefab;
 
     [Header("Caches")] 
@@ -147,6 +149,16 @@ public class GameParamsHolder : MonoBehaviour
     #endregion
 
     #region Prefab(s)
+
+    public CreatureObject CreaturePrefab
+    {
+        get { return _creaturePrefab; }
+    }
+
+    public SpellObject SpellPrefab
+    {
+        get { return _spellPrefab; }
+    }
 
     public FlavorTextLayoutHandler FlavorTextLayoutPrefab
     {

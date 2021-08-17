@@ -33,12 +33,7 @@ public class PlayerController : Controller
     {
         set { _canSelect = value; }
     }
-
-    public bool CanSelectShield
-    {
-        set { _canSelectShield = value; }
-    }
-
+    
     void Start()
     {
         _mainCamera = Camera.main;
@@ -216,7 +211,22 @@ public class PlayerController : Controller
     {
         bool selectToAttack = false;
         if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone))
-            _canSelectShield = selectToAttack = true;//_currentlySelected.CanAttackPlayer
+        {    
+            //if(_currentlySelected.CanAttackPlayer) {
+            //if (_currentlySelected.CardInst.IsMultipleBreaker)
+            //{
+            //    int shieldsToBreak;
+            //    switch (_c)
+            //    {
+                    
+            //    }
+
+            //    return;
+            //}
+
+            _canSelectShield = selectToAttack = true;
+            // }
+        }
             
         if (_canSelectShield)
         {
@@ -358,6 +368,9 @@ public class PlayerController : Controller
     protected override IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
         EffectTargetingCondition targetingCondition)
     {
+        if (selectCard)
+            _canSelectShield = true;
+
         _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
         _actionOverlay.AdjustCardSelectionButtons(lower, upper, 0);
 
@@ -367,6 +380,8 @@ public class PlayerController : Controller
         yield return routine.coroutine;
 
         _actionOverlay.DeactivateButtons();
+        if (selectCard)
+            _canSelectShield = false;
 
         yield return routine.returnVal;
     }
