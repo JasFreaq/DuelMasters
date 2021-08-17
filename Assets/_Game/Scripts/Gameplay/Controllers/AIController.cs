@@ -57,7 +57,7 @@ public class AIController : Controller
 
     #region Number Selection Methods
 
-    public IEnumerator GetNumberSelectionRoutine(int lower, int upper)
+    public override IEnumerator GetNumberSelectionRoutine(int lower, int upper)
     {
         _numSelection = _lowerBound = lower;
         _upperBound = upper;

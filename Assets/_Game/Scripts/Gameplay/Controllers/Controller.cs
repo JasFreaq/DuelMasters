@@ -198,6 +198,15 @@ public class Controller : MonoBehaviour
         yield return null;
     }
 
+    #region Number Selection Methods
+
+    public virtual IEnumerator GetNumberSelectionRoutine(int lower, int upper)
+    {
+        yield break;
+    }
+
+    #endregion
+
     #region May Activate Effect Methods
 
     public virtual IEnumerator ChooseEffectActivationRoutine()

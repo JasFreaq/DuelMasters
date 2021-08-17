@@ -1819,6 +1819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1efcbb597dfe02949b01778a662628c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _numberSelector: {fileID: 1829933507}
   _actionOverlay: {fileID: 1156849063}
   _deselectDelayBufferFrames: 24
 --- !u!1 &1102408664
@@ -1971,7 +1972,6 @@ MonoBehaviour:
   _playerDeck: {fileID: 11400000, guid: 615ab36afa02f2547bb4ee3aa3d2e43c, type: 2}
   _opponentDeck: {fileID: 11400000, guid: 889dc1febc334be479bcd52e9096e2a2, type: 2}
   _actionOverlay: {fileID: 0}
-  _numberSelector: {fileID: 1829933507}
   _cardBrowserOverlay: {fileID: 2141456923}
 --- !u!4 &1167120987
 Transform:

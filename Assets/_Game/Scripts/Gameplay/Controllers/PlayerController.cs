@@ -14,6 +14,7 @@ public class PlayerController : Controller
 
     #endregion
 
+    [SerializeField] private NumberSelector _numberSelector;
     [SerializeField] private ActionButtonOverlay _actionOverlay;
     [SerializeField] private int _deselectDelayBufferFrames = 24;
 
@@ -324,6 +325,17 @@ public class PlayerController : Controller
             }
         }
     }
+
+    #region Number Selection Methods
+
+    public override IEnumerator GetNumberSelectionRoutine(int lower, int upper)
+    {
+        Coroutine<int> routine1 = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(lower, upper));
+        yield return routine1.coroutine;
+        yield return routine1.returnVal;
+    }
+
+    #endregion
 
     #region May Activate Effect Methods
 

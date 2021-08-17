@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private ActionButtonOverlay _actionOverlay;
-    [SerializeField] private NumberSelector _numberSelector;
     [SerializeField] private CardBrowserOverlay _cardBrowserOverlay;
 
     private PlayerManager _currentManager;
@@ -404,7 +403,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
     {
-        Controller choosingPlayer = GetController(playerChooses);
+        Controller choosingController = GetController(playerChooses);
         PlayerManager affectedPlayer = GetManager(affectPlayer);
 
         int lower = 1, upper = movementZones.moveCount;
@@ -424,18 +423,9 @@ public class GameManager : MonoBehaviour
                             moveCount = movementZones.moveCount;
                         else if (movementZones.countChoice == CountChoiceType.Upto)
                         {
-                            if (playerChooses) 
-                            {
-                                Coroutine<int> routine1 = _numberSelector.StartCoroutine<int>(_numberSelector.GetSelectionRoutine(lower, upper));
-                                yield return routine1.coroutine;
-                                moveCount = routine1.returnVal;
-                            }
-                            else
-                            {
-                                Coroutine<int> routine1 = choosingPlayer.StartCoroutine<int>(((AIController) choosingPlayer).GetNumberSelectionRoutine(lower, upper));
-                                yield return routine1.coroutine;
-                                moveCount = routine1.returnVal;
-                            }
+                            Coroutine<int> routine1 = choosingController.StartCoroutine<int>(choosingController.GetNumberSelectionRoutine(lower, upper));
+                            yield return routine1.coroutine;
+                            moveCount = routine1.returnVal;
                         }
 
                         for (int i = 0; i < moveCount; i++)
@@ -460,7 +450,7 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             Coroutine<List<CardBehaviour>> routine2 = 
-                                choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true, 
+                                choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true, 
                                     affectedPlayer.DataHandler.CardsInDeck));
                             yield return routine2.coroutine;
                             selectedCards = routine2.returnVal;
@@ -485,7 +475,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     Coroutine<List<CardBehaviour>> routine =
-                        choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true,
+                        choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
                             affectedPlayer.DataHandler.CardsInHand, targetingCondition));
                     yield return routine.coroutine;
                     selectedCards = routine.returnVal;
@@ -496,7 +486,7 @@ public class GameManager : MonoBehaviour
                 if (playerChooses)
                     _playerController.CanSelectShield = true;
                 Coroutine<List<CardBehaviour>> routine3 = 
-                    choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, false, 
+                    choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, false, 
                         affectedPlayer.DataHandler.Shields));
                 yield return routine3.coroutine;
                 selectedCards = routine3.returnVal;
@@ -505,7 +495,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case CardZoneType.Graveyard:
-                if (choosingPlayer)
+                if (choosingController)
                 {
                     _playerController.EnableFullControl(false);
                     Coroutine<List<CardBehaviour>> routine4 =
@@ -519,7 +509,7 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     Coroutine<List<CardBehaviour>> routine4 = 
-                        choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true, 
+                        choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true, 
                             affectedPlayer.DataHandler.CardsInGrave));
                     yield return routine4.coroutine;
                     selectedCards = routine4.returnVal;
@@ -528,7 +518,7 @@ public class GameManager : MonoBehaviour
             
             case CardZoneType.ManaZone:
                 Coroutine<List<CardBehaviour>> routine5 =
-                    choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true, 
+                    choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true, 
                         affectedPlayer.DataHandler.CardsInMana, targetingCondition));
                 yield return routine5.coroutine;
                 selectedCards = routine5.returnVal;
@@ -538,12 +528,12 @@ public class GameManager : MonoBehaviour
                 Coroutine<List<CardBehaviour>> routine6;
                 if (movementZones.fromBothPlayers)
                 {
-                    routine6 = choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true,
+                    routine6 = choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
                         _playerManager.DataHandler.CardsInBattle, _opponentManager.DataHandler.CardsInBattle, targetingCondition));
                 }
                 else
                 {
-                    routine6 = choosingPlayer.StartCoroutine<List<CardBehaviour>>(choosingPlayer.SelectCardsRoutine(lower, upper, true,
+                    routine6 = choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
                             affectedPlayer.DataHandler.CardsInBattle, targetingCondition));
                 }
                  
