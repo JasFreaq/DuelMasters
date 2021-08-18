@@ -211,21 +211,8 @@ public class PlayerController : Controller
     {
         bool selectToAttack = false;
         if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone))
-        {    
-            //if(_currentlySelected.CanAttackPlayer) {
-            //if (_currentlySelected.CardInst.IsMultipleBreaker)
-            //{
-            //    int shieldsToBreak;
-            //    switch (_c)
-            //    {
-                    
-            //    }
-
-            //    return;
-            //}
-
-            _canSelectShield = selectToAttack = true;
-            // }
+        {
+            _canSelectShield = selectToAttack = true; //_currentlySelected.CanAttackPlayer
         }
             
         if (_canSelectShield)

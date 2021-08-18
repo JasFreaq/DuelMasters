@@ -134,7 +134,8 @@ public class Controller : MonoBehaviour
             }
             else if (_targetedShield && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
             {
-                if (_currentlySelected.CardInst.IsMultipleBreaker)
+                if (_currentlySelected.CardInst.IsMultipleBreaker &&
+                    GameDataHandler.Instance.GetDataHandler(!_isPlayer).Shields.Count > 1) 
                 {
                     int shieldsToBreak = 0;
                     switch (_currentlySelected.CardInst.MultipleBreakerType)

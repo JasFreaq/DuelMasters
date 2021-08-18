@@ -126,14 +126,13 @@ public class GameManager : MonoBehaviour
             {
                 MovementZones movementZones = new MovementZones
                 {
-                    fromZone = CardZoneType.Shields,
-                    toZone = CardZoneType.ManaZone,
+                    fromZone = CardZoneType.Hand,
+                    toZone = CardZoneType.Shields,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
                     countChoice = CountChoiceType.Upto,
                     moveCount = 3
                 };
 
-                EffectTargetingCondition targetingCondition = null;
                 //EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
                 //targetingCondition.AddPowerCondition(new PowerCondition
                 //{
@@ -148,18 +147,18 @@ public class GameManager : MonoBehaviour
             {
                 MovementZones movementZones = new MovementZones
                 {
-                    fromZone = CardZoneType.Deck,
-                    toZone = CardZoneType.BattleZone,
+                    fromZone = CardZoneType.Shields,
+                    toZone = CardZoneType.ManaZone,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
                     countChoice = CountChoiceType.Upto,
-                    moveCount = 4
+                    moveCount = 3
                 };
 
-                EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
-                targetingCondition.AssignedCardTypeCondition = true;
-                targetingCondition.CardTypeCondition = CardParams.CardType.Creature;
+                //EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
+                //targetingCondition.AssignedCardTypeCondition = true;
+                //targetingCondition.CardTypeCondition = CardParams.CardType.Creature;
 
-                //ProcessRegionMovement(true, movementZones, targetingCondition);
+                CardEffectsManager.Instance.ProcessRegionMovement(true, true, movementZones, null);
             }
         }
     }
