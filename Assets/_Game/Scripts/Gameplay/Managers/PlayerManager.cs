@@ -188,7 +188,7 @@ public class PlayerManager : MonoBehaviour
     
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
-        CardObject cardObj = shieldObj.CardObject;
+        CardObject cardObj = shieldObj.CardObj;
         yield return _shieldsManager.BreakShieldRoutine(shieldObj);
         yield return MoveToHandRoutine(cardObj);
     }
@@ -214,7 +214,7 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator MoveFromShieldsRoutine(ShieldObject shieldObj)
     {
-        InitiateMove(shieldObj.CardObject);
+        InitiateMove(shieldObj.CardObj);
 
         yield return _shieldsManager.BreakShieldRoutine(shieldObj);
     }

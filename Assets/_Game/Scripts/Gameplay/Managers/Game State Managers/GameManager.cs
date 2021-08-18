@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
             {
                 MovementZones movementZones = new MovementZones
                 {
-                    fromZone = CardZoneType.Hand,
+                    fromZone = CardZoneType.Shields,
                     toZone = CardZoneType.ManaZone,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
                     countChoice = CountChoiceType.Upto,
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
                 //    power = 1
                 //});
 
-                //ProcessRegionMovement(true, movementZones, targetingCondition);
+                CardEffectsManager.Instance.ProcessRegionMovement(true, true, movementZones, null);
             }
             
             if (Input.GetKeyDown(KeyCode.Keypad1))

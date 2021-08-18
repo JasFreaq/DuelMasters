@@ -106,8 +106,7 @@ public class CardEffectsManager : MonoBehaviour
                         {
                             playerController.EnableFullControl(false);
                             Coroutine<List<CardBehaviour>> routine2 =
-                                _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(
-                                    _cardBrowserOverlay.CardSelectionRoutine(lower, upper,
+                                _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(_cardBrowserOverlay.CardSelectionRoutine(lower, upper,
                                         affectedPlayer.DataHandler.CardsInDeck, targetingCondition));
                             yield return routine2.coroutine;
                             selectedCards = routine2.returnVal;
@@ -221,7 +220,7 @@ public class CardEffectsManager : MonoBehaviour
         {
             shieldObj = card as ShieldObject;
             if (shieldObj)
-                cardObj = shieldObj.CardObject;
+                cardObj = shieldObj.CardObj;
         }
 
         PlayerManager owner = GameManager.Instance.GetManager(cardObj.IsPlayer);

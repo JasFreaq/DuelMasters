@@ -16,8 +16,6 @@ public class ShieldsManager : MonoBehaviour
     [SerializeField] private Transform _holderTransform;
 
     [Header("Animation")]
-    [SerializeField] private string _shieldBreakTriggerName = "BreakShield";
-    [SerializeField] private string _shieldUnbreakTriggerName = "UnbreakShield";
     [SerializeField] private float _animationTime = 1f;
     
     [Header("Transition")]
@@ -28,16 +26,10 @@ public class ShieldsManager : MonoBehaviour
     
     private PlayerDataHandler _playerData;
     
-    private int _shieldBreakTriggerHash;
-    private int _shieldUnbreakTriggerHash;
-    
     private void Start()
     {
         _playerData = GameDataHandler.Instance.GetDataHandler(_isPlayer);
-
-        _shieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
-        _shieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
-
+        
         for (int i = 0; i < GameParamsHolder.Instance.BaseCardCount; i++)
         {
             ShieldObject shieldObj = Instantiate(_shieldPrefab, _holderTransform);
@@ -71,18 +63,20 @@ public class ShieldsManager : MonoBehaviour
 
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
-        shieldObj.SetAnimatorTrigger(_shieldBreakTriggerHash);
+        shieldObj.SetAnimatorTrigger(true);
         shieldObj.CardHolder.DOScale(shieldObj.HolderScale, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);
 
-        CardObject cardObj = shieldObj.CardObject;
+        CardObject cardObj = shieldObj.CardObj;
         cardObj.CardLayout.Canvas.sortingOrder = 100;
         cardObj.transform.parent = transform;
         cardObj.CardLayout.Canvas.gameObject.SetActive(true);
         
-        shieldObj.CardObject = null;
         int n = _playerData.Shields.Count, shieldIndex = shieldObj.transform.GetSiblingIndex();
+        
+        shieldObj.ActivateShield(false, null);
+        
         if (n > GameParamsHolder.Instance.BaseCardCount && shieldIndex < n)
         {
             _playerData.Shields.RemoveAt(shieldIndex);
@@ -106,19 +100,19 @@ public class ShieldsManager : MonoBehaviour
 
     public CardObject GetShieldAtIndex(int shieldIndex)
     {
-        return _playerData.Shields[shieldIndex].CardObject;
+        return _playerData.Shields[shieldIndex].CardObj;
     }
     
     private void AddShield(int shieldIndex, CardObject cardObj)
     {
         if (_playerData.Shields.Count > shieldIndex)
         {
-            _playerData.Shields[shieldIndex].CardObject = cardObj;
+            _playerData.Shields[shieldIndex].ActivateShield(true, cardObj);
         }
         else
         {
             ShieldObject shieldObj = Instantiate(_shieldPrefab, _holderTransform);
-            shieldObj.CardObject = cardObj;
+            shieldObj.ActivateShield(true, cardObj);
             _playerData.Shields.Add(shieldObj);
             ArrangeShields(true);
         }
@@ -131,7 +125,7 @@ public class ShieldsManager : MonoBehaviour
         int n = _playerData.Shields.Count;
         for (int i = 0; i < n; i++)
         {
-            if (_playerData.Shields[i].CardObject == null)
+            if (_playerData.Shields[i].CardObj == null)
             {
                 return i;
             }
@@ -166,13 +160,13 @@ public class ShieldsManager : MonoBehaviour
         
         cardObj.transform.DOScale(holderTransform.lossyScale, _toTransitionTime).SetEase(Ease.OutQuint);
 
-        shieldObj.CardObject = cardObj;
+        shieldObj.ActivateShield(true, cardObj);
         cardObj.transform.parent = holderTransform;
     }
 
     private IEnumerator PlayMakeShieldAnimationRoutine(int shieldIndex)
     {
-        _playerData.Shields[shieldIndex].SetAnimatorTrigger(_shieldUnbreakTriggerHash);
+        _playerData.Shields[shieldIndex].SetAnimatorTrigger(true);
         _playerData.Shields[shieldIndex].CardHolder.DOScale(Vector3.zero, _animationTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_animationTime);

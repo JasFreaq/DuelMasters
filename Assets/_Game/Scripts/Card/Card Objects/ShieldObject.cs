@@ -5,26 +5,33 @@ using UnityEngine;
 
 public class ShieldObject : CardBehaviour
 {
+    public static int ShieldBreakTriggerHash = 0, ShieldUnbreakTriggerHash = 0;
+
     [SerializeField] private MeshRenderer _shieldRenderer;
     [SerializeField] private Transform _cardHolderTransform;
 
     private Animator _animator;
-    private CardObject _cardObject = null;
+    private BoxCollider _boxCollider;
+    private CardObject _cardObj = null;
 
-    private bool _isHighlighted, _keepHighlighted;
+    private bool _activeState, _isHighlighted, _keepHighlighted;
     private Vector3 _holderScale;
-
+    
     #region Properties
 
-    public CardObject CardObject
+    public CardObject CardObj
     {
-        get { return _cardObject;}
-        set { _cardObject = value; }
+        get { return _cardObj;}
     }
 
     public Transform CardHolder
     {
         get { return _cardHolderTransform; }
+    }
+
+    public bool ActiveState
+    {
+        get { return _activeState; }
     }
 
     public Vector3 HolderScale
@@ -42,6 +49,8 @@ public class ShieldObject : CardBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        _boxCollider = GetComponent<BoxCollider>();
+
         _holderScale = _cardHolderTransform.localScale;
     }
 
@@ -68,8 +77,19 @@ public class ShieldObject : CardBehaviour
         }
     }
 
-    public void SetAnimatorTrigger(int hash)
+    public void ActivateShield(bool activate, CardObject cardObj)
     {
-        _animator.SetTrigger(hash);
+        _activeState = activate;
+        if (_boxCollider.enabled != _activeState)
+            _boxCollider.enabled = _activeState;
+        _cardObj = cardObj;
+
+        if (activate && !cardObj)
+            Debug.LogError("ActivateShield called in activate state without valid CardObject.");
+    }
+
+    public void SetAnimatorTrigger(bool breakShieldAnimation)
+    {
+        _animator.SetTrigger(breakShieldAnimation ? ShieldBreakTriggerHash : ShieldUnbreakTriggerHash);
     }
 }

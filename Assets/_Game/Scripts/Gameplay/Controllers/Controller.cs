@@ -94,8 +94,11 @@ public class Controller : MonoBehaviour
                         {
                             if (!_shieldSelections.Contains(_targetedShield))
                             {
-                                _targetedShield.KeepHighlighted = true;
-                                _shieldSelections.Add(_targetedShield);
+                                if (_shieldSelections.Count < _selectionUpperBound) 
+                                {
+                                    _targetedShield.KeepHighlighted = true;
+                                    _shieldSelections.Add(_targetedShield);
+                                }
                             }
                             else
                             {
@@ -230,10 +233,12 @@ public class Controller : MonoBehaviour
         List<CardBehaviour> targetedShields = routine.returnVal;
         for (int i = 0, n = targetedShields.Count; i < n; i++)
         {
-            if (i != n - 1)
-                yield return BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i], true);
-            else
-                BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i]);
+            if (i == 0)
+                yield return BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i], true, true);
+            else if (i > 0 && i < n - 1)
+                yield return BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i], false, true);
+            else if (i == n - 1)
+                yield return BattleManager.Instance.AttemptAttack(_isPlayer, targetedShields[i], false);
         }
     }
 

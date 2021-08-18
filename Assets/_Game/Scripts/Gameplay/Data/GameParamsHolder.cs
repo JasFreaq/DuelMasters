@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class GameParamsHolder : MonoBehaviour
 {
+    [Header("Strings")]
+    [SerializeField] private string _shieldBreakTriggerName = "BreakShield";
+    [SerializeField] private string _shieldUnbreakTriggerName = "UnbreakShield";
+
     [Header("Integers")] 
     [SerializeField] private int _baseCardCount = 5;
 
@@ -176,6 +180,14 @@ public class GameParamsHolder : MonoBehaviour
             Destroy(gameObject);
         else
             _Instance = this;
+    }
+
+    private void Start()
+    {
+        if (ShieldObject.ShieldBreakTriggerHash == 0)
+            ShieldObject.ShieldBreakTriggerHash = Animator.StringToHash(_shieldBreakTriggerName);
+        if (ShieldObject.ShieldUnbreakTriggerHash == 0)
+            ShieldObject.ShieldUnbreakTriggerHash = Animator.StringToHash(_shieldUnbreakTriggerName);
     }
 
     public CardFrameData GetCardFrameData(bool isCreature, CardParams.Civilization[] civilization)

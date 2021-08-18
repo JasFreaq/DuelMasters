@@ -368,7 +368,7 @@ public class PlayerController : Controller
     protected override IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
         EffectTargetingCondition targetingCondition)
     {
-        if (selectCard)
+        if (!selectCard)
             _canSelectShield = true;
 
         _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
@@ -380,7 +380,7 @@ public class PlayerController : Controller
         yield return routine.coroutine;
 
         _actionOverlay.DeactivateButtons();
-        if (selectCard)
+        if (!selectCard)
             _canSelectShield = false;
 
         yield return routine.returnVal;

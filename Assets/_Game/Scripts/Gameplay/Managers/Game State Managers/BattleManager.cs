@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
+    private Vector3 _creatureOriginalPos = Vector3.zero;
+
     #region Static Data Members
 
     private static BattleManager _Instance = null;
@@ -30,12 +32,12 @@ public class BattleManager : MonoBehaviour
             _Instance = this;
     }
 
-    public Coroutine AttemptAttack(bool isPlayer, CardBehaviour target, bool continueAttack = false)
+    public Coroutine AttemptAttack(bool isPlayer, CardBehaviour target, bool registerPos = true, bool continueAttack = false)
     {
-        return StartCoroutine(AttemptAttackRoutine(isPlayer, target, continueAttack));
+        return StartCoroutine(AttemptAttackRoutine(isPlayer, target, registerPos, continueAttack));
     }
     
-    private IEnumerator AttemptAttackRoutine(bool isPlayer, CardBehaviour target, bool continueAttack)
+    private IEnumerator AttemptAttackRoutine(bool isPlayer, CardBehaviour target, bool registerPos, bool continueAttack)
     {
         Controller controller = GameManager.Instance.GetController(isPlayer);
 
@@ -47,7 +49,9 @@ public class BattleManager : MonoBehaviour
             {
                 TargetingLinesHandler.Instance.DisableLines();
 
-                CreatureObject creatureObj = (CreatureObject)selectedCardObj;
+                CreatureObject creatureObj = (CreatureObject) selectedCardObj;
+                if (registerPos)
+                    _creatureOriginalPos = creatureObj.transform.position;
                 IEnumerator attackRoutine = null;
 
                 if (target is CreatureObject attackedCreatureObj)
@@ -77,7 +81,6 @@ public class BattleManager : MonoBehaviour
     private IEnumerator AttackCreatureRoutine(Controller controller, CreatureObject creatureObj,
         CreatureObject attackedCreatureObj, bool continueAttack)
     {
-        Vector3 creaturePos = creatureObj.transform.position;
         float attackTime = GameParamsHolder.Instance.AttackTime;
 
         int attackingCreaturePower = creatureObj.CardData.Power;
@@ -112,15 +115,14 @@ public class BattleManager : MonoBehaviour
         }
 
         if (creatureObj && !continueAttack)
-            yield return ResetCreaturePosRoutine(creaturePos, creatureObj);
+            yield return ResetCreaturePosRoutine(creatureObj);
     }
 
     private IEnumerator AttackShieldRoutine(Controller controller, CreatureObject creatureObj,
         ShieldObject shieldObj, bool isPlayer, bool continueAttack)
     {
         float attackTime = GameParamsHolder.Instance.AttackTime;
-        Vector3 creaturePos = creatureObj.transform.position;
-
+        
         creatureObj.transform.DOMove(shieldObj.transform.position, attackTime).SetEase(Ease.InCubic);
         yield return new WaitForSeconds(attackTime);
 
@@ -128,10 +130,10 @@ public class BattleManager : MonoBehaviour
             controller.DeselectCurrentlySelected();
 
         PlayerManager opponent = GameManager.Instance.GetManager(!isPlayer);
-        StartCoroutine(opponent.BreakShieldRoutine(shieldObj));
+        yield return opponent.BreakShieldRoutine(shieldObj);
 
         if (!continueAttack)
-            yield return ResetCreaturePosRoutine(creaturePos, creatureObj);
+            yield return ResetCreaturePosRoutine(creatureObj);
     }
 
     private IEnumerator AttemptBlockRoutine(bool isPlayer)
@@ -146,12 +148,14 @@ public class BattleManager : MonoBehaviour
         yield return blockingCard;
     }
 
-    private IEnumerator ResetCreaturePosRoutine(Vector3 creaturePos, CreatureObject creatureObj)
+    private IEnumerator ResetCreaturePosRoutine(CreatureObject creatureObj)
     {
         float attackTime = GameParamsHolder.Instance.AttackTime;
 
-        creatureObj.transform.DOMove(creaturePos, attackTime).SetEase(Ease.InCubic);
+        creatureObj.transform.DOMove(_creatureOriginalPos, attackTime).SetEase(Ease.InCubic);
         yield return new WaitForSeconds(attackTime);
+        
         creatureObj.ToggleTapState();
+        _creatureOriginalPos = Vector3.zero;
     }
 }
