@@ -456,10 +456,10 @@ public class EffectFunctionality : ScriptableObject
 
             switch (_targetPlayer)
             {
-                case PlayerTargetType.TargetPlayer:
+                case PlayerTargetType.Player:
                     str1 = "Player moves ";
                     break;
-                case PlayerTargetType.TargetOpponent:
+                case PlayerTargetType.Opponent:
                     str1 = "Opponent moves ";
                     break;
             }

@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
                     fromZone = CardZoneType.Hand,
                     toZone = CardZoneType.Shields,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
-                    countChoice = CountChoiceType.Upto,
+                    countChoice = CountChoiceType.Exactly,
                     moveCount = 3
                 };
 

@@ -134,11 +134,11 @@ public class Controller : MonoBehaviour
             }
             else if (_targetedShield && GameManager.Instance.CurrentStep == GameStepType.AttackStep)
             {
-                if (_currentlySelected.CardInst.IsMultipleBreaker &&
+                if (_currentlySelected.CardInst.InstanceEffectHandler.IsMultipleBreaker &&
                     GameDataHandler.Instance.GetDataHandler(!_isPlayer).Shields.Count > 1) 
                 {
                     int shieldsToBreak = 0;
-                    switch (_currentlySelected.CardInst.MultipleBreakerType)
+                    switch (_currentlySelected.CardInst.InstanceEffectHandler.MultipleBreakerType)
                     {
                         case MultipleBreakerType.DoubleBreaker:
                             shieldsToBreak = 2;
@@ -291,11 +291,12 @@ public class Controller : MonoBehaviour
         SubmitSelection();
     }
 
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardObject> cardList)
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardObject> cardList, 
+        EffectTargetingCondition targetingCondition)
     {
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
-                new List<CardBehaviour>(cardList), null));
+                new List<CardBehaviour>(cardList), targetingCondition));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
@@ -313,12 +314,9 @@ public class Controller : MonoBehaviour
         Dictionary<int, CreatureObject> creatureDict, EffectTargetingCondition targetingCondition)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
-        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict)
-        {
-            CardBehaviour card = pair.Value;
+        foreach (CardBehaviour card in creatureDict.Values)
             cards.Add(card);
-        }
-
+        
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
                 targetingCondition));
@@ -330,16 +328,10 @@ public class Controller : MonoBehaviour
         Dictionary<int, CreatureObject> creatureDict2, EffectTargetingCondition targetingCondition)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
-        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict1)
-        {
-            CardBehaviour card = pair.Value;
+        foreach (CardBehaviour card in creatureDict1.Values)
             cards.Add(card);
-        }
-        foreach (KeyValuePair<int, CreatureObject> pair in creatureDict2)
-        {
-            CardBehaviour card = pair.Value;
+        foreach (CardBehaviour card in creatureDict2.Values)
             cards.Add(card);
-        }
 
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
@@ -347,24 +339,7 @@ public class Controller : MonoBehaviour
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
-
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CardObject> cardDict,
-        EffectTargetingCondition targetingCondition)
-    {
-        List<CardBehaviour> cards = new List<CardBehaviour>();
-        foreach (KeyValuePair<int, CardObject> pair in cardDict)
-        {
-            CardBehaviour card = pair.Value;
-            cards.Add(card);
-        }
-
-        Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
-                targetingCondition));
-        yield return routine.coroutine;
-        yield return routine.returnVal;
-    }
-
+    
     protected virtual IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
         EffectTargetingCondition targetingCondition)
     {

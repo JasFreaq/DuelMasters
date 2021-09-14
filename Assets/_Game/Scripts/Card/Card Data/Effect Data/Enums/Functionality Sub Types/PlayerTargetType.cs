@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum PlayerTargetType
 {
-    TargetPlayer,
-    TargetOpponent
+    Player,
+    Opponent,
+    Both
 }

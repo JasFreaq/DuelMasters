@@ -44,7 +44,7 @@ public class BattleZoneManager : MonoBehaviour
         cardObj.transform.parent = _holderTransform;
 
         _playerData.CardsInBattle.Add(cardObj.transform.GetInstanceID(), cardObj);
-        if (cardObj.CardInst.IsBlocker)
+        if (cardObj.CardInst.InstanceEffectHandler.IsBlocker)
             _playerData.BlockersInBattle.Add(cardObj);
 
         cardObj.CardInst.SetCurrentZone(CardZoneType.BattleZone);
@@ -56,7 +56,7 @@ public class BattleZoneManager : MonoBehaviour
         CreatureObject creatureObj = _playerData.CardsInBattle[iD];
 
         _playerData.CardsInBattle.Remove(iD);
-        if (creatureObj.CardInst.IsBlocker)
+        if (creatureObj.CardInst.InstanceEffectHandler.IsBlocker)
             _playerData.BlockersInBattle.Remove(creatureObj);
 
         creatureObj.transform.parent = transform;

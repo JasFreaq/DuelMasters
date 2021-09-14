@@ -23,7 +23,8 @@ public class EffectTargetingParameter
     [SerializeReference] private CountType _countType;
     [SerializeReference] private CountChoiceType _countChoice;
     [SerializeReference] private int _count = 0;
-    [SerializeReference] private SubZoneType _subZone;
+    [SerializeReference] private PlayerTargetType _owningPlayer;
+    [SerializeReference] public CardZoneType _zoneType;
 
     [SerializeReference] private bool _includeSelf;
     [SerializeReference] private bool _opponentChooses;
@@ -73,12 +74,21 @@ public class EffectTargetingParameter
 #endif
     }
 
-    public SubZoneType SubZone
+    public PlayerTargetType OwningPlayer
     {
-        get { return _subZone; }
+        get { return _owningPlayer; }
 
 #if UNITY_EDITOR
-        set { _subZone = value; }
+        set { _owningPlayer = value; }
+#endif
+    }
+
+    public CardZoneType ZoneType
+    {
+        get { return _zoneType; }
+
+#if UNITY_EDITOR
+        set { _zoneType = value; }
 #endif
     }
 
@@ -112,14 +122,11 @@ public class EffectTargetingParameter
                 str += $"{_countType} ";
         }
         
-        str += $"in {_subZone}";
+        str += $"in {_owningPlayer} {_zoneType}";
 
-        int regionValue = (int) Enum.Parse(typeof(SubZoneType), _subZone.ToString());
-        if (regionValue < 6 && !_includeSelf && ownerIsCreature) 
-        {
+        if (_owningPlayer == PlayerTargetType.Player && !_includeSelf && ownerIsCreature) 
             str += " except itself";
-        }
-        else if (regionValue > 7 && _opponentChooses)
+        else if (_owningPlayer == PlayerTargetType.Opponent && _opponentChooses)
             str += " chosen by opponent";
 
         return str;

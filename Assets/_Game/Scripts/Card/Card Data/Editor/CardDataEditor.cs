@@ -448,9 +448,9 @@ public class CardDataEditor : Editor
         }
 
         GUILayout.Label("In");
-        parameter.SubZone = DrawFoldout(parameter.SubZone);
-        int regionValue = (int)Enum.Parse(typeof(SubZoneType), parameter.SubZone.ToString());
-        if (regionValue < 6)
+        parameter.OwningPlayer = DrawFoldout(parameter.OwningPlayer);
+        parameter.ZoneType = DrawFoldout(parameter.ZoneType);
+        if (parameter.OwningPlayer == PlayerTargetType.Player) 
         {
             if (_cardData is CreatureData)
             {
@@ -458,7 +458,7 @@ public class CardDataEditor : Editor
                 parameter.ownerIsCreature = true;
             }
         }
-        else if (regionValue > 7)
+        else if (parameter.OwningPlayer == PlayerTargetType.Opponent)
             parameter.OpponentChooses = GUILayout.Toggle(parameter.OpponentChooses, "Opponent Chooses");
 
         GUILayout.EndHorizontal();

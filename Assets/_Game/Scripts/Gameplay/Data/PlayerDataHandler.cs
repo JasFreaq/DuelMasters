@@ -38,15 +38,51 @@ public class PlayerDataHandler : MonoBehaviour
     {
         get { return _cardsInHand; }
     }
-    
+
+    public List<CardObject> CardsInHandList
+    {
+        get
+        {
+            List<CardObject> handList = new List<CardObject>();
+            foreach (CardObject cardObj in _cardsInHand.Values)
+                handList.Add(cardObj);
+
+            return handList;
+        }
+    }
+
     public Dictionary<int, CardObject> CardsInMana
     {
         get { return _cardsInManaZone; }
     }
 
+    public List<CardObject> CardsInManaList
+    {
+        get
+        {
+            List<CardObject> manaList = new List<CardObject>();
+            foreach (CardObject cardObj in _cardsInManaZone.Values)
+                manaList.Add(cardObj);
+
+            return manaList;
+        }
+    }
+
     public Dictionary<int, CreatureObject> CardsInBattle
     {
         get { return _cardsInBattleZone; }
+    }
+
+    public List<CreatureObject> CardsInBattleList
+    {
+        get
+        {
+            List<CreatureObject> battleList = new List<CreatureObject>();
+            foreach (CreatureObject cardObj in _cardsInBattleZone.Values)
+                battleList.Add(cardObj);
+
+            return battleList;
+        }
     }
 
     public List<CardObject> TappedCards

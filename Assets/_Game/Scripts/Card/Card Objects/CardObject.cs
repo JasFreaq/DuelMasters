@@ -181,7 +181,7 @@ public abstract class CardObject : CardBehaviour
 
     protected virtual void SetupCard()
     {
-        _cardInst.SetupRuleEffects();
+        _cardInst.InstanceEffectHandler.SetupRuleEffects();
     }
     
     public virtual void ActivateCardLayout()

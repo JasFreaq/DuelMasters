@@ -116,7 +116,7 @@ public class CardEffectsManager : MonoBehaviour
                         {
                             Coroutine<List<CardBehaviour>> routine2 =
                                 choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                                    affectedPlayer.DataHandler.CardsInDeck));
+                                        affectedPlayer.DataHandler.CardsInDeck, null));
                             yield return routine2.coroutine;
                             selectedCards = routine2.returnVal;
                         }
@@ -141,7 +141,7 @@ public class CardEffectsManager : MonoBehaviour
                 {
                     Coroutine<List<CardBehaviour>> routine =
                         choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                            affectedPlayer.DataHandler.CardsInHand, targetingCondition));
+                            affectedPlayer.DataHandler.CardsInHandList, targetingCondition));
                     yield return routine.coroutine;
                     selectedCards = routine.returnVal;
                 }
@@ -170,7 +170,7 @@ public class CardEffectsManager : MonoBehaviour
                 {
                     Coroutine<List<CardBehaviour>> routine4 =
                         choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                            affectedPlayer.DataHandler.CardsInGrave));
+                            affectedPlayer.DataHandler.CardsInGrave, null));
                     yield return routine4.coroutine;
                     selectedCards = routine4.returnVal;
                 }
@@ -179,7 +179,7 @@ public class CardEffectsManager : MonoBehaviour
             case CardZoneType.ManaZone:
                 Coroutine<List<CardBehaviour>> routine5 =
                     choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                        affectedPlayer.DataHandler.CardsInMana, targetingCondition));
+                        affectedPlayer.DataHandler.CardsInManaList, targetingCondition));
                 yield return routine5.coroutine;
                 selectedCards = routine5.returnVal;
                 break;

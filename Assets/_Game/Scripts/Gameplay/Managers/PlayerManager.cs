@@ -93,10 +93,8 @@ public class PlayerManager : MonoBehaviour
     {
         _playableCards.Clear();
 
-        foreach (KeyValuePair<int, CardObject> pair in _playerDataHandler.CardsInHand)
+        foreach (CardObject cardObj in _playerDataHandler.CardsInHand.Values)
         {
-            CardObject cardObj = pair.Value;
-
             if (_playerDataHandler.CanPayCost(cardObj.CardData.Civilization, cardObj.CardData.Cost))
             {
                 if (cardObj is CreatureObject creatureObj && creatureObj.IsEvolutionCreature)
@@ -167,7 +165,7 @@ public class PlayerManager : MonoBehaviour
                 creatureObj.ActivateBattleLayout();
                 yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj, underEvolvingCard);
                 creatureObj.HoverPreviewHandler.PreviewEnabled = true;
-                creatureObj.CardInst.TriggerWhenPutIntoBattle();
+                creatureObj.CardInst.InstanceEffectHandler.TriggerWhenPutIntoBattle();
             }
             else
                 yield return MoveToHandRoutine(creatureObj);
@@ -177,7 +175,7 @@ public class PlayerManager : MonoBehaviour
             creatureObj.ActivateBattleLayout();
             yield return _battleZoneManager.MoveToBattleZoneRoutine(creatureObj);
             creatureObj.HoverPreviewHandler.PreviewEnabled = true;
-            creatureObj.CardInst.TriggerWhenPutIntoBattle();
+            creatureObj.CardInst.InstanceEffectHandler.TriggerWhenPutIntoBattle();
         }
     }
 
@@ -271,7 +269,7 @@ public class PlayerManager : MonoBehaviour
 
     public Coroutine MoveToGraveyard(CardObject cardObj)
     {
-        if (!cardObj.CardInst.TriggerWhenWouldBeDestroyed()) 
+        if (!cardObj.CardInst.InstanceEffectHandler.TriggerWhenWouldBeDestroyed()) 
             return StartCoroutine(MoveToGraveyardRoutine(cardObj));
 
         return null;
@@ -298,7 +296,7 @@ public class PlayerManager : MonoBehaviour
 
         cardObj.gameObject.SetActive(true);
 
-        cardObj.CardInst.TriggerWhenDestroyed();
+        cardObj.CardInst.InstanceEffectHandler.TriggerWhenDestroyed();
         yield break;
     }
 

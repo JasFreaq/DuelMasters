@@ -84,9 +84,9 @@ public class BattleManager : MonoBehaviour
         float attackTime = GameParamsHolder.Instance.AttackTime;
 
         int attackingCreaturePower = creatureObj.CardData.Power;
-        if (creatureObj.CardInst.IsPowerAttacker)
+        if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
         {
-            attackingCreaturePower += creatureObj.CardInst.PowerBoost;
+            attackingCreaturePower += creatureObj.CardInst.InstanceEffectHandler.PowerBoost;
             creatureObj.DisplayPowerAttack(attackingCreaturePower);
         }
         int attackedCreaturePower = attackedCreatureObj.CardData.Power;
@@ -97,7 +97,7 @@ public class BattleManager : MonoBehaviour
         if (!continueAttack)
             controller.DeselectCurrentlySelected();
 
-        if (creatureObj.CardInst.IsPowerAttacker)
+        if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
             creatureObj.ResetPowerAttack();
 
         if (attackingCreaturePower > attackedCreaturePower)
