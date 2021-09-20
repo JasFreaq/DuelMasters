@@ -177,6 +177,8 @@ public class PlayerManager : MonoBehaviour
             creatureObj.HoverPreviewHandler.PreviewEnabled = true;
             creatureObj.CardInst.InstanceEffectHandler.TriggerWhenPutIntoBattle();
         }
+
+        GameDataHandler.Instance.CheckWhileConditions();
     }
 
     private IEnumerator CastSpellRoutine(SpellObject spellObj)

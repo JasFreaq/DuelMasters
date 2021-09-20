@@ -56,7 +56,7 @@ public class BattleManager : MonoBehaviour
 
                 if (target is CreatureObject attackedCreatureObj)
                 {
-                    if (attackedCreatureObj.CardInst.IsTapped)
+                    //if (attackedCreatureObj.CardInst.IsTapped)
                         attackRoutine = AttackCreatureRoutine(controller, creatureObj, attackedCreatureObj, continueAttack);
                 }
                 else if (target is ShieldObject shieldObj)
@@ -75,6 +75,8 @@ public class BattleManager : MonoBehaviour
 
                 yield return attackRoutine;
             }
+
+            GameDataHandler.Instance.CheckWhileConditions();
         }
     }
 

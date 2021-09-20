@@ -66,4 +66,41 @@ public class GameDataHandler : MonoBehaviour
     {
         return isPlayer ? _playerDataHandler : _opponentDataHandler;
     }
+
+    public List<CardBehaviour> GetZoneCards(bool isPlayer, CardZoneType zoneType)
+    {
+        PlayerDataHandler dataHandler = GetDataHandler(isPlayer);
+        switch (zoneType)
+        {
+            case CardZoneType.Deck:
+                return new List<CardBehaviour>(dataHandler.CardsInDeck);
+            case CardZoneType.Hand:
+                return new List<CardBehaviour>(dataHandler.CardsInHandList);
+            case CardZoneType.Shields:
+                return new List<CardBehaviour>(dataHandler.Shields);
+            case CardZoneType.Graveyard:
+                return new List<CardBehaviour>(dataHandler.CardsInGrave);
+            case CardZoneType.ManaZone:
+                return new List<CardBehaviour>(dataHandler.CardsInManaList);
+            case CardZoneType.BattleZone:
+                return new List<CardBehaviour>(dataHandler.CardsInBattleList);
+        }
+
+        return null;
+    }
+
+    public void CheckWhileConditions()
+    {
+        foreach (CreatureObject creatureObj in _playerDataHandler.CardsInBattle.Values)
+        {
+            if (creatureObj.CardInst.InstanceEffectHandler.HasWhileCondition)
+                creatureObj.CardInst.InstanceEffectHandler.TriggerWhileCondition();
+        }
+        
+        foreach (CreatureObject creatureObj in _opponentDataHandler.CardsInBattle.Values)
+        {
+            if (creatureObj.CardInst.InstanceEffectHandler.HasWhileCondition)
+                creatureObj.CardInst.InstanceEffectHandler.TriggerWhileCondition();
+        }
+    }
 }

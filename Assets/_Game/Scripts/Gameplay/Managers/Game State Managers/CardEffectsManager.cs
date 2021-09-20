@@ -280,6 +280,8 @@ public class CardEffectsManager : MonoBehaviour
                     Debug.LogError($"{card} selected to MoveToBattleZone but it is not a creature");
                 break;
         }
+
+        GameDataHandler.Instance.CheckWhileConditions();
     }
 
     private void EnablePlayerControllerInteract(bool enable)

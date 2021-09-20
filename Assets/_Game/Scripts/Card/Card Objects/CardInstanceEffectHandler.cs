@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.PlayerLoop;
 
 
 public class CardInstanceEffectHandler
@@ -14,11 +14,13 @@ public class CardInstanceEffectHandler
         public EffectTargetingParameter targetingParameter;
         public EffectTargetingCondition targetingCondition;
 
-        public Action function;
-        public bool triggeredEffect;
+        public Action<bool> processFunction;
+        public bool effectActive;
     }
 
     #endregion
+
+    #region Data Members
 
     private CardObject _cardObj;
     private CardData _cardData;
@@ -30,13 +32,15 @@ public class CardInstanceEffectHandler
 
     private bool _isPowerAttacker;
     private int _powerBoost;
-    
+
     private Action _whenPlayed;
     private Action _whenPutIntoBattle;
     private Action _whenDestroyed;
     private Action _whenWouldBeDestroyed;
 
     private List<WhileConditionHolder> _whileConditions = new List<WhileConditionHolder>();
+
+    #endregion
 
     public CardInstanceEffectHandler(CardData cardData)
     {
@@ -92,6 +96,8 @@ public class CardInstanceEffectHandler
         }
     }
 
+    #region Properties
+
     public CardObject CardObj
     {
         set { _cardObj = value; }
@@ -121,16 +127,37 @@ public class CardInstanceEffectHandler
     {
         get { return _powerBoost; }
     }
-    
+
+    public bool HasWhileCondition
+    {
+        get { return _whileConditions.Count > 0; }
+    }
+
+    #endregion
+
     public void SetupRuleEffects()
     {
         foreach (EffectData effectData in _cardData.ruleEffects)
         {
-            Action function = SetupEffectFunctionality(effectData.EffectFunctionality, effectData.MayUseFunction);
-            if (effectData.EffectCondition)
-                SetupEffectCondition(effectData.EffectCondition, function);
-            else
-                _whenPlayed += function;
+            switch (effectData.EffectFunctionality.Type)
+            {
+                case EffectFunctionalityType.GrantFunction:
+                case EffectFunctionalityType.GrantPower:
+                    Action<bool> function1 = SetupEffectFunctionality(effectData.EffectFunctionality);
+                    if (effectData.EffectCondition)
+                        SetupEffectCondition(effectData.EffectCondition, function1);
+                    else
+                        Debug.LogError("GrantFunction or GrantPower is being processed without a condition");
+                    break;
+
+                default:
+                    Action function0 = SetupEffectFunctionality(effectData.EffectFunctionality, effectData.MayUseFunction);
+                    if (effectData.EffectCondition)
+                        SetupEffectCondition(effectData.EffectCondition, function0);
+                    else
+                        _whenPlayed += function0;
+                    break;
+            }
         }
     }
 
@@ -148,7 +175,27 @@ public class CardInstanceEffectHandler
 
         void InvokeRegionMovementFunctionality()
         {
-            ProcessRegionMovementFunctionality(functionality, mayUse);
+            ProcessRegionMovementFunctionality(this, functionality, mayUse);
+        }
+
+        #endregion
+    }
+    
+    private Action<bool> SetupEffectFunctionality(EffectFunctionality functionality)
+    {
+        switch (functionality.Type)
+        {
+            case EffectFunctionalityType.GrantFunction:
+                return InvokeGrantFunctionFunctionality;
+        }
+
+        return null;
+
+        #region Local Functions
+
+        void InvokeGrantFunctionFunctionality(bool activate)
+        {
+            ProcessGrantFunctionFunctionality(this, functionality.SubFunctionality, activate);
         }
 
         #endregion
@@ -158,15 +205,6 @@ public class CardInstanceEffectHandler
     {
         switch (condition.Type)
         {
-            case EffectConditionType.WhileCondition:
-                _whileConditions.Add(new WhileConditionHolder
-                {
-                    targetingParameter = condition.TargetingParameter,
-                    targetingCondition = condition.TargetingCondition,
-                    function = function
-                });
-                break;
-
             case EffectConditionType.WhenPutIntoBattle:
                 _whenPutIntoBattle += function;
                 break;
@@ -180,6 +218,25 @@ public class CardInstanceEffectHandler
                 break;
         }
     }
+    
+    private void SetupEffectCondition(EffectCondition condition, Action<bool> function)
+    {
+        switch (condition.Type)
+        {
+            case EffectConditionType.WhileCondition:
+                _whileConditions.Add(new WhileConditionHolder
+                {
+                    targetingParameter = condition.TargetingParameter,
+                    targetingCondition = condition.TargetingCondition,
+                    processFunction = function
+                });
+
+
+                break;
+        }
+    }
+
+    #region Effect Trigger Methods
 
     public bool TriggerWhenPlayed()
     {
@@ -224,35 +281,42 @@ public class CardInstanceEffectHandler
 
         return false;
     }
-    
+
     public void TriggerWhileCondition()
     {
         for (int i = 0, n = _whileConditions.Count; i < n; i++)
         {
             WhileConditionHolder whileCondition = _whileConditions[i];
-            bool meetsCondition = false;
+            bool meetsCondition = ProcessTargeting(whileCondition.targetingParameter, whileCondition.targetingCondition);
 
-
-
-            if (meetsCondition && !whileCondition.triggeredEffect)
+            if (meetsCondition && !whileCondition.effectActive)
             {
-                whileCondition.triggeredEffect = true;
-                whileCondition.function.Invoke();
+                whileCondition.effectActive = true;
+                whileCondition.processFunction.Invoke(true);
+            }
+            else if (!meetsCondition && whileCondition.effectActive)
+            {
+                whileCondition.effectActive = false;
+                whileCondition.processFunction.Invoke(false);
             }
         }
     }
 
-    private void ProcessRegionMovementFunctionality(EffectFunctionality functionality, bool mayUse)
+    #endregion
+    
+    #region Static Methods
+
+    private static void ProcessRegionMovementFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality, bool mayUse)
     {
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
             case CardTargetType.NoTarget:
-                Debug.LogError($"{_cardData.Name} has RegionMovement as functionality type with the wrong target type.");
+                Debug.LogError($"{instanceEffect._cardData.Name} has RegionMovement as functionality type with the wrong target type.");
                 break;
 
             case CardTargetType.TargetSelf:
-                CardEffectsManager.Instance.ProcessRegionMovement(_cardObj, functionality.MovementZones);
+                CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardObj, functionality.MovementZones);
                 break;
 
             case CardTargetType.TargetOther:
@@ -263,23 +327,54 @@ public class CardInstanceEffectHandler
         }
     }
 
-    private bool ProcessTargeting(EffectTargetingParameter targetingParameter,
+    private static void ProcessGrantFunctionFunctionality(CardInstanceEffectHandler instanceEffect,
+        EffectFunctionality functionality, bool activate)
+    {
+        if (activate)
+            ActivateGrantFunctionFunctionality(instanceEffect, functionality);
+        else
+            DeactivateGrantFunctionFunctionality(instanceEffect, functionality);
+    }
+
+    private static void ActivateGrantFunctionFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
+    {
+        switch (functionality.Type)
+        {
+            case EffectFunctionalityType.PowerAttacker:
+                instanceEffect._isPowerAttacker = true;
+                instanceEffect._powerBoost = functionality.PowerBoost;
+                break;
+        }
+    }
+    
+    private static void DeactivateGrantFunctionFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
+    {
+        switch (functionality.Type)
+        {
+            case EffectFunctionalityType.PowerAttacker:
+                instanceEffect._isPowerAttacker = false;
+                instanceEffect._powerBoost = 0;
+                break;
+        }
+    }
+
+    private static bool ProcessTargeting(EffectTargetingParameter targetingParameter,
         EffectTargetingCondition targetingCondition)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         switch (targetingParameter.OwningPlayer)
         {
             case PlayerTargetType.Player:
-                cards = GetZoneCards(true, targetingParameter.ZoneType);
+                cards = GameDataHandler.Instance.GetZoneCards(true, targetingParameter.ZoneType);
                 break;
 
             case PlayerTargetType.Opponent:
-                cards = GetZoneCards(false, targetingParameter.ZoneType);
+                cards = GameDataHandler.Instance.GetZoneCards(false, targetingParameter.ZoneType);
                 break;
 
             case PlayerTargetType.Both:
-                cards = GetZoneCards(true, targetingParameter.ZoneType);
-                cards.AddRange(GetZoneCards(false, targetingParameter.ZoneType));
+                cards = GameDataHandler.Instance.GetZoneCards(true, targetingParameter.ZoneType);
+                cards.AddRange(GameDataHandler.Instance.GetZoneCards(false, targetingParameter.ZoneType));
                 break;
         }
 
@@ -299,32 +394,12 @@ public class CardInstanceEffectHandler
             if (!cardObj)
                 cardObj = ((ShieldObject) card).CardObj;
 
-            if (CardData.IsTargetingConditionSatisfied(_cardObj.CardInst, targetingCondition))
+            if (CardData.IsTargetingConditionSatisfied(cardObj.CardInst, targetingCondition))
                 count++;
         }
 
         return count == targetCount;
     }
 
-    private List<CardBehaviour> GetZoneCards(bool isPlayer, CardZoneType zoneType)
-    {
-        PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(isPlayer);
-        switch (zoneType)
-        {
-            case CardZoneType.Deck:
-                return new List<CardBehaviour>(dataHandler.CardsInDeck);
-            case CardZoneType.Hand:
-                 return new List<CardBehaviour>(dataHandler.CardsInHandList);
-            case CardZoneType.Shields:
-                 return new List<CardBehaviour>(dataHandler.Shields);
-            case CardZoneType.Graveyard:
-                 return new List<CardBehaviour>(dataHandler.CardsInGrave);
-            case CardZoneType.ManaZone:
-                 return new List<CardBehaviour>(dataHandler.CardsInManaList);
-            case CardZoneType.BattleZone:
-                return new List<CardBehaviour>(dataHandler.CardsInBattleList);
-        }
-
-        return null;
-    }
+    #endregion
 }

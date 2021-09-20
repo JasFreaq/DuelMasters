@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -206,11 +204,17 @@ public class GameManager : MonoBehaviour
         {
             GameStep nextStep = _gameSteps[_currentStep.NextStepType];
             yield return _currentStep.FinishStepRoutine(_currentManager);
+            GameDataHandler.Instance.CheckWhileConditions();
+
             _currentStep = nextStep;
             yield return _currentStep.StartStepRoutine(_currentManager);
+            GameDataHandler.Instance.CheckWhileConditions();
 
             if (_endCurrentStep)
+            {
                 _endCurrentStep = false;
+                GameDataHandler.Instance.CheckWhileConditions();
+            }
         }
 
         _gameLoopRoutine = null;
