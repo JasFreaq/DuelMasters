@@ -94,13 +94,13 @@ public class GameDataHandler : MonoBehaviour
         foreach (CreatureObject creatureObj in _playerDataHandler.CardsInBattle.Values)
         {
             if (creatureObj.CardInst.InstanceEffectHandler.HasWhileCondition)
-                creatureObj.CardInst.InstanceEffectHandler.TriggerWhileCondition();
+                creatureObj.TriggerWhileConditions();
         }
         
         foreach (CreatureObject creatureObj in _opponentDataHandler.CardsInBattle.Values)
         {
             if (creatureObj.CardInst.InstanceEffectHandler.HasWhileCondition)
-                creatureObj.CardInst.InstanceEffectHandler.TriggerWhileCondition();
+                creatureObj.TriggerWhileConditions();
         }
     }
 }

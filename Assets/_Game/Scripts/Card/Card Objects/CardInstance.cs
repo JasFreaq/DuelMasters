@@ -10,7 +10,7 @@ public class CardInstance
     private CardZoneType _currentZone = CardZoneType.Deck;
 
     private bool _isTapped;
-    
+
     public CardInstance(CardData cardData)
     {
         _cardData = cardData;

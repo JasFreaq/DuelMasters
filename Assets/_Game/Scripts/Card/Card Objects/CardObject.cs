@@ -23,9 +23,10 @@ public abstract class CardObject : CardBehaviour
     private Action<CardObject> _onDragReleaseAction;
     private Func<CardObject, Coroutine> _onSendToGraveFunc;
 
-    private bool _isPlayer, _isValid, _isHighlightBaseColor = true, _isVisible = false;
+    private bool _isPlayer, _isValid, _isHighlightBaseColor = true, _isVisible;
     private bool _canDrag, _processDragRelease, _inPlayerHand;
-    
+    private bool _triggeredWhileConditionsThisFrame;
+
     protected bool _isHighlighted, _isSelected;
     
     #region Properties
@@ -118,6 +119,12 @@ public abstract class CardObject : CardBehaviour
         _hoverPreviewHandler.PreviewLayoutHandler = _previewLayoutHandler;
 
         _dragHandler = GetComponent<DragHandler>();
+    }
+
+    private void Update()
+    {
+        _triggeredWhileConditionsThisFrame = false;
+        _cardInst.InstanceEffectHandler.Update();
     }
 
     public void Initialize(CardInstance cardInst, bool isPlayer)
@@ -305,4 +312,10 @@ public abstract class CardObject : CardBehaviour
     }
 
     #endregion
+
+    public void TriggerWhileConditions()
+    {
+        if (!_triggeredWhileConditionsThisFrame)
+            _cardInst.InstanceEffectHandler.TriggerWhileConditions();
+    }
 }

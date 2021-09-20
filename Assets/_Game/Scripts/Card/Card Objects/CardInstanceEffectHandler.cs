@@ -2,13 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 
 public class CardInstanceEffectHandler
 {
     #region Helper Data Structures
-
     struct WhileConditionHolder
     {
         public EffectTargetingParameter targetingParameter;
@@ -39,6 +37,14 @@ public class CardInstanceEffectHandler
     private Action _whenWouldBeDestroyed;
 
     private List<WhileConditionHolder> _whileConditions = new List<WhileConditionHolder>();
+
+    public void Update()
+    {
+        foreach (WhileConditionHolder condition in _whileConditions)
+        {
+            Debug.Log($"Param: {condition.targetingParameter} Cond: {condition.targetingCondition} IsActive: {condition.effectActive}");
+        }
+    }
 
     #endregion
 
@@ -282,23 +288,20 @@ public class CardInstanceEffectHandler
         return false;
     }
 
-    public void TriggerWhileCondition()
+    public void TriggerWhileConditions()
     {
         for (int i = 0, n = _whileConditions.Count; i < n; i++)
         {
             WhileConditionHolder whileCondition = _whileConditions[i];
             bool meetsCondition = ProcessTargeting(whileCondition.targetingParameter, whileCondition.targetingCondition);
 
-            if (meetsCondition && !whileCondition.effectActive)
+            if (meetsCondition != whileCondition.effectActive)
             {
-                whileCondition.effectActive = true;
-                whileCondition.processFunction.Invoke(true);
+                whileCondition.effectActive = meetsCondition;
+                whileCondition.processFunction.Invoke(meetsCondition);
             }
-            else if (!meetsCondition && whileCondition.effectActive)
-            {
-                whileCondition.effectActive = false;
-                whileCondition.processFunction.Invoke(false);
-            }
+
+            _whileConditions[i] = whileCondition;
         }
     }
 
@@ -380,13 +383,9 @@ public class CardInstanceEffectHandler
 
         int count = 0, targetCount = 0;
         if (targetingParameter.CountType == CountType.All)
-        {
             targetCount = cards.Count;
-        }
         else if (targetingParameter.CountType == CountType.Number)
-        {
             targetCount = targetingParameter.Count;
-        }
 
         foreach (CardBehaviour card in cards)
         {
@@ -396,6 +395,21 @@ public class CardInstanceEffectHandler
 
             if (CardData.IsTargetingConditionSatisfied(cardObj.CardInst, targetingCondition))
                 count++;
+        }
+
+        if (targetingParameter.CountType == CountType.Number)
+        {
+            switch (targetingParameter.CountChoice)
+            {
+                case CountChoiceType.Exactly:
+                    return count == targetCount;
+
+                case CountChoiceType.AtLeast:
+                    return count >= targetCount;
+
+                case CountChoiceType.Upto:
+                    return count <= targetCount;
+            }
         }
 
         return count == targetCount;
