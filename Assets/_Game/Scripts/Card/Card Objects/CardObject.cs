@@ -124,7 +124,6 @@ public abstract class CardObject : CardBehaviour
     private void Update()
     {
         _triggeredWhileConditionsThisFrame = false;
-        _cardInst.InstanceEffectHandler.Update();
     }
 
     public void Initialize(CardInstance cardInst, bool isPlayer)

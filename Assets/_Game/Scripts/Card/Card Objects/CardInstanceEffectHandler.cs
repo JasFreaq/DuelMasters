@@ -37,15 +37,7 @@ public class CardInstanceEffectHandler
     private Action _whenWouldBeDestroyed;
 
     private List<WhileConditionHolder> _whileConditions = new List<WhileConditionHolder>();
-
-    public void Update()
-    {
-        foreach (WhileConditionHolder condition in _whileConditions)
-        {
-            Debug.Log($"Param: {condition.targetingParameter} Cond: {condition.targetingCondition} IsActive: {condition.effectActive}");
-        }
-    }
-
+    
     #endregion
 
     public CardInstanceEffectHandler(CardData cardData)
