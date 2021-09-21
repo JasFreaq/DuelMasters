@@ -1,10 +1,50 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CardEffectsManager : MonoBehaviour
 {
+    #region Helper Data Structures
+
+    public struct CardSelectionData
+    {
+        public CardZoneType fromZone;
+        public bool fromBothPlayers, searchAndShuffleDeck, showSearchedCard;
+
+        public CountChoiceType countChoice;
+        public int moveCount;
+
+        public CardSelectionData(MovementZones movementZones)
+        {
+            fromZone = movementZones.fromZone;
+            
+            fromBothPlayers = movementZones.fromBothPlayers;
+            searchAndShuffleDeck = movementZones.deckCardMove != DeckCardMoveType.Top;
+            showSearchedCard = movementZones.showSearchedCard;
+
+            countChoice = movementZones.countChoice;
+            moveCount = movementZones.moveCount;
+        }
+
+        public CardSelectionData(EffectFunctionality functionality)
+        {
+            fromZone = functionality.TargetingParameter.ZoneType;
+
+            fromBothPlayers = functionality.TargetPlayer == PlayerTargetType.Both;
+            searchAndShuffleDeck = false;
+            showSearchedCard = false;
+
+            countChoice = functionality.TargetingParameter.CountChoice;
+            moveCount = functionality.TargetingParameter.Count;
+        }
+    }
+
+    #endregion
+
     [SerializeField] private CardBrowserOverlay _cardBrowserOverlay;
+
+    private Action _onEndOfTurnAction;
 
     #region Static Data Members
 
@@ -55,74 +95,46 @@ public class CardEffectsManager : MonoBehaviour
     {
         return StartCoroutine(ProcessRegionMovementRoutine(card, movementZones));
     }
-
-    private IEnumerator MayProcessRegionMovementRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
-    {
-        Controller choosingPlayer = GameManager.Instance.GetController(playerChooses);
-        Coroutine<bool> routine = choosingPlayer.StartCoroutine<bool>(choosingPlayer.ChooseEffectActivationRoutine());
-        yield return routine.coroutine;
-        if (routine.returnVal)
-            yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetingCondition);
-    }
-
-    private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
+    
+    public IEnumerator ProcessCardSelectionRoutine(bool playerChooses, bool affectPlayer, CardSelectionData selectionData, 
+        EffectTargetingCondition targetingCondition)
     {
         Controller choosingController = GameManager.Instance.GetController(playerChooses);
         PlayerController playerController = choosingController as PlayerController;
 
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
 
-        int lower = 1, upper = movementZones.moveCount;
-        if (movementZones.countChoice == CountChoiceType.Exactly)
+        int lower = 1, upper = selectionData.moveCount;
+        if (selectionData.countChoice == CountChoiceType.Exactly)
             lower = upper;
 
         List<CardBehaviour> selectedCards = null;
 
-        switch (movementZones.fromZone)
+        switch (selectionData.fromZone)
         {
             case CardZoneType.Deck:
-                switch (movementZones.deckCardMove)
+                if (selectionData.searchAndShuffleDeck)
                 {
-                    case DeckCardMoveType.Top:
-                        int moveCount = 0;
-                        if (movementZones.countChoice == CountChoiceType.Exactly || movementZones.moveCount == 1)
-                            moveCount = movementZones.moveCount;
-                        else if (movementZones.countChoice == CountChoiceType.Upto)
-                        {
-                            Coroutine<int> routine1 = choosingController.StartCoroutine<int>(choosingController.GetNumberSelectionRoutine(lower, upper));
-                            yield return routine1.coroutine;
-                            moveCount = routine1.returnVal;
-                        }
+                    if (playerChooses)
+                    {
+                        playerController.EnableFullControl(false);
+                        Coroutine<List<CardBehaviour>> routine2 =
+                            _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(_cardBrowserOverlay.CardSelectionRoutine(lower, upper,
+                                affectedPlayer.DataHandler.CardsInDeck, targetingCondition));
+                        yield return routine2.coroutine;
+                        selectedCards = routine2.returnVal;
+                        playerController.EnableFullControl(true);
+                    }
+                    else
+                    {
+                        Coroutine<List<CardBehaviour>> routine2 =
+                            choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
+                                affectedPlayer.DataHandler.CardsInDeck, null));
+                        yield return routine2.coroutine;
+                        selectedCards = routine2.returnVal;
+                    }
 
-                        for (int i = 0; i < moveCount; i++)
-                        {
-                            CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
-                            yield return ProcessRegionMovementRoutine(cardObj, movementZones);
-                        }
-                        break;
-
-                    case DeckCardMoveType.SearchShuffle:
-                        if (playerChooses)
-                        {
-                            playerController.EnableFullControl(false);
-                            Coroutine<List<CardBehaviour>> routine2 =
-                                _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(_cardBrowserOverlay.CardSelectionRoutine(lower, upper,
-                                        affectedPlayer.DataHandler.CardsInDeck, targetingCondition));
-                            yield return routine2.coroutine;
-                            selectedCards = routine2.returnVal;
-                            playerController.EnableFullControl(true);
-                        }
-                        else
-                        {
-                            Coroutine<List<CardBehaviour>> routine2 =
-                                choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                                        affectedPlayer.DataHandler.CardsInDeck, null));
-                            yield return routine2.coroutine;
-                            selectedCards = routine2.returnVal;
-                        }
-
-                        //TODO: Shuffle Deck
-                        break;
+                    //TODO: Shuffle Deck
                 }
                 break;
 
@@ -186,11 +198,11 @@ public class CardEffectsManager : MonoBehaviour
 
             case CardZoneType.BattleZone:
                 Coroutine<List<CardBehaviour>> routine6;
-                if (movementZones.fromBothPlayers)
+                if (selectionData.fromBothPlayers)
                 {
                     routine6 = choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
                         GameManager.Instance.GetManager(true).DataHandler.CardsInBattle,
-                        GameManager.Instance.GetManager(false).DataHandler.CardsInBattle, 
+                        GameManager.Instance.GetManager(false).DataHandler.CardsInBattle,
                         targetingCondition));
                 }
                 else
@@ -204,10 +216,57 @@ public class CardEffectsManager : MonoBehaviour
                 break;
         }
 
-        if (selectedCards != null)
+        yield return selectedCards;
+    }
+
+    private IEnumerator MayProcessRegionMovementRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
+    {
+        Controller choosingPlayer = GameManager.Instance.GetController(playerChooses);
+        Coroutine<bool> routine = choosingPlayer.StartCoroutine<bool>(choosingPlayer.ChooseEffectActivationRoutine());
+        yield return routine.coroutine;
+        if (routine.returnVal)
+            yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetingCondition);
+    }
+
+    private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
+    {
+        Controller choosingController = GameManager.Instance.GetController(playerChooses);
+        PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
+        
+        if (movementZones.fromZone == CardZoneType.Deck && movementZones.deckCardMove == DeckCardMoveType.Top)
         {
-            foreach (CardBehaviour card in selectedCards)
-                yield return ProcessRegionMovementRoutine(card, movementZones);
+            int lower = 1, upper = movementZones.moveCount;
+            if (movementZones.countChoice == CountChoiceType.Exactly)
+                lower = upper;
+
+            int moveCount = 0;
+            if (movementZones.countChoice == CountChoiceType.Exactly || movementZones.moveCount == 1)
+                moveCount = movementZones.moveCount;
+            else if (movementZones.countChoice == CountChoiceType.Upto)
+            {
+                Coroutine<int> routine1 = choosingController.StartCoroutine<int>(choosingController.GetNumberSelectionRoutine(lower, upper));
+                yield return routine1.coroutine;
+                moveCount = routine1.returnVal;
+            }
+
+            for (int i = 0; i < moveCount; i++)
+            {
+                CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
+                yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+            }
+        }
+        else
+        {
+            Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(ProcessCardSelectionRoutine(playerChooses, affectPlayer,
+                    new CardSelectionData(movementZones), targetingCondition));
+            yield return routine.coroutine;
+            List<CardBehaviour> selectedCards = routine.returnVal;
+
+            if (selectedCards != null)
+            {
+                foreach (CardBehaviour card in selectedCards)
+                    yield return ProcessRegionMovementRoutine(card, movementZones);
+            }
         }
     }
 
@@ -289,4 +348,18 @@ public class CardEffectsManager : MonoBehaviour
         PlayerController playerController = GameManager.Instance.GetController(true) as PlayerController;
         playerController.CanInteract = enable;
     }
+
+    #region Register Callbacks
+
+    public void RegisterOnEndOfTurn(Action action)
+    {
+        _onEndOfTurnAction += action;
+    }
+    
+    public void DeregisterOnEndOfTurn(Action action)
+    {
+        _onEndOfTurnAction -= action;
+    }
+
+    #endregion
 }

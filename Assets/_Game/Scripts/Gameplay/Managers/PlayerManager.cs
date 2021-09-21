@@ -147,6 +147,7 @@ public class PlayerManager : MonoBehaviour
             yield return CastSpellRoutine(spellCard);
 
         HoverPreviewHandler.FlipPreviewLocation = false;
+        GameDataHandler.Instance.CheckWhileConditions();
     }
 
     private IEnumerator SummonCreatureRoutine(CreatureObject creatureObj)
@@ -177,12 +178,11 @@ public class PlayerManager : MonoBehaviour
             creatureObj.HoverPreviewHandler.PreviewEnabled = true;
             creatureObj.CardInst.InstanceEffectHandler.TriggerWhenPutIntoBattle();
         }
-
-        GameDataHandler.Instance.CheckWhileConditions();
     }
 
     private IEnumerator CastSpellRoutine(SpellObject spellObj)
     {
+        spellObj.CardInst.InstanceEffectHandler.TriggerWhenPlayed();
         yield return MoveToGraveyardRoutine(spellObj);
     }
     

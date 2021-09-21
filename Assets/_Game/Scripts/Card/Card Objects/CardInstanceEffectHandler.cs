@@ -137,24 +137,24 @@ public class CardInstanceEffectHandler
     {
         foreach (EffectData effectData in _cardData.ruleEffects)
         {
-            switch (effectData.EffectFunctionality.Type)
+            if (effectData.EffectCondition && effectData.EffectCondition.Type == EffectConditionType.WhileCondition)
             {
-                case EffectFunctionalityType.GrantFunction:
-                case EffectFunctionalityType.GrantPower:
-                    Action<bool> function1 = SetupEffectFunctionality(effectData.EffectFunctionality);
-                    if (effectData.EffectCondition)
-                        SetupEffectCondition(effectData.EffectCondition, function1);
-                    else
-                        Debug.LogError("GrantFunction or GrantPower is being processed without a condition");
-                    break;
-
-                default:
-                    Action function0 = SetupEffectFunctionality(effectData.EffectFunctionality, effectData.MayUseFunction);
-                    if (effectData.EffectCondition)
-                        SetupEffectCondition(effectData.EffectCondition, function0);
-                    else
-                        _whenPlayed += function0;
-                    break;
+                switch (effectData.EffectFunctionality.Type)
+                {
+                    case EffectFunctionalityType.GrantFunction:
+                    case EffectFunctionalityType.GrantPower:
+                        Action<bool> function = SetupEffectFunctionality(effectData.EffectFunctionality);
+                        SetupEffectCondition(effectData.EffectCondition, function);
+                        break;
+                }
+            }
+            else
+            {
+                Action function = SetupEffectFunctionality(effectData.EffectFunctionality, effectData.MayUseFunction);
+                if (effectData.EffectCondition)
+                    SetupEffectCondition(effectData.EffectCondition, function);
+                else
+                    _whenPlayed += function;
             }
         }
     }
@@ -165,6 +165,9 @@ public class CardInstanceEffectHandler
         {
             case EffectFunctionalityType.RegionMovement:
                 return InvokeRegionMovementFunctionality;
+
+            case EffectFunctionalityType.GrantFunction:
+                return InvokeGrantFunctionFunctionality;
         }
 
         return null;
@@ -174,6 +177,12 @@ public class CardInstanceEffectHandler
         void InvokeRegionMovementFunctionality()
         {
             ProcessRegionMovementFunctionality(this, functionality, mayUse);
+        }
+
+        void InvokeGrantFunctionFunctionality()
+        {
+            ProcessGrantFunctionFunctionality(this, functionality.SubFunctionality, true,
+                functionality.AlterFunctionUntilEndOfTurn);
         }
 
         #endregion
@@ -193,7 +202,8 @@ public class CardInstanceEffectHandler
 
         void InvokeGrantFunctionFunctionality(bool activate)
         {
-            ProcessGrantFunctionFunctionality(this, functionality.SubFunctionality, activate);
+            ProcessGrantFunctionFunctionality(this, functionality.SubFunctionality, activate,
+                functionality.AlterFunctionUntilEndOfTurn);
         }
 
         #endregion
@@ -309,29 +319,117 @@ public class CardInstanceEffectHandler
             case CardTargetType.NoTarget:
                 Debug.LogError($"{instanceEffect._cardData.Name} has RegionMovement as functionality type with the wrong target type.");
                 break;
-
-            case CardTargetType.TargetSelf:
-                CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardObj, functionality.MovementZones);
-                break;
-
+                
             case CardTargetType.TargetOther:
                 CardEffectsManager.Instance.ProcessRegionMovement(functionality.ChoosingPlayer == PlayerTargetType.Player,
                     functionality.TargetPlayer == PlayerTargetType.Player,
                     functionality.MovementZones, functionality.TargetingCondition, mayUse);
                 break;
+            
+            case CardTargetType.TargetSelf:
+                CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardObj, functionality.MovementZones);
+                break;
         }
     }
 
     private static void ProcessGrantFunctionFunctionality(CardInstanceEffectHandler instanceEffect,
-        EffectFunctionality functionality, bool activate)
+        EffectFunctionality functionality, bool activate, bool untilEndOfTurn)
     {
-        if (activate)
-            ActivateGrantFunctionFunctionality(instanceEffect, functionality);
-        else
-            DeactivateGrantFunctionFunctionality(instanceEffect, functionality);
+        switch (functionality.TargetCard)
+        {
+            case CardTargetType.AutoTarget:
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetPlayer == PlayerTargetType.Player,functionality.TargetingParameter.ZoneType);
+                foreach (CardBehaviour card in cards)
+                {
+                    CardObject cardObj = card as CardObject;
+                    if (!cardObj)
+                        cardObj = ((ShieldObject)card).CardObj;
+
+                    ProcessGrant(cardObj.CardInst.InstanceEffectHandler);
+                }
+                break;
+
+            case CardTargetType.TargetOther:
+                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessGrant));
+                break;
+
+            case CardTargetType.TargetSelf:
+                ProcessGrant(instanceEffect);
+                break;
+        }
+
+        #region Local Functions
+
+        void ProcessGrant(CardInstanceEffectHandler instance)
+        {
+            if (activate)
+            {
+                ActivateEffectFunctionality(instance, functionality);
+                if (untilEndOfTurn)
+                    CardEffectsManager.Instance.RegisterOnEndOfTurn(InvokeFunctionDeactivation);
+            }
+            else
+                DeactivateEffectFunctionality(instance, functionality);
+        }
+
+        void InvokeFunctionDeactivation()
+        {
+            DeactivateEffectFunctionality(instanceEffect, functionality);
+        }
+
+        #endregion
+    }
+    
+    private static void ProcessDisableFunctionFunctionality(CardInstanceEffectHandler instanceEffect,
+        EffectFunctionality functionality, bool deactivate, bool untilEndOfTurn)
+    {
+        switch (functionality.TargetCard)
+        {
+            case CardTargetType.AutoTarget:
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetPlayer == PlayerTargetType.Player, functionality.TargetingParameter.ZoneType);
+                foreach (CardBehaviour card in cards)
+                {
+                    CardObject cardObj = card as CardObject;
+                    if (!cardObj)
+                        cardObj = ((ShieldObject)card).CardObj;
+
+                    ProcessDisable(cardObj.CardInst.InstanceEffectHandler);
+                }
+                break;
+
+            case CardTargetType.TargetOther:
+                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessDisable));
+                break;
+
+            case CardTargetType.TargetSelf:
+                ProcessDisable(instanceEffect);
+                break;
+        }
+
+        #region Local Functions
+
+        void ProcessDisable(CardInstanceEffectHandler instance)
+        {
+            if (deactivate)
+            {
+                DeactivateEffectFunctionality(instanceEffect, functionality);
+
+                if (untilEndOfTurn)
+                    CardEffectsManager.Instance.RegisterOnEndOfTurn(InvokeFunctionActivation);
+            }
+            else
+                ActivateEffectFunctionality(instanceEffect, functionality);
+        }
+        
+        void InvokeFunctionActivation()
+        {
+            ActivateEffectFunctionality(instanceEffect, functionality);
+        }
+
+        #endregion
     }
 
-    private static void ActivateGrantFunctionFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
+    private static void ActivateEffectFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
     {
         switch (functionality.Type)
         {
@@ -342,7 +440,7 @@ public class CardInstanceEffectHandler
         }
     }
     
-    private static void DeactivateGrantFunctionFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
+    private static void DeactivateEffectFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
     {
         switch (functionality.Type)
         {
@@ -405,6 +503,26 @@ public class CardInstanceEffectHandler
         }
 
         return count == targetCount;
+    }
+
+    private static IEnumerator ProcessCardSelectionRoutine(EffectFunctionality functionality, Action<CardInstanceEffectHandler> callback)
+    {
+        Coroutine<List<CardBehaviour>> routine =
+            CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
+                functionality.ChoosingPlayer == PlayerTargetType.Player,
+                functionality.TargetPlayer == PlayerTargetType.Player,
+                new CardEffectsManager.CardSelectionData(functionality), functionality.TargetingCondition));
+        yield return routine.coroutine;
+        List<CardBehaviour> cards = routine.returnVal;
+
+        foreach (CardBehaviour card in cards)
+        {
+            CardObject cardObj = card as CardObject;
+            if (!cardObj)
+                cardObj = ((ShieldObject)card).CardObj;
+
+            callback.Invoke(cardObj.CardInst.InstanceEffectHandler);
+        }
     }
 
     #endregion

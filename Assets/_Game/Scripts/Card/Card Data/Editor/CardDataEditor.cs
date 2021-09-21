@@ -204,30 +204,36 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
         GUILayout.Label(labelText, EditorStyles.boldLabel);
         
+        bool setAutoTarget = false;
         functionality.Type = DrawFoldout(functionality.Type);
 
         bool showMultiplyVal = false;
         DrawFunctionTypeSpecificParams();
 
         functionality.TargetCard = DrawFoldout(functionality.TargetCard);
-        if (functionality.TargetCard == CardTargetType.TargetOther)
+        switch (functionality.TargetCard)
         {
-            GUILayout.Label("Chooser:");
-            functionality.ChoosingPlayer = DrawFoldout(functionality.ChoosingPlayer);
+            case CardTargetType.AutoTarget:
+                if (functionality.TargetingParameter.Type != ConditionType.Affect)
+                    functionality.TargetingParameter.Type = ConditionType.Affect;
+                break;
 
-            if (!(functionality.Type == EffectFunctionalityType.RegionMovement &&
-                 functionality.MovementZones.fromBothPlayers))
-            {
-                GUILayout.Label("Target:");
-                functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
-            }
+            case CardTargetType.TargetOther:
+                GUILayout.Label("Chooser:");
+                functionality.ChoosingPlayer = DrawFoldout(functionality.ChoosingPlayer);
+                if (!(functionality.Type == EffectFunctionalityType.RegionMovement &&
+                      functionality.MovementZones.fromBothPlayers))
+                {
+                    GUILayout.Label("Target:");
+                    functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
+                }
+                break;
         }
 
         if (showMultiplyVal)
         {
-            bool initialMultiplyVal = functionality.ShouldMultiplyVal;
             functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
-            if (functionality.ShouldMultiplyVal && !initialMultiplyVal)
+            if (functionality.ShouldMultiplyVal && functionality.TargetingParameter.Type != ConditionType.Count)
                 functionality.TargetingParameter.Type = ConditionType.Count;
         }
 
@@ -237,7 +243,7 @@ public class CardDataEditor : Editor
 
         GUILayout.EndHorizontal();
 
-        if (functionality.TargetUnspecified() && functionality.ShouldMultiplyVal)
+        if (functionality.TargetUnspecified() && functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget)
             DrawTargetingParameter(functionality.TargetingParameter);
 
         if (functionality.AssignedCondition)

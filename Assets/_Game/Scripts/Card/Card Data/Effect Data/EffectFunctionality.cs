@@ -481,7 +481,7 @@ public class EffectFunctionality : ScriptableObject
             {
                 str1 += $"from {_movementZones.fromZone} ";
                 if (_movementZones.deckCardMove == DeckCardMoveType.Top)
-                    str1 += $"to top of Deck";
+                    str1 += "to top of Deck";
                 else
                     str1 += "and shuffle into Deck";
             }
