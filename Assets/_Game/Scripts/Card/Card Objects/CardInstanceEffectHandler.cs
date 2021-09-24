@@ -511,7 +511,7 @@ public class CardInstanceEffectHandler
             CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
                 functionality.ChoosingPlayer == PlayerTargetType.Player,
                 functionality.TargetPlayer == PlayerTargetType.Player,
-                new CardEffectsManager.CardSelectionData(functionality), functionality.TargetingCondition));
+                new CardEffectsManager.CardSelectionData(functionality), functionality.TargetingCondition, false));
         yield return routine.coroutine;
         List<CardBehaviour> cards = routine.returnVal;
 

@@ -88,7 +88,7 @@ public class CardEffectsManager : MonoBehaviour
                 targetingCondition));
 
         return StartCoroutine(AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones,
-                targetingCondition));
+                targetingCondition, false));
     }
 
     public Coroutine ProcessRegionMovement(CardBehaviour card, MovementZones movementZones)
@@ -97,7 +97,7 @@ public class CardEffectsManager : MonoBehaviour
     }
     
     public IEnumerator ProcessCardSelectionRoutine(bool playerChooses, bool affectPlayer, CardSelectionData selectionData, 
-        EffectTargetingCondition targetingCondition)
+        EffectTargetingCondition targetingCondition, bool mayUse)
     {
         Controller choosingController = GameManager.Instance.GetController(playerChooses);
         PlayerController playerController = choosingController as PlayerController;
@@ -120,7 +120,7 @@ public class CardEffectsManager : MonoBehaviour
                         playerController.EnableFullControl(false);
                         Coroutine<List<CardBehaviour>> routine2 =
                             _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(_cardBrowserOverlay.CardSelectionRoutine(lower, upper,
-                                affectedPlayer.DataHandler.CardsInDeck, targetingCondition));
+                                affectedPlayer.DataHandler.CardsInDeck, targetingCondition, mayUse));
                         yield return routine2.coroutine;
                         selectedCards = routine2.returnVal;
                         playerController.EnableFullControl(true);
@@ -129,7 +129,7 @@ public class CardEffectsManager : MonoBehaviour
                     {
                         Coroutine<List<CardBehaviour>> routine2 =
                             choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                                affectedPlayer.DataHandler.CardsInDeck, null));
+                                affectedPlayer.DataHandler.CardsInDeck, null, mayUse));
                         yield return routine2.coroutine;
                         selectedCards = routine2.returnVal;
                     }
@@ -144,7 +144,7 @@ public class CardEffectsManager : MonoBehaviour
                     playerController.EnableFullControl(false);
                     Coroutine<List<CardBehaviour>> routine =
                         _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(_cardBrowserOverlay.CardSelectionRoutine(lower, upper,
-                            affectedPlayer.DataHandler.CardsInHand, targetingCondition));
+                            affectedPlayer.DataHandler.CardsInHand, targetingCondition, mayUse));
                     yield return routine.coroutine;
                     selectedCards = routine.returnVal;
                     playerController.EnableFullControl(true);
@@ -153,7 +153,7 @@ public class CardEffectsManager : MonoBehaviour
                 {
                     Coroutine<List<CardBehaviour>> routine =
                         choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                            affectedPlayer.DataHandler.CardsInHandList, targetingCondition));
+                            affectedPlayer.DataHandler.CardsInHandList, targetingCondition, mayUse));
                     yield return routine.coroutine;
                     selectedCards = routine.returnVal;
                 }
@@ -162,7 +162,7 @@ public class CardEffectsManager : MonoBehaviour
             case CardZoneType.Shields:
                 Coroutine<List<CardBehaviour>> routine3 =
                     choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, false,
-                        affectedPlayer.DataHandler.Shields));
+                        affectedPlayer.DataHandler.Shields, mayUse));
                 yield return routine3.coroutine;
                 selectedCards = routine3.returnVal;
                 break;
@@ -173,7 +173,7 @@ public class CardEffectsManager : MonoBehaviour
                     playerController.EnableFullControl(false);
                     Coroutine<List<CardBehaviour>> routine4 =
                         _cardBrowserOverlay.StartCoroutine<List<CardBehaviour>>(_cardBrowserOverlay.CardSelectionRoutine(lower, upper,
-                                affectedPlayer.DataHandler.CardsInGrave, targetingCondition));
+                                affectedPlayer.DataHandler.CardsInGrave, targetingCondition, mayUse));
                     yield return routine4.coroutine;
                     selectedCards = routine4.returnVal;
                     playerController.EnableFullControl(true);
@@ -182,7 +182,7 @@ public class CardEffectsManager : MonoBehaviour
                 {
                     Coroutine<List<CardBehaviour>> routine4 =
                         choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                            affectedPlayer.DataHandler.CardsInGrave, null));
+                            affectedPlayer.DataHandler.CardsInGrave, null, mayUse));
                     yield return routine4.coroutine;
                     selectedCards = routine4.returnVal;
                 }
@@ -191,7 +191,7 @@ public class CardEffectsManager : MonoBehaviour
             case CardZoneType.ManaZone:
                 Coroutine<List<CardBehaviour>> routine5 =
                     choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                        affectedPlayer.DataHandler.CardsInManaList, targetingCondition));
+                        affectedPlayer.DataHandler.CardsInManaList, targetingCondition, mayUse));
                 yield return routine5.coroutine;
                 selectedCards = routine5.returnVal;
                 break;
@@ -203,12 +203,12 @@ public class CardEffectsManager : MonoBehaviour
                     routine6 = choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
                         GameManager.Instance.GetManager(true).DataHandler.CardsInBattle,
                         GameManager.Instance.GetManager(false).DataHandler.CardsInBattle,
-                        targetingCondition));
+                        targetingCondition, mayUse));
                 }
                 else
                 {
                     routine6 = choosingController.StartCoroutine<List<CardBehaviour>>(choosingController.SelectCardsRoutine(lower, upper, true,
-                            affectedPlayer.DataHandler.CardsInBattle, targetingCondition));
+                            affectedPlayer.DataHandler.CardsInBattle, targetingCondition, mayUse));
                 }
 
                 yield return routine6.coroutine;
@@ -225,10 +225,10 @@ public class CardEffectsManager : MonoBehaviour
         Coroutine<bool> routine = choosingPlayer.StartCoroutine<bool>(choosingPlayer.ChooseEffectActivationRoutine());
         yield return routine.coroutine;
         if (routine.returnVal)
-            yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetingCondition);
+            yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetingCondition, true);
     }
 
-    private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
+    private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition, bool mayUse)
     {
         Controller choosingController = GameManager.Instance.GetController(playerChooses);
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
@@ -258,7 +258,7 @@ public class CardEffectsManager : MonoBehaviour
         else
         {
             Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(ProcessCardSelectionRoutine(playerChooses, affectPlayer,
-                    new CardSelectionData(movementZones), targetingCondition));
+                    new CardSelectionData(movementZones), targetingCondition, mayUse));
             yield return routine.coroutine;
             List<CardBehaviour> selectedCards = routine.returnVal;
 

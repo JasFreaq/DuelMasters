@@ -85,7 +85,7 @@ public class CardBrowserOverlay : MonoBehaviour
     #region Functionality Methods
 
     public IEnumerator CardSelectionRoutine(int lower, int upper, List<CardObject> cardList,
-        EffectTargetingCondition targetingCondition)
+        EffectTargetingCondition targetingCondition, bool mayUse)
     {
         _lowerBound = lower;
         _upperBound = upper;
@@ -94,7 +94,8 @@ public class CardBrowserOverlay : MonoBehaviour
             _targetText.text = _upperBound == 1 ? $"Target a{targetingCondition.GetConditionParametersString()}" : $"Target {targetingCondition.GetConditionParametersString()}";
         _submitText.text = "Submit 0";
         _submitButton.interactable = false;
-
+        _cancelButton.gameObject.SetActive(mayUse);
+        print(mayUse);
         CheckAndArrangeValidCards(cardList, targetingCondition);
         
         _layoutHolder.SetActive(true);
@@ -122,7 +123,7 @@ public class CardBrowserOverlay : MonoBehaviour
     }
 
     public IEnumerator CardSelectionRoutine(int lower, int upper, Dictionary<int, CardObject> cardDict,
-        EffectTargetingCondition targetingCondition)
+        EffectTargetingCondition targetingCondition, bool mayUse)
     {
         List<CardObject> cardList = new List<CardObject>();
         foreach (KeyValuePair<int, CardObject> pair in cardDict)
@@ -132,7 +133,7 @@ public class CardBrowserOverlay : MonoBehaviour
         }
 
         Coroutine<List<CardBehaviour>> routine =
-            this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, cardList, targetingCondition));
+            this.StartCoroutine<List<CardBehaviour>>(CardSelectionRoutine(lower, upper, cardList, targetingCondition, mayUse));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }

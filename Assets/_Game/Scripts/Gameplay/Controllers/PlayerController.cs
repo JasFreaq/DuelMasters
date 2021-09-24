@@ -353,17 +353,17 @@ public class PlayerController : Controller
     #region Multiple Cards Selection Methods
 
     protected override IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
-        EffectTargetingCondition targetingCondition)
+        EffectTargetingCondition targetingCondition, bool mayUse)
     {
         if (!selectCard)
             _canSelectShield = true;
 
-        _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection);
+        _actionOverlay.ActivateCardSelectionButtons(SubmitSelection, CancelSelection, mayUse);
         _actionOverlay.AdjustCardSelectionButtons(lower, upper, 0);
 
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(base.SelectCardsRoutine(lower, upper, selectCard, cards,
-                targetingCondition));
+                targetingCondition, mayUse));
         yield return routine.coroutine;
 
         _actionOverlay.DeactivateButtons();

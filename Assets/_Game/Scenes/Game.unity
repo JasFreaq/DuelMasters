@@ -961,6 +961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0d079a83051ed4e8e8c15c9ece4c02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shieldBreakTriggerName: BreakShield
+  _shieldUnbreakTriggerName: UnbreakShield
   _baseCardCount: 5
   _layoutsArrangeMoveTime: 0.5
   _hoverBeforePreviewTime: 0.75
@@ -1743,8 +1745,6 @@ MonoBehaviour:
   _maxShieldWidth: 10
   _shieldScale: 12.5
   _holderTransform: {fileID: 1853220378}
-  _shieldBreakTriggerName: BreakShield
-  _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
   _pauseTime: 0.75
   _fromTransitionTime: 1.5
@@ -2040,8 +2040,8 @@ MonoBehaviour:
   _opponentController: {fileID: 1962481312}
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
-  _playerDeck: {fileID: 11400000, guid: 615ab36afa02f2547bb4ee3aa3d2e43c, type: 2}
-  _opponentDeck: {fileID: 11400000, guid: 889dc1febc334be479bcd52e9096e2a2, type: 2}
+  _playerDeck: {fileID: 11400000, guid: 7ef26056e252e854196fc9da0eddad90, type: 2}
+  _opponentDeck: {fileID: 11400000, guid: 615ab36afa02f2547bb4ee3aa3d2e43c, type: 2}
   _actionOverlay: {fileID: 0}
 --- !u!4 &1167120987
 Transform:
@@ -2181,8 +2181,6 @@ MonoBehaviour:
   _maxShieldWidth: 10
   _shieldScale: 12.5
   _holderTransform: {fileID: 2000661157}
-  _shieldBreakTriggerName: BreakShield
-  _shieldUnbreakTriggerName: UnbreakShield
   _animationTime: 1
   _pauseTime: 0.75
   _fromTransitionTime: 1.5

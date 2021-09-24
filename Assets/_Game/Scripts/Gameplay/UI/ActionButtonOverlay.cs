@@ -64,7 +64,7 @@ public class ActionButtonOverlay : MonoBehaviour
 
     #region Card Selection Methods
 
-    public void ActivateCardSelectionButtons(UnityAction submitAction, UnityAction cancelAction)
+    public void ActivateCardSelectionButtons(UnityAction submitAction, UnityAction cancelAction, bool mayUse)
     {
         ActionButton submitButton = _actionButtons[0];
         if (!submitButton.gameObject.activeInHierarchy)
@@ -75,13 +75,15 @@ public class ActionButtonOverlay : MonoBehaviour
         }
 
         ActionButton cancelButton = _actionButtons[1];
-        if (!cancelButton.gameObject.activeInHierarchy)
+        if (mayUse && !cancelButton.gameObject.activeInHierarchy)
         {
             cancelButton.button.onClick.RemoveAllListeners();
             cancelButton.button.onClick.AddListener(cancelAction);
             cancelButton.text.text = "Cancel";
             cancelButton.button.gameObject.SetActive(true);
         }
+        else if (!mayUse && cancelButton.gameObject.activeInHierarchy)
+            cancelButton.button.gameObject.SetActive(false);
     }
 
     public void AdjustCardSelectionButtons(int lower, int upper, int selected)

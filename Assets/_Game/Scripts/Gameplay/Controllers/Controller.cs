@@ -169,7 +169,7 @@ public class Controller : MonoBehaviour
             List<CardBehaviour> selectedCards;
             Coroutine<List<CardBehaviour>> routine =
                 this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(1, 1, true,
-                    new List<CardBehaviour>(blockers), null));
+                    new List<CardBehaviour>(blockers), null, true));
             yield return routine.coroutine;
             selectedCards = routine.returnVal;
 
@@ -211,7 +211,7 @@ public class Controller : MonoBehaviour
             List<CardBehaviour> selectedCards;
             Coroutine<List<CardBehaviour>> routine =
                 this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(1, 1, true,
-                    new List<CardBehaviour>(matchingCreatures), null));
+                    new List<CardBehaviour>(matchingCreatures), null, true));
             yield return routine.coroutine;
             selectedCards = routine.returnVal;
 
@@ -228,7 +228,7 @@ public class Controller : MonoBehaviour
     {
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(shieldsToBreak, shieldsToBreak, false,
-                GameDataHandler.Instance.GetDataHandler(!_isPlayer).Shields));
+                GameDataHandler.Instance.GetDataHandler(!_isPlayer).Shields, false));
         yield return routine.coroutine;
         
         List<CardBehaviour> targetedShields = routine.returnVal;
@@ -292,26 +292,26 @@ public class Controller : MonoBehaviour
     }
 
     public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardObject> cardList, 
-        EffectTargetingCondition targetingCondition)
+        EffectTargetingCondition targetingCondition, bool mayUse)
     {
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
-                new List<CardBehaviour>(cardList), targetingCondition));
+                new List<CardBehaviour>(cardList), targetingCondition, mayUse));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
     
-    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<ShieldObject> shieldList)
+    public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<ShieldObject> shieldList, bool mayUse)
     {
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard,
-                new List<CardBehaviour>(shieldList), null));
+                new List<CardBehaviour>(shieldList), null, mayUse));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
 
     public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard,
-        Dictionary<int, CreatureObject> creatureDict, EffectTargetingCondition targetingCondition)
+        Dictionary<int, CreatureObject> creatureDict, EffectTargetingCondition targetingCondition, bool mayUse)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         foreach (CardBehaviour card in creatureDict.Values)
@@ -319,13 +319,13 @@ public class Controller : MonoBehaviour
         
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
-                targetingCondition));
+                targetingCondition, mayUse));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
 
     public IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, Dictionary<int, CreatureObject> creatureDict1,
-        Dictionary<int, CreatureObject> creatureDict2, EffectTargetingCondition targetingCondition)
+        Dictionary<int, CreatureObject> creatureDict2, EffectTargetingCondition targetingCondition, bool mayUse)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
         foreach (CardBehaviour card in creatureDict1.Values)
@@ -335,13 +335,13 @@ public class Controller : MonoBehaviour
 
         Coroutine<List<CardBehaviour>> routine =
             this.StartCoroutine<List<CardBehaviour>>(SelectCardsRoutine(lower, upper, selectCard, cards,
-                targetingCondition));
+                targetingCondition, mayUse));
         yield return routine.coroutine;
         yield return routine.returnVal;
     }
     
     protected virtual IEnumerator SelectCardsRoutine(int lower, int upper, bool selectCard, List<CardBehaviour> cards,
-        EffectTargetingCondition targetingCondition)
+        EffectTargetingCondition targetingCondition, bool mayUse)
     {
         _selectionLowerBound = Mathf.Min(lower, cards.Count);
         _selectionUpperBound = Mathf.Min(upper, cards.Count);
