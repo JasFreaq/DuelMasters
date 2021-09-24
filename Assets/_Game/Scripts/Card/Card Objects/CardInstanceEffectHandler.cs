@@ -181,7 +181,7 @@ public class CardInstanceEffectHandler
 
         void InvokeGrantFunctionFunctionality()
         {
-            ProcessGrantFunctionFunctionality(this, functionality.SubFunctionality, true,
+            ProcessGrantFunctionFunctionality(this, functionality, true,
                 functionality.AlterFunctionUntilEndOfTurn);
         }
 
@@ -202,7 +202,7 @@ public class CardInstanceEffectHandler
 
         void InvokeGrantFunctionFunctionality(bool activate)
         {
-            ProcessGrantFunctionFunctionality(this, functionality.SubFunctionality, activate,
+            ProcessGrantFunctionFunctionality(this, functionality, activate,
                 functionality.AlterFunctionUntilEndOfTurn);
         }
 
@@ -364,17 +364,17 @@ public class CardInstanceEffectHandler
         {
             if (activate)
             {
-                ActivateEffectFunctionality(instance, functionality);
+                ActivateEffectFunctionality(instance, functionality.SubFunctionality);
                 if (untilEndOfTurn)
                     CardEffectsManager.Instance.RegisterOnEndOfTurn(InvokeFunctionDeactivation);
             }
             else
-                DeactivateEffectFunctionality(instance, functionality);
+                DeactivateEffectFunctionality(instance, functionality.SubFunctionality);
         }
 
         void InvokeFunctionDeactivation()
         {
-            DeactivateEffectFunctionality(instanceEffect, functionality);
+            DeactivateEffectFunctionality(instanceEffect, functionality.SubFunctionality);
         }
 
         #endregion
