@@ -63,6 +63,18 @@ public class ShieldsManager : MonoBehaviour
         yield return StartCoroutine(PlayMakeShieldAnimationRoutine(baseShieldCountMinusOne));
     }
 
+    public IEnumerator BreakShieldRoutine(CardObject cardObj)
+    {
+        foreach (ShieldObject shieldObj in _shields)
+        {
+            if (shieldObj.CardObj == cardObj)
+            {
+                yield return BreakShieldRoutine(shieldObj);
+                break;
+            }
+        }
+    }
+
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
         shieldObj.SetAnimatorTrigger(true);

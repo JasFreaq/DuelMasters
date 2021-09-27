@@ -204,7 +204,6 @@ public class CardDataEditor : Editor
         GUILayout.BeginHorizontal();
         GUILayout.Label(labelText, EditorStyles.boldLabel);
         
-        bool setAutoTarget = false;
         functionality.Type = DrawFoldout(functionality.Type);
 
         bool showMultiplyVal = false;
@@ -399,8 +398,8 @@ public class CardDataEditor : Editor
             destroyParam.countType = DrawFoldout(destroyParam.countType);
             if (destroyParam.countType == CountType.Number)
             {
-                if (int.TryParse(EditorGUILayout.TextField($"{destroyParam.lookCount}"), out int num))
-                    destroyParam.lookCount = num;
+                if (int.TryParse(EditorGUILayout.TextField($"{destroyParam.destroyCount}"), out int num))
+                    destroyParam.destroyCount = num;
             }
         }
 

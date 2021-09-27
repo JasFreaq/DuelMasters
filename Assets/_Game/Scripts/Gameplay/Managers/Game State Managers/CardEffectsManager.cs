@@ -12,7 +12,8 @@ public class CardEffectsManager : MonoBehaviour
         public CardZoneType fromZone;
         public bool fromBothPlayers, searchAndShuffleDeck, showSearchedCard;
 
-        public CountChoiceType countChoice;
+        public CountType countType;
+        public CountChoiceType countChoiceType;
         public int moveCount;
 
         public CardSelectionData(MovementZones movementZones)
@@ -23,20 +24,22 @@ public class CardEffectsManager : MonoBehaviour
             searchAndShuffleDeck = movementZones.deckCardMove != DeckCardMoveType.Top;
             showSearchedCard = movementZones.showSearchedCard;
 
-            countChoice = movementZones.countChoice;
+            countType = CountType.Number;
+            countChoiceType = movementZones.countChoice;
             moveCount = movementZones.moveCount;
         }
 
-        public CardSelectionData(EffectFunctionality functionality)
+        public CardSelectionData(DestroyParam destroyParam, EffectFunctionality functionality)
         {
-            fromZone = functionality.TargetingParameter.ZoneType;
+            fromZone = destroyParam.destroyZone;
 
             fromBothPlayers = functionality.TargetPlayer == PlayerTargetType.Both;
             searchAndShuffleDeck = false;
             showSearchedCard = false;
 
-            countChoice = functionality.TargetingParameter.CountChoice;
-            moveCount = functionality.TargetingParameter.Count;
+            countType = destroyParam.countType;
+            countChoiceType = CountChoiceType.Exactly;
+            moveCount = destroyParam.destroyCount;
         }
     }
 
@@ -91,9 +94,9 @@ public class CardEffectsManager : MonoBehaviour
                 targetingCondition, false));
     }
 
-    public Coroutine ProcessRegionMovement(CardBehaviour card, MovementZones movementZones)
+    public Coroutine ProcessRegionMovement(CardBehaviour card, CardZoneType fromZone, CardZoneType toZone)
     {
-        return StartCoroutine(ProcessRegionMovementRoutine(card, movementZones));
+        return StartCoroutine(ProcessRegionMovementRoutine(card, fromZone, toZone));
     }
     
     public IEnumerator ProcessCardSelectionRoutine(bool playerChooses, bool affectPlayer, CardSelectionData selectionData, 
@@ -104,8 +107,18 @@ public class CardEffectsManager : MonoBehaviour
 
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
 
-        int lower = 1, upper = selectionData.moveCount;
-        if (selectionData.countChoice == CountChoiceType.Exactly)
+        int lower = 1, upper = 0;
+        switch (selectionData.countType)
+        {
+            case CountType.All:
+                upper = GameDataHandler.Instance.GetZoneCards(affectPlayer, selectionData.fromZone).Count;
+                break;
+
+            case CountType.Number:
+                upper = selectionData.moveCount;
+                break;
+        }
+        if (selectionData.countChoiceType == CountChoiceType.Exactly)
             lower = upper;
 
         List<CardBehaviour> selectedCards = null;
@@ -252,7 +265,7 @@ public class CardEffectsManager : MonoBehaviour
             for (int i = 0; i < moveCount; i++)
             {
                 CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
-                yield return ProcessRegionMovementRoutine(cardObj, movementZones);
+                yield return ProcessRegionMovementRoutine(cardObj, movementZones.fromZone, movementZones.toZone);
             }
         }
         else
@@ -265,12 +278,12 @@ public class CardEffectsManager : MonoBehaviour
             if (selectedCards != null)
             {
                 foreach (CardBehaviour card in selectedCards)
-                    yield return ProcessRegionMovementRoutine(card, movementZones);
+                    yield return ProcessRegionMovementRoutine(card, movementZones.fromZone, movementZones.toZone);
             }
         }
     }
 
-    private IEnumerator ProcessRegionMovementRoutine(CardBehaviour card, MovementZones movementZones)
+    private IEnumerator ProcessRegionMovementRoutine(CardBehaviour card, CardZoneType fromZone, CardZoneType toZone)
     {
         CardObject cardObj = card as CardObject;
         ShieldObject shieldObj = null;
@@ -284,34 +297,37 @@ public class CardEffectsManager : MonoBehaviour
 
         PlayerManager owner = GameManager.Instance.GetManager(cardObj.IsPlayer);
 
-        switch (movementZones.fromZone)
+        if (toZone != CardZoneType.Graveyard) 
         {
-            case CardZoneType.Deck:
-                yield return owner.MoveFromDeckRoutine(cardObj);
-                break;
+            switch (fromZone)
+            {
+                case CardZoneType.Deck:
+                    yield return owner.MoveFromDeckRoutine(cardObj);
+                    break;
 
-            case CardZoneType.Hand:
-                yield return owner.MoveFromHandRoutine(cardObj);
-                break;
+                case CardZoneType.Hand:
+                    yield return owner.MoveFromHandRoutine(cardObj);
+                    break;
 
-            case CardZoneType.Shields:
-                yield return owner.MoveFromShieldsRoutine(shieldObj);
-                break;
+                case CardZoneType.Shields:
+                    yield return owner.MoveFromShieldsRoutine(shieldObj);
+                    break;
 
-            case CardZoneType.Graveyard:
-                yield return owner.MoveFromGraveyard(cardObj);
-                break;
+                case CardZoneType.Graveyard:
+                    yield return owner.MoveFromGraveyard(cardObj);
+                    break;
 
-            case CardZoneType.ManaZone:
-                yield return owner.MoveFromManaZoneRoutine(cardObj);
-                break;
+                case CardZoneType.ManaZone:
+                    yield return owner.MoveFromManaZoneRoutine(cardObj);
+                    break;
 
-            case CardZoneType.BattleZone:
-                yield return owner.MoveFromBattleZoneRoutine(cardObj);
-                break;
+                case CardZoneType.BattleZone:
+                    yield return owner.MoveFromBattleZoneRoutine(cardObj);
+                    break;
+            }
         }
 
-        switch (movementZones.toZone)
+        switch (toZone)
         {
             case CardZoneType.Deck:
                 break;

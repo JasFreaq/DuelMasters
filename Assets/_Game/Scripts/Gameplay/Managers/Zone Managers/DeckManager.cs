@@ -62,23 +62,27 @@ public class DeckManager : MonoBehaviour
 
     public CardObject RemoveTopCard()
     {
-        CardObject card = GetTopCard();
-        _playerData.CardsInDeck.Remove(card);
-        return card;
+        CardObject cardObj = GetTopCard();
+        _playerData.CardsInDeck.Remove(cardObj);
+        return cardObj;
     }
 
     #endregion
 
     #region Transition Methods
 
-    public IEnumerator MoveFromDeckRoutine(CardObject card)
+    public IEnumerator MoveFromDeckRoutine(CardObject cardObj)
     {
-        card.transform.parent = null;
-        card.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
-        card.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
+        _playerData.CardsInDeck.Remove(cardObj);
+
+        cardObj.transform.parent = null;
+        cardObj.transform.DOMove(_intermediateHolder.position, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DORotateQuaternion(_intermediateHolder.rotation, _fromTransitionTime).SetEase(Ease.OutQuint);
+        cardObj.transform.DOScale(Vector3.one, _fromTransitionTime).SetEase(Ease.OutQuint);
 
         yield return new WaitForSeconds(_fromTransitionTime);
+
+        ArrangeCards();
     }
 
     #endregion

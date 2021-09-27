@@ -33,7 +33,7 @@ public class DestroyParam
 {
     public CardZoneType destroyZone;
     public CountType countType;
-    public int lookCount = 1;
+    public int destroyCount = 1;
 
     public override string ToString()
     {
@@ -42,8 +42,8 @@ public class DestroyParam
             str += "all cards";
         else
         {
-            str += $"{lookCount} card";
-            if (lookCount > 1)
+            str += $"{destroyCount} card";
+            if (destroyCount > 1)
                 str += "s ";
         }
 

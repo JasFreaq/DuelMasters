@@ -186,11 +186,16 @@ public class PlayerManager : MonoBehaviour
         yield return MoveToGraveyardRoutine(spellObj);
     }
     
+    public IEnumerator BreakShieldRoutine(CardObject cardObj)
+    {
+        yield return _shieldsManager.BreakShieldRoutine(cardObj);
+        yield return MoveToHandRoutine(cardObj);
+    }
+    
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
-        CardObject cardObj = shieldObj.CardObj;
         yield return _shieldsManager.BreakShieldRoutine(shieldObj);
-        yield return MoveToHandRoutine(cardObj);
+        yield return MoveToHandRoutine(shieldObj.CardObj);
     }
 
     #endregion
@@ -212,6 +217,13 @@ public class PlayerManager : MonoBehaviour
         yield return _handManager.MoveFromHandRoutine(cardObj);
     }
 
+    public IEnumerator MoveFromShieldsRoutine(CardObject cardObj)
+    {
+        InitiateMove(cardObj);
+
+        yield return _shieldsManager.BreakShieldRoutine(cardObj);
+    }
+    
     public IEnumerator MoveFromShieldsRoutine(ShieldObject shieldObj)
     {
         InitiateMove(shieldObj.CardObj);
@@ -279,27 +291,35 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator MoveToGraveyardRoutine(CardObject cardObj)
     {
-        cardObj.gameObject.SetActive(false);
-        cardObj.ActivateCardLayout();
-
         switch (cardObj.CardInst.CurrentZone)
         {
+            case CardZoneType.Deck:
+                yield return MoveFromDeckRoutine(cardObj);
+                break;
+
             case CardZoneType.Hand:
-                _playerDataHandler.CardsInHand.Remove(cardObj.transform.GetInstanceID());
-                _handManager.ArrangeCards();
+                yield return MoveFromHandRoutine(cardObj);
+                break;
+
+            case CardZoneType.Shields:
+                yield return MoveFromShieldsRoutine(cardObj);
+                break;
+
+            case CardZoneType.ManaZone:
+                yield return MoveFromManaZoneRoutine(cardObj);
                 break;
 
             case CardZoneType.BattleZone:
-                _playerDataHandler.CardsInBattle.Remove(cardObj.transform.GetInstanceID());
-                _battleZoneManager.ArrangeCards();
+                yield return MoveFromBattleZoneRoutine(cardObj);
                 break;
         }
-        _graveyardManager.AddCard(cardObj);
 
+        cardObj.gameObject.SetActive(false);
+        cardObj.ActivateCardLayout();
+        _graveyardManager.AddCard(cardObj);
         cardObj.gameObject.SetActive(true);
 
         cardObj.CardInst.InstanceEffectHandler.TriggerWhenDestroyed();
-        yield break;
     }
 
     public IEnumerator MoveToManaZoneRoutine(CardObject cardObj)
