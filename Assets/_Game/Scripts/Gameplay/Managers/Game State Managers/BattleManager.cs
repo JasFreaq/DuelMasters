@@ -85,11 +85,12 @@ public class BattleManager : MonoBehaviour
     {
         float attackTime = GameParamsHolder.Instance.AttackTime;
 
-        int attackingCreaturePower = creatureObj.CardData.Power;
+        int originalAttackingCreaturePower = creatureObj.CardData.Power;
+        int attackingCreaturePower = originalAttackingCreaturePower;
         if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
         {
-            attackingCreaturePower += creatureObj.CardInst.InstanceEffectHandler.PowerBoost;
-            creatureObj.DisplayPowerAttack(attackingCreaturePower);
+            attackingCreaturePower += creatureObj.CardInst.InstanceEffectHandler.PowerAttackBoost;
+            creatureObj.UpdatePower(attackingCreaturePower);
         }
         int attackedCreaturePower = attackedCreatureObj.CardData.Power;
 
@@ -98,10 +99,7 @@ public class BattleManager : MonoBehaviour
 
         if (!continueAttack)
             controller.DeselectCurrentlySelected();
-
-        if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
-            creatureObj.ResetPowerAttack();
-
+        
         if (attackingCreaturePower > attackedCreaturePower)
             yield return attackedCreatureObj.SendToGraveyard();
         else if (attackingCreaturePower == attackedCreaturePower)
@@ -115,6 +113,9 @@ public class BattleManager : MonoBehaviour
             yield return creatureObj.SendToGraveyard();
             creatureObj = null;
         }
+
+        if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
+            creatureObj.ResetPower(originalAttackingCreaturePower);
 
         if (creatureObj && !continueAttack)
             yield return ResetCreaturePosRoutine(creatureObj);

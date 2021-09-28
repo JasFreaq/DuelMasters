@@ -67,26 +67,41 @@ public class GameDataHandler : MonoBehaviour
         return isPlayer ? _playerDataHandler : _opponentDataHandler;
     }
 
-    public List<CardBehaviour> GetZoneCards(bool isPlayer, CardZoneType zoneType)
+    public List<CardBehaviour> GetZoneCards(bool isPlayer, CardZoneType zoneType, bool both = false)
     {
-        PlayerDataHandler dataHandler = GetDataHandler(isPlayer);
+        List<CardBehaviour> cards = new List<CardBehaviour>();
+        
         switch (zoneType)
         {
             case CardZoneType.Deck:
-                return new List<CardBehaviour>(dataHandler.CardsInDeck);
+                cards = new List<CardBehaviour>(GetDataHandler(isPlayer).CardsInDeck);
+                break;
+
             case CardZoneType.Hand:
-                return new List<CardBehaviour>(dataHandler.CardsInHandList);
+                cards = new List<CardBehaviour>(GetDataHandler(isPlayer).CardsInHandList);
+                break;
+
             case CardZoneType.Shields:
-                return new List<CardBehaviour>(dataHandler.Shields);
+                cards = new List<CardBehaviour>(GetDataHandler(isPlayer).Shields);
+                break;
+            
             case CardZoneType.Graveyard:
-                return new List<CardBehaviour>(dataHandler.CardsInGrave);
+                cards = new List<CardBehaviour>(GetDataHandler(isPlayer).CardsInGrave);
+                break;
+
             case CardZoneType.ManaZone:
-                return new List<CardBehaviour>(dataHandler.CardsInManaList);
+                cards = new List<CardBehaviour>(GetDataHandler(isPlayer).CardsInManaList);
+                break;
+
             case CardZoneType.BattleZone:
-                return new List<CardBehaviour>(dataHandler.CardsInBattleList);
+                cards = new List<CardBehaviour>(GetDataHandler(isPlayer).CardsInBattleList);
+                break;
         }
 
-        return null;
+        if (both)
+            cards.AddRange(GetZoneCards(!isPlayer, zoneType));
+
+        return cards;
     }
 
     public void CheckWhileConditions()

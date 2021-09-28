@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class CardInstance
 {
-    private CardData _cardData;
+    protected CardData _cardData;
     private CardInstanceEffectHandler _instanceEffectHandler;
     private CardZoneType _currentZone = CardZoneType.Deck;
 
-    private bool _isTapped;
+    protected bool _isTapped;
 
     public CardInstance(CardData cardData)
     {
@@ -45,10 +45,5 @@ public class CardInstance
     public void ToggleTapState()
     {
         _isTapped = !_isTapped;
-    }
-
-    public bool CanAttack()
-    {
-        return !_isTapped;
     }
 }

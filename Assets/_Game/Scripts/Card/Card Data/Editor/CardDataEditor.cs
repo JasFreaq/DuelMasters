@@ -238,7 +238,7 @@ public class CardDataEditor : Editor
 
         GUILayout.EndHorizontal();
 
-        if (functionality.TargetUnspecified() && functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget)
+        if (functionality.TargetUnspecified() && (functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget))
             DrawTargetingParameter(functionality.TargetingParameter);
 
         if (functionality.AssignedCondition)

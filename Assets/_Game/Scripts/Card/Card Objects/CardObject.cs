@@ -126,7 +126,7 @@ public abstract class CardObject : CardBehaviour
         _triggeredWhileConditionsThisFrame = false;
     }
 
-    public void Initialize(CardInstance cardInst, bool isPlayer)
+    public virtual void Initialize(CardInstance cardInst, bool isPlayer)
     {
         _cardInst = cardInst;
         SetupCard();

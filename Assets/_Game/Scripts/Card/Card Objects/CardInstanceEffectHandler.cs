@@ -7,15 +7,20 @@ using UnityEngine;
 public class CardInstanceEffectHandler
 {
     #region Helper Data Structures
+    struct BoolActionHolder
+    {
+        public Action<bool> processFunction;
+        public bool effectActive;
+    }
+
     struct WhileConditionHolder
     {
         public EffectTargetingParameter targetingParameter;
         public EffectTargetingCondition targetingCondition;
 
-        public Action<bool> processFunction;
-        public bool effectActive;
+        public BoolActionHolder boolAction;
     }
-
+    
     #endregion
 
     #region Data Members
@@ -28,14 +33,22 @@ public class CardInstanceEffectHandler
     private bool _isMultipleBreaker;
     private MultipleBreakerType _multipleBreakerType;
 
-    private bool _isPowerAttacker;
-    private int _powerBoost;
+    private bool _isPowerAttacker, _multiplyPowerAttackValue;
+    private int _powerAttackBoost;
+    private EffectTargetingParameter _multiplyPowerAttackParameter;
+    private EffectTargetingCondition _multiplyPowerAttackCondition;
+    
+    private bool _multiplyGrantedPowerValue;
+    private int _grantedPowerBoost = 0;
+    private EffectTargetingParameter _multiplyGrantedPowerParameter;
+    private EffectTargetingCondition _multiplyGrantedPowerCondition;
 
     private Action _whenPlayed;
     private Action _whenPutIntoBattle;
     private Action _whenDestroyed;
     private Action _whenWouldBeDestroyed;
 
+    private BoolActionHolder _whenAttacking = new BoolActionHolder();
     private List<WhileConditionHolder> _whileConditions = new List<WhileConditionHolder>();
     
     #endregion
@@ -85,7 +98,13 @@ public class CardInstanceEffectHandler
 
                 case EffectFunctionalityType.PowerAttacker:
                     _isPowerAttacker = true;
-                    _powerBoost = functionality.PowerBoost;
+                    _multiplyPowerAttackValue = functionality.ShouldMultiplyVal;
+                    _powerAttackBoost = functionality.PowerBoost;
+                    if (_multiplyPowerAttackValue)
+                    {
+                        _multiplyPowerAttackParameter = functionality.TargetingParameter;
+                        _multiplyPowerAttackCondition = functionality.TargetingCondition;
+                    }
                     break;
 
                 case EffectFunctionalityType.CostAdjustment:
@@ -120,10 +139,17 @@ public class CardInstanceEffectHandler
     {
         get { return _isPowerAttacker; }
     }
-
-    public int PowerBoost
+    
+    public int PowerAttackBoost
     {
-        get { return _powerBoost; }
+        get
+        {
+            if (_multiplyPowerAttackValue)
+                return _powerAttackBoost *
+                       CardData.GetNumValidCards(_multiplyPowerAttackParameter, _multiplyPowerAttackCondition);
+
+            return _powerAttackBoost;
+        }
     }
 
     public bool HasWhileCondition
@@ -183,7 +209,13 @@ public class CardInstanceEffectHandler
         {
             case EffectFunctionalityType.GrantFunction:
                 return activate => { ProcessGrantFunctionFunctionality(this, functionality, activate,
-                        functionality.AlterFunctionUntilEndOfTurn);                };
+                        functionality.AlterFunctionUntilEndOfTurn);
+                };
+
+            case EffectFunctionalityType.GrantPower:
+                return activate => { ProcessGrantPowerFunctionality(this, functionality, activate,
+                        functionality.AlterFunctionUntilEndOfTurn);
+                };
         }
 
         return null;
@@ -216,10 +248,12 @@ public class CardInstanceEffectHandler
                 {
                     targetingParameter = condition.TargetingParameter,
                     targetingCondition = condition.TargetingCondition,
-                    processFunction = function
+                    boolAction = new BoolActionHolder { processFunction = function }
                 });
+                break;
 
-
+            case EffectConditionType.WhenAttacking:
+                _whenAttacking.processFunction += function;
                 break;
         }
     }
@@ -242,6 +276,17 @@ public class CardInstanceEffectHandler
         if (_whenPutIntoBattle != null)
         {
             _whenPutIntoBattle.Invoke();
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TriggerWhenAttacking(bool activate)
+    {
+        if (_whenAttacking.processFunction != null)
+        {
+            _whenAttacking.processFunction.Invoke(activate);
             return true;
         }
 
@@ -277,10 +322,10 @@ public class CardInstanceEffectHandler
             WhileConditionHolder whileCondition = _whileConditions[i];
             bool meetsCondition = ProcessTargeting(whileCondition.targetingParameter, whileCondition.targetingCondition);
 
-            if (meetsCondition != whileCondition.effectActive)
+            if (meetsCondition != whileCondition.boolAction.effectActive)
             {
-                whileCondition.effectActive = meetsCondition;
-                whileCondition.processFunction.Invoke(meetsCondition);
+                whileCondition.boolAction.effectActive = meetsCondition;
+                whileCondition.boolAction.processFunction.Invoke(meetsCondition);
             }
 
             _whileConditions[i] = whileCondition;
@@ -346,22 +391,22 @@ public class CardInstanceEffectHandler
                     if (!cardObj)
                         cardObj = ((ShieldObject)card).CardObj;
 
-                    ProcessGrant(cardObj.CardInst.InstanceEffectHandler);
+                    ProcessPowerGrant(cardObj.CardInst.InstanceEffectHandler);
                 }
                 break;
 
             case CardTargetType.TargetOther:
-                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessGrant));
+                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
                 break;
 
             case CardTargetType.TargetSelf:
-                ProcessGrant(instanceEffect);
+                ProcessPowerGrant(instanceEffect);
                 break;
         }
 
         #region Local Functions
 
-        void ProcessGrant(CardInstanceEffectHandler instance)
+        void ProcessPowerGrant(CardInstanceEffectHandler instance)
         {
             if (activate)
             {
@@ -392,27 +437,26 @@ public class CardInstanceEffectHandler
                     if (!cardObj)
                         cardObj = ((ShieldObject) card).CardObj;
 
-                    ProcessDisable(cardObj.CardInst.InstanceEffectHandler);
+                    ProcessFunctionDisable(cardObj.CardInst.InstanceEffectHandler);
                 }
                 break;
 
             case CardTargetType.TargetOther:
-                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessDisable));
+                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessFunctionDisable));
                 break;
 
             case CardTargetType.TargetSelf:
-                ProcessDisable(instanceEffect);
+                ProcessFunctionDisable(instanceEffect);
                 break;
         }
 
         #region Local Functions
 
-        void ProcessDisable(CardInstanceEffectHandler instance)
+        void ProcessFunctionDisable(CardInstanceEffectHandler instance)
         {
             if (deactivate)
             {
                 DeactivateEffectFunctionality(instanceEffect, functionality.SubFunctionality);
-
                 if (untilEndOfTurn)
                     CardEffectsManager.Instance.RegisterOnEndOfTurn(() =>
                     {
@@ -426,13 +470,73 @@ public class CardInstanceEffectHandler
         #endregion
     }
 
+    private static void ProcessGrantPowerFunctionality(CardInstanceEffectHandler instanceEffect,
+        EffectFunctionality functionality, bool activate, bool untilEndOfTurn)
+    {
+        switch (functionality.TargetCard)
+        {
+            case CardTargetType.AutoTarget:
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetPlayer == PlayerTargetType.Player, functionality.TargetingParameter.ZoneType);
+                foreach (CardBehaviour card in cards)
+                {
+                    CardObject cardObj = card as CardObject;
+                    if (!cardObj)
+                        cardObj = ((ShieldObject)card).CardObj;
+
+                    ProcessPowerGrant(cardObj.CardInst.InstanceEffectHandler);
+                }
+                break;
+
+            case CardTargetType.TargetOther:
+                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
+                break;
+
+            case CardTargetType.TargetSelf:
+                ProcessPowerGrant(instanceEffect);
+                break;
+        }
+
+        #region Local Functions
+
+        void ProcessPowerGrant(CardInstanceEffectHandler instance)
+        {
+            if (activate)
+            {
+                instance._grantedPowerBoost += functionality.PowerBoost;
+                if (instance._multiplyGrantedPowerValue)
+                    instance._grantedPowerBoost *= CardData.GetNumValidCards(instance._multiplyGrantedPowerParameter,
+                        instance._multiplyGrantedPowerCondition);
+                //((CreatureObject)instance._cardObj).card
+
+                if (untilEndOfTurn)
+                    CardEffectsManager.Instance.RegisterOnEndOfTurn(() =>
+                    {
+                        DeactivatePowerGrant(instance);
+                    });
+            }
+            else
+                DeactivatePowerGrant(instance);
+        }
+
+        void DeactivatePowerGrant(CardInstanceEffectHandler instance)
+        {
+            if (instance._multiplyGrantedPowerValue)
+                instance._grantedPowerBoost -= instance._grantedPowerBoost * CardData.GetNumValidCards(instance._multiplyGrantedPowerParameter,
+                    instance._multiplyGrantedPowerCondition);
+            else
+                instance._grantedPowerBoost -= functionality.PowerBoost;
+        }
+
+        #endregion
+    }
+
     private static void ActivateEffectFunctionality(CardInstanceEffectHandler instanceEffect, EffectFunctionality functionality)
     {
         switch (functionality.Type)
         {
             case EffectFunctionalityType.PowerAttacker:
                 instanceEffect._isPowerAttacker = true;
-                instanceEffect._powerBoost = functionality.PowerBoost;
+                instanceEffect._powerAttackBoost = functionality.PowerBoost;
                 break;
         }
     }
@@ -443,7 +547,7 @@ public class CardInstanceEffectHandler
         {
             case EffectFunctionalityType.PowerAttacker:
                 instanceEffect._isPowerAttacker = false;
-                instanceEffect._powerBoost = 0;
+                instanceEffect._powerAttackBoost = 0;
                 break;
         }
     }
@@ -463,8 +567,7 @@ public class CardInstanceEffectHandler
                 break;
 
             case PlayerTargetType.Both:
-                cards = GameDataHandler.Instance.GetZoneCards(true, targetingParameter.ZoneType);
-                cards.AddRange(GameDataHandler.Instance.GetZoneCards(false, targetingParameter.ZoneType));
+                cards = GameDataHandler.Instance.GetZoneCards(true, targetingParameter.ZoneType, true);
                 break;
         }
 

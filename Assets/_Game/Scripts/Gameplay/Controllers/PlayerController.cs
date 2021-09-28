@@ -85,7 +85,7 @@ public class PlayerController : Controller
                     break;
 
                 case GameStepType.AttackStep:
-                    if (cardObj.CardInst.CanAttack())
+                    if (((CreatureObject) cardObj).CardInst.CanAttack()) 
                     {
                         cardObj.SetHighlight(true);
                         if (cardObj.InZone(CardZoneType.BattleZone))

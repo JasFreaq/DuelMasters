@@ -377,5 +377,40 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         return result;
     }
 
+    public static List<CardObject> GetValidCards(List<CardBehaviour> cards, EffectTargetingCondition targetingCondition)
+    {
+        List<CardObject> cardList = new List<CardObject>();
+        foreach (CardBehaviour card in cards)
+        {
+            cardList.Add((CardObject)card);
+        }
+
+        return GetValidCards(cardList, targetingCondition);
+    }
+
+    public static List<CardObject> GetValidCards(List<CardObject> cardList, EffectTargetingCondition targetingCondition)
+    {
+        List<CardObject> validCards = new List<CardObject>();
+        foreach (CardObject cardObj in cardList)
+        {
+            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
+            cardObj.SetValidity(targetingCondition);
+            if (cardObj.IsValid)
+                validCards.Add(cardObj);
+        }
+
+        return validCards;
+    }
+
+    public static int GetNumValidCards(EffectTargetingParameter targetingParameter, EffectTargetingCondition targetingCondition)
+    {
+        List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(
+            targetingParameter.OwningPlayer == PlayerTargetType.Player, targetingParameter.ZoneType,
+            targetingParameter.OwningPlayer == PlayerTargetType.Both);
+
+        List<CardObject> validCards = GetValidCards(cards, targetingCondition);
+        return validCards.Count;
+    }
+
     #endregion
 }

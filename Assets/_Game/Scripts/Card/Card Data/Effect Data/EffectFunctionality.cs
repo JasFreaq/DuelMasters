@@ -366,7 +366,6 @@ public class EffectFunctionality : ScriptableObject
             case EffectFunctionalityType.AttackTarget:
             case EffectFunctionalityType.TargetBehaviour:
             case EffectFunctionalityType.Keyword:
-            case EffectFunctionalityType.PowerAttacker:
             case EffectFunctionalityType.MultipleBreaker:
                 if (_multipleBreaker == MultipleBreakerType.CrewBreaker)
                     return true;

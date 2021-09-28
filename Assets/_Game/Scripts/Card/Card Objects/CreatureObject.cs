@@ -8,15 +8,21 @@ public class CreatureObject : CardObject
     [SerializeField] private BattleCardLayoutHandler _battleCardLayoutHandler;
 
     private List<CreatureObject> _creaturesUnderEvolution = new List<CreatureObject>();
+    private new CreatureInstance _cardInst;
 
     public new CreatureData CardData
     {
-        get { return (CreatureData) _cardInst.CardData; }
+        get { return _cardInst.CardData; }
     }
 
     public new CreatureLayoutHandler CardLayout
     {
         get { return (CreatureLayoutHandler) _cardLayoutHandler; }
+    }
+
+    public new CreatureInstance CardInst
+    {
+        get { return _cardInst; }
     }
 
     public bool IsEvolutionCreature
@@ -38,7 +44,14 @@ public class CreatureObject : CardObject
     {
         get { return _battleCardLayoutHandler.Canvas; }
     }
-    
+
+    public override void Initialize(CardInstance cardInst, bool isPlayer)
+    {
+        base.Initialize(cardInst, isPlayer);
+
+        _cardInst = (CreatureInstance) cardInst;
+    }
+
     public override void ProcessMouseDown()
     {
         base.ProcessMouseDown();
@@ -98,23 +111,22 @@ public class CreatureObject : CardObject
         _battleCardLayoutHandler.AddPlusToPower();
     }
 
-    public void DisplayPowerAttack(int updatedPower)
+    public void UpdatePower(int updatePower)
     {
-        ((CreatureLayoutHandler)_cardLayoutHandler).DisplayPowerAttack(updatedPower);
-        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).DisplayPowerAttack(updatedPower);
-        _battleCardLayoutHandler.DisplayPowerAttack(updatedPower);
+        ((CreatureLayoutHandler)_cardLayoutHandler).UpdatePower(updatePower);
+        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).UpdatePower(updatePower);
+        _battleCardLayoutHandler.UpdatePower(updatePower);
     }
 
-    public void ResetPowerAttack()
+    public void ResetPower(int resetPower)
     {
-        ((CreatureLayoutHandler)_cardLayoutHandler).ResetPowerAttack();
-        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).ResetPowerAttack();
-        _battleCardLayoutHandler.ResetPowerAttack();
+        ((CreatureLayoutHandler)_cardLayoutHandler).ResetPower(resetPower);
+        ((CreatureLayoutHandler)_previewLayoutHandler.CardLayout).ResetPower(resetPower);
+        _battleCardLayoutHandler.ResetPower(resetPower);
     }
 
     #endregion
-
-
+    
     #region State Methods
 
     public override void SetHighlight(bool highlight)

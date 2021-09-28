@@ -140,14 +140,7 @@ public class CardBrowserOverlay : MonoBehaviour
 
     private void CheckAndArrangeValidCards(List<CardObject> cardList, EffectTargetingCondition targetingCondition)
     {
-        List<CardObject> validCards = new List<CardObject>();
-        foreach (CardObject cardObj in cardList)
-        {
-            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
-            cardObj.SetValidity(targetingCondition);
-            if (cardObj.IsValid)
-                validCards.Add(cardObj);
-        }
+        List<CardObject> validCards = CardData.GetValidCards(cardList, targetingCondition);
 
         foreach (CardObject cardObj in validCards)
             cardList.Remove(cardObj);
