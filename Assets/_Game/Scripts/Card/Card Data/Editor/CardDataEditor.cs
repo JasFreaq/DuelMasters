@@ -220,12 +220,8 @@ public class CardDataEditor : Editor
             case CardTargetType.TargetOther:
                 GUILayout.Label("Chooser:");
                 functionality.ChoosingPlayer = DrawFoldout(functionality.ChoosingPlayer);
-                if (!(functionality.Type == EffectFunctionalityType.RegionMovement &&
-                      functionality.MovementZones.fromBothPlayers))
-                {
-                    GUILayout.Label("Target:");
-                    functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
-                }
+                GUILayout.Label("Target:");
+                functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
                 break;
         }
 
@@ -332,10 +328,6 @@ public class CardDataEditor : Editor
                 movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
                 if (movementZones.deckCardMove == DeckCardMoveType.SearchShuffle)
                     movementZones.showSearchedCard = GUILayout.Toggle(movementZones.showSearchedCard, "Show Card");
-            }
-            else if (movementZones.fromZone == CardZoneType.BattleZone)
-            {
-                movementZones.fromBothPlayers = GUILayout.Toggle(movementZones.fromBothPlayers, "From Both");
             }
 
             if (movementZones.moveCount > 1)

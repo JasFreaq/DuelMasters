@@ -16,7 +16,7 @@ public class MovementZones
 {
     public CardZoneType fromZone, toZone;
     public DeckCardMoveType deckCardMove;
-    public bool fromBothPlayers, showSearchedCard;
+    public bool showSearchedCard;
 
     public CountChoiceType countChoice;
     public int moveCount = 1;

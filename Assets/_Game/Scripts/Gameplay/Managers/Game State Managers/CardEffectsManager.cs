@@ -16,11 +16,11 @@ public class CardEffectsManager : MonoBehaviour
         public CountChoiceType countChoiceType;
         public int moveCount;
 
-        public CardSelectionData(MovementZones movementZones)
+        public CardSelectionData(MovementZones movementZones, PlayerTargetType targetType)
         {
             fromZone = movementZones.fromZone;
-            
-            fromBothPlayers = movementZones.fromBothPlayers;
+
+            fromBothPlayers = targetType == PlayerTargetType.Both;
             searchAndShuffleDeck = movementZones.deckCardMove != DeckCardMoveType.Top;
             showSearchedCard = movementZones.showSearchedCard;
 
@@ -29,11 +29,11 @@ public class CardEffectsManager : MonoBehaviour
             moveCount = movementZones.moveCount;
         }
 
-        public CardSelectionData(DestroyParam destroyParam, EffectFunctionality functionality)
+        public CardSelectionData(DestroyParam destroyParam, PlayerTargetType targetType)
         {
             fromZone = destroyParam.destroyZone;
 
-            fromBothPlayers = functionality.TargetPlayer == PlayerTargetType.Both;
+            fromBothPlayers = targetType == PlayerTargetType.Both;
             searchAndShuffleDeck = false;
             showSearchedCard = false;
 
@@ -84,14 +84,17 @@ public class CardEffectsManager : MonoBehaviour
         _cardBrowserOverlay.DeregisterOnToggleTab(EnablePlayerControllerInteract);
     }
 
-    public Coroutine ProcessRegionMovement(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition, bool mayUse = false)
+    public Coroutine ProcessRegionMovement(EffectFunctionality functionality, bool mayUse = false)
     {
-        if (mayUse)
-            return StartCoroutine(MayProcessRegionMovementRoutine(playerChooses, affectPlayer, movementZones,
-                targetingCondition));
+        bool playerChooses = functionality.TargetPlayer == PlayerTargetType.Player;
+        bool affectPlayer = functionality.TargetPlayer == PlayerTargetType.Player;
 
-        return StartCoroutine(AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones,
-                targetingCondition, false));
+        if (mayUse)
+            return StartCoroutine(MayProcessRegionMovementRoutine(playerChooses, affectPlayer,
+                functionality.MovementZones, functionality.TargetPlayer, functionality.TargetingCondition));
+
+        return StartCoroutine(AdjustMovementTargetRoutine(playerChooses, affectPlayer, functionality.MovementZones,
+            functionality.TargetPlayer, functionality.TargetingCondition, false));
     }
 
     public Coroutine ProcessRegionMovement(CardBehaviour card, CardZoneType fromZone, CardZoneType toZone)
@@ -232,16 +235,16 @@ public class CardEffectsManager : MonoBehaviour
         yield return selectedCards;
     }
 
-    private IEnumerator MayProcessRegionMovementRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition)
+    private IEnumerator MayProcessRegionMovementRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, PlayerTargetType targetType, EffectTargetingCondition targetingCondition)
     {
         Controller choosingPlayer = GameManager.Instance.GetController(playerChooses);
         Coroutine<bool> routine = choosingPlayer.StartCoroutine<bool>(choosingPlayer.ChooseEffectActivationRoutine());
         yield return routine.coroutine;
         if (routine.returnVal)
-            yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetingCondition, true);
+            yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetType, targetingCondition, true);
     }
 
-    private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, EffectTargetingCondition targetingCondition, bool mayUse)
+    private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, PlayerTargetType targetType, EffectTargetingCondition targetingCondition, bool mayUse)
     {
         Controller choosingController = GameManager.Instance.GetController(playerChooses);
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
@@ -271,7 +274,7 @@ public class CardEffectsManager : MonoBehaviour
         else
         {
             Coroutine<List<CardBehaviour>> routine = this.StartCoroutine<List<CardBehaviour>>(ProcessCardSelectionRoutine(playerChooses, affectPlayer,
-                    new CardSelectionData(movementZones), targetingCondition, mayUse));
+                    new CardSelectionData(movementZones, targetType), targetingCondition, mayUse));
             yield return routine.coroutine;
             List<CardBehaviour> selectedCards = routine.returnVal;
 

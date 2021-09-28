@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
                 //    power = 1
                 //});
 
-                CardEffectsManager.Instance.ProcessRegionMovement(true, true, movementZones, null);
+                //CardEffectsManager.Instance.ProcessRegionMovement(true, true, movementZones, null);
             }
             
             if (Input.GetKeyDown(KeyCode.Keypad1))
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
                 //targetingCondition.AssignedCardTypeCondition = true;
                 //targetingCondition.CardTypeCondition = CardParams.CardType.Creature;
 
-                CardEffectsManager.Instance.ProcessRegionMovement(true, true, movementZones, null);
+                //CardEffectsManager.Instance.ProcessRegionMovement(true, true, movementZones, null);
             }
         }
     }

@@ -301,9 +301,7 @@ public class CardInstanceEffectHandler
                 break;
                 
             case CardTargetType.TargetOther:
-                CardEffectsManager.Instance.ProcessRegionMovement(functionality.ChoosingPlayer == PlayerTargetType.Player,
-                    functionality.TargetPlayer == PlayerTargetType.Player,
-                    functionality.MovementZones, functionality.TargetingCondition, mayUse);
+                CardEffectsManager.Instance.ProcessRegionMovement(functionality, mayUse);
                 break;
             
             case CardTargetType.TargetSelf:
@@ -510,7 +508,8 @@ public class CardInstanceEffectHandler
             CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
                 functionality.ChoosingPlayer == PlayerTargetType.Player,
                 functionality.TargetPlayer == PlayerTargetType.Player,
-                new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality), functionality.TargetingCondition, false));
+                new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
+                functionality.TargetingCondition, false));
         yield return routine.coroutine;
         List<CardBehaviour> cards = routine.returnVal;
 
