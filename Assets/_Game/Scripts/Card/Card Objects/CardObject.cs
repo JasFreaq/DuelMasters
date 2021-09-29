@@ -138,7 +138,7 @@ public abstract class CardObject : CardBehaviour
 
         CardInst.SetCurrentZone(CardZoneType.Deck);
     }
-
+    
     public void ProcessMouseEnter()
     {
         _hoverPreviewHandler.BeginPreviewing();

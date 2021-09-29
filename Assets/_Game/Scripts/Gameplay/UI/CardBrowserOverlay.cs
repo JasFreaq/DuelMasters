@@ -143,7 +143,10 @@ public class CardBrowserOverlay : MonoBehaviour
         List<CardObject> validCards = CardData.GetValidCards(cardList, targetingCondition);
 
         foreach (CardObject cardObj in validCards)
+        {
+            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
             cardList.Remove(cardObj);
+        }
 
         cardList.AddRange(validCards);
     }

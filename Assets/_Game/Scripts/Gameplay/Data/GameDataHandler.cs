@@ -39,7 +39,7 @@ public class GameDataHandler : MonoBehaviour
         List<CardInstance> cardInstances = new List<CardInstance>();
         foreach (CardData cardData in deck.GetCards())
         {
-            cardInstances.Add(new CardInstance(cardData));
+            cardInstances.Add(cardData is CreatureData ? new CreatureInstance(cardData) : new CardInstance(cardData));
         }
 
         return cardInstances;

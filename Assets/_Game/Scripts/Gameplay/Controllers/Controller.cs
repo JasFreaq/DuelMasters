@@ -40,7 +40,7 @@ public class Controller : MonoBehaviour
             switch (GameManager.Instance.CurrentStep)
             {
                 case GameStepType.AttackStep:
-                    if (!((CreatureObject) _currentlySelected).CardInst.CanAttack())
+                    if (!((CreatureObject) _currentlySelected).CardInst.CanAttack)
                         _currentlySelected = null;
 
                     break;

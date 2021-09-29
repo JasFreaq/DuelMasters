@@ -49,18 +49,18 @@ public class BattleManager : MonoBehaviour
             {
                 TargetingLinesHandler.Instance.DisableLines();
 
-                CreatureObject creatureObj = (CreatureObject) selectedCardObj;
+                CreatureObject attackingCreatureObj = (CreatureObject) selectedCardObj;
                 if (registerPos)
-                    _creatureOriginalPos = creatureObj.transform.position;
+                    _creatureOriginalPos = attackingCreatureObj.transform.position;
                 IEnumerator attackRoutine = null;
 
-                if (target is CreatureObject attackedCreatureObj)
+                if (target is CreatureObject targetCreatureObj)
                 {
                     //if (attackedCreatureObj.CardInst.IsTapped)
-                        attackRoutine = AttackCreatureRoutine(controller, creatureObj, attackedCreatureObj, continueAttack);
+                        attackRoutine = AttackCreatureRoutine(controller, attackingCreatureObj, targetCreatureObj, continueAttack);
                 }
-                else if (target is ShieldObject shieldObj)
-                    attackRoutine = AttackShieldRoutine(controller, creatureObj, shieldObj, isPlayer, continueAttack);
+                else if (target is ShieldObject targetShieldObj)
+                    attackRoutine = AttackShieldRoutine(controller, attackingCreatureObj, targetShieldObj, isPlayer, continueAttack);
 
                 CreatureObject blockingCreatureObj;
                 if (true /*creatureObj can be blocked*/)
@@ -71,62 +71,55 @@ public class BattleManager : MonoBehaviour
                 }
 
                 if (blockingCreatureObj)
-                    attackRoutine = AttackCreatureRoutine(controller, creatureObj, blockingCreatureObj, continueAttack);
+                    attackRoutine = AttackCreatureRoutine(controller, attackingCreatureObj, blockingCreatureObj, continueAttack);
 
+                attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerWhenAttacking(true);
                 yield return attackRoutine;
+                attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerWhenAttacking(false);
             }
 
             GameDataHandler.Instance.CheckWhileConditions();
         }
     }
 
-    private IEnumerator AttackCreatureRoutine(Controller controller, CreatureObject creatureObj,
-        CreatureObject attackedCreatureObj, bool continueAttack)
+    private IEnumerator AttackCreatureRoutine(Controller controller, CreatureObject attackingCreatureObj,
+        CreatureObject targetCreatureObj, bool continueAttack)
     {
         float attackTime = GameParamsHolder.Instance.AttackTime;
+        Pair<int> attackingCreaturePowerPair = GetAttackingCreaturePower(attackingCreatureObj);
+        int attackedCreaturePower = targetCreatureObj.CardInst.Power;
 
-        int originalAttackingCreaturePower = creatureObj.CardData.Power;
-        int attackingCreaturePower = originalAttackingCreaturePower;
-        if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
-        {
-            attackingCreaturePower += creatureObj.CardInst.InstanceEffectHandler.PowerAttackBoost;
-            creatureObj.UpdatePower(attackingCreaturePower);
-        }
-        int attackedCreaturePower = attackedCreatureObj.CardData.Power;
-
-        creatureObj.transform.DOMove(attackedCreatureObj.transform.position, attackTime).SetEase(Ease.InCubic);
+        attackingCreatureObj.transform.DOMove(targetCreatureObj.transform.position, attackTime).SetEase(Ease.InCubic);
         yield return new WaitForSeconds(attackTime);
 
         if (!continueAttack)
             controller.DeselectCurrentlySelected();
         
-        if (attackingCreaturePower > attackedCreaturePower)
-            yield return attackedCreatureObj.SendToGraveyard();
-        else if (attackingCreaturePower == attackedCreaturePower)
+        if (attackingCreaturePowerPair.second > attackedCreaturePower)
+            yield return targetCreatureObj.SendToGraveyard();
+        else if (attackingCreaturePowerPair.second == attackedCreaturePower)
         {
-            yield return creatureObj.SendToGraveyard();
-            creatureObj = null;
-            yield return attackedCreatureObj.SendToGraveyard();
+            yield return attackingCreatureObj.SendToGraveyard();
+            attackingCreatureObj = null;
+            yield return targetCreatureObj.SendToGraveyard();
         }
         else
         {
-            yield return creatureObj.SendToGraveyard();
-            creatureObj = null;
+            yield return attackingCreatureObj.SendToGraveyard();
+            attackingCreatureObj = null;
         }
 
-        if (creatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
-            creatureObj.ResetPower(originalAttackingCreaturePower);
-
-        if (creatureObj && !continueAttack)
-            yield return ResetCreaturePosRoutine(creatureObj);
+        if (attackingCreatureObj)
+            yield return ResetCreatureRoutine(attackingCreatureObj, attackingCreaturePowerPair, continueAttack);
     }
 
-    private IEnumerator AttackShieldRoutine(Controller controller, CreatureObject creatureObj,
+    private IEnumerator AttackShieldRoutine(Controller controller, CreatureObject attackingCreatureObj,
         ShieldObject shieldObj, bool isPlayer, bool continueAttack)
     {
         float attackTime = GameParamsHolder.Instance.AttackTime;
-        
-        creatureObj.transform.DOMove(shieldObj.transform.position, attackTime).SetEase(Ease.InCubic);
+        Pair<int> attackingCreaturePowerPair = GetAttackingCreaturePower(attackingCreatureObj);
+
+        attackingCreatureObj.transform.DOMove(shieldObj.transform.position, attackTime).SetEase(Ease.InCubic);
         yield return new WaitForSeconds(attackTime);
 
         if (!continueAttack)
@@ -135,8 +128,8 @@ public class BattleManager : MonoBehaviour
         PlayerManager opponent = GameManager.Instance.GetManager(!isPlayer);
         yield return opponent.BreakShieldRoutine(shieldObj);
 
-        if (!continueAttack)
-            yield return ResetCreaturePosRoutine(creatureObj);
+        if (attackingCreatureObj)
+            yield return ResetCreatureRoutine(attackingCreatureObj, attackingCreaturePowerPair, continueAttack);
     }
 
     private IEnumerator AttemptBlockRoutine(bool isPlayer)
@@ -151,14 +144,38 @@ public class BattleManager : MonoBehaviour
         yield return blockingCard;
     }
 
-    private IEnumerator ResetCreaturePosRoutine(CreatureObject creatureObj)
+    private IEnumerator ResetCreatureRoutine(CreatureObject creatureObj, Pair<int> creaturePowerPair,
+        bool continueAttack)
     {
-        float attackTime = GameParamsHolder.Instance.AttackTime;
+        if (creatureObj)
+        {
+            if (!creaturePowerPair.ValuesAreEqual())
+                creatureObj.ResetPower(creaturePowerPair.first);
 
-        creatureObj.transform.DOMove(_creatureOriginalPos, attackTime).SetEase(Ease.InCubic);
-        yield return new WaitForSeconds(attackTime);
-        
-        creatureObj.ToggleTapState();
-        _creatureOriginalPos = Vector3.zero;
+            if (!continueAttack)
+            {
+                float attackTime = GameParamsHolder.Instance.AttackTime;
+
+                creatureObj.transform.DOMove(_creatureOriginalPos, attackTime).SetEase(Ease.InCubic);
+                yield return new WaitForSeconds(attackTime);
+
+                creatureObj.ToggleTapState();
+                _creatureOriginalPos = Vector3.zero;
+            }
+        }
+    }
+
+    private Pair<int> GetAttackingCreaturePower(CreatureObject attackingCreatureObj)
+    {
+        int originalAttackingCreaturePower = attackingCreatureObj.CardInst.Power;
+        int attackingCreaturePower = originalAttackingCreaturePower;
+
+        if (attackingCreatureObj.CardInst.InstanceEffectHandler.IsPowerAttacker)
+        {
+            attackingCreaturePower += attackingCreatureObj.CardInst.InstanceEffectHandler.PowerAttackBoost;
+            attackingCreatureObj.UpdatePower(attackingCreaturePower);
+        }
+
+        return new Pair<int>(originalAttackingCreaturePower, attackingCreaturePower);
     }
 }

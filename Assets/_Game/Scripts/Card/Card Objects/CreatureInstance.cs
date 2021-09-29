@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CreatureInstance : CardInstance
 {
+    private int _grantedPower = 0;
+
     public CreatureInstance(CardData cardData) : base(cardData) { }
 
     public new CreatureData CardData
@@ -11,8 +13,19 @@ public class CreatureInstance : CardInstance
         get { return (CreatureData) _cardData; }
     }
 
-    public bool CanAttack()
+    public int Power
     {
-        return !_isTapped;
+        get { return CardData.Power + _grantedPower; }
+    }
+
+    public int GrantedPower
+    {
+        get { return _grantedPower;}
+        set { _grantedPower = value; }
+    }
+
+    public bool CanAttack
+    {
+        get { return !_isTapped; }
     }
 }

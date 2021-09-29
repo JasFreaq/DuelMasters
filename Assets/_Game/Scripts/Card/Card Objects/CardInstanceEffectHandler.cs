@@ -39,7 +39,6 @@ public class CardInstanceEffectHandler
     private EffectTargetingCondition _multiplyPowerAttackCondition;
     
     private bool _multiplyGrantedPowerValue;
-    private int _grantedPowerBoost = 0;
     private EffectTargetingParameter _multiplyGrantedPowerParameter;
     private EffectTargetingCondition _multiplyGrantedPowerCondition;
 
@@ -106,6 +105,15 @@ public class CardInstanceEffectHandler
                         _multiplyPowerAttackCondition = functionality.TargetingCondition;
                     }
                     break;
+                
+                case EffectFunctionalityType.GrantPower:
+                    _multiplyGrantedPowerValue = functionality.ShouldMultiplyVal;
+                    if (_multiplyGrantedPowerValue)
+                    {
+                        _multiplyGrantedPowerParameter = functionality.TargetingParameter;
+                        _multiplyGrantedPowerCondition = functionality.TargetingCondition;
+                    }
+                    break;
 
                 case EffectFunctionalityType.CostAdjustment:
                     break;
@@ -163,24 +171,21 @@ public class CardInstanceEffectHandler
     {
         foreach (EffectData effectData in _cardData.ruleEffects)
         {
-            if (effectData.EffectCondition && effectData.EffectCondition.Type == EffectConditionType.WhileCondition)
+            switch (effectData.EffectFunctionality.Type)
             {
-                switch (effectData.EffectFunctionality.Type)
-                {
-                    case EffectFunctionalityType.GrantFunction:
-                    case EffectFunctionalityType.GrantPower:
-                        Action<bool> function = SetupEffectFunctionality(effectData.EffectFunctionality);
-                        SetupEffectCondition(effectData.EffectCondition, function);
-                        break;
-                }
-            }
-            else
-            {
-                Action function = SetupEffectFunctionality(effectData.EffectFunctionality, effectData.MayUseFunction);
-                if (effectData.EffectCondition)
-                    SetupEffectCondition(effectData.EffectCondition, function);
-                else
-                    _whenPlayed += function;
+                case EffectFunctionalityType.GrantFunction:
+                case EffectFunctionalityType.GrantPower:
+                    Action<bool> function1 = SetupEffectFunctionality(effectData.EffectFunctionality);
+                    SetupEffectCondition(effectData.EffectCondition, function1);
+                    break;
+
+                default:
+                    Action function0 = SetupEffectFunctionality(effectData.EffectFunctionality, effectData.MayUseFunction);
+                    if (effectData.EffectCondition)
+                        SetupEffectCondition(effectData.EffectCondition, function0);
+                    else
+                        _whenPlayed += function0;
+                    break;
             }
         }
     }
@@ -199,7 +204,7 @@ public class CardInstanceEffectHandler
                 return () => { ProcessGrantFunctionFunctionality(this, functionality, true,
                         functionality.AlterFunctionUntilEndOfTurn); };
         }
-
+        
         return null;
     }
     
@@ -473,6 +478,8 @@ public class CardInstanceEffectHandler
     private static void ProcessGrantPowerFunctionality(CardInstanceEffectHandler instanceEffect,
         EffectFunctionality functionality, bool activate, bool untilEndOfTurn)
     {
+        int grantedPowerBoost = functionality.PowerBoost;
+
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
@@ -481,7 +488,7 @@ public class CardInstanceEffectHandler
                 {
                     CardObject cardObj = card as CardObject;
                     if (!cardObj)
-                        cardObj = ((ShieldObject)card).CardObj;
+                        cardObj = ((ShieldObject) card).CardObj;
 
                     ProcessPowerGrant(cardObj.CardInst.InstanceEffectHandler);
                 }
@@ -502,11 +509,16 @@ public class CardInstanceEffectHandler
         {
             if (activate)
             {
-                instance._grantedPowerBoost += functionality.PowerBoost;
                 if (instance._multiplyGrantedPowerValue)
-                    instance._grantedPowerBoost *= CardData.GetNumValidCards(instance._multiplyGrantedPowerParameter,
+                {
+                    int num = CardData.GetNumValidCards(instance._multiplyGrantedPowerParameter,
                         instance._multiplyGrantedPowerCondition);
-                //((CreatureObject)instance._cardObj).card
+                    grantedPowerBoost *= num;
+                }
+
+                CreatureObject creatureObj = (CreatureObject) instance._cardObj;
+                creatureObj.CardInst.GrantedPower += grantedPowerBoost;
+                creatureObj.UpdatePower(creatureObj.CardInst.Power);
 
                 if (untilEndOfTurn)
                     CardEffectsManager.Instance.RegisterOnEndOfTurn(() =>
@@ -520,11 +532,9 @@ public class CardInstanceEffectHandler
 
         void DeactivatePowerGrant(CardInstanceEffectHandler instance)
         {
-            if (instance._multiplyGrantedPowerValue)
-                instance._grantedPowerBoost -= instance._grantedPowerBoost * CardData.GetNumValidCards(instance._multiplyGrantedPowerParameter,
-                    instance._multiplyGrantedPowerCondition);
-            else
-                instance._grantedPowerBoost -= functionality.PowerBoost;
+            CreatureObject creatureObj = (CreatureObject) instance._cardObj;
+            creatureObj.CardInst.GrantedPower -= grantedPowerBoost;
+            creatureObj.ResetPower(creatureObj.CardInst.Power);
         }
 
         #endregion

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardData : ScriptableObject, ISerializationCallbackReceiver
@@ -191,7 +192,7 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
             {
                 CivilizationCondition civilizationCondition = civilizationConditions[i];
 
-                bool res0 = cardData.Civilization == civilizationCondition.civilization;
+                bool res0 = cardData.Civilization.SequenceEqual(civilizationCondition.civilization);
                 if (civilizationCondition.non)
                     res0 = !res0;
 
@@ -393,7 +394,6 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         List<CardObject> validCards = new List<CardObject>();
         foreach (CardObject cardObj in cardList)
         {
-            cardObj.PreviewLayoutHandler.SetActiveInBrowser();
             cardObj.SetValidity(targetingCondition);
             if (cardObj.IsValid)
                 validCards.Add(cardObj);
