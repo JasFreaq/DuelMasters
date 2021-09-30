@@ -25,8 +25,7 @@ public class CardInstanceEffectHandler
 
     #region Data Members
 
-    private CardObject _cardObj;
-    private CardData _cardData;
+    private CardInstance _cardInst;
 
     private readonly bool _isBlocker;
 
@@ -52,10 +51,10 @@ public class CardInstanceEffectHandler
     
     #endregion
 
-    public CardInstanceEffectHandler(CardData cardData)
+    public CardInstanceEffectHandler(CardInstance cardInst)
     {
-        _cardData = cardData;
-        foreach (EffectData effectData in cardData.ruleEffects)
+        _cardInst = cardInst;
+        foreach (EffectData effectData in _cardInst.CardData.ruleEffects)
         {
             EffectFunctionality functionality = effectData.EffectFunctionality;
             switch (functionality.Type)
@@ -122,12 +121,7 @@ public class CardInstanceEffectHandler
     }
 
     #region Properties
-
-    public CardObject CardObj
-    {
-        set { _cardObj = value; }
-    }
-
+    
     public bool IsBlocker
     {
         get { return _isBlocker; }
@@ -169,7 +163,7 @@ public class CardInstanceEffectHandler
 
     public void SetupRuleEffects()
     {
-        foreach (EffectData effectData in _cardData.ruleEffects)
+        foreach (EffectData effectData in _cardInst.CardData.ruleEffects)
         {
             switch (effectData.EffectFunctionality.Type)
             {
@@ -347,7 +341,7 @@ public class CardInstanceEffectHandler
         {
             case CardTargetType.AutoTarget:
             case CardTargetType.NoTarget:
-                Debug.LogError($"{instanceEffect._cardData.Name} has RegionMovement as functionality type with the wrong target type.");
+                Debug.LogError($"{instanceEffect._cardInst.CardData.Name} has RegionMovement as functionality type with the wrong target type.");
                 break;
                 
             case CardTargetType.TargetOther:
@@ -355,7 +349,7 @@ public class CardInstanceEffectHandler
                 break;
             
             case CardTargetType.TargetSelf:
-                CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardObj,
+                CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardInst.CardObj,
                     functionality.MovementZones.fromZone, functionality.MovementZones.toZone);
                 break;
         }
@@ -367,18 +361,18 @@ public class CardInstanceEffectHandler
         {
             case CardTargetType.AutoTarget:
             case CardTargetType.NoTarget:
-                Debug.LogError($"{instanceEffect._cardData.Name} has Destroy as functionality type with the wrong target type.");
+                Debug.LogError($"{instanceEffect._cardInst.CardData.Name} has Destroy as functionality type with the wrong target type.");
                 break;
                 
             case CardTargetType.TargetOther:
-                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, instance =>
+                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, instance =>
                 {
-                    instance._cardObj.SendToGraveyard();
+                    instance._cardInst.CardObj.SendToGraveyard();
                 }));
                 break;
             
             case CardTargetType.TargetSelf:
-                instanceEffect._cardObj.SendToGraveyard();
+                instanceEffect._cardInst.CardObj.SendToGraveyard();
                 break;
         }
     }
@@ -401,7 +395,7 @@ public class CardInstanceEffectHandler
                 break;
 
             case CardTargetType.TargetOther:
-                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
+                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
                 break;
 
             case CardTargetType.TargetSelf:
@@ -447,7 +441,7 @@ public class CardInstanceEffectHandler
                 break;
 
             case CardTargetType.TargetOther:
-                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessFunctionDisable));
+                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessFunctionDisable));
                 break;
 
             case CardTargetType.TargetSelf:
@@ -495,7 +489,7 @@ public class CardInstanceEffectHandler
                 break;
 
             case CardTargetType.TargetOther:
-                instanceEffect._cardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
+                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
                 break;
 
             case CardTargetType.TargetSelf:
@@ -516,7 +510,7 @@ public class CardInstanceEffectHandler
                     grantedPowerBoost *= num;
                 }
 
-                CreatureObject creatureObj = (CreatureObject) instance._cardObj;
+                CreatureObject creatureObj = (CreatureObject) instance._cardInst.CardObj;
                 creatureObj.CardInst.GrantedPower += grantedPowerBoost;
                 creatureObj.UpdatePower(creatureObj.CardInst.Power);
 
@@ -532,7 +526,7 @@ public class CardInstanceEffectHandler
 
         void DeactivatePowerGrant(CardInstanceEffectHandler instance)
         {
-            CreatureObject creatureObj = (CreatureObject) instance._cardObj;
+            CreatureObject creatureObj = (CreatureObject) instance._cardInst.CardObj;
             creatureObj.CardInst.GrantedPower -= grantedPowerBoost;
             creatureObj.ResetPower(creatureObj.CardInst.Power);
         }

@@ -6,6 +6,8 @@ using UnityEngine;
 public class CardInstance
 {
     protected CardData _cardData;
+    protected CardObject _cardObj;
+
     private CardInstanceEffectHandler _instanceEffectHandler;
     private CardZoneType _currentZone = CardZoneType.Deck;
 
@@ -14,12 +16,17 @@ public class CardInstance
     public CardInstance(CardData cardData)
     {
         _cardData = cardData;
-        _instanceEffectHandler = new CardInstanceEffectHandler(cardData);
+        _instanceEffectHandler = new CardInstanceEffectHandler(this);
     }
     
     public CardData CardData
     {
         get { return _cardData; }
+    }
+
+    public CardObject CardObj
+    {
+        get { return _cardObj; }
     }
 
     public CardInstanceEffectHandler InstanceEffectHandler
@@ -45,5 +52,10 @@ public class CardInstance
     public void ToggleTapState()
     {
         _isTapped = !_isTapped;
+    }
+
+    public void AssignCardObject(CardObject cardObj)
+    {
+        _cardObj = cardObj;
     }
 }

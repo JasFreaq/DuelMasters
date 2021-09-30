@@ -51,7 +51,7 @@ public class DeckManager : MonoBehaviour
             cardObj.RegisterOnSendToGrave(sendToGraveFunc);
 
             _playerData.CardsInDeck.Add(cardObj);
-            cardInst.InstanceEffectHandler.CardObj = cardObj;
+            cardInst.AssignCardObject(cardObj);
         }
     }
     
