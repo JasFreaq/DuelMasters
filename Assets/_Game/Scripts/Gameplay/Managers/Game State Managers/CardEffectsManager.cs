@@ -84,7 +84,7 @@ public class CardEffectsManager : MonoBehaviour
         _cardBrowserOverlay.DeregisterOnToggleTab(EnablePlayerControllerInteract);
     }
 
-    public Coroutine ProcessRegionMovement(EffectFunctionality functionality, bool mayUse = false)
+    public Coroutine ProcessRegionMovement(EffectFunctionality functionality, bool ownerIsPlayer, bool mayUse = false)
     {
         bool playerChooses = functionality.TargetPlayer == PlayerTargetType.Player;
         bool affectPlayer = functionality.TargetPlayer == PlayerTargetType.Player;
@@ -237,16 +237,24 @@ public class CardEffectsManager : MonoBehaviour
 
     private IEnumerator MayProcessRegionMovementRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, PlayerTargetType targetType, EffectTargetingCondition targetingCondition)
     {
+        GameManager.Instance.GetManager(playerChooses).IsSelecting = true;
         Controller choosingPlayer = GameManager.Instance.GetController(playerChooses);
+
         Coroutine<bool> routine = choosingPlayer.StartCoroutine<bool>(choosingPlayer.ChooseEffectActivationRoutine());
         yield return routine.coroutine;
+
+        GameManager.Instance.GetManager(playerChooses).IsSelecting = false;
+
         if (routine.returnVal)
             yield return AdjustMovementTargetRoutine(playerChooses, affectPlayer, movementZones, targetType, targetingCondition, true);
     }
 
     private IEnumerator AdjustMovementTargetRoutine(bool playerChooses, bool affectPlayer, MovementZones movementZones, PlayerTargetType targetType, EffectTargetingCondition targetingCondition, bool mayUse)
     {
+        PlayerManager choosingPlayer = GameManager.Instance.GetManager(playerChooses);
+        choosingPlayer.IsSelecting = true;
         Controller choosingController = GameManager.Instance.GetController(playerChooses);
+
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
         
         if (movementZones.fromZone == CardZoneType.Deck && movementZones.deckCardMove == DeckCardMoveType.Top)
@@ -265,6 +273,8 @@ public class CardEffectsManager : MonoBehaviour
                 moveCount = routine1.returnVal;
             }
 
+            yield return FinishPlayerCast();
+
             for (int i = 0; i < moveCount; i++)
             {
                 CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
@@ -278,12 +288,25 @@ public class CardEffectsManager : MonoBehaviour
             yield return routine.coroutine;
             List<CardBehaviour> selectedCards = routine.returnVal;
 
+            yield return FinishPlayerCast();
+
             if (selectedCards != null)
             {
                 foreach (CardBehaviour card in selectedCards)
                     yield return ProcessRegionMovementRoutine(card, movementZones.fromZone, movementZones.toZone);
             }
         }
+
+        #region Local Function(s)
+
+        IEnumerator FinishPlayerCast()
+        {
+            choosingPlayer.IsSelecting = false;
+            while (!choosingPlayer.FinishedCasting)
+                yield return new WaitForEndOfFrame();
+        }
+
+        #endregion
     }
 
     private IEnumerator ProcessRegionMovementRoutine(CardBehaviour card, CardZoneType fromZone, CardZoneType toZone)

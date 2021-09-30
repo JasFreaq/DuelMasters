@@ -7,7 +7,7 @@ public class CardInstance
 {
     protected CardData _cardData;
     protected CardObject _cardObj;
-
+    
     private CardInstanceEffectHandler _instanceEffectHandler;
     private CardZoneType _currentZone = CardZoneType.Deck;
 
@@ -28,7 +28,7 @@ public class CardInstance
     {
         get { return _cardObj; }
     }
-
+    
     public CardInstanceEffectHandler InstanceEffectHandler
     {
         get { return _instanceEffectHandler; }

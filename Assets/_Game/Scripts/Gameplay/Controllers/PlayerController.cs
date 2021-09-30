@@ -81,7 +81,6 @@ public class PlayerController : Controller
                         if (cardObj0 != cardObj)
                             cardObj0.SetHighlight(false);
                     }
-
                     break;
 
                 case GameStepType.AttackStep:
@@ -91,7 +90,6 @@ public class PlayerController : Controller
                         if (cardObj.InZone(CardZoneType.BattleZone))
                             TargetingLinesHandler.Instance.EnableLine(cardObj.transform.position);
                     }
-
                     break;
             }
         }

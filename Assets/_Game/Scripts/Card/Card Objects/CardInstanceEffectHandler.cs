@@ -395,10 +395,8 @@ public class CardInstanceEffectHandler
                 break;
                 
             case CardTargetType.TargetOther:
-                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, instance =>
-                {
-                    instance._cardInst.CardObj.SendToGraveyard();
-                }));
+                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, 
+                    instance => { instance._cardInst.CardObj.SendToGraveyard(); }));
                 break;
             
             case CardTargetType.TargetSelf:
@@ -641,6 +639,9 @@ public class CardInstanceEffectHandler
 
     private static IEnumerator ProcessCardSelectionRoutine(EffectFunctionality functionality, Action<CardInstanceEffectHandler> callback)
     {
+        PlayerManager choosingPlayer = GameManager.Instance.GetManager(functionality.ChoosingPlayer == PlayerTargetType.Player);
+        choosingPlayer.IsSelecting = true;
+
         Coroutine<List<CardBehaviour>> routine =
             CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
                 functionality.ChoosingPlayer == PlayerTargetType.Player,
@@ -649,6 +650,10 @@ public class CardInstanceEffectHandler
                 functionality.TargetingCondition, false));
         yield return routine.coroutine;
         List<CardBehaviour> cards = routine.returnVal;
+
+        choosingPlayer.IsSelecting = false;
+        while (!choosingPlayer.FinishedCasting)
+            yield return new WaitForEndOfFrame();
 
         foreach (CardBehaviour card in cards)
         {

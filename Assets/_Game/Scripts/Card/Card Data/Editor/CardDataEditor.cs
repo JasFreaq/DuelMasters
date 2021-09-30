@@ -18,7 +18,7 @@ public class CardDataEditor : Editor
         base.OnInspectorGUI();
         serializedObject.Update();
 
-        _cardData = (CardData)target;
+        _cardData = (CardData) target;
 
         EditorGUILayout.Space(10);
         GUIStyle labelStyle = new GUIStyle { fontStyle = FontStyle.BoldAndItalic, fontSize = 16 };

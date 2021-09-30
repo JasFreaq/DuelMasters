@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
 
     private PlayerDataHandler _playerDataHandler;
 
+    private bool _isSelecting, _finishedCasting;
     private List<CardObject> _playableCards = new List<CardObject>();
 
     public PlayerDataHandler DataHandler
@@ -35,6 +36,16 @@ public class PlayerManager : MonoBehaviour
     public ManaZoneManager ManaZoneManager
     {
         get { return _manaZoneManager; }
+    }
+
+    public bool IsSelecting
+    {
+        set { _isSelecting = value; }
+    }
+    
+    public bool FinishedCasting
+    {
+        get { return _finishedCasting; }
     }
 
     public List<CardObject> PlayableCards
@@ -182,8 +193,14 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator CastSpellRoutine(SpellObject spellObj)
     {
+        _finishedCasting = false;
         spellObj.CardInst.InstanceEffectHandler.TriggerWhenPlayed();
+
+        while (_isSelecting) 
+            yield return new WaitForEndOfFrame();
+
         yield return MoveToGraveyardRoutine(spellObj);
+        _finishedCasting = true;
     }
     
     public IEnumerator BreakShieldRoutine(CardObject cardObj)
