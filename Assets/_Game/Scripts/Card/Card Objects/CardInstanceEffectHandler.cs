@@ -28,6 +28,7 @@ public class CardInstanceEffectHandler
     private CardInstance _cardInst;
 
     private readonly bool _isBlocker;
+    private readonly bool _isSlayer;
 
     private bool _isMultipleBreaker;
     private MultipleBreakerType _multipleBreakerType;
@@ -73,8 +74,16 @@ public class CardInstanceEffectHandler
                     break;
 
                 case EffectFunctionalityType.Keyword:
-                    if (functionality.Keyword == KeywordType.Blocker)
-                        _isBlocker = true;
+                    switch (functionality.Keyword)
+                    {
+                        case KeywordType.Blocker:
+                            _isBlocker = true;
+                            break;
+
+                        case KeywordType.Slayer:
+                            _isSlayer = true;
+                            break;
+                    }
                     break;
 
                 case EffectFunctionalityType.MultipleBreaker:
@@ -125,6 +134,11 @@ public class CardInstanceEffectHandler
     public bool IsBlocker
     {
         get { return _isBlocker; }
+    }
+
+    public bool IsSlayer
+    {
+        get { return _isSlayer; }
     }
 
     public bool IsMultipleBreaker

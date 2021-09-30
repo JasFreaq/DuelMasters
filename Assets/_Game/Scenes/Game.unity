@@ -2041,7 +2041,7 @@ MonoBehaviour:
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
   _playerDeck: {fileID: 11400000, guid: 7ef26056e252e854196fc9da0eddad90, type: 2}
-  _opponentDeck: {fileID: 11400000, guid: 615ab36afa02f2547bb4ee3aa3d2e43c, type: 2}
+  _opponentDeck: {fileID: 11400000, guid: 7ef26056e252e854196fc9da0eddad90, type: 2}
   _actionOverlay: {fileID: 0}
 --- !u!4 &1167120987
 Transform:

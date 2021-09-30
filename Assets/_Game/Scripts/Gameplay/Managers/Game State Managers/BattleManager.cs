@@ -96,21 +96,36 @@ public class BattleManager : MonoBehaviour
             controller.DeselectCurrentlySelected();
         
         if (attackingCreaturePowerPair.second > attackedCreaturePower)
+        {
+            if (targetCreatureObj.CardInst.InstanceEffectHandler.IsSlayer)
+                yield return DestroyAttackingCreature();
             yield return targetCreatureObj.SendToGraveyard();
+        }
         else if (attackingCreaturePowerPair.second == attackedCreaturePower)
         {
-            yield return attackingCreatureObj.SendToGraveyard();
-            attackingCreatureObj = null;
+            yield return DestroyAttackingCreature();
             yield return targetCreatureObj.SendToGraveyard();
         }
         else
+        {
+            if (attackingCreatureObj.CardInst.InstanceEffectHandler.IsSlayer)
+                yield return targetCreatureObj.SendToGraveyard();
+            yield return DestroyAttackingCreature();
+        }
+        
+
+        if (attackingCreatureObj)
+            yield return ResetCreatureRoutine(attackingCreatureObj, attackingCreaturePowerPair, continueAttack);
+
+        #region Local Functions
+
+        IEnumerator DestroyAttackingCreature()
         {
             yield return attackingCreatureObj.SendToGraveyard();
             attackingCreatureObj = null;
         }
 
-        if (attackingCreatureObj)
-            yield return ResetCreatureRoutine(attackingCreatureObj, attackingCreaturePowerPair, continueAttack);
+        #endregion
     }
 
     private IEnumerator AttackShieldRoutine(Controller controller, CreatureObject attackingCreatureObj,
