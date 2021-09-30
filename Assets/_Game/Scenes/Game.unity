@@ -2040,7 +2040,7 @@ MonoBehaviour:
   _opponentController: {fileID: 1962481312}
   _playerManager: {fileID: 1042105413}
   _opponentManager: {fileID: 1962481310}
-  _playerDeck: {fileID: 11400000, guid: 7ef26056e252e854196fc9da0eddad90, type: 2}
+  _playerDeck: {fileID: 11400000, guid: 889dc1febc334be479bcd52e9096e2a2, type: 2}
   _opponentDeck: {fileID: 11400000, guid: 7ef26056e252e854196fc9da0eddad90, type: 2}
   _actionOverlay: {fileID: 0}
 --- !u!4 &1167120987

@@ -239,16 +239,14 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator MoveFromManaZoneRoutine(CardObject cardObj)
     {
-        InitiateMove(cardObj);
-        cardObj.IsVisible = true;
+        InitiateFieldMove(cardObj);
 
         yield return _manaZoneManager.MoveFromManaZoneRoutine(cardObj);
     }
 
     public IEnumerator MoveFromBattleZoneRoutine(CardObject cardObj)
     {
-        InitiateMove(cardObj);
-        cardObj.IsVisible = true;
+        InitiateFieldMove(cardObj);
 
         yield return _battleZoneManager.MoveFromBattleZoneRoutine(cardObj);
     }
@@ -257,6 +255,15 @@ public class PlayerManager : MonoBehaviour
     {
         cardObj.CardLayout.Canvas.sortingOrder = 100;
         cardObj.HoverPreviewHandler.PreviewEnabled = false;
+    }
+
+    private void InitiateFieldMove(CardObject cardObj)
+    {
+        InitiateMove(cardObj);
+
+        cardObj.IsVisible = true;
+        if (cardObj.CardInst.IsTapped)
+            cardObj.ToggleTapState();
     }
 
     #endregion

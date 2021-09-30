@@ -99,23 +99,29 @@ public class BattleManager : MonoBehaviour
         {
             if (targetCreatureObj.CardInst.InstanceEffectHandler.IsSlayer)
                 yield return DestroyAttackingCreature();
-            yield return targetCreatureObj.SendToGraveyard();
+            yield return DestroyTargetCreature();
         }
         else if (attackingCreaturePowerPair.second == attackedCreaturePower)
         {
             yield return DestroyAttackingCreature();
-            yield return targetCreatureObj.SendToGraveyard();
+            yield return DestroyTargetCreature();
         }
         else
         {
             if (attackingCreatureObj.CardInst.InstanceEffectHandler.IsSlayer)
-                yield return targetCreatureObj.SendToGraveyard();
+                yield return DestroyTargetCreature();
             yield return DestroyAttackingCreature();
         }
         
 
         if (attackingCreatureObj)
+        {
             yield return ResetCreatureRoutine(attackingCreatureObj, attackingCreaturePowerPair, continueAttack);
+            attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerAfterBattle();
+        }
+
+        if (targetCreatureObj) 
+            targetCreatureObj.CardInst.InstanceEffectHandler.TriggerAfterBattle();
 
         #region Local Functions
 
@@ -123,6 +129,12 @@ public class BattleManager : MonoBehaviour
         {
             yield return attackingCreatureObj.SendToGraveyard();
             attackingCreatureObj = null;
+        }
+        
+        IEnumerator DestroyTargetCreature()
+        {
+            yield return targetCreatureObj.SendToGraveyard();
+            targetCreatureObj = null;
         }
 
         #endregion

@@ -44,6 +44,7 @@ public class CardInstanceEffectHandler
 
     private Action _whenPlayed;
     private Action _whenPutIntoBattle;
+    private Action _afterBattle;
     private Action _whenDestroyed;
     private Action _whenWouldBeDestroyed;
 
@@ -242,6 +243,10 @@ public class CardInstanceEffectHandler
                 _whenPutIntoBattle += function;
                 break;
 
+            case EffectConditionType.AfterBattle:
+                _afterBattle += function;
+                break;
+
             case EffectConditionType.WhenDestroyed:
                 _whenDestroyed += function;
                 break;
@@ -306,6 +311,17 @@ public class CardInstanceEffectHandler
         return false;
     }
 
+    public bool TriggerAfterBattle()
+    {
+        if (_afterBattle != null)
+        {
+            _afterBattle.Invoke();
+            return true;
+        }
+
+        return false;
+    }
+    
     public bool TriggerWhenDestroyed()
     {
         if (_whenDestroyed != null)
