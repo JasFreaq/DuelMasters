@@ -20,7 +20,7 @@ public class PlayerManager : MonoBehaviour
 
     private PlayerDataHandler _playerDataHandler;
 
-    private bool _isSelecting, _finishedCasting;
+    private bool _isSelecting, _finishedCasting = true;
     private List<CardObject> _playableCards = new List<CardObject>();
 
     public PlayerDataHandler DataHandler

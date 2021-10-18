@@ -262,7 +262,7 @@ public class CardEffectsManager : MonoBehaviour
             int lower = 1, upper = movementZones.moveCount;
             if (movementZones.countChoice == CountChoiceType.Exactly)
                 lower = upper;
-
+            
             int moveCount = 0;
             if (movementZones.countChoice == CountChoiceType.Exactly || movementZones.moveCount == 1)
                 moveCount = movementZones.moveCount;
@@ -272,9 +272,9 @@ public class CardEffectsManager : MonoBehaviour
                 yield return routine1.coroutine;
                 moveCount = routine1.returnVal;
             }
-
+            
             yield return FinishPlayerCast();
-
+            
             for (int i = 0; i < moveCount; i++)
             {
                 CardObject cardObj = affectedPlayer.DeckManager.RemoveTopCard();
