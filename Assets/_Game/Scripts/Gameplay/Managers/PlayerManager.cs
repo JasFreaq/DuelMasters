@@ -199,7 +199,7 @@ public class PlayerManager : MonoBehaviour
         while (_isSelecting) 
             yield return new WaitForEndOfFrame();
 
-        yield return MoveToGraveyardRoutine(spellObj);
+        yield return MoveToGraveyardRoutine(spellObj, false);
         _finishedCasting = true;
     }
     
@@ -313,29 +313,32 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
 
-    private IEnumerator MoveToGraveyardRoutine(CardObject cardObj)
+    private IEnumerator MoveToGraveyardRoutine(CardObject cardObj, bool handleCurrentZoneRemoval = true)
     {
-        switch (cardObj.CardInst.CurrentZone)
+        if (handleCurrentZoneRemoval) 
         {
-            case CardZoneType.Deck:
-                yield return MoveFromDeckRoutine(cardObj);
-                break;
+            switch (cardObj.CardInst.CurrentZone)
+            {
+                case CardZoneType.Deck:
+                    yield return MoveFromDeckRoutine(cardObj);
+                    break;
 
-            case CardZoneType.Hand:
-                yield return MoveFromHandRoutine(cardObj);
-                break;
+                case CardZoneType.Hand:
+                    yield return MoveFromHandRoutine(cardObj);
+                    break;
 
-            case CardZoneType.Shields:
-                yield return MoveFromShieldsRoutine(cardObj);
-                break;
+                case CardZoneType.Shields:
+                    yield return MoveFromShieldsRoutine(cardObj);
+                    break;
 
-            case CardZoneType.ManaZone:
-                yield return MoveFromManaZoneRoutine(cardObj);
-                break;
+                case CardZoneType.ManaZone:
+                    yield return MoveFromManaZoneRoutine(cardObj);
+                    break;
 
-            case CardZoneType.BattleZone:
-                yield return MoveFromBattleZoneRoutine(cardObj);
-                break;
+                case CardZoneType.BattleZone:
+                    yield return MoveFromBattleZoneRoutine(cardObj);
+                    break;
+            }
         }
 
         cardObj.gameObject.SetActive(false);

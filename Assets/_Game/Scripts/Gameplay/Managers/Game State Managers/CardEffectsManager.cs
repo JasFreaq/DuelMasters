@@ -84,11 +84,11 @@ public class CardEffectsManager : MonoBehaviour
         _cardBrowserOverlay.DeregisterOnToggleTab(EnablePlayerControllerInteract);
     }
 
-    public Coroutine ProcessRegionMovement(EffectFunctionality functionality, bool ownerIsPlayer, bool mayUse = false)
+    public Coroutine ProcessRegionMovement(EffectFunctionality functionality, bool mayUse = false)
     {
         bool playerChooses = functionality.TargetPlayer == PlayerTargetType.Player;
         bool affectPlayer = functionality.TargetPlayer == PlayerTargetType.Player;
-
+        
         if (mayUse)
             return StartCoroutine(MayProcessRegionMovementRoutine(playerChooses, affectPlayer,
                 functionality.MovementZones, functionality.TargetPlayer, functionality.TargetingCondition));

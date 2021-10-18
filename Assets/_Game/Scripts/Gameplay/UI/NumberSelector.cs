@@ -12,8 +12,8 @@ public class NumberSelector : MonoBehaviour
     [SerializeField] private Button _leftButton;
     [SerializeField] private Button _rightButton;
 
-    private int _selectionNum = 0, _lowerBound, _upperBound;
-    private bool _selectionMade = false;
+    private int _selectionNum, _lowerBound, _upperBound;
+    private bool _selectionMade;
 
     private void Start()
     {

@@ -112,7 +112,7 @@ public class HandManager : MonoBehaviour
 
         _playerData.CardsInHand.Remove(iD);
         cardObj.transform.parent = transform;
-        
+
         ArrangeCards();
     }
 

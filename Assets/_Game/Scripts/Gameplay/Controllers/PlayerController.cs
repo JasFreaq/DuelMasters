@@ -336,7 +336,7 @@ public class PlayerController : Controller
 
     public override IEnumerator ChooseEffectActivationRoutine()
     {
-        _actionOverlay.ActivateMayUseEffectButton(ActivateEffectActivation,CancelEffectActivation);
+        _actionOverlay.ActivateMayUseEffectButton(ActivateEffectActivation, CancelEffectActivation);
         
         Coroutine<bool> routine = this.StartCoroutine<bool>(base.ChooseEffectActivationRoutine());
         yield return routine.coroutine;
