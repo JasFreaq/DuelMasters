@@ -65,11 +65,11 @@ public class PlayerManager : MonoBehaviour
 
         if (_handManager.transform.GetChild(0).childCount > 0)
         {
-            CardObject card = _playerDataHandler.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
+            CardObject cardObj = _playerDataHandler.CardsInHand[_handManager.transform.GetChild(0).GetChild(0).GetInstanceID()];
             if (Input.GetKeyDown(KeyCode.M))
-                StartCoroutine(ChargeManaRoutine(card));
+                StartCoroutine(ChargeManaRoutine(cardObj));
             if (Input.GetKeyDown(KeyCode.P))
-                StartCoroutine(PlayCardRoutine(card));
+                StartCoroutine(PlayCardFromHandRoutine(cardObj));
         }
     }
 
@@ -147,11 +147,16 @@ public class PlayerManager : MonoBehaviour
         yield return MoveToManaZoneRoutine(cardObj);
     }
 
-    public IEnumerator PlayCardRoutine(CardObject cardObj)
+    public IEnumerator PlayCardFromHandRoutine(CardObject cardObj)
     {
         HoverPreviewHandler.FlipPreviewLocation = true;
         yield return MoveFromHandRoutine(cardObj);
 
+        yield return PlayCardRoutine(cardObj);
+    }
+    
+    public IEnumerator PlayCardRoutine(CardObject cardObj)
+    {
         if (cardObj is CreatureObject creatureCard)
             yield return SummonCreatureRoutine(creatureCard);
         else if (cardObj is SpellObject spellCard)
@@ -206,7 +211,22 @@ public class PlayerManager : MonoBehaviour
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
         CardObject cardObj = shieldObj.CardObj;
+
         yield return _shieldsManager.BreakShieldRoutine(shieldObj);
+
+        if (cardObj.CardInst.InstanceEffectHandler.HasShieldTrigger)
+        {
+            Controller choosingPlayer = GameManager.Instance.GetController(_isPlayer);
+            Coroutine<bool> routine = choosingPlayer.StartCoroutine<bool>(choosingPlayer.ChooseEffectActivationRoutine());
+            yield return routine.coroutine;
+
+            if (routine.returnVal)
+            {
+                yield return PlayCardRoutine(cardObj);
+                yield break;
+            }
+        }
+
         yield return MoveToHandRoutine(cardObj);
     }
 

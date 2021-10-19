@@ -33,9 +33,15 @@ public class Controller : MonoBehaviour
     {
         if (_currentlySelected != cardObj)
         {
-            if (_currentlySelected) 
-                DeselectCurrentlySelected();
-            _currentlySelected = cardObj;
+            switch (cardObj.CardInst.CurrentZone)
+            {
+                case CardZoneType.Hand:
+                case CardZoneType.BattleZone:
+                    if (_currentlySelected)
+                        DeselectCurrentlySelected();
+                    _currentlySelected = cardObj;
+                    break;
+            }
 
             switch (GameManager.Instance.CurrentStep)
             {

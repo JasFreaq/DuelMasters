@@ -27,7 +27,7 @@ public class MainStep : GameStep
 
             dataHandler.PayCost(cardObj.CardData.Civilization, cardObj.CardData.Cost);
             currentPlayer.ManaZoneManager.ArrangeCards();
-            yield return currentPlayer.PlayCardRoutine(cardObj);
+            yield return currentPlayer.PlayCardFromHandRoutine(cardObj);
 
             CheckPlayableCards(currentPlayer);
         }

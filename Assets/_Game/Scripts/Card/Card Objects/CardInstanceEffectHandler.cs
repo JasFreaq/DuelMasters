@@ -27,6 +27,7 @@ public class CardInstanceEffectHandler
 
     private CardInstance _cardInst;
 
+    private readonly bool _hasShieldTrigger;
     private readonly bool _isBlocker;
     private readonly bool _isSlayer;
 
@@ -77,6 +78,10 @@ public class CardInstanceEffectHandler
                 case EffectFunctionalityType.Keyword:
                     switch (functionality.Keyword)
                     {
+                        case KeywordType.ShieldTrigger:
+                            _hasShieldTrigger = true;
+                            break;
+
                         case KeywordType.Blocker:
                             _isBlocker = true;
                             break;
@@ -131,6 +136,11 @@ public class CardInstanceEffectHandler
     }
 
     #region Properties
+    
+    public bool HasShieldTrigger
+    {
+        get { return _hasShieldTrigger; }
+    }
     
     public bool IsBlocker
     {

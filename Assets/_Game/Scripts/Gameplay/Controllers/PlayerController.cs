@@ -18,8 +18,8 @@ public class PlayerController : Controller
     [SerializeField] private ActionButtonOverlay _actionOverlay;
     [SerializeField] private int _deselectDelayBufferFrames = 24;
 
-    private Camera _mainCamera = null;
-    private GameManager _gameManager = null;
+    private Camera _mainCamera;
+    private GameManager _gameManager;
 
     private bool _canInteract, _canSelect, _canSelectShield;
     private HoverState _hoverState = HoverState.None;
@@ -68,6 +68,16 @@ public class PlayerController : Controller
     {
         if (_currentlySelected != cardObj)
         {
+            switch (cardObj.CardInst.CurrentZone)
+            {
+                case CardZoneType.Hand:
+                case CardZoneType.BattleZone:
+                    break;
+
+                default:
+                    return;
+            }
+
             switch (GameManager.Instance.CurrentStep)
             {
                 case GameStepType.ChargeStep:
@@ -84,11 +94,11 @@ public class PlayerController : Controller
                     break;
 
                 case GameStepType.AttackStep:
-                    if (((CreatureObject) cardObj).CardInst.CanAttack) 
+                    if (cardObj is CreatureObject creatureObj && creatureObj.CardInst.CanAttack) 
                     {
-                        cardObj.SetHighlight(true);
-                        if (cardObj.InZone(CardZoneType.BattleZone))
-                            TargetingLinesHandler.Instance.EnableLine(cardObj.transform.position);
+                        creatureObj.SetHighlight(true);
+                        if (creatureObj.InZone(CardZoneType.BattleZone))
+                            TargetingLinesHandler.Instance.EnableLine(creatureObj.transform.position);
                     }
                     break;
             }
@@ -167,7 +177,7 @@ public class PlayerController : Controller
 
         if (tempCardObj)
         {
-            if (_targetedCard != tempCardObj)
+            if (_targetedCard != tempCardObj)  
             {
                 ExitHover();
                 
