@@ -12,7 +12,7 @@ public class ShieldObject : CardBehaviour
 
     private Animator _animator;
     private BoxCollider _boxCollider;
-    private CardObject _cardObj = null;
+    private CardObject _cardObj;
 
     private bool _activeState, _isHighlighted, _keepHighlighted;
     private Vector3 _holderScale;

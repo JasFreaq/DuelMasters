@@ -203,16 +203,11 @@ public class PlayerManager : MonoBehaviour
         _finishedCasting = true;
     }
     
-    public IEnumerator BreakShieldRoutine(CardObject cardObj)
-    {
-        yield return _shieldsManager.BreakShieldRoutine(cardObj);
-        yield return MoveToHandRoutine(cardObj);
-    }
-    
     public IEnumerator BreakShieldRoutine(ShieldObject shieldObj)
     {
+        CardObject cardObj = shieldObj.CardObj;
         yield return _shieldsManager.BreakShieldRoutine(shieldObj);
-        yield return MoveToHandRoutine(shieldObj.CardObj);
+        yield return MoveToHandRoutine(cardObj);
     }
 
     #endregion
