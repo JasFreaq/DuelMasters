@@ -9,5 +9,7 @@ public enum KeywordType
     Evolution,
     VortexEvolution,
     Slayer,
-    SpeedAttacker
+    SpeedAttacker,
+    AttacksEachTurnIfAble,
+    AttackThisTurnAsThoughTapped
 }

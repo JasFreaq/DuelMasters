@@ -29,7 +29,10 @@ public class CardInstanceEffectHandler
 
     private readonly bool _hasShieldTrigger;
     private readonly bool _isBlocker;
-    private readonly bool _isSlayer;
+    
+    private bool _isSlayer;
+    private bool _attacksEachTurnIfAble;
+    private bool _attackAsThoughTapped;
 
     private bool _isMultipleBreaker;
     private MultipleBreakerType _multipleBreakerType;
@@ -85,6 +88,14 @@ public class CardInstanceEffectHandler
 
                         case KeywordType.Slayer:
                             _isSlayer = true;
+                            break;
+
+                        case KeywordType.AttacksEachTurnIfAble:
+                            _attacksEachTurnIfAble = true;
+                            break;
+
+                        case KeywordType.AttackThisTurnAsThoughTapped:
+                            _attackAsThoughTapped = true;
                             break;
                     }
                     break;
@@ -482,29 +493,30 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetPlayer == PlayerTargetType.Player, functionality.TargetingParameter.ZoneType);
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingParameter.OwningPlayer == PlayerTargetType.Player, 
+                    functionality.TargetingParameter.ZoneType);
                 foreach (CardBehaviour card in cards)
                 {
                     CardObject cardObj = card as CardObject;
                     if (!cardObj)
                         cardObj = ((ShieldObject)card).CardObj;
 
-                    ProcessPowerGrant(cardObj.CardInst.InstanceEffectHandler);
+                    ProcessFunctionGrant(cardObj.CardInst.InstanceEffectHandler);
                 }
                 break;
 
             case CardTargetType.TargetOther:
-                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessPowerGrant));
+                instanceEffect._cardInst.CardObj.StartCoroutine(ProcessCardSelectionRoutine(functionality, ProcessFunctionGrant));
                 break;
 
             case CardTargetType.TargetSelf:
-                ProcessPowerGrant(instanceEffect);
+                ProcessFunctionGrant(instanceEffect);
                 break;
         }
 
         #region Local Functions
 
-        void ProcessPowerGrant(CardInstanceEffectHandler instance)
+        void ProcessFunctionGrant(CardInstanceEffectHandler instance)
         {
             if (activate)
             {
@@ -528,7 +540,8 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetPlayer == PlayerTargetType.Player, functionality.TargetingParameter.ZoneType);
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingParameter.OwningPlayer == PlayerTargetType.Player, 
+                    functionality.TargetingParameter.ZoneType);
                 foreach (CardBehaviour card in cards)
                 {
                     CardObject cardObj = card as CardObject;
@@ -576,7 +589,8 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetPlayer == PlayerTargetType.Player, functionality.TargetingParameter.ZoneType);
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingParameter.OwningPlayer == PlayerTargetType.Player, 
+                    functionality.TargetingParameter.ZoneType);
                 foreach (CardBehaviour card in cards)
                 {
                     CardObject cardObj = card as CardObject;
@@ -637,6 +651,23 @@ public class CardInstanceEffectHandler
     {
         switch (functionality.Type)
         {
+            case EffectFunctionalityType.Keyword:
+                switch (functionality.Keyword)
+                {
+                    case KeywordType.Slayer:
+                        instanceEffect._isSlayer = true;
+                        break;
+
+                    case KeywordType.AttacksEachTurnIfAble:
+                        instanceEffect._attacksEachTurnIfAble = true;
+                        break;
+
+                    case KeywordType.AttackThisTurnAsThoughTapped:
+                        instanceEffect._attackAsThoughTapped = true;
+                        break;
+                }
+                break;
+
             case EffectFunctionalityType.MultipleBreaker:
                 instanceEffect._isMultipleBreaker = true;
                 instanceEffect._multipleBreakerType = functionality.MultipleBreaker;
@@ -687,6 +718,23 @@ public class CardInstanceEffectHandler
     {
         switch (functionality.Type)
         {
+            case EffectFunctionalityType.Keyword:
+                switch (functionality.Keyword)
+                {
+                    case KeywordType.Slayer:
+                        instanceEffect._isSlayer = false;
+                        break;
+
+                    case KeywordType.AttacksEachTurnIfAble:
+                        instanceEffect._attacksEachTurnIfAble = false;
+                        break;
+
+                    case KeywordType.AttackThisTurnAsThoughTapped:
+                        instanceEffect._attackAsThoughTapped = false;
+                        break;
+                }
+                break;
+
             case EffectFunctionalityType.MultipleBreaker:
                 instanceEffect._isMultipleBreaker = false;
                 break;
@@ -794,6 +842,38 @@ public class CardInstanceEffectHandler
             CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
                 functionality.ChoosingPlayer == PlayerTargetType.Player,
                 functionality.TargetPlayer == PlayerTargetType.Player,
+                new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
+                functionality.TargetingCondition, false));
+        yield return routine.coroutine;
+        List<CardBehaviour> cards = routine.returnVal;
+
+        choosingPlayer.IsSelecting = false;
+        while (!choosingPlayer.FinishedCasting)
+            yield return new WaitForEndOfFrame();
+
+        foreach (CardBehaviour card in cards)
+        {
+            CardObject cardObj = card as CardObject;
+            if (!cardObj)
+                cardObj = ((ShieldObject)card).CardObj;
+
+            callback.Invoke(cardObj.CardInst.InstanceEffectHandler);
+        }
+    }
+    
+    private static IEnumerator ProcessCardSelectionRoutine(EffectTargetingParameter targetingParameter, Action<CardInstanceEffectHandler> callback)
+    {
+        bool playerChooses = true;
+        bool affectPlayer = targetingParameter.OwningPlayer == PlayerTargetType.Player;
+        if (!affectPlayer && targetingParameter.OpponentChooses)
+            playerChooses = false;
+
+        PlayerManager choosingPlayer = GameManager.Instance.GetManager(playerChooses);
+        choosingPlayer.IsSelecting = true;
+
+        Coroutine<List<CardBehaviour>> routine =
+            CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
+                playerChooses, affectPlayer,
                 new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
                 functionality.TargetingCondition, false));
         yield return routine.coroutine;

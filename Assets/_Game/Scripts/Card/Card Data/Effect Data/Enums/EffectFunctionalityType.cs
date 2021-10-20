@@ -16,8 +16,6 @@ public enum EffectFunctionalityType
     Destroy,
     Discard,
     LookAtRegion,
-    AttacksEachTurnIfAble,
-    AttackThisTurnAsThoughTapped,
     SearchAndShuffle,
     PowerAttacker,
     GrantPower,

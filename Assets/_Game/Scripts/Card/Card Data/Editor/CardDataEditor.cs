@@ -302,7 +302,7 @@ public class CardDataEditor : Editor
                 case EffectFunctionalityType.LookAtRegion:
                     DrawLookAtParam();
                     break;
-
+                    
                 case EffectFunctionalityType.PowerAttacker:
                 case EffectFunctionalityType.GrantPower:
                     if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerBoost}"), out int num1))
