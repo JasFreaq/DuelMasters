@@ -50,32 +50,43 @@ public class BattleManager : MonoBehaviour
                 TargetingLinesHandler.Instance.DisableLines();
 
                 CreatureObject attackingCreatureObj = (CreatureObject) selectedCardObj;
-                if (registerPos)
-                    _creatureOriginalPos = attackingCreatureObj.transform.position;
-                IEnumerator attackRoutine = null;
-
-                if (target is CreatureObject targetCreatureObj)
+                if (!attackingCreatureObj.CardInst.InstanceEffectHandler.CantAttack) 
                 {
-                    //if (attackedCreatureObj.CardInst.IsTapped)
-                        attackRoutine = AttackCreatureRoutine(controller, attackingCreatureObj, targetCreatureObj, continueAttack);
+                    if (registerPos)
+                        _creatureOriginalPos = attackingCreatureObj.transform.position;
+                    IEnumerator attackRoutine = null;
+
+                    if (target is CreatureObject targetCreatureObj &&
+                        !attackingCreatureObj.CardInst.InstanceEffectHandler.CantAttackCreatures)
+                    {
+                        if ((targetCreatureObj.CardInst.IsTapped ||
+                             attackingCreatureObj.CardInst.InstanceEffectHandler.CanAttackUntapped)
+                            && !targetCreatureObj.CardInst.InstanceEffectHandler.CantBeAttacked)
+                            attackRoutine = AttackCreatureRoutine(controller, attackingCreatureObj, targetCreatureObj,
+                                continueAttack);
+                    }
+                    else if (target is ShieldObject targetShieldObj &&
+                             !attackingCreatureObj.CardInst.InstanceEffectHandler.CantAttackPlayer)
+                        attackRoutine = AttackShieldRoutine(controller, attackingCreatureObj, targetShieldObj, isPlayer,
+                            continueAttack);
+
+                    CreatureObject blockingCreatureObj = null;
+                    if (!attackingCreatureObj.CardInst.InstanceEffectHandler.CantBeBlocked)
+                    {
+                        Coroutine<CreatureObject> blockRoutine =
+                            this.StartCoroutine<CreatureObject>(AttemptBlockRoutine(!isPlayer));
+                        yield return blockRoutine.coroutine;
+                        blockingCreatureObj = blockRoutine.returnVal;
+                    }
+
+                    if (blockingCreatureObj)
+                        attackRoutine = AttackCreatureRoutine(controller, attackingCreatureObj, blockingCreatureObj,
+                            continueAttack);
+
+                    attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerWhenAttacking(true);
+                    yield return attackRoutine;
+                    attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerWhenAttacking(false);
                 }
-                else if (target is ShieldObject targetShieldObj)
-                    attackRoutine = AttackShieldRoutine(controller, attackingCreatureObj, targetShieldObj, isPlayer, continueAttack);
-
-                CreatureObject blockingCreatureObj;
-                if (true /*creatureObj can be blocked*/)
-                {
-                    Coroutine<CreatureObject> blockRoutine = this.StartCoroutine<CreatureObject>(AttemptBlockRoutine(!isPlayer));
-                    yield return blockRoutine.coroutine;
-                    blockingCreatureObj = blockRoutine.returnVal;
-                }
-
-                if (blockingCreatureObj)
-                    attackRoutine = AttackCreatureRoutine(controller, attackingCreatureObj, blockingCreatureObj, continueAttack);
-
-                attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerWhenAttacking(true);
-                yield return attackRoutine;
-                attackingCreatureObj.CardInst.InstanceEffectHandler.TriggerWhenAttacking(false);
             }
 
             GameDataHandler.Instance.CheckWhileConditions();

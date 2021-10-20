@@ -34,6 +34,9 @@ public class CardInstanceEffectHandler
     private bool _isMultipleBreaker;
     private MultipleBreakerType _multipleBreakerType;
 
+    private bool _canAttackUntapped, _cantAttack, _cantAttackCreatures, _cantAttackPlayer;
+    private bool _cantBeAttacked, _cantBeBlocked;
+
     private bool _isPowerAttacker, _multiplyPowerAttackValue;
     private int _powerAttackBoost;
     private EffectTargetingParameter _multiplyPowerAttackParameter;
@@ -68,13 +71,7 @@ public class CardInstanceEffectHandler
 
                 case EffectFunctionalityType.RegionMovement:
                     break;
-
-                case EffectFunctionalityType.AttackTarget:
-                    break;
-
-                case EffectFunctionalityType.TargetBehaviour:
-                    break;
-
+                    
                 case EffectFunctionalityType.Keyword:
                     switch (functionality.Keyword)
                     {
@@ -95,6 +92,40 @@ public class CardInstanceEffectHandler
                 case EffectFunctionalityType.MultipleBreaker:
                     _isMultipleBreaker = true;
                     _multipleBreakerType = functionality.MultipleBreaker;
+                    break;
+
+                case EffectFunctionalityType.AttackTarget:
+                    switch (functionality.AttackType)
+                    {
+                        case AttackType.CanAttackUntapped:
+                            _canAttackUntapped = true;
+                            break;
+
+                        case AttackType.CantAttack:
+                            _cantAttack = true;
+                            break;
+
+                        case AttackType.CantAttackCreatures:
+                            _cantAttackCreatures = true;
+                            break;
+
+                        case AttackType.CantAttackPlayer:
+                            _cantAttackPlayer = true;
+                            break;
+                    }
+                    break;
+
+                case EffectFunctionalityType.TargetBehaviour:
+                    switch (functionality.TargetBehaviour)
+                    {
+                        case TargetBehaviourType.CantBeAttacked:
+                            _cantBeAttacked = true;
+                            break;
+
+                        case TargetBehaviourType.CantBeBlocked:
+                            _cantBeBlocked = true;
+                            break;
+                    }
                     break;
 
                 case EffectFunctionalityType.ToggleTap:
@@ -155,6 +186,36 @@ public class CardInstanceEffectHandler
     public bool IsMultipleBreaker
     {
         get { return _isMultipleBreaker; }
+    }
+    
+    public bool CanAttackUntapped
+    {
+        get { return _canAttackUntapped; }
+    }
+    
+    public bool CantAttack
+    {
+        get { return _cantAttack; }
+    }
+    
+    public bool CantAttackCreatures
+    {
+        get { return _cantAttackCreatures; }
+    }
+
+    public bool CantAttackPlayer
+    {
+        get { return _cantAttackPlayer; }
+    }
+    
+    public bool CantBeAttacked
+    {
+        get { return _cantBeAttacked; }
+    }
+    
+    public bool CantBeBlocked
+    {
+        get { return _cantBeBlocked; }
     }
 
     public MultipleBreakerType MultipleBreakerType
@@ -576,6 +637,45 @@ public class CardInstanceEffectHandler
     {
         switch (functionality.Type)
         {
+            case EffectFunctionalityType.MultipleBreaker:
+                instanceEffect._isMultipleBreaker = true;
+                instanceEffect._multipleBreakerType = functionality.MultipleBreaker;
+                break;
+
+            case EffectFunctionalityType.AttackTarget:
+                switch (functionality.AttackType)
+                {
+                    case AttackType.CanAttackUntapped:
+                        instanceEffect._canAttackUntapped = true;
+                        break;
+
+                    case AttackType.CantAttack:
+                        instanceEffect._cantAttack = true;
+                        break;
+
+                    case AttackType.CantAttackCreatures:
+                        instanceEffect._cantAttackCreatures = true;
+                        break;
+
+                    case AttackType.CantAttackPlayer:
+                        instanceEffect._cantAttackPlayer = true;
+                        break;
+                }
+                break;
+
+            case EffectFunctionalityType.TargetBehaviour:
+                switch (functionality.TargetBehaviour)
+                {
+                    case TargetBehaviourType.CantBeAttacked:
+                        instanceEffect._cantBeAttacked = true;
+                        break;
+
+                    case TargetBehaviourType.CantBeBlocked:
+                        instanceEffect._cantBeBlocked = true;
+                        break;
+                }
+                break;
+
             case EffectFunctionalityType.PowerAttacker:
                 instanceEffect._isPowerAttacker = true;
                 instanceEffect._powerAttackBoost = functionality.PowerBoost;
@@ -587,6 +687,44 @@ public class CardInstanceEffectHandler
     {
         switch (functionality.Type)
         {
+            case EffectFunctionalityType.MultipleBreaker:
+                instanceEffect._isMultipleBreaker = false;
+                break;
+
+            case EffectFunctionalityType.AttackTarget:
+                switch (functionality.AttackType)
+                {
+                    case AttackType.CanAttackUntapped:
+                        instanceEffect._canAttackUntapped = false;
+                        break;
+
+                    case AttackType.CantAttack:
+                        instanceEffect._cantAttack = false;
+                        break;
+
+                    case AttackType.CantAttackCreatures:
+                        instanceEffect._cantAttackCreatures = false;
+                        break;
+
+                    case AttackType.CantAttackPlayer:
+                        instanceEffect._cantAttackPlayer = false;
+                        break;
+                }
+                break;
+
+            case EffectFunctionalityType.TargetBehaviour:
+                switch (functionality.TargetBehaviour)
+                {
+                    case TargetBehaviourType.CantBeAttacked:
+                        instanceEffect._cantBeAttacked = false;
+                        break;
+
+                    case TargetBehaviourType.CantBeBlocked:
+                        instanceEffect._cantBeBlocked = false;
+                        break;
+                }
+                break;
+
             case EffectFunctionalityType.PowerAttacker:
                 instanceEffect._isPowerAttacker = false;
                 instanceEffect._powerAttackBoost = 0;

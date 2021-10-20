@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum AttackType
 {
-    AttackUntapped,
+    CanAttackUntapped,
     CantAttack,
     CantAttackPlayer,
-    CantAttackCreature
+    CantAttackCreatures
 }

@@ -217,13 +217,7 @@ public class PlayerController : Controller
 
     private void ProcessShieldHover(int iD)
     {
-        bool selectToAttack = false;
         if (_currentlySelected && _currentlySelected.InZone(CardZoneType.BattleZone))
-        {
-            _canSelectShield = selectToAttack = true; //_currentlySelected.CanAttackPlayer
-        }
-            
-        if (_canSelectShield)
         {
             ShieldObject tempShield = null;
             if (_selectMultiple)
@@ -240,15 +234,12 @@ public class PlayerController : Controller
             else
             {
                 PlayerDataHandler dataHandler = GameDataHandler.Instance.GetDataHandler(true);
-                if (!selectToAttack)
+                foreach (ShieldObject shield in dataHandler.Shields)
                 {
-                    foreach (ShieldObject shield in dataHandler.Shields)
+                    if (shield.transform.GetInstanceID() == iD)
                     {
-                        if (shield.transform.GetInstanceID() == iD)
-                        {
-                            tempShield = shield;
-                            break;
-                        }
+                        tempShield = shield;
+                        break;
                     }
                 }
 
