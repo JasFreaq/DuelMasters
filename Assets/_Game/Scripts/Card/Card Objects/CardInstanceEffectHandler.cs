@@ -861,37 +861,37 @@ public class CardInstanceEffectHandler
         }
     }
     
-    private static IEnumerator ProcessCardSelectionRoutine(EffectTargetingParameter targetingParameter, Action<CardInstanceEffectHandler> callback)
-    {
-        bool playerChooses = true;
-        bool affectPlayer = targetingParameter.OwningPlayer == PlayerTargetType.Player;
-        if (!affectPlayer && targetingParameter.OpponentChooses)
-            playerChooses = false;
+    //private static IEnumerator ProcessCardSelectionRoutine(EffectTargetingParameter targetingParameter, Action<CardInstanceEffectHandler> callback)
+    //{
+    //    bool playerChooses = true;
+    //    bool affectPlayer = targetingParameter.OwningPlayer == PlayerTargetType.Player;
+    //    if (!affectPlayer && targetingParameter.OpponentChooses)
+    //        playerChooses = false;
 
-        PlayerManager choosingPlayer = GameManager.Instance.GetManager(playerChooses);
-        choosingPlayer.IsSelecting = true;
+    //    PlayerManager choosingPlayer = GameManager.Instance.GetManager(playerChooses);
+    //    choosingPlayer.IsSelecting = true;
 
-        Coroutine<List<CardBehaviour>> routine =
-            CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
-                playerChooses, affectPlayer,
-                new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
-                functionality.TargetingCondition, false));
-        yield return routine.coroutine;
-        List<CardBehaviour> cards = routine.returnVal;
+    //    Coroutine<List<CardBehaviour>> routine =
+    //        CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
+    //            playerChooses, affectPlayer,
+    //            new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
+    //            functionality.TargetingCondition, false));
+    //    yield return routine.coroutine;
+    //    List<CardBehaviour> cards = routine.returnVal;
 
-        choosingPlayer.IsSelecting = false;
-        while (!choosingPlayer.FinishedCasting)
-            yield return new WaitForEndOfFrame();
+    //    choosingPlayer.IsSelecting = false;
+    //    while (!choosingPlayer.FinishedCasting)
+    //        yield return new WaitForEndOfFrame();
 
-        foreach (CardBehaviour card in cards)
-        {
-            CardObject cardObj = card as CardObject;
-            if (!cardObj)
-                cardObj = ((ShieldObject)card).CardObj;
+    //    foreach (CardBehaviour card in cards)
+    //    {
+    //        CardObject cardObj = card as CardObject;
+    //        if (!cardObj)
+    //            cardObj = ((ShieldObject)card).CardObj;
 
-            callback.Invoke(cardObj.CardInst.InstanceEffectHandler);
-        }
-    }
+    //        callback.Invoke(cardObj.CardInst.InstanceEffectHandler);
+    //    }
+    //}
 
     #endregion
 }
