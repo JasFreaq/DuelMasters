@@ -41,7 +41,7 @@ public class EffectCondition : ScriptableObject
         get { return _assignedCondition; }
 #if UNITY_EDITOR
         set { _assignedCondition = value; }
-#endif
+#endif 
     }
 
     public bool ConnectSubCondition

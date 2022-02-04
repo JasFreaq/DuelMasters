@@ -188,10 +188,14 @@ public class CardDataEditor : Editor
         {
             DrawTargetingCondition(condition.TargetingCondition);
             if (GUILayout.Button("Remove Targeting Condition"))
+            {
                 condition.AssignedCondition = false;
+            }
         }
         else if (GUILayout.Button("Add Targeting Condition"))
+        {
             condition.AssignedCondition = true;
+        }
 
         DrawSubCondition(condition);
         DrawSubFunctionality(condition);
@@ -245,10 +249,14 @@ public class CardDataEditor : Editor
         {
             DrawTargetingCondition(functionality.TargetingCondition);
             if (GUILayout.Button("Remove Targeting Condition"))
+            {
                 functionality.AssignedCondition = false;
+            }
         }
         else if (GUILayout.Button("Add Targeting Condition"))
+        {
             functionality.AssignedCondition = true;
+        }
 
         DrawSubFunctionality(functionality);
 
@@ -464,289 +472,16 @@ public class CardDataEditor : Editor
     private void DrawTargetingCondition(EffectTargetingCondition condition)
     {
         EditorGUILayout.LabelField("Targeting Condition:", EditorStyles.boldLabel);
-
-        GUIStyle labelStyle = new GUIStyle { fontStyle = FontStyle.Italic, fontSize = 12 };
-
         GUILayout.BeginHorizontal();
         GUILayout.Space(15);
-
         GUILayout.BeginVertical();
 
-        DrawCardTypeCondition();
-        DrawCivilizationCondition();
-        DrawRaceCondition();
-        DrawKeywordCondition();
-        DrawPowerCondition();
-        DrawCardCondition();
-        DrawTapStateCondition();
-
+        //TODO: Remove Assign from below and put elsewhere
+        EffectTargetingCondition_ParamSettingWrapper.AssignConditionParams(condition);
+        EffectTargetingCondition_ParamSettingWrapper.DrawConditionParamsLayout(condition);
+        
         GUILayout.EndVertical();
-
         GUILayout.EndHorizontal();
-
-        #region Local Functions
-
-        void DrawCardTypeCondition()
-        {
-            GUILayout.BeginHorizontal();
-
-            if (condition.AssignedCardTypeCondition)
-            {
-                GUILayout.Label("Card Type:");
-                condition.CardTypeCondition = DrawFoldout(condition.CardTypeCondition, 1);
-
-                if (GUILayout.Button("Remove Card Type"))
-                    condition.AssignedCardTypeCondition = false;
-            }
-            else if (GUILayout.Button("Add Card Type"))
-                condition.AssignedCardTypeCondition = true;
-
-            GUILayout.EndHorizontal();
-        }
-
-        void DrawCivilizationCondition()
-        {
-            if (condition.CivilizationConditions.Count > 0)
-            {
-                List<CivilizationCondition> removedConditions = new List<CivilizationCondition>();
-                GUILayout.Label("Civilizations:", labelStyle);
-
-                for (int i = 0, n = condition.CivilizationConditions.Count; i < n; i++)
-                {
-                    CivilizationCondition civilizationCondition = condition.CivilizationConditions[i];
-                    CardParams.Civilization[] civilization = civilizationCondition.civilization;
-
-                    GUILayout.BeginHorizontal();
-                    civilizationCondition.non = GUILayout.Toggle(civilizationCondition.non, "Non");
-
-                    ReorderableList list = new ReorderableList(civilization,
-                        typeof(CardParams.Civilization), true, true, true, false);
-                    list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-                    {
-                        rect.y += 2;
-                        Rect elementRect = new Rect(rect.x, rect.y, 120, EditorGUIUtility.singleLineHeight);
-                        civilization[index] = (CardParams.Civilization)EditorGUI.EnumPopup(elementRect, civilization[index]);
-                    };
-                    list.drawHeaderCallback = (Rect rect) =>
-                    {
-                        EditorGUI.LabelField(rect, "Civilization");
-                    };
-                    list.onAddCallback = reorderableList =>
-                    {
-                        List<CardParams.Civilization> tempCivilization = new List<CardParams.Civilization>(civilization);
-                        tempCivilization.Add(0);
-                        civilization = tempCivilization.ToArray();
-                    };
-                    list.DoLayoutList();
-
-                    civilizationCondition.civilization = civilization;
-                    GUILayout.EndHorizontal();
-
-                    if (n > 1 && i < n - 1)
-                        civilizationCondition.connector = DrawFoldout(civilizationCondition.connector);
-
-                    if (GUILayout.Button("Remove Civilization"))
-                    {
-                        EditorGUILayout.Space(5);
-                        removedConditions.Add(civilizationCondition);
-                    }
-                }
-
-                foreach (CivilizationCondition civilizationCondition in removedConditions)
-                {
-                    condition.RemoveCivilizationCondition(civilizationCondition);
-                }
-            }
-
-            if (GUILayout.Button("Add Civilization"))
-            {
-                CardParams.Civilization[] civilization = new CardParams.Civilization[1];
-                CivilizationCondition civilizationCondition = new CivilizationCondition
-                {
-                    civilization = civilization
-                };
-                condition.AddCivilizationCondition(civilizationCondition);
-            }
-        }
-
-        void DrawRaceCondition()
-        {
-            if (condition.RaceConditions.Count > 0)
-            {
-                List<RaceCondition> removedConditions = new List<RaceCondition>();
-                GUILayout.Label("Races:", labelStyle);
-
-                for (int i = 0, n = condition.RaceConditions.Count; i < n; i++)
-                {
-                    RaceCondition raceCondition = condition.RaceConditions[i];
-
-                    GUILayout.BeginHorizontal();
-
-                    raceCondition.non = GUILayout.Toggle(raceCondition.non, "Non");
-                    raceCondition.race = DrawFoldout(raceCondition.race, 1);
-                    if (n > 1 && i < n - 1)
-                        raceCondition.connector = DrawFoldout(raceCondition.connector);
-
-                    GUILayout.EndHorizontal();
-
-                    if (GUILayout.Button("Remove Race"))
-                    {
-                        EditorGUILayout.Space(5);
-                        removedConditions.Add(raceCondition);
-                    }
-                }
-
-                foreach (RaceCondition raceCondition in removedConditions)
-                {
-                    condition.RemoveRaceCondition(raceCondition);
-                }
-            }
-
-            if (GUILayout.Button("Add Race"))
-            {
-                RaceCondition raceCondition = new RaceCondition();
-                condition.AddRaceCondition(raceCondition);
-            }
-        }
-
-        void DrawKeywordCondition()
-        {
-            if (condition.KeywordConditions.Count > 0)
-            {
-                List<KeywordCondition> removedConditions = new List<KeywordCondition>();
-                GUILayout.Label("Keywords:", labelStyle);
-
-                for (int i = 0, n = condition.KeywordConditions.Count; i < n; i++)
-                {
-                    KeywordCondition keywordCondition = condition.KeywordConditions[i];
-
-                    GUILayout.BeginHorizontal();
-
-                    keywordCondition.non = GUILayout.Toggle(keywordCondition.non, "Non");
-                    keywordCondition.keyword = DrawFoldout(keywordCondition.keyword);
-                    if (n > 1 && i < n - 1)
-                        keywordCondition.connector = DrawFoldout(keywordCondition.connector);
-
-                    GUILayout.EndHorizontal();
-
-                    if (GUILayout.Button("Remove Keyword"))
-                    {
-                        EditorGUILayout.Space(5);
-                        removedConditions.Add(keywordCondition);
-                    }
-                }
-
-                foreach (KeywordCondition keywordCondition in removedConditions)
-                {
-                    condition.RemoveKeywordCondition(keywordCondition);
-                }
-            }
-
-            if (GUILayout.Button("Add Keyword"))
-            {
-                KeywordCondition keywordCondition = new KeywordCondition();
-                condition.AddKeywordCondition(keywordCondition);
-            }
-        }
-
-        void DrawPowerCondition()
-        {
-            if (condition.PowerConditions.Count > 0)
-            {
-                List<PowerCondition> removedConditions = new List<PowerCondition>();
-                GUILayout.Label("Powers:", labelStyle);
-
-                for (int i = 0, n = condition.PowerConditions.Count; i < n; i++)
-                {
-                    PowerCondition powerCondition = condition.PowerConditions[i];
-
-                    GUILayout.BeginHorizontal();
-
-                    powerCondition.comparator = DrawFoldout(powerCondition.comparator);
-                    powerCondition.power = EditorGUILayout.IntField(powerCondition.power);
-                    if (n > 1 && i < n - 1)
-                        powerCondition.connector = DrawFoldout(powerCondition.connector);
-
-                    GUILayout.EndHorizontal();
-
-                    if (GUILayout.Button("Remove Power"))
-                    {
-                        EditorGUILayout.Space(5);
-                        removedConditions.Add(powerCondition);
-                    }
-                }
-
-                foreach (PowerCondition powerCondition in removedConditions)
-                {
-                    condition.RemovePowerCondition(powerCondition);
-                }
-            }
-
-            if (GUILayout.Button("Add Power"))
-            {
-                PowerCondition powerCondition = new PowerCondition();
-                condition.AddPowerCondition(powerCondition);
-            }
-        }
-
-        void DrawCardCondition()
-        {
-            if (condition.CardConditions.Count > 0)
-            {
-                List<CardCondition> removedConditions = new List<CardCondition>();
-                GUILayout.Label("Cards:", labelStyle);
-
-                for (int i = 0, n = condition.CardConditions.Count; i < n; i++)
-                {
-                    CardCondition cardCondition = condition.CardConditions[i];
-
-                    GUILayout.BeginHorizontal();
-
-                    cardCondition.cardData = (CardData)EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
-                    if (n > 1 && i < n - 1)
-                        cardCondition.connector = DrawFoldout(cardCondition.connector);
-
-                    GUILayout.EndHorizontal();
-
-                    if (GUILayout.Button("Remove Card"))
-                    {
-                        EditorGUILayout.Space(5);
-                        removedConditions.Add(cardCondition);
-                    }
-                }
-
-                foreach (CardCondition cardCondition in removedConditions)
-                {
-                    condition.RemoveCardCondition(cardCondition);
-                }
-            }
-
-            if (GUILayout.Button("Add Card"))
-            {
-                CardCondition cardCondition = new CardCondition();
-                condition.AddCardCondition(cardCondition);
-            }
-        }
-
-        void DrawTapStateCondition()
-        {
-            GUILayout.BeginHorizontal();
-
-            if (condition.AssignedTapCondition)
-            {
-                GUILayout.Label("Tap State:");
-                condition.TapCondition = DrawFoldout(condition.TapCondition);
-
-                if (GUILayout.Button("Remove Tap State"))
-                    condition.AssignedTapCondition = false;
-            }
-            else if (GUILayout.Button("Add Tap State"))
-                condition.AssignedTapCondition = true;
-
-            GUILayout.EndHorizontal();
-        }
-
-        #endregion
     }
     
     private void DrawSubCondition(EffectCondition parentCondition)

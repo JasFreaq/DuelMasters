@@ -195,11 +195,13 @@ public class Controller : MonoBehaviour
         EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
         foreach (CardParams.Race race in races)
         {
-            targetingCondition.AddRaceCondition(new RaceCondition
-            {
-                connector = ConnectorType.Or,
-                race = race
-            });
+            //targetingCondition.AddRaceCondition(new RaceConditionParam.RaceCondition
+            //{
+            //    connector = ConnectorType.Or,
+            //    race = race
+            //});
+
+            //TODO: Fix this^
         }
         
         Dictionary<int, CreatureObject> battleCreatures = GameDataHandler.Instance.GetDataHandler(_isPlayer).CardsInBattle;
