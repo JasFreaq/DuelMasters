@@ -75,16 +75,15 @@ public class KeywordConditionParam : EffectTargetingConditionParameter, ICardInt
 
                 keywordCondition.non = GUILayout.Toggle(keywordCondition.non, "Non");
                 keywordCondition.keyword = EditorUtils.DrawFoldout(keywordCondition.keyword);
-                if (n > 1 && i < n - 1)
-                    keywordCondition.connector = EditorUtils.DrawFoldout(keywordCondition.connector);
+                if (GUILayout.Button("Remove Keyword"))
+                {
+                    removedConditions.Add(keywordCondition);
+                }
 
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Remove Keyword"))
-                {
-                    EditorGUILayout.Space(5);
-                    removedConditions.Add(keywordCondition);
-                }
+                if (n > 1 && i < n - 1)
+                    keywordCondition.connector = EditorUtils.DrawFoldout(keywordCondition.connector);
             }
 
             foreach (KeywordCondition keywordCondition in removedConditions)

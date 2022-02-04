@@ -59,16 +59,15 @@ public class CardConditionParam : EffectTargetingConditionParameter, ICardIntrin
                 GUILayout.BeginHorizontal();
 
                 cardCondition.cardData = (CardData)EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
-                if (n > 1 && i < n - 1)
-                    cardCondition.connector = EditorUtils.DrawFoldout(cardCondition.connector);
+                if (GUILayout.Button("Remove Card"))
+                {
+                    removedConditions.Add(cardCondition);
+                }
 
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Remove Card"))
-                {
-                    EditorGUILayout.Space(5);
-                    removedConditions.Add(cardCondition);
-                }
+                if (n > 1 && i < n - 1)
+                    cardCondition.connector = EditorUtils.DrawFoldout(cardCondition.connector);
             }
 
             foreach (CardCondition cardCondition in removedConditions)

@@ -102,16 +102,16 @@ public class RaceConditionParam : EffectTargetingConditionParameter, ICardIntrin
 
                 raceCondition.non = GUILayout.Toggle(raceCondition.non, "Non");
                 raceCondition.race = EditorUtils.DrawFoldout(raceCondition.race, 1);
-                if (n > 1 && i < n - 1)
-                    raceCondition.connector = EditorUtils.DrawFoldout(raceCondition.connector);
-
-                GUILayout.EndHorizontal();
-
                 if (GUILayout.Button("Remove Race"))
                 {
                     EditorGUILayout.Space(5);
                     removedConditions.Add(raceCondition);
                 }
+
+                GUILayout.EndHorizontal();
+
+                if (n > 1 && i < n - 1)
+                    raceCondition.connector = EditorUtils.DrawFoldout(raceCondition.connector);
             }
 
             foreach (RaceCondition raceCondition in removedConditions)

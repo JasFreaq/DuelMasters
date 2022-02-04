@@ -22,7 +22,7 @@ public class EffectTargetingParameter
     [SerializeReference] private ConditionType _type;
     [SerializeReference] private CountType _countType;
     [SerializeReference] private CountChoiceType _countChoice;
-    [SerializeReference] private int _count = 0;
+    [SerializeReference] private int _count;
     [SerializeReference] private PlayerTargetType _owningPlayer;
     [SerializeReference] public CardZoneType _zoneType;
 

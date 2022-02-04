@@ -90,14 +90,13 @@ public class CivilizationConditionParam : EffectTargetingConditionParameter, ICa
                 civilizationCondition.civilization = civilization;
                 GUILayout.EndHorizontal();
 
-                if (n > 1 && i < n - 1)
-                    civilizationCondition.connector =EditorUtils.DrawFoldout(civilizationCondition.connector);
-
                 if (GUILayout.Button("Remove Civilization"))
                 {
-                    EditorGUILayout.Space(5);
                     removedConditions.Add(civilizationCondition);
                 }
+
+                if (n > 1 && i < n - 1)
+                    civilizationCondition.connector = EditorUtils.DrawFoldout(civilizationCondition.connector);
             }
 
             foreach (CivilizationCondition civilizationCondition in removedConditions)

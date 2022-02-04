@@ -102,16 +102,15 @@ public class PowerConditionParam : EffectTargetingConditionParameter, ICardIntri
 
                 powerCondition.comparator = EditorUtils.DrawFoldout(powerCondition.comparator);
                 powerCondition.power = EditorGUILayout.IntField(powerCondition.power);
-                if (n > 1 && i < n - 1)
-                    powerCondition.connector = EditorUtils.DrawFoldout(powerCondition.connector);
+                if (GUILayout.Button("Remove Power"))
+                {
+                    removedConditions.Add(powerCondition);
+                }
 
                 GUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Remove Power"))
-                {
-                    EditorGUILayout.Space(5);
-                    removedConditions.Add(powerCondition);
-                }
+                if (n > 1 && i < n - 1)
+                    powerCondition.connector = EditorUtils.DrawFoldout(powerCondition.connector);
             }
 
             foreach (PowerCondition powerCondition in removedConditions)
