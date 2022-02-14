@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public enum CountType
+public enum CountRangeType
 {
     All,
     Number

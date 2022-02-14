@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
                     fromZone = CardZoneType.Hand,
                     toZone = CardZoneType.Shields,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
-                    countChoice = CountChoiceType.Exactly,
+                    countQuantifier = CountQuantifierType.Exactly,
                     moveCount = 3
                 };
 
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
                     fromZone = CardZoneType.Shields,
                     toZone = CardZoneType.ManaZone,
                     deckCardMove = DeckCardMoveType.SearchShuffle,
-                    countChoice = CountChoiceType.Upto,
+                    countQuantifier = CountQuantifierType.Upto,
                     moveCount = 3
                 };
 

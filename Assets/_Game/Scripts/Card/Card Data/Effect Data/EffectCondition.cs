@@ -6,7 +6,7 @@ public class EffectCondition : ScriptableObject
 {
     [SerializeReference] private EffectConditionType _type;
     [SerializeReference] private bool _assignedParameter, _assignedCondition, _connectSubCondition;
-    [SerializeReference] private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
+    [SerializeReference] private EffectTargetingData _targetingData = new EffectTargetingData();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectCondition _subCondition;
@@ -53,12 +53,12 @@ public class EffectCondition : ScriptableObject
 #endif
     }
 
-    public EffectTargetingParameter TargetingParameter
+    public EffectTargetingData TargetingData
     {
-        get { return _targetingParameter; }
+        get { return _targetingData; }
 
 #if UNITY_EDITOR
-        set { _targetingParameter = value; }
+        set { _targetingData = value; }
 #endif
     }
 
@@ -121,7 +121,7 @@ public class EffectCondition : ScriptableObject
         string str = GetTypeRepresentation();
 
         if (_assignedParameter)
-            str += $" {_targetingParameter}";
+            str += $" {_targetingData}";
         
         if (_assignedCondition)
             str += $" where{_targetingCondition}";

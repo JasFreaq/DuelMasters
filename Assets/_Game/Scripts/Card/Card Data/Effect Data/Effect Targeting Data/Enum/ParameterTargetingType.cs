@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public enum CountChoiceType
+public enum ParameterTargetingType
 {
-    Upto,
-    Exactly,
-    AtLeast
+    Check,
+    Affect,
+    Count
 }

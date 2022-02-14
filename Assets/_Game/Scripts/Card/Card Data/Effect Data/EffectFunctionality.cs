@@ -18,7 +18,7 @@ public class MovementZones
     public DeckCardMoveType deckCardMove;
     public bool showSearchedCard;
 
-    public CountChoiceType countChoice;
+    public CountQuantifierType countQuantifier;
     public int moveCount = 1;
 }
 
@@ -32,13 +32,13 @@ public class RaceHolder
 public class DestroyParam
 {
     public CardZoneType destroyZone;
-    public CountType countType;
+    public CountRangeType countRangeType;
     public int destroyCount = 1;
 
     public override string ToString()
     {
         string str = "Destroy ";
-        if (countType == CountType.All)
+        if (countRangeType == CountRangeType.All)
             str += "all cards";
         else
         {
@@ -55,13 +55,13 @@ public class DestroyParam
 public class DiscardParam
 {
     public DiscardType discardType;
-    public CountType countType;
+    public CountRangeType countRangeType;
     public int discardCount = 1;
 
     public override string ToString()
     {
         string str = "discards ";
-        if (countType == CountType.All)
+        if (countRangeType == CountRangeType.All)
             str += "all cards";
         else
         {
@@ -91,13 +91,13 @@ public class DiscardParam
 public class LookAtParam
 {
     public CardZoneType lookAtZone;
-    public CountType countType;
+    public CountRangeType countRangeType;
     public int lookCount = 1;
 
     public override string ToString()
     {
         string str = "Look at ";
-        if (countType == CountType.All)
+        if (countRangeType == CountRangeType.All)
             str += "all cards";
         else
         {
@@ -119,7 +119,7 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private PlayerTargetType _choosingPlayer;
     [SerializeReference] private PlayerTargetType _targetPlayer;
     [SerializeReference] private bool _assignedCondition, _connectSubFunctionality;
-    [SerializeReference] private EffectTargetingParameter _targetingParameter = new EffectTargetingParameter();
+    [SerializeReference] private EffectTargetingData _targetingData = new EffectTargetingData();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectFunctionality _subFunctionality;
@@ -197,12 +197,12 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public EffectTargetingParameter TargetingParameter
+    public EffectTargetingData TargetingData
     {
-        get { return _targetingParameter; }
+        get { return _targetingData; }
 
 #if UNITY_EDITOR
-        set { _targetingParameter = value; }
+        set { _targetingData = value; }
 #endif
     }
     
@@ -380,7 +380,7 @@ public class EffectFunctionality : ScriptableObject
         string str = GetTypeRepresentation();
         
         if (_targetCard == CardTargetType.TargetOther || _shouldMultiplyVal)
-            str += $" {_targetingParameter}";
+            str += $" {_targetingData}";
         
         if (_assignedCondition)
             str += $" where{_targetingCondition}";
@@ -470,7 +470,7 @@ public class EffectFunctionality : ScriptableObject
             if (_movementZones.fromZone == CardZoneType.Deck)
             {
                 if (_movementZones.deckCardMove == DeckCardMoveType.Top)
-                    return $"Draw {_movementZones.countChoice} {_movementZones.moveCount}";
+                    return $"Draw {_movementZones.countQuantifier} {_movementZones.moveCount}";
                 
                 str1 += $"after searching deck to {_movementZones.toZone}";
                 if (_movementZones.showSearchedCard)

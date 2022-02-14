@@ -15,7 +15,7 @@ public class CardInstanceEffectHandler
 
     struct WhileConditionHolder
     {
-        public EffectTargetingParameter targetingParameter;
+        public EffectTargetingData TargetingData;
         public EffectTargetingCondition targetingCondition;
 
         public BoolActionHolder boolAction;
@@ -42,11 +42,11 @@ public class CardInstanceEffectHandler
 
     private bool _isPowerAttacker, _multiplyPowerAttackValue;
     private int _powerAttackBoost;
-    private EffectTargetingParameter _multiplyPowerAttackParameter;
+    private EffectTargetingData _multiplyPowerAttackData;
     private EffectTargetingCondition _multiplyPowerAttackCondition;
     
     private bool _multiplyGrantedPowerValue;
-    private EffectTargetingParameter _multiplyGrantedPowerParameter;
+    private EffectTargetingData _multiplyGrantedPowerData;
     private EffectTargetingCondition _multiplyGrantedPowerCondition;
 
     private Action _whenPlayed;
@@ -157,7 +157,7 @@ public class CardInstanceEffectHandler
                     _powerAttackBoost = functionality.PowerBoost;
                     if (_multiplyPowerAttackValue)
                     {
-                        _multiplyPowerAttackParameter = functionality.TargetingParameter;
+                        _multiplyPowerAttackData = functionality.TargetingData;
                         _multiplyPowerAttackCondition = functionality.TargetingCondition;
                     }
                     break;
@@ -166,7 +166,7 @@ public class CardInstanceEffectHandler
                     _multiplyGrantedPowerValue = functionality.ShouldMultiplyVal;
                     if (_multiplyGrantedPowerValue)
                     {
-                        _multiplyGrantedPowerParameter = functionality.TargetingParameter;
+                        _multiplyGrantedPowerData = functionality.TargetingData;
                         _multiplyGrantedPowerCondition = functionality.TargetingCondition;
                     }
                     break;
@@ -245,7 +245,7 @@ public class CardInstanceEffectHandler
         {
             if (_multiplyPowerAttackValue)
                 return _powerAttackBoost *
-                       CardData.GetNumValidCards(_multiplyPowerAttackParameter, _multiplyPowerAttackCondition);
+                       CardData.GetNumValidCards(_multiplyPowerAttackData, _multiplyPowerAttackCondition);
 
             return _powerAttackBoost;
         }
@@ -346,7 +346,7 @@ public class CardInstanceEffectHandler
             case EffectConditionType.WhileCondition:
                 _whileConditions.Add(new WhileConditionHolder
                 {
-                    targetingParameter = condition.TargetingParameter,
+                    TargetingData = condition.TargetingData,
                     targetingCondition = condition.TargetingCondition,
                     boolAction = new BoolActionHolder { processFunction = function }
                 });
@@ -431,7 +431,7 @@ public class CardInstanceEffectHandler
         for (int i = 0, n = _whileConditions.Count; i < n; i++)
         {
             WhileConditionHolder whileCondition = _whileConditions[i];
-            bool meetsCondition = ProcessTargeting(whileCondition.targetingParameter, whileCondition.targetingCondition);
+            bool meetsCondition = ProcessTargeting(whileCondition.TargetingData, whileCondition.targetingCondition);
 
             if (meetsCondition != whileCondition.boolAction.effectActive)
             {
@@ -493,8 +493,8 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingParameter.OwningPlayer == PlayerTargetType.Player, 
-                    functionality.TargetingParameter.ZoneType);
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingData.OwningPlayer == PlayerTargetType.Player, 
+                    functionality.TargetingData.ZoneType);
                 foreach (CardBehaviour card in cards)
                 {
                     CardObject cardObj = card as CardObject;
@@ -540,8 +540,8 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingParameter.OwningPlayer == PlayerTargetType.Player, 
-                    functionality.TargetingParameter.ZoneType);
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingData.OwningPlayer == PlayerTargetType.Player, 
+                    functionality.TargetingData.ZoneType);
                 foreach (CardBehaviour card in cards)
                 {
                     CardObject cardObj = card as CardObject;
@@ -589,8 +589,8 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingParameter.OwningPlayer == PlayerTargetType.Player, 
-                    functionality.TargetingParameter.ZoneType);
+                List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(functionality.TargetingData.OwningPlayer == PlayerTargetType.Player, 
+                    functionality.TargetingData.ZoneType);
                 foreach (CardBehaviour card in cards)
                 {
                     CardObject cardObj = card as CardObject;
@@ -618,7 +618,7 @@ public class CardInstanceEffectHandler
             {
                 if (instance._multiplyGrantedPowerValue)
                 {
-                    int num = CardData.GetNumValidCards(instance._multiplyGrantedPowerParameter,
+                    int num = CardData.GetNumValidCards(instance._multiplyGrantedPowerData,
                         instance._multiplyGrantedPowerCondition);
                     grantedPowerBoost *= num;
                 }
@@ -780,30 +780,30 @@ public class CardInstanceEffectHandler
         }
     }
 
-    private static bool ProcessTargeting(EffectTargetingParameter targetingParameter,
+    private static bool ProcessTargeting(EffectTargetingData targetingData,
         EffectTargetingCondition targetingCondition)
     {
         List<CardBehaviour> cards = new List<CardBehaviour>();
-        switch (targetingParameter.OwningPlayer)
+        switch (targetingData.OwningPlayer)
         {
             case PlayerTargetType.Player:
-                cards = GameDataHandler.Instance.GetZoneCards(true, targetingParameter.ZoneType);
+                cards = GameDataHandler.Instance.GetZoneCards(true, targetingData.ZoneType);
                 break;
 
             case PlayerTargetType.Opponent:
-                cards = GameDataHandler.Instance.GetZoneCards(false, targetingParameter.ZoneType);
+                cards = GameDataHandler.Instance.GetZoneCards(false, targetingData.ZoneType);
                 break;
 
             case PlayerTargetType.Both:
-                cards = GameDataHandler.Instance.GetZoneCards(true, targetingParameter.ZoneType, true);
+                cards = GameDataHandler.Instance.GetZoneCards(true, targetingData.ZoneType, true);
                 break;
         }
 
         int count = 0, targetCount = 0;
-        if (targetingParameter.CountType == CountType.All)
+        if (targetingData.CountRangeType == CountRangeType.All)
             targetCount = cards.Count;
-        else if (targetingParameter.CountType == CountType.Number)
-            targetCount = targetingParameter.Count;
+        else if (targetingData.CountRangeType == CountRangeType.Number)
+            targetCount = targetingData.Count;
 
         foreach (CardBehaviour card in cards)
         {
@@ -815,17 +815,17 @@ public class CardInstanceEffectHandler
                 count++;
         }
 
-        if (targetingParameter.CountType == CountType.Number)
+        if (targetingData.CountRangeType == CountRangeType.Number)
         {
-            switch (targetingParameter.CountChoice)
+            switch (targetingData.CountQuantifier)
             {
-                case CountChoiceType.Exactly:
+                case CountQuantifierType.Exactly:
                     return count == targetCount;
 
-                case CountChoiceType.AtLeast:
+                case CountQuantifierType.AtLeast:
                     return count >= targetCount;
 
-                case CountChoiceType.Upto:
+                case CountQuantifierType.Upto:
                     return count <= targetCount;
             }
         }

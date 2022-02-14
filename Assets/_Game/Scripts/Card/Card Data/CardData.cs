@@ -402,11 +402,11 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         return validCards;
     }
 
-    public static int GetNumValidCards(EffectTargetingParameter targetingParameter, EffectTargetingCondition targetingCondition)
+    public static int GetNumValidCards(EffectTargetingData targetingData, EffectTargetingCondition targetingCondition)
     {
         List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(
-            targetingParameter.OwningPlayer == PlayerTargetType.Player, targetingParameter.ZoneType,
-            targetingParameter.OwningPlayer == PlayerTargetType.Both);
+            targetingData.OwningPlayer == PlayerTargetType.Player, targetingData.ZoneType,
+            targetingData.OwningPlayer == PlayerTargetType.Both);
 
         List<CardObject> validCards = GetValidCards(cards, targetingCondition);
         return validCards.Count;
