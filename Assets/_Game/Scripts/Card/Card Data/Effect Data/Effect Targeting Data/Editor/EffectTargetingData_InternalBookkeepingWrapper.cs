@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
 using UnityEngine;
 
 public class EffectTargetingData_InternalBookkeepingWrapper

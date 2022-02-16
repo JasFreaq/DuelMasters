@@ -1,86 +1,93 @@
+using UnityEditor.DuelMasters;
 using UnityEngine;
 
-public class CardTypeConditionParam : SingleEnumConditionParam, ICardIntrinsicParam
+namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    [SerializeReference] private CardParams.CardType _cardTypeCondition;
-
-    public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
+    public class CardTypeConditionParam : SingleEnumConditionParam, ICardIntrinsicParam
     {
-        bool result = true;
-        CardData cardData = cardInstToCheck.CardData;
+        [SerializeReference] private CardParams.CardType _cardTypeCondition;
 
-        if (_assignedParameter)
+        public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
-            switch (_cardTypeCondition)
+            bool result = true;
+            CardData cardData = cardInstToCheck.CardData;
+
+            if (_assignedParameter)
             {
-                case CardParams.CardType.EvolutionCreature:
-                    switch (cardData.CardType)
-                    {
-                        case CardParams.CardType.Creature:
-                        case CardParams.CardType.Spell:
-                            result = false;
-                            break;
-                    }
-                    break;
+                switch (_cardTypeCondition)
+                {
+                    case CardParams.CardType.EvolutionCreature:
+                        switch (cardData.CardType)
+                        {
+                            case CardParams.CardType.Creature:
+                            case CardParams.CardType.Spell:
+                                result = false;
+                                break;
+                        }
 
-                case CardParams.CardType.Creature:
-                    switch (cardData.CardType)
-                    {
-                        case CardParams.CardType.Spell:
-                            result = false;
-                            break;
-                    }
-                    break;
+                        break;
 
-                case CardParams.CardType.Spell:
-                    switch (cardData.CardType)
-                    {
-                        case CardParams.CardType.EvolutionCreature:
-                        case CardParams.CardType.Creature:
-                            result = false;
-                            break;
-                    }
-                    break;
+                    case CardParams.CardType.Creature:
+                        switch (cardData.CardType)
+                        {
+                            case CardParams.CardType.Spell:
+                                result = false;
+                                break;
+                        }
+
+                        break;
+
+                    case CardParams.CardType.Spell:
+                        switch (cardData.CardType)
+                        {
+                            case CardParams.CardType.EvolutionCreature:
+                            case CardParams.CardType.Creature:
+                                result = false;
+                                break;
+                        }
+
+                        break;
+                }
             }
-        }
 
-        return result;
-    }
+            return result;
+        }
 
 #if UNITY_EDITOR
-    
-    public override void DrawParamInspector()
-    {
-        GUILayout.BeginHorizontal();
 
-        if (_assignedParameter)
+        public override void DrawParamInspector()
         {
-            GUILayout.Label("Card Type:", EditorStatics.EffectTargetingConditionParamLabelStyle);
-            _cardTypeCondition = EditorUtils.DrawFoldout(_cardTypeCondition, 1);
+            GUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("Remove Card Type"))
-                _assignedParameter = false;
+            if (_assignedParameter)
+            {
+                GUILayout.Label("Card Type:", EditorStatics.EffectTargetingConditionParamLabelStyle);
+                _cardTypeCondition = EditorUtils.DrawFoldout(_cardTypeCondition, 1);
+
+                if (GUILayout.Button("Remove Card Type"))
+                    _assignedParameter = false;
+            }
+            else if (GUILayout.Button("Add Card Type"))
+                _assignedParameter = true;
+
+            GUILayout.EndHorizontal();
         }
-        else if (GUILayout.Button("Add Card Type"))
-            _assignedParameter = true;
 
-        GUILayout.EndHorizontal();
-    }
-
-    public override string GetEditorRepresentationString()
-    {
-        return $"\nCard Type is{ToString()}";
-    }
+        public override string GetEditorRepresentationString()
+        {
+            return $"\nCard Type is{ToString()}";
+        }
 
 #endif
-    
-    public override string GetGameRepresentationString()
-    {
-        return ToString();
-    }
 
-    public override string ToString()
-    {
-        return $" {CardParams.StringFromCardType(_cardTypeCondition)}";
+        public override string GetGameRepresentationString()
+        {
+            return ToString();
+        }
+
+        public override string ToString()
+        {
+            return $" {CardParams.StringFromCardType(_cardTypeCondition)}";
+        }
     }
 }

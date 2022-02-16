@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
+using DuelMasters.Card.Data.Effects.TargetingCondition.Parameters;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditorInternal;

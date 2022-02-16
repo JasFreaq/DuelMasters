@@ -2,116 +2,121 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.DuelMasters;
 using UnityEngine;
 
-public class CardConditionParam : EffectTargetingConditionParameter, ICardIntrinsicParam
+namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    #region Helper Data Structure(s)
-
-    [System.Serializable]
-    private class CardCondition
+    public class CardConditionParam : EffectTargetingConditionParameter, ICardIntrinsicParam
     {
-        public CardData cardData;
-        public ConnectorType connector;
-    }
+        #region Helper Data Structure(s)
 
-    #endregion
-
-    [SerializeReference] private List<CardCondition> _cardConditions = new List<CardCondition>();
-
-    public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
-    {
-        bool result = true;
-        CardData cardData = cardInstToCheck.CardData;
-
-        for (int i = 0, n = _cardConditions.Count; i < n; i++)
+        [System.Serializable]
+        private class CardCondition
         {
-            CardCondition cardCondition = _cardConditions[i];
-
-            bool res0 = cardData.Name == cardCondition.cardData.Name;
-            result = result && res0;
-
-            if (n > 1 && i < n - 1)
-            {
-                if (cardCondition.connector == ConnectorType.And && !result)
-                    break;
-                if (cardCondition.connector == ConnectorType.Or && result)
-                    break;
-            }
+            public CardData cardData;
+            public ConnectorType connector;
         }
 
-        return result;
-    }
+        #endregion
 
-#if UNITY_EDITOR
+        [SerializeReference] private List<CardCondition> _cardConditions = new List<CardCondition>();
 
-    public override void DrawParamInspector()
-    {
-        if (_cardConditions.Count > 0)
+        public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
-            List<CardCondition> removedConditions = new List<CardCondition>();
-            GUILayout.Label("Cards:", EditorStatics.EffectTargetingConditionParamLabelStyle);
+            bool result = true;
+            CardData cardData = cardInstToCheck.CardData;
 
             for (int i = 0, n = _cardConditions.Count; i < n; i++)
             {
                 CardCondition cardCondition = _cardConditions[i];
 
-                GUILayout.BeginHorizontal();
-
-                cardCondition.cardData = (CardData)EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
-                if (GUILayout.Button("Remove Card"))
-                {
-                    removedConditions.Add(cardCondition);
-                }
-
-                GUILayout.EndHorizontal();
+                bool res0 = cardData.Name == cardCondition.cardData.Name;
+                result = result && res0;
 
                 if (n > 1 && i < n - 1)
-                    cardCondition.connector = EditorUtils.DrawFoldout(cardCondition.connector);
+                {
+                    if (cardCondition.connector == ConnectorType.And && !result)
+                        break;
+                    if (cardCondition.connector == ConnectorType.Or && result)
+                        break;
+                }
             }
 
-            foreach (CardCondition cardCondition in removedConditions)
-            {
-                _cardConditions.Remove(cardCondition);
-            }
+            return result;
         }
 
-        if (GUILayout.Button("Add Card"))
+#if UNITY_EDITOR
+
+        public override void DrawParamInspector()
         {
-            CardCondition cardCondition = new CardCondition();
-            _cardConditions.Add(cardCondition);
+            if (_cardConditions.Count > 0)
+            {
+                List<CardCondition> removedConditions = new List<CardCondition>();
+                GUILayout.Label("Cards:", EditorStatics.EffectTargetingConditionParamLabelStyle);
+
+                for (int i = 0, n = _cardConditions.Count; i < n; i++)
+                {
+                    CardCondition cardCondition = _cardConditions[i];
+
+                    GUILayout.BeginHorizontal();
+
+                    cardCondition.cardData =
+                        (CardData) EditorGUILayout.ObjectField(cardCondition.cardData, typeof(CardData), false);
+                    if (GUILayout.Button("Remove Card"))
+                    {
+                        removedConditions.Add(cardCondition);
+                    }
+
+                    GUILayout.EndHorizontal();
+
+                    if (n > 1 && i < n - 1)
+                        cardCondition.connector = EditorUtils.DrawFoldout(cardCondition.connector);
+                }
+
+                foreach (CardCondition cardCondition in removedConditions)
+                {
+                    _cardConditions.Remove(cardCondition);
+                }
+            }
+
+            if (GUILayout.Button("Add Card"))
+            {
+                CardCondition cardCondition = new CardCondition();
+                _cardConditions.Add(cardCondition);
+            }
         }
-    }
 
-    public override bool IsAssignedValue()
-    {
-        return _cardConditions.Count > 0;
-    }
+        public override bool IsAssignedValue()
+        {
+            return _cardConditions.Count > 0;
+        }
 
-    public override string GetEditorRepresentationString()
-    {
-        return $"\nCard is{ToString()}";
-    }
+        public override string GetEditorRepresentationString()
+        {
+            return $"\nCard is{ToString()}";
+        }
 
 #endif
-    
-    public override string GetGameRepresentationString()
-    {
-        return ToString();
-    }
 
-    public override string ToString()
-    {
-        string str = "";
-        for (int i = 0, n = _cardConditions.Count; i < n; i++)
+        public override string GetGameRepresentationString()
         {
-            CardCondition cardCondition = _cardConditions[i];
-            str += $" {cardCondition.cardData.Name}";
-
-            if (n > 1 && i < n - 1)
-                str += $" {_cardConditions[i].connector} ";
+            return ToString();
         }
 
-        return str;
+        public override string ToString()
+        {
+            string str = "";
+            for (int i = 0, n = _cardConditions.Count; i < n; i++)
+            {
+                CardCondition cardCondition = _cardConditions[i];
+                str += $" {cardCondition.cardData.Name}";
+
+                if (n > 1 && i < n - 1)
+                    str += $" {_cardConditions[i].connector} ";
+            }
+
+            return str;
+        }
     }
 }

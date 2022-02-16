@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public enum ParameterTargetingType
+namespace DuelMasters.Card.Data.Effects.TargetingCondition.Data
 {
-    Check,
-    Affect,
-    Count
+    [System.Serializable]
+    public enum ParameterTargetingType
+    {
+        Check,
+        Affect,
+        Count
+    }
 }

@@ -2,12 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SingleEnumConditionParam : EffectTargetingConditionParameter
+namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    [SerializeReference] protected bool _assignedParameter;
-
-    public override bool IsAssignedValue()
+    public abstract class SingleEnumConditionParam : EffectTargetingConditionParameter
     {
-        return _assignedParameter;
+#if UNITY_EDITOR
+
+        [SerializeReference] protected bool _assignedParameter;
+
+        public override bool IsAssignedValue()
+        {
+            return _assignedParameter;
+        }
+
+#endif
     }
 }
