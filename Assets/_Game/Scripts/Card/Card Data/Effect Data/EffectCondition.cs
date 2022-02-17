@@ -7,8 +7,8 @@ using UnityEngine;
 public class EffectCondition : ScriptableObject
 {
     [SerializeReference] private EffectConditionType _type;
-    [SerializeReference] private bool _assignedParameter, _assignedCondition, _connectSubCondition;
-    [SerializeReference] private EffectTargetingData _targetingData = new EffectTargetingData();
+    [SerializeReference] private bool _assignedCriterion, _assignedCondition, _connectSubCondition;
+    [SerializeReference] private EffectTargetingCriterion _targetingCriterion = new EffectTargetingCriterion();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectCondition _subCondition;
@@ -30,11 +30,11 @@ public class EffectCondition : ScriptableObject
 #endif
     }
 
-    public bool AssignedParameter
+    public bool AssignedCriterion
     {
-        get { return _assignedParameter; }
+        get { return _assignedCriterion; }
 #if UNITY_EDITOR
-        set { _assignedParameter = value; }
+        set { _assignedCriterion = value; }
 #endif
     }
 
@@ -55,12 +55,12 @@ public class EffectCondition : ScriptableObject
 #endif
     }
 
-    public EffectTargetingData TargetingData
+    public EffectTargetingCriterion TargetingCriterion
     {
-        get { return _targetingData; }
+        get { return _targetingCriterion; }
 
 #if UNITY_EDITOR
-        set { _targetingData = value; }
+        set { _targetingCriterion = value; }
 #endif
     }
 
@@ -122,8 +122,8 @@ public class EffectCondition : ScriptableObject
     {
         string str = GetTypeRepresentation();
 
-        if (_assignedParameter)
-            str += $" {_targetingData}";
+        if (_assignedCriterion)
+            str += $" {_targetingCriterion}";
         
         if (_assignedCondition)
             str += $" where{_targetingCondition}";

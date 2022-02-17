@@ -7,7 +7,7 @@ using UnityEngine;
 namespace DuelMasters.Card.Data.Effects.TargetingCondition.Data
 {
     [System.Serializable]
-    public class EffectTargetingData
+    public class EffectTargetingCriterion
     {
         [SerializeReference] private CountRangeType _countRangeType;
         [SerializeReference] private CountQuantifierType _countQuantifier;

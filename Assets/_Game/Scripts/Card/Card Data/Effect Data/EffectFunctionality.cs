@@ -121,7 +121,7 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private PlayerTargetType _choosingPlayer;
     [SerializeReference] private PlayerTargetType _targetPlayer;
     [SerializeReference] private bool _assignedCondition, _connectSubFunctionality;
-    [SerializeReference] private EffectTargetingData _targetingData = new EffectTargetingData();
+    [SerializeReference] private EffectTargetingCriterion _targetingCriterion = new EffectTargetingCriterion();
     [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectFunctionality _subFunctionality;
@@ -199,12 +199,12 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public EffectTargetingData TargetingData
+    public EffectTargetingCriterion TargetingCriterion
     {
-        get { return _targetingData; }
+        get { return _targetingCriterion; }
 
 #if UNITY_EDITOR
-        set { _targetingData = value; }
+        set { _targetingCriterion = value; }
 #endif
     }
     
@@ -382,7 +382,7 @@ public class EffectFunctionality : ScriptableObject
         string str = GetTypeRepresentation();
         
         if (_targetCard == CardTargetType.TargetOther || _shouldMultiplyVal)
-            str += $" {_targetingData}";
+            str += $" {_targetingCriterion}";
         
         if (_assignedCondition)
             str += $" where{_targetingCondition}";

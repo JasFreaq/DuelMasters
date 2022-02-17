@@ -8,13 +8,13 @@ public class EffectTargetingData_InternalBookkeepingWrapper
     private static Dictionary<int, ParameterTargetingType> DataToTargetingDict =
         new Dictionary<int, ParameterTargetingType>();
 
-    public static void SetTargetingType(EffectTargetingData targetingData, ParameterTargetingType targetingType)
+    public static void SetTargetingType(EffectTargetingCriterion targetingCriterion, ParameterTargetingType targetingType)
     {
-        DataToTargetingDict[targetingData.GetHashCode()] = targetingType;
+        DataToTargetingDict[targetingCriterion.GetHashCode()] = targetingType;
     }
     
-    public static ParameterTargetingType GetTargetingType(EffectTargetingData targetingData)
+    public static ParameterTargetingType GetTargetingType(EffectTargetingCriterion targetingCriterion)
     {
-        return DataToTargetingDict[targetingData.GetHashCode()];
+        return DataToTargetingDict[targetingCriterion.GetHashCode()];
     }
 }

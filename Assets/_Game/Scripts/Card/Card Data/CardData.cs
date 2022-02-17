@@ -404,11 +404,11 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         return validCards;
     }
 
-    public static int GetNumValidCards(EffectTargetingData targetingData, EffectTargetingCondition targetingCondition)
+    public static int GetNumValidCards(EffectTargetingCriterion targetingCriterion, EffectTargetingCondition targetingCondition)
     {
         List<CardBehaviour> cards = GameDataHandler.Instance.GetZoneCards(
-            targetingData.OwningPlayer == PlayerTargetType.Player, targetingData.ZoneType,
-            targetingData.OwningPlayer == PlayerTargetType.Both);
+            targetingCriterion.OwningPlayer == PlayerTargetType.Player, targetingCriterion.ZoneType,
+            targetingCriterion.OwningPlayer == PlayerTargetType.Both);
 
         List<CardObject> validCards = GetValidCards(cards, targetingCondition);
         return validCards.Count;

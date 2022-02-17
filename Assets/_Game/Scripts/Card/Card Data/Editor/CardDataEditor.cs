@@ -117,7 +117,7 @@ public class CardDataEditor : Editor
         EffectCondition condition = CreateInstance<EffectCondition>();
         condition.name = conditionName;
 
-        condition.TargetingData.SetTargetingType(ParameterTargetingType.Check);
+        condition.TargetingCriterion.SetTargetingType(ParameterTargetingType.Check);
 
         AssetDatabase.AddObjectToAsset(condition, _cardData);
         EditorUtility.SetDirty(condition);
@@ -179,14 +179,14 @@ public class CardDataEditor : Editor
 
         GUILayout.EndHorizontal();
 
-        if (condition.AssignedParameter)
+        if (condition.AssignedCriterion)
         {
-            DrawTargetingParameter(condition.TargetingData);
+            DrawTargetingParameter(condition.TargetingCriterion);
             if (GUILayout.Button("Remove Targeting Parameter"))
-                condition.AssignedParameter = false;
+                condition.AssignedCriterion = false;
         }
         else if (GUILayout.Button("Add Targeting Parameter"))
-            condition.AssignedParameter = true;
+            condition.AssignedCriterion = true;
         if (condition.AssignedCondition)
         {
             DrawTargetingCondition(condition.TargetingCondition);
@@ -220,8 +220,8 @@ public class CardDataEditor : Editor
         switch (functionality.TargetCard)
         {
             case CardTargetType.AutoTarget:
-                if (!functionality.TargetingData.TypeEquals(ParameterTargetingType.Affect))
-                    functionality.TargetingData.SetTargetingType(ParameterTargetingType.Affect);
+                if (!functionality.TargetingCriterion.TypeEquals(ParameterTargetingType.Affect))
+                    functionality.TargetingCriterion.SetTargetingType(ParameterTargetingType.Affect);
                 break;
 
             case CardTargetType.TargetOther:
@@ -236,8 +236,8 @@ public class CardDataEditor : Editor
         {
             functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
             if (functionality.ShouldMultiplyVal &&
-                !functionality.TargetingData.TypeEquals(ParameterTargetingType.Count))
-                functionality.TargetingData.SetTargetingType(ParameterTargetingType.Count);
+                !functionality.TargetingCriterion.TypeEquals(ParameterTargetingType.Count))
+                functionality.TargetingCriterion.SetTargetingType(ParameterTargetingType.Count);
         }
 
         functionality.ConnectSubFunctionality = GUILayout.Toggle(functionality.ConnectSubFunctionality, "Connect");
@@ -247,7 +247,7 @@ public class CardDataEditor : Editor
         GUILayout.EndHorizontal();
 
         if (functionality.TargetUnspecified() && (functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget))
-            DrawTargetingParameter(functionality.TargetingData);
+            DrawTargetingParameter(functionality.TargetingCriterion);
 
         if (functionality.AssignedCondition)
         {
@@ -439,36 +439,36 @@ public class CardDataEditor : Editor
         #endregion
     }
 
-    private void DrawTargetingParameter(EffectTargetingData data)
+    private void DrawTargetingParameter(EffectTargetingCriterion criterion)
     {
         GUILayout.BeginHorizontal();
 
         GUILayout.Label("Targeting Parameter:", EditorStyles.boldLabel);
 
-        ParameterTargetingType targetingType = data.GetTargetingType();
+        ParameterTargetingType targetingType = criterion.GetTargetingType();
         GUILayout.Label($"{targetingType}");
 
         if (targetingType != ParameterTargetingType.Count)
         {
-            data.CountRangeType = DrawFoldout(data.CountRangeType);
-            if (data.CountRangeType == CountRangeType.Number)
+            criterion.CountRangeType = DrawFoldout(criterion.CountRangeType);
+            if (criterion.CountRangeType == CountRangeType.Number)
             {
-                data.CountQuantifier = DrawFoldout(data.CountQuantifier);
-                if (int.TryParse(EditorGUILayout.TextField($"{data.Count}"), out int num))
-                    data.Count = num;
+                criterion.CountQuantifier = DrawFoldout(criterion.CountQuantifier);
+                if (int.TryParse(EditorGUILayout.TextField($"{criterion.Count}"), out int num))
+                    criterion.Count = num;
             }
         }
 
         GUILayout.Label("In");
-        data.OwningPlayer = DrawFoldout(data.OwningPlayer);
-        data.ZoneType = DrawFoldout(data.ZoneType);
-        if (data.OwningPlayer == PlayerTargetType.Player) 
+        criterion.OwningPlayer = DrawFoldout(criterion.OwningPlayer);
+        criterion.ZoneType = DrawFoldout(criterion.ZoneType);
+        if (criterion.OwningPlayer == PlayerTargetType.Player) 
         {
             if (_cardData is CreatureData)
-                data.IncludeSelf = GUILayout.Toggle(data.IncludeSelf, "Include Self");
+                criterion.IncludeSelf = GUILayout.Toggle(criterion.IncludeSelf, "Include Self");
         }
-        else if (data.OwningPlayer == PlayerTargetType.Opponent)
-            data.OpponentChooses = GUILayout.Toggle(data.OpponentChooses, "Opponent Chooses");
+        else if (criterion.OwningPlayer == PlayerTargetType.Opponent)
+            criterion.OpponentChooses = GUILayout.Toggle(criterion.OpponentChooses, "Opponent Chooses");
 
         GUILayout.EndHorizontal();
     }
