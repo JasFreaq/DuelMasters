@@ -7,15 +7,14 @@ public static class EffectTargetingCriterion_EditorExtension
 {
     public static void SetTargetingType(this EffectTargetingCriterion targetingCriterion, ParameterTargetingType targetingType)
     {
-        EffectTargetingData_InternalBookkeepingWrapper.SetTargetingType(targetingCriterion, targetingType);
+        EffectTargetingCriterion_InternalBookkeepingWrapper.SetTargetingType(targetingCriterion, targetingType);
         if (targetingType == ParameterTargetingType.Count)
             targetingCriterion.CountRangeType = CountRangeType.All;
-
     }
 
     public static ParameterTargetingType GetTargetingType(this EffectTargetingCriterion targetingCriterion)
     {
-        return EffectTargetingData_InternalBookkeepingWrapper.GetTargetingType(targetingCriterion);
+        return EffectTargetingCriterion_InternalBookkeepingWrapper.GetTargetingType(targetingCriterion);
     }
 
     public static bool TypeEquals(this EffectTargetingCriterion targetingCriterion, ParameterTargetingType targetingType)

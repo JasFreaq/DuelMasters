@@ -42,16 +42,6 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
             return str;
         }
 
-        public override string ToString()
-        {
-            string str = "";
-
-            foreach (EffectTargetingConditionParameter param in ConditionParams)
-                str += param.GetEditorRepresentationString();
-
-            return str;
-        }
-
         #endregion
     }
 }

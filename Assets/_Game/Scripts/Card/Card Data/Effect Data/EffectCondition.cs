@@ -7,9 +7,8 @@ using UnityEngine;
 public class EffectCondition : ScriptableObject
 {
     [SerializeReference] private EffectConditionType _type;
-    [SerializeReference] private bool _assignedCriterion, _assignedCondition, _connectSubCondition;
-    [SerializeReference] private EffectTargetingCriterion _targetingCriterion = new EffectTargetingCriterion();
-    [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
+    [SerializeReference] private EffectTargetingCriterion _targetingCriterion;
+    [SerializeReference] private EffectTargetingCondition _targetingCondition;
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectCondition _subCondition;
     [SerializeReference] private EffectFunctionality _subFunctionality;
@@ -29,32 +28,7 @@ public class EffectCondition : ScriptableObject
         set { _type = value; }
 #endif
     }
-
-    public bool AssignedCriterion
-    {
-        get { return _assignedCriterion; }
-#if UNITY_EDITOR
-        set { _assignedCriterion = value; }
-#endif
-    }
-
-    public bool AssignedCondition
-    {
-        get { return _assignedCondition; }
-#if UNITY_EDITOR
-        set { _assignedCondition = value; }
-#endif 
-    }
-
-    public bool ConnectSubCondition
-    {
-        get { return _connectSubCondition; }
-
-#if UNITY_EDITOR
-        set { _connectSubCondition = value; }
-#endif
-    }
-
+    
     public EffectTargetingCriterion TargetingCriterion
     {
         get { return _targetingCriterion; }
@@ -116,46 +90,5 @@ public class EffectCondition : ScriptableObject
 #if UNITY_EDITOR
         set { _checkHasFunction = value; }
 #endif
-    }
-
-    public override string ToString()
-    {
-        string str = GetTypeRepresentation();
-
-        if (_assignedCriterion)
-            str += $" {_targetingCriterion}";
-        
-        if (_assignedCondition)
-            str += $" where{_targetingCondition}";
-
-        if (_connectSubCondition)
-            str += $" {_connector}";
-
-        if (_subCondition)
-            str += $" if\n\t{_subCondition}";
-
-        return str;
-
-        #region Local Functions
-
-        string GetTypeRepresentation()
-        {
-            switch (_type)
-            {
-                case EffectConditionType.WhileTapState:
-                    return $"While {_tapState}ped";
-
-                case EffectConditionType.CheckFunction:
-                    string str1 = "Check if target ";
-                    str1 += _checkHasFunction ? "has" : "doesn't have";
-                    str1 += $" function(s)\n\t{_subFunctionality}";
-                    return str1;
-
-                default:
-                    return _type.ToString();
-            }
-        }
-
-        #endregion
     }
 }

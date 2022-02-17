@@ -117,6 +117,7 @@ public class CardDataEditor : Editor
         EffectCondition condition = CreateInstance<EffectCondition>();
         condition.name = conditionName;
 
+        condition.TargetingCriterion = new EffectTargetingCriterion();
         condition.TargetingCriterion.SetTargetingType(ParameterTargetingType.Check);
 
         AssetDatabase.AddObjectToAsset(condition, _cardData);
@@ -173,32 +174,33 @@ public class CardDataEditor : Editor
                 break;
         }
 
-        condition.ConnectSubCondition = GUILayout.Toggle(condition.ConnectSubCondition, "Connect");
-        if (condition.ConnectSubCondition)
+        condition.SetConnectToSubCondition
+            (GUILayout.Toggle(condition.GetConnectToSubCondition(), "Connect"));
+        if (condition.GetConnectToSubCondition())
             condition.Connector = DrawFoldout(condition.Connector);
 
         GUILayout.EndHorizontal();
 
-        if (condition.AssignedCriterion)
+        if (condition.TargetingCriterion != null) 
         {
-            DrawTargetingParameter(condition.TargetingCriterion);
-            if (GUILayout.Button("Remove Targeting Parameter"))
-                condition.AssignedCriterion = false;
+            DrawTargetingCriterion(condition.TargetingCriterion);
+            if (GUILayout.Button("Remove Targeting Criterion"))
+                condition.TargetingCriterion = null;
         }
-        else if (GUILayout.Button("Add Targeting Parameter"))
-            condition.AssignedCriterion = true;
-        if (condition.AssignedCondition)
+        else if (GUILayout.Button("Add Targeting Criterion"))
+        {
+            condition.TargetingCriterion = new EffectTargetingCriterion();
+            condition.TargetingCriterion.SetTargetingType(ParameterTargetingType.Check);
+        }
+
+        if (condition.TargetingCondition != null)
         {
             DrawTargetingCondition(condition.TargetingCondition);
             if (GUILayout.Button("Remove Targeting Condition"))
-            {
-                condition.AssignedCondition = false;
-            }
+                condition.TargetingCondition = null;
         }
         else if (GUILayout.Button("Add Targeting Condition"))
-        {
-            condition.AssignedCondition = true;
-        }
+            condition.TargetingCondition = new EffectTargetingCondition();
 
         DrawSubCondition(condition);
         DrawSubFunctionality(condition);
@@ -208,284 +210,289 @@ public class CardDataEditor : Editor
 
     private void DrawFunctionality(EffectFunctionality functionality, string labelText)
     {
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(labelText, EditorStyles.boldLabel);
-        
-        functionality.Type = DrawFoldout(functionality.Type);
+        //GUILayout.BeginHorizontal();
+        //GUILayout.Label(labelText, EditorStyles.boldLabel);
 
-        bool showMultiplyVal = false;
-        DrawFunctionTypeSpecificParams();
+        //functionality.Type = DrawFoldout(functionality.Type);
 
-        functionality.TargetCard = DrawFoldout(functionality.TargetCard);
-        switch (functionality.TargetCard)
-        {
-            case CardTargetType.AutoTarget:
-                if (!functionality.TargetingCriterion.TypeEquals(ParameterTargetingType.Affect))
-                    functionality.TargetingCriterion.SetTargetingType(ParameterTargetingType.Affect);
-                break;
+        //bool showMultiplyVal = false;
+        //DrawFunctionTypeSpecificParams();
 
-            case CardTargetType.TargetOther:
-                GUILayout.Label("Chooser:");
-                functionality.ChoosingPlayer = DrawFoldout(functionality.ChoosingPlayer);
-                GUILayout.Label("Target:");
-                functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
-                break;
-        }
+        //functionality.TargetCard = DrawFoldout(functionality.TargetCard);
+        //switch (functionality.TargetCard)
+        //{
+        //    case CardTargetType.AutoTarget:
+        //        if (!functionality.TargetingCriterion.TypeEquals(ParameterTargetingType.Affect))
+        //            functionality.TargetingCriterion.SetTargetingType(ParameterTargetingType.Affect);
+        //        break;
 
-        if (showMultiplyVal)
-        {
-            functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
-            if (functionality.ShouldMultiplyVal &&
-                !functionality.TargetingCriterion.TypeEquals(ParameterTargetingType.Count))
-                functionality.TargetingCriterion.SetTargetingType(ParameterTargetingType.Count);
-        }
+        //    case CardTargetType.TargetOther:
+        //        GUILayout.Label("Chooser:");
+        //        functionality.ChoosingPlayer = DrawFoldout(functionality.ChoosingPlayer);
+        //        GUILayout.Label("Target:");
+        //        functionality.TargetPlayer = DrawFoldout(functionality.TargetPlayer);
+        //        break;
+        //}
 
-        functionality.ConnectSubFunctionality = GUILayout.Toggle(functionality.ConnectSubFunctionality, "Connect");
-        if (functionality.ConnectSubFunctionality)
-            functionality.Connector = DrawFoldout(functionality.Connector);
+        //if (showMultiplyVal)
+        //{
+        //    functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
+        //    if (functionality.ShouldMultiplyVal &&
+        //        !functionality.TargetingCriterion.TypeEquals(ParameterTargetingType.Count))
+        //        functionality.TargetingCriterion.SetTargetingType(ParameterTargetingType.Count);
+        //}
 
-        GUILayout.EndHorizontal();
+        //functionality.ConnectSubFunctionality = GUILayout.Toggle(functionality.ConnectSubFunctionality, "Connect");
+        //if (functionality.ConnectSubFunctionality)
+        //    functionality.Connector = DrawFoldout(functionality.Connector);
 
-        if (functionality.TargetUnspecified() && (functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget))
-            DrawTargetingParameter(functionality.TargetingCriterion);
+        //GUILayout.EndHorizontal();
 
-        if (functionality.AssignedCondition)
-        {
-            DrawTargetingCondition(functionality.TargetingCondition);
-            if (GUILayout.Button("Remove Targeting Condition"))
-            {
-                functionality.AssignedCondition = false;
-            }
-        }
-        else if (GUILayout.Button("Add Targeting Condition"))
-        {
-            functionality.AssignedCondition = true;
-        }
+        //if (functionality.TargetUnspecified() && (functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget))
+        //    DrawTargetingParameter(functionality.TargetingCriterion);
 
-        DrawSubFunctionality(functionality);
+        //if (functionality.AssignedCondition)
+        //{
+        //    DrawTargetingCondition(functionality.TargetingCondition);
+        //    if (GUILayout.Button("Remove Targeting Condition"))
+        //    {
+        //        functionality.AssignedCondition = false;
+        //    }
+        //}
+        //else if (GUILayout.Button("Add Targeting Condition"))
+        //{
+        //    functionality.AssignedCondition = true;
+        //}
 
-        EditorUtility.SetDirty(functionality);
+        //DrawSubFunctionality(functionality);
 
-        #region Local Functions
+        //EditorUtility.SetDirty(functionality);
 
-        void DrawFunctionTypeSpecificParams()
-        {
-            switch (functionality.Type)
-            {
-                case EffectFunctionalityType.GrantFunction:
-                case EffectFunctionalityType.DisableFunction:
-                    functionality.AlterFunctionUntilEndOfTurn = GUILayout.Toggle(functionality.AlterFunctionUntilEndOfTurn, "Until End Of Turn");
-                    break;
+        //#region Local Functions
 
-                case EffectFunctionalityType.RegionMovement:
-                    DrawMovementRegions();
-                    break;
+        //void DrawFunctionTypeSpecificParams()
+        //{
+        //    switch (functionality.Type)
+        //    {
+        //        case EffectFunctionalityType.GrantFunction:
+        //        case EffectFunctionalityType.DisableFunction:
+        //            functionality.AlterFunctionUntilEndOfTurn = GUILayout.Toggle(functionality.AlterFunctionUntilEndOfTurn, "Until End Of Turn");
+        //            break;
 
-                case EffectFunctionalityType.AttackTarget:
-                    functionality.AttackType = DrawFoldout(functionality.AttackType);
-                    break;
+        //        case EffectFunctionalityType.RegionMovement:
+        //            DrawMovementRegions();
+        //            break;
 
-                case EffectFunctionalityType.TargetBehaviour:
-                    functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
-                    break;
+        //        case EffectFunctionalityType.AttackTarget:
+        //            functionality.AttackType = DrawFoldout(functionality.AttackType);
+        //            break;
 
-                case EffectFunctionalityType.Keyword:
-                    functionality.Keyword = DrawFoldout(functionality.Keyword);
-                    if (functionality.Keyword == KeywordType.VortexEvolution)
-                        DrawVortexRaces();
-                    break;
+        //        case EffectFunctionalityType.TargetBehaviour:
+        //            functionality.TargetBehaviour = DrawFoldout(functionality.TargetBehaviour);
+        //            break;
 
-                case EffectFunctionalityType.MultipleBreaker:
-                    functionality.MultipleBreaker = DrawFoldout(functionality.MultipleBreaker);
-                    break;
+        //        case EffectFunctionalityType.Keyword:
+        //            functionality.Keyword = DrawFoldout(functionality.Keyword);
+        //            if (functionality.Keyword == KeywordType.VortexEvolution)
+        //                DrawVortexRaces();
+        //            break;
 
-                case EffectFunctionalityType.ToggleTap:
-                    functionality.TapState = DrawFoldout(functionality.TapState);
-                    break;
+        //        case EffectFunctionalityType.MultipleBreaker:
+        //            functionality.MultipleBreaker = DrawFoldout(functionality.MultipleBreaker);
+        //            break;
 
-                case EffectFunctionalityType.Destroy:
-                    DrawDestroyParam();
-                    break;
+        //        case EffectFunctionalityType.ToggleTap:
+        //            functionality.TapState = DrawFoldout(functionality.TapState);
+        //            break;
 
-                case EffectFunctionalityType.Discard:
-                    DrawDiscardParam();
-                    break;
+        //        case EffectFunctionalityType.Destroy:
+        //            DrawDestroyParam();
+        //            break;
 
-                case EffectFunctionalityType.LookAtRegion:
-                    DrawLookAtParam();
-                    break;
-                    
-                case EffectFunctionalityType.PowerAttacker:
-                case EffectFunctionalityType.GrantPower:
-                    if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerBoost}"), out int num1))
-                        functionality.PowerBoost = num1;
-                    DrawMultiplyVal();
-                    break;
+        //        case EffectFunctionalityType.Discard:
+        //            DrawDiscardParam();
+        //            break;
 
-                case EffectFunctionalityType.CostAdjustment:
-                    if (int.TryParse(EditorGUILayout.TextField($"{functionality.CostAdjustmentAmount}"), out int num2))
-                        functionality.CostAdjustmentAmount = num2;
-                    break;
-            }
-        }
+        //        case EffectFunctionalityType.LookAtRegion:
+        //            DrawLookAtParam();
+        //            break;
 
-        void DrawMovementRegions()
-        {
-            MovementZones movementZones = functionality.MovementZones;
+        //        case EffectFunctionalityType.PowerAttacker:
+        //        case EffectFunctionalityType.GrantPower:
+        //            if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerBoost}"), out int num1))
+        //                functionality.PowerBoost = num1;
+        //            DrawMultiplyVal();
+        //            break;
 
-            movementZones.fromZone = DrawFoldout(movementZones.fromZone);
+        //        case EffectFunctionalityType.CostAdjustment:
+        //            if (int.TryParse(EditorGUILayout.TextField($"{functionality.CostAdjustmentAmount}"), out int num2))
+        //                functionality.CostAdjustmentAmount = num2;
+        //            break;
+        //    }
+        //}
 
-            if (movementZones.fromZone == CardZoneType.Deck)
-            {
-                movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
-                if (movementZones.deckCardMove == DeckCardMoveType.SearchShuffle)
-                    movementZones.showSearchedCard = GUILayout.Toggle(movementZones.showSearchedCard, "Show Card");
-            }
+        //void DrawMovementRegions()
+        //{
+        //    MovementZones movementZones = functionality.MovementZones;
 
-            if (movementZones.moveCount > 1)
-                movementZones.countQuantifier = DrawFoldout(movementZones.countQuantifier);
-            if (int.TryParse(EditorGUILayout.TextField($"{movementZones.moveCount}"), out int num))
-                movementZones.moveCount = num;
-            DrawMultiplyVal();
+        //    movementZones.fromZone = DrawFoldout(movementZones.fromZone);
 
-            movementZones.toZone = DrawFoldout(movementZones.toZone);
+        //    if (movementZones.fromZone == CardZoneType.Deck)
+        //    {
+        //        movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
+        //        if (movementZones.deckCardMove == DeckCardMoveType.SearchShuffle)
+        //            movementZones.showSearchedCard = GUILayout.Toggle(movementZones.showSearchedCard, "Show Card");
+        //    }
 
-            if (movementZones.toZone == CardZoneType.Deck)
-                movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
-        }
+        //    if (movementZones.moveCount > 1)
+        //        movementZones.countQuantifier = DrawFoldout(movementZones.countQuantifier);
+        //    if (int.TryParse(EditorGUILayout.TextField($"{movementZones.moveCount}"), out int num))
+        //        movementZones.moveCount = num;
+        //    DrawMultiplyVal();
 
-        void DrawVortexRaces()
-        {
-            GUILayout.BeginVertical();
-            
-            if (functionality.VortexRaces.Count > 0)
-            {
-                List<RaceHolder> removedConditions = new List<RaceHolder>();
-                GUILayout.Label("Races:");
+        //    movementZones.toZone = DrawFoldout(movementZones.toZone);
 
-                for (int i = 0, n = functionality.VortexRaces.Count; i < n; i++)
-                {
-                    RaceHolder raceHolder = functionality.VortexRaces[i];
+        //    if (movementZones.toZone == CardZoneType.Deck)
+        //        movementZones.deckCardMove = DrawFoldout(movementZones.deckCardMove);
+        //}
 
-                    GUILayout.BeginHorizontal();
+        //void DrawVortexRaces()
+        //{
+        //    GUILayout.BeginVertical();
 
-                    raceHolder.race = DrawFoldout(raceHolder.race, 1);
+        //    if (functionality.VortexRaces.Count > 0)
+        //    {
+        //        List<RaceHolder> removedConditions = new List<RaceHolder>();
+        //        GUILayout.Label("Races:");
 
-                    GUILayout.EndHorizontal();
+        //        for (int i = 0, n = functionality.VortexRaces.Count; i < n; i++)
+        //        {
+        //            RaceHolder raceHolder = functionality.VortexRaces[i];
 
-                    if (GUILayout.Button("Remove Race"))
-                    {
-                        EditorGUILayout.Space(5);
-                        removedConditions.Add(raceHolder);
-                    }
-                }
+        //            GUILayout.BeginHorizontal();
 
-                foreach (RaceHolder raceHolder in removedConditions)
-                {
-                    functionality.VortexRaces.Remove(raceHolder);
-                }
-            }
+        //            raceHolder.race = DrawFoldout(raceHolder.race, 1);
 
-            if (GUILayout.Button("Add Race"))
-            {
-                RaceHolder raceHolder = new RaceHolder();
-                functionality.VortexRaces.Add(raceHolder);
-            }
-            
-            GUILayout.EndVertical();
-        }
+        //            GUILayout.EndHorizontal();
 
-        void DrawDestroyParam()
-        {
-            DestroyParam destroyParam = functionality.DestroyParam;
-            destroyParam.destroyZone = DrawFoldout(destroyParam.destroyZone);
-            destroyParam.countRangeType = DrawFoldout(destroyParam.countRangeType);
-            if (destroyParam.countRangeType == CountRangeType.Number)
-            {
-                if (int.TryParse(EditorGUILayout.TextField($"{destroyParam.destroyCount}"), out int num))
-                    destroyParam.destroyCount = num;
-            }
-        }
+        //            if (GUILayout.Button("Remove Race"))
+        //            {
+        //                EditorGUILayout.Space(5);
+        //                removedConditions.Add(raceHolder);
+        //            }
+        //        }
 
-        void DrawDiscardParam()
-        {
-            DiscardParam discardParam = functionality.DiscardParam;
-            discardParam.countRangeType = DrawFoldout(discardParam.countRangeType);
-            if (discardParam.countRangeType == CountRangeType.Number)
-            {
-                if (int.TryParse(EditorGUILayout.TextField($"{discardParam.discardCount}"), out int num))
-                    discardParam.discardCount = num;
-            }
-        }
+        //        foreach (RaceHolder raceHolder in removedConditions)
+        //        {
+        //            functionality.VortexRaces.Remove(raceHolder);
+        //        }
+        //    }
 
-        void DrawLookAtParam()
-        {
-            LookAtParam lookAtParam = functionality.LookAtParam;
-            lookAtParam.lookAtZone = DrawFoldout(lookAtParam.lookAtZone);
-            lookAtParam.countRangeType = DrawFoldout(lookAtParam.countRangeType);
-            if (lookAtParam.countRangeType == CountRangeType.Number)
-            {
-                if (int.TryParse(EditorGUILayout.TextField($"{lookAtParam.lookCount}"), out int num))
-                    lookAtParam.lookCount = num;
-            }
-        }
+        //    if (GUILayout.Button("Add Race"))
+        //    {
+        //        RaceHolder raceHolder = new RaceHolder();
+        //        functionality.VortexRaces.Add(raceHolder);
+        //    }
 
-        void DrawMultiplyVal()
-        {
-            showMultiplyVal = true;
-            GUILayout.Label(": val");
-        }
+        //    GUILayout.EndVertical();
+        //}
 
-        #endregion
+        //void DrawDestroyParam()
+        //{
+        //    DestroyParam destroyParam = functionality.DestroyParam;
+        //    destroyParam.destroyZone = DrawFoldout(destroyParam.destroyZone);
+        //    destroyParam.countRangeType = DrawFoldout(destroyParam.countRangeType);
+        //    if (destroyParam.countRangeType == CountRangeType.Number)
+        //    {
+        //        if (int.TryParse(EditorGUILayout.TextField($"{destroyParam.destroyCount}"), out int num))
+        //            destroyParam.destroyCount = num;
+        //    }
+        //}
+
+        //void DrawDiscardParam()
+        //{
+        //    DiscardParam discardParam = functionality.DiscardParam;
+        //    discardParam.countRangeType = DrawFoldout(discardParam.countRangeType);
+        //    if (discardParam.countRangeType == CountRangeType.Number)
+        //    {
+        //        if (int.TryParse(EditorGUILayout.TextField($"{discardParam.discardCount}"), out int num))
+        //            discardParam.discardCount = num;
+        //    }
+        //}
+
+        //void DrawLookAtParam()
+        //{
+        //    LookAtParam lookAtParam = functionality.LookAtParam;
+        //    lookAtParam.lookAtZone = DrawFoldout(lookAtParam.lookAtZone);
+        //    lookAtParam.countRangeType = DrawFoldout(lookAtParam.countRangeType);
+        //    if (lookAtParam.countRangeType == CountRangeType.Number)
+        //    {
+        //        if (int.TryParse(EditorGUILayout.TextField($"{lookAtParam.lookCount}"), out int num))
+        //            lookAtParam.lookCount = num;
+        //    }
+        //}
+
+        //void DrawMultiplyVal()
+        //{
+        //    showMultiplyVal = true;
+        //    GUILayout.Label(": val");
+        //}
+
+        //#endregion
     }
 
-    private void DrawTargetingParameter(EffectTargetingCriterion criterion)
+    private void DrawTargetingCriterion(EffectTargetingCriterion criterion)
     {
-        GUILayout.BeginHorizontal();
-
-        GUILayout.Label("Targeting Parameter:", EditorStyles.boldLabel);
-
-        ParameterTargetingType targetingType = criterion.GetTargetingType();
-        GUILayout.Label($"{targetingType}");
-
-        if (targetingType != ParameterTargetingType.Count)
+        if (criterion != null) 
         {
-            criterion.CountRangeType = DrawFoldout(criterion.CountRangeType);
-            if (criterion.CountRangeType == CountRangeType.Number)
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label("Targeting Criterion:", EditorStyles.boldLabel);
+
+            ParameterTargetingType targetingType = criterion.GetTargetingType();
+            GUILayout.Label($"{targetingType}");
+
+            if (targetingType != ParameterTargetingType.Count)
             {
-                criterion.CountQuantifier = DrawFoldout(criterion.CountQuantifier);
-                if (int.TryParse(EditorGUILayout.TextField($"{criterion.Count}"), out int num))
-                    criterion.Count = num;
+                criterion.CountRangeType = DrawFoldout(criterion.CountRangeType);
+                if (criterion.CountRangeType == CountRangeType.Number)
+                {
+                    criterion.CountQuantifier = DrawFoldout(criterion.CountQuantifier);
+                    if (int.TryParse(EditorGUILayout.TextField($"{criterion.Count}"), out int num))
+                        criterion.Count = num;
+                }
             }
-        }
 
-        GUILayout.Label("In");
-        criterion.OwningPlayer = DrawFoldout(criterion.OwningPlayer);
-        criterion.ZoneType = DrawFoldout(criterion.ZoneType);
-        if (criterion.OwningPlayer == PlayerTargetType.Player) 
-        {
-            if (_cardData is CreatureData)
-                criterion.IncludeSelf = GUILayout.Toggle(criterion.IncludeSelf, "Include Self");
-        }
-        else if (criterion.OwningPlayer == PlayerTargetType.Opponent)
-            criterion.OpponentChooses = GUILayout.Toggle(criterion.OpponentChooses, "Opponent Chooses");
+            GUILayout.Label("In");
+            criterion.OwningPlayer = DrawFoldout(criterion.OwningPlayer);
+            criterion.ZoneType = DrawFoldout(criterion.ZoneType);
+            if (criterion.OwningPlayer == PlayerTargetType.Player)
+            {
+                if (_cardData is CreatureData)
+                    criterion.IncludeSelf = GUILayout.Toggle(criterion.IncludeSelf, "Include Self");
+            }
+            else if (criterion.OwningPlayer == PlayerTargetType.Opponent)
+                criterion.OpponentChooses = GUILayout.Toggle(criterion.OpponentChooses, "Opponent Chooses");
 
-        GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();
+        }
     }
 
     private void DrawTargetingCondition(EffectTargetingCondition condition)
     {
-        EditorGUILayout.LabelField("Targeting Condition:", EditorStyles.boldLabel);
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(15);
-        GUILayout.BeginVertical();
+        if (condition != null) 
+        {
+            EditorGUILayout.LabelField("Targeting Condition:", EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(15);
+            GUILayout.BeginVertical();
 
-        //TODO: Remove Assign from below and put elsewhere
-        EffectTargetingCondition_ParamSettingWrapper.AssignConditionParams(condition);
-        EffectTargetingCondition_ParamSettingWrapper.DrawConditionParamsLayout(condition);
-        
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
+            condition.AssignConditionParams();
+            condition.DrawConditionParamsLayout();
+
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+        }
     }
     
     private void DrawSubCondition(EffectCondition parentCondition)
