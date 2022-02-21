@@ -30,5 +30,12 @@ namespace DuelMasters.Editor.Data.InternalBookkeeping
             
             return ParameterTargetingType.Check;
         }
+
+        public static void RemoveTargetingType(EffectTargetingCriterion criterion)
+        {
+            DataToTargetingDict.Remove(criterion.GetHashCode());
+
+            SaveWrapper.Save(FILE_NAME, DataToTargetingDict);
+        }
     }
 }

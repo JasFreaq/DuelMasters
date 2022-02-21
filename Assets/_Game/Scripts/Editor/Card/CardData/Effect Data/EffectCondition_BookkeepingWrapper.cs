@@ -18,15 +18,23 @@ namespace DuelMasters.Editor.Data.InternalBookkeeping
         public static void SetConnectToSubCondition(EffectCondition condition, bool connect)
         {
             ConnectToSubConditionDict[condition.GetHashCode()] = connect;
+
             SaveWrapper.Save(FILE_NAME, ConnectToSubConditionDict);
         }
-
+        
         public static bool GetConnectToSubCondition(EffectCondition condition)
         {
             if (ConnectToSubConditionDict.ContainsKey(condition.GetHashCode()))
                 return ConnectToSubConditionDict[condition.GetHashCode()];
             
             return false;
+        }
+
+        public static void RemoveConnectToSubCondition(EffectCondition condition)
+        {
+            ConnectToSubConditionDict.Remove(condition.GetHashCode());
+
+            SaveWrapper.Save(FILE_NAME, ConnectToSubConditionDict);
         }
     }
 }

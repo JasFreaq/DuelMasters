@@ -12,7 +12,7 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 
 #if UNITY_EDITOR
 
-        public abstract void DrawParamInspector();
+        public abstract void DrawInspector();
 
         public abstract bool IsAssignedValue();
 

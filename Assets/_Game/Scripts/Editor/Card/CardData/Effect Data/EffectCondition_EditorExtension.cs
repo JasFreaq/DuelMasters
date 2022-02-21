@@ -14,6 +14,11 @@ namespace DuelMasters.Editor.Data.Extensions
             return EffectCondition_BookkeepingWrapper.GetConnectToSubCondition(condition);
         }
 
+        public static void RemoveConnectToSubCondition(this EffectCondition condition)
+        {
+            EffectCondition_BookkeepingWrapper.RemoveConnectToSubCondition(condition);
+        }
+
         public static string GetEditorRepresentationString(this EffectCondition condition)
         {
             string str = GetTypeRepresentation();

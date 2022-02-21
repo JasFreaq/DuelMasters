@@ -91,7 +91,7 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 
 #if UNITY_EDITOR
 
-        public override void DrawParamInspector()
+        public override void DrawInspector()
         {
             if (_raceConditions.Count > 0)
             {

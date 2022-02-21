@@ -72,7 +72,7 @@ namespace DuelMasters.Editor.Data.DataSetters
         {
             foreach (EffectTargetingConditionParameter param in condition.ConditionParams)
             {
-                param.DrawParamInspector();
+                param.DrawInspector();
             }
         }
     }

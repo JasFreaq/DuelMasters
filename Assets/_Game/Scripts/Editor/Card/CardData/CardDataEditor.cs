@@ -136,8 +136,13 @@ namespace DuelMasters.Editor.Data
 
         private void RemoveCondition(EffectCondition condition)
         {
-            if (condition && condition.SubCondition)
-                RemoveCondition(condition.SubCondition);
+            if (condition)
+            {
+                if (condition.SubCondition)
+                    RemoveCondition(condition.SubCondition);
+
+                condition.RemoveConnectToSubCondition();
+            }
 
             DestroyImmediate(condition, true);
         }
@@ -181,9 +186,12 @@ namespace DuelMasters.Editor.Data
 
             if (condition.TargetingCriterion != null)
             {
-                DrawTargetingCriterion(condition.TargetingCriterion);
+                condition.TargetingCriterion.DrawInspector(_cardData);
                 if (GUILayout.Button("Remove Targeting Criterion"))
+                {
+                    condition.TargetingCriterion.RemoveTargetingType();
                     condition.TargetingCriterion = null;
+                }
             }
             else if (GUILayout.Button("Add Targeting Criterion"))
             {
@@ -438,44 +446,7 @@ namespace DuelMasters.Editor.Data
 
             //#endregion
         }
-
-        private void DrawTargetingCriterion(EffectTargetingCriterion criterion)
-        {
-            if (criterion != null)
-            {
-                GUILayout.BeginHorizontal();
-
-                GUILayout.Label("Targeting Criterion:", EditorStyles.boldLabel);
-
-                ParameterTargetingType targetingType = criterion.GetTargetingType();
-                GUILayout.Label($"{targetingType}");
-
-                if (targetingType != ParameterTargetingType.Count)
-                {
-                    criterion.CountRangeType = DrawFoldout(criterion.CountRangeType);
-                    if (criterion.CountRangeType == CountRangeType.Number)
-                    {
-                        criterion.CountQuantifier = DrawFoldout(criterion.CountQuantifier);
-                        if (int.TryParse(EditorGUILayout.TextField($"{criterion.Count}"), out int num))
-                            criterion.Count = num;
-                    }
-                }
-
-                GUILayout.Label("In");
-                criterion.OwningPlayer = DrawFoldout(criterion.OwningPlayer);
-                criterion.ZoneType = DrawFoldout(criterion.ZoneType);
-                if (criterion.OwningPlayer == PlayerTargetType.Player)
-                {
-                    if (_cardData is CreatureData)
-                        criterion.IncludeSelf = GUILayout.Toggle(criterion.IncludeSelf, "Include Self");
-                }
-                else if (criterion.OwningPlayer == PlayerTargetType.Opponent)
-                    criterion.OpponentChooses = GUILayout.Toggle(criterion.OpponentChooses, "Opponent Chooses");
-
-                GUILayout.EndHorizontal();
-            }
-        }
-
+        
         private void DrawTargetingCondition(EffectTargetingCondition condition)
         {
             if (condition != null)

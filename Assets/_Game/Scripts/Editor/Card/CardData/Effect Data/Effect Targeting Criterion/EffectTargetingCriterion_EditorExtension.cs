@@ -1,49 +1,95 @@
 using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
 using DuelMasters.Editor.Data.InternalBookkeeping;
+using UnityEditor;
+using UnityEditor.DuelMasters;
+using UnityEngine;
 
 namespace DuelMasters.Editor.Data.Extensions
 {
     public static class EffectTargetingCriterion_EditorExtension
     {
-        public static void SetTargetingType(this EffectTargetingCriterion targetingCriterion,
+        #region Internal Bookkeeping
+
+        public static void SetTargetingType(this EffectTargetingCriterion criterion,
             ParameterTargetingType targetingType)
         {
-            EffectTargetingCriterion_BookkeepingWrapper.SetTargetingType(targetingCriterion, targetingType);
+            EffectTargetingCriterion_BookkeepingWrapper.SetTargetingType(criterion, targetingType);
             if (targetingType == ParameterTargetingType.Count)
-                targetingCriterion.CountRangeType = CountRangeType.All;
+                criterion.CountRangeType = CountRangeType.All;
         }
 
-        public static ParameterTargetingType GetTargetingType(this EffectTargetingCriterion targetingCriterion)
+        public static ParameterTargetingType GetTargetingType(this EffectTargetingCriterion criterion)
         {
-            return EffectTargetingCriterion_BookkeepingWrapper.GetTargetingType(targetingCriterion);
+            return EffectTargetingCriterion_BookkeepingWrapper.GetTargetingType(criterion);
         }
 
-        public static bool TypeEquals(this EffectTargetingCriterion targetingCriterion,
+        public static void RemoveTargetingType(this EffectTargetingCriterion criterion)
+        {
+            EffectTargetingCriterion_BookkeepingWrapper.RemoveTargetingType(criterion);
+        }
+
+        public static bool TypeEquals(this EffectTargetingCriterion criterion,
             ParameterTargetingType targetingType)
         {
-            return GetTargetingType(targetingCriterion) == targetingType;
+            return GetTargetingType(criterion) == targetingType;
         }
 
-        public static string GetEditorRepresentationString(this EffectTargetingCriterion targetingCriterion)
+        #endregion
+
+        public static void DrawInspector(this EffectTargetingCriterion criterion, CardData cardData)
         {
-            ParameterTargetingType targetingType = targetingCriterion.GetTargetingType();
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label("Targeting Criterion:", EditorStyles.boldLabel);
+
+            ParameterTargetingType targetingType = criterion.GetTargetingType();
+            GUILayout.Label($"{targetingType}");
+
+            if (targetingType != ParameterTargetingType.Count)
+            {
+                criterion.CountRangeType = EditorUtils.DrawFoldout(criterion.CountRangeType);
+                if (criterion.CountRangeType == CountRangeType.Number)
+                {
+                    criterion.CountQuantifier = EditorUtils.DrawFoldout(criterion.CountQuantifier);
+                    if (int.TryParse(EditorGUILayout.TextField($"{criterion.Count}"), out int num))
+                        criterion.Count = num;
+                }
+            }
+
+            GUILayout.Label("In");
+            criterion.OwningPlayer = EditorUtils.DrawFoldout(criterion.OwningPlayer);
+            criterion.ZoneType = EditorUtils.DrawFoldout(criterion.ZoneType);
+            if (criterion.OwningPlayer == PlayerTargetType.Player)
+            {
+                if (cardData is CreatureData)
+                    criterion.IncludeSelf = GUILayout.Toggle(criterion.IncludeSelf, "Include Self");
+            }
+            else if (criterion.OwningPlayer == PlayerTargetType.Opponent)
+                criterion.OpponentChooses = GUILayout.Toggle(criterion.OpponentChooses, "Opponent Chooses");
+
+            GUILayout.EndHorizontal();
+        }
+
+        public static string GetEditorRepresentationString(this EffectTargetingCriterion criterion)
+        {
+            ParameterTargetingType targetingType = criterion.GetTargetingType();
             string str = $"{targetingType} ";
 
             if (targetingType != ParameterTargetingType.Count)
             {
-                if (targetingCriterion.CountRangeType == CountRangeType.Number)
-                    str += $"{targetingCriterion.CountQuantifier} {targetingCriterion.Count} ";
+                if (criterion.CountRangeType == CountRangeType.Number)
+                    str += $"{criterion.CountQuantifier} {criterion.Count} ";
                 else
-                    str += $"{targetingCriterion.CountRangeType} ";
+                    str += $"{criterion.CountRangeType} ";
             }
 
-            PlayerTargetType owningPlayer = targetingCriterion.OwningPlayer;
-            str += $"in {owningPlayer} {targetingCriterion.ZoneType}";
+            PlayerTargetType owningPlayer = criterion.OwningPlayer;
+            str += $"in {owningPlayer} {criterion.ZoneType}";
 
             if (owningPlayer == PlayerTargetType.Player &&
-                !targetingCriterion.IncludeSelf)
+                !criterion.IncludeSelf)
                 str += " except itself";
-            else if (owningPlayer == PlayerTargetType.Opponent && targetingCriterion.OpponentChooses)
+            else if (owningPlayer == PlayerTargetType.Opponent && criterion.OpponentChooses)
                 str += " chosen by opponent";
 
             return str;
