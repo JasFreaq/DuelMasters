@@ -1,5 +1,4 @@
 using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
-using DuelMasters.Editor.Data.InternalBookkeeping;
 using UnityEditor;
 using UnityEditor.DuelMasters;
 using UnityEngine;
@@ -8,41 +7,13 @@ namespace DuelMasters.Editor.Data.Extensions
 {
     public static class EffectTargetingCriterion_EditorExtension
     {
-        #region Internal Bookkeeping
-
-        public static void SetTargetingType(this EffectTargetingCriterion criterion,
-            ParameterTargetingType targetingType)
-        {
-            EffectTargetingCriterion_BookkeepingWrapper.SetTargetingType(criterion, targetingType);
-            if (targetingType == ParameterTargetingType.Count)
-                criterion.CountRangeType = CountRangeType.All;
-        }
-
-        public static ParameterTargetingType GetTargetingType(this EffectTargetingCriterion criterion)
-        {
-            return EffectTargetingCriterion_BookkeepingWrapper.GetTargetingType(criterion);
-        }
-
-        public static void RemoveTargetingType(this EffectTargetingCriterion criterion)
-        {
-            EffectTargetingCriterion_BookkeepingWrapper.RemoveTargetingType(criterion);
-        }
-
-        public static bool TypeEquals(this EffectTargetingCriterion criterion,
-            ParameterTargetingType targetingType)
-        {
-            return GetTargetingType(criterion) == targetingType;
-        }
-
-        #endregion
-
         public static void DrawInspector(this EffectTargetingCriterion criterion, CardData cardData)
         {
             GUILayout.BeginHorizontal();
 
             GUILayout.Label("Targeting Criterion:", EditorStyles.boldLabel);
 
-            ParameterTargetingType targetingType = criterion.GetTargetingType();
+            ParameterTargetingType targetingType = criterion.targetingType;
             GUILayout.Label($"{targetingType}");
 
             if (targetingType != ParameterTargetingType.Count)
@@ -72,7 +43,7 @@ namespace DuelMasters.Editor.Data.Extensions
 
         public static string GetEditorRepresentationString(this EffectTargetingCriterion criterion)
         {
-            ParameterTargetingType targetingType = criterion.GetTargetingType();
+            ParameterTargetingType targetingType = criterion.targetingType;
             string str = $"{targetingType} ";
 
             if (targetingType != ParameterTargetingType.Count)

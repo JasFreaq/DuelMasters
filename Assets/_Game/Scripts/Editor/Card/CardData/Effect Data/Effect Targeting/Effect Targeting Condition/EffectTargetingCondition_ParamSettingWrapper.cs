@@ -10,6 +10,7 @@ namespace DuelMasters.Editor.Data.DataSetters
         {
             List<EffectTargetingConditionParameter> newParams =
                 ReflectiveEnumerator.GetClassesOfType<EffectTargetingConditionParameter>();
+
             if (condition.ConditionParams == null)
             {
                 condition.ConditionParams = newParams;
@@ -30,6 +31,7 @@ namespace DuelMasters.Editor.Data.DataSetters
         public static void ClearUnassignedParams(EffectTargetingCondition condition)
         {
             List<EffectTargetingConditionParameter> unassignedParams = new List<EffectTargetingConditionParameter>();
+            
             foreach (EffectTargetingConditionParameter param in condition.ConditionParams)
             {
                 if (!param.IsAssignedValue())

@@ -74,6 +74,3 @@ crashlytics-build.properties
 #Test Folder
 /[Aa]ssets/_[Gg]ame/_[Tt]est/
 /[Aa]ssets/_[Gg]ame/_[Tt]est.meta
-
-#Bookkeeping Folder
-/[Aa]ssets/[Ee]ditor [Dd]efault [Rr]esources/

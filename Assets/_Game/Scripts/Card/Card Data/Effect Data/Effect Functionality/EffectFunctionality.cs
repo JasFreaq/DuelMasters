@@ -141,7 +141,7 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private int _costAdjustmentAmount;
 
     [SerializeReference] private List<RaceHolder> _vortexRaces = new List<RaceHolder>();
-    [SerializeReference] private bool _shouldMultiplyVal = false;
+    [SerializeReference] private bool _shouldMultiplyVal;
     [SerializeReference] private bool _alterFunctionUntilEndOfTurn = true;
 
     #endregion

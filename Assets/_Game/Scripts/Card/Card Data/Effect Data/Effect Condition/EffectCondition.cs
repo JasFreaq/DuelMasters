@@ -13,6 +13,15 @@ public class EffectCondition : ScriptableObject
     [SerializeReference] private EffectCondition _subCondition;
     [SerializeReference] private EffectFunctionality _subFunctionality;
 
+#if UNITY_EDITOR
+
+    #region Editor Only Members
+
+    [SerializeField] public bool connectToSubCondition;
+
+    #endregion
+#endif
+
     #region Type Specific Members
 
     [SerializeReference] private TapStateType _tapState;

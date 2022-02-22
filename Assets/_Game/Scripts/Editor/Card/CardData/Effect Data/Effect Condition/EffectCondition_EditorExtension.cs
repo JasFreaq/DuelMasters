@@ -1,24 +1,7 @@
-using DuelMasters.Editor.Data.InternalBookkeeping;
-
 namespace DuelMasters.Editor.Data.Extensions
 {
     public static class EffectCondition_EditorExtension
     {
-        public static void SetConnectToSubCondition(this EffectCondition condition, bool connect)
-        {
-            EffectCondition_BookkeepingWrapper.SetConnectToSubCondition(condition, connect);
-        }
-
-        public static bool GetConnectToSubCondition(this EffectCondition condition)
-        {
-            return EffectCondition_BookkeepingWrapper.GetConnectToSubCondition(condition);
-        }
-
-        public static void RemoveConnectToSubCondition(this EffectCondition condition)
-        {
-            EffectCondition_BookkeepingWrapper.RemoveConnectToSubCondition(condition);
-        }
-
         public static string GetEditorRepresentationString(this EffectCondition condition)
         {
             string str = GetTypeRepresentation();
@@ -29,7 +12,7 @@ namespace DuelMasters.Editor.Data.Extensions
             if (condition.TargetingCondition != null)
                 str += $" where{condition.TargetingCondition}";
 
-            if (condition.GetConnectToSubCondition())
+            if (condition.connectToSubCondition)
                 str += $" {condition.Connector}";
 
             if (condition.SubCondition)

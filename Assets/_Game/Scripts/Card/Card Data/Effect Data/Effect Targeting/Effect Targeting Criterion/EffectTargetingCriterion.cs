@@ -18,6 +18,14 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Data
         [SerializeReference] private bool _includeSelf;
         [SerializeReference] private bool _opponentChooses;
 
+#if UNITY_EDITOR
+        #region Editor Only Members
+
+        [SerializeField] public ParameterTargetingType targetingType;
+
+        #endregion
+#endif
+
         public CountRangeType CountRangeType
         {
             get { return _countRangeType; }
