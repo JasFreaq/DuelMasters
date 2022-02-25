@@ -7,6 +7,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
     {
         [SerializeReference] private CardParams.CardType _cardTypeCondition;
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 1; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;

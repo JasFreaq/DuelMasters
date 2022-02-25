@@ -10,6 +10,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
     {
         [SerializeReference] private TapStateType _tapCondition;
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 6; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;

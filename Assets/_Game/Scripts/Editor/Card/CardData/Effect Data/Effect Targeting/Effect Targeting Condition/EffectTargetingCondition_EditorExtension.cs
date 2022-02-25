@@ -7,38 +7,46 @@ namespace DuelMasters.Editor.Data.Extensions
 {
     public static class EffectTargetingCondition_EditorExtension
     {
-        public static void DrawInspector(this EffectTargetingCondition condition)
+        public static void DrawInspector(this EffectTargetingCondition targetingCondition)
         {
-            if (condition != null)
+            if (targetingCondition != null)
             {
                 EditorGUILayout.LabelField("Targeting Condition:", EditorStyles.boldLabel);
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(15);
                 GUILayout.BeginVertical();
 
-                AssignConditionParams(condition);
-                DrawConditionParamsLayout(condition);
+                AssignConditionParams(targetingCondition);
+                DrawConditionParamsLayout(targetingCondition);
 
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
             }
         }
 
-        private static void AssignConditionParams(EffectTargetingCondition condition)
+        private static void AssignConditionParams(EffectTargetingCondition targetingCondition)
         {
-            EffectTargetingCondition_ParamSettingWrapper.AssignConditionParams(condition);
+            EffectTargetingCondition_ParamSettingWrapper.AssignConditionParams(targetingCondition);
         }
 
-        private static void DrawConditionParamsLayout(EffectTargetingCondition condition)
+        private static void DrawConditionParamsLayout(EffectTargetingCondition targetingCondition)
         {
-            EffectTargetingCondition_ParamSettingWrapper.DrawConditionParamsLayout(condition);
+            foreach (EffectTargetingConditionParameter param in targetingCondition.ConditionParams)
+            {
+                param.DrawInspector();
+            }
         }
 
-        public static string GetEditorRepresentationString(this EffectTargetingCondition condition)
+        public static void ClearUnassignedParams(this EffectTargetingCondition targetingCondition)
+        {
+            EffectTargetingCondition_ParamSettingWrapper.ClearUnassignedParams(targetingCondition);
+        }
+
+        public static string GetEditorRepresentationString(this EffectTargetingCondition targetingCondition)
         {
             string str = "";
 
-            foreach (EffectTargetingConditionParameter param in condition.ConditionParams)
+            foreach (EffectTargetingConditionParameter param in targetingCondition.ConditionParams)
                 str += param.GetEditorRepresentationString();
 
             return str;

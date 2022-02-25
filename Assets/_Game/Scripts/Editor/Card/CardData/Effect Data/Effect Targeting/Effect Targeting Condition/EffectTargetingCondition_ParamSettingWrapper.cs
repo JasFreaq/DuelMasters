@@ -6,33 +6,33 @@ namespace DuelMasters.Editor.Data.DataSetters
 {
     public static class EffectTargetingCondition_ParamSettingWrapper
     {
-        public static void AssignConditionParams(EffectTargetingCondition condition)
+        public static void AssignConditionParams(EffectTargetingCondition targetingCondition)
         {
             List<EffectTargetingConditionParameter> newParams =
-                ReflectiveEnumerator.GetClassesOfType<EffectTargetingConditionParameter>();
+                ReflectiveEnumerator.GetComparableClassesOfType<EffectTargetingConditionParameter>();
 
-            if (condition.ConditionParams == null)
+            if (targetingCondition.ConditionParams == null)
             {
-                condition.ConditionParams = newParams;
+                targetingCondition.ConditionParams = newParams;
 
-                condition.CardIntrinsicConditionParams = new List<EffectTargetingConditionParameter>();
+                targetingCondition.CardIntrinsicConditionParams = new List<EffectTargetingConditionParameter>();
                 foreach (EffectTargetingConditionParameter newParam in newParams)
                 {
                     if (newParam is ICardIntrinsicParam)
-                        condition.CardIntrinsicConditionParams.Add(newParam);
+                        targetingCondition.CardIntrinsicConditionParams.Add(newParam);
                 }
             }
             else
             {
-                PopulateParamListWithMissingTypes(condition, newParams);
+                PopulateParamListWithMissingTypes(targetingCondition, newParams);
             }
         }
 
-        public static void ClearUnassignedParams(EffectTargetingCondition condition)
+        public static void ClearUnassignedParams(EffectTargetingCondition targetingCondition)
         {
             List<EffectTargetingConditionParameter> unassignedParams = new List<EffectTargetingConditionParameter>();
             
-            foreach (EffectTargetingConditionParameter param in condition.ConditionParams)
+            foreach (EffectTargetingConditionParameter param in targetingCondition.ConditionParams)
             {
                 if (!param.IsAssignedValue())
                     unassignedParams.Add(param);
@@ -40,18 +40,18 @@ namespace DuelMasters.Editor.Data.DataSetters
 
             foreach (EffectTargetingConditionParameter unassignedParam in unassignedParams)
             {
-                condition.ConditionParams.Remove(unassignedParam);
-                condition.CardIntrinsicConditionParams.Remove(unassignedParam);
+                targetingCondition.ConditionParams.Remove(unassignedParam);
+                targetingCondition.CardIntrinsicConditionParams.Remove(unassignedParam);
             }
         }
 
-        private static void PopulateParamListWithMissingTypes(EffectTargetingCondition condition,
+        private static void PopulateParamListWithMissingTypes(EffectTargetingCondition targetingCondition,
             List<EffectTargetingConditionParameter> newParams)
         {
             Dictionary<string, EffectTargetingConditionParameter> existingParamsMap =
                 new Dictionary<string, EffectTargetingConditionParameter>();
 
-            foreach (EffectTargetingConditionParameter existingParam in condition.ConditionParams)
+            foreach (EffectTargetingConditionParameter existingParam in targetingCondition.ConditionParams)
             {
                 Type type = existingParam.GetType();
                 existingParamsMap.Add(type.Name, existingParam);
@@ -62,20 +62,15 @@ namespace DuelMasters.Editor.Data.DataSetters
                 Type type = newParam.GetType();
                 if (!existingParamsMap.ContainsKey(type.Name))
                 {
-                    condition.ConditionParams.Add(newParam);
+                    targetingCondition.ConditionParams.Add(newParam);
 
                     if (newParam is ICardIntrinsicParam)
-                        condition.CardIntrinsicConditionParams.Add(newParam);
+                        targetingCondition.CardIntrinsicConditionParams.Add(newParam);
                 }
             }
-        }
 
-        public static void DrawConditionParamsLayout(EffectTargetingCondition condition)
-        {
-            foreach (EffectTargetingConditionParameter param in condition.ConditionParams)
-            {
-                param.DrawInspector();
-            }
+            targetingCondition.ConditionParams.Sort();
+            targetingCondition.CardIntrinsicConditionParams.Sort();
         }
     }
 }

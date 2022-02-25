@@ -33,6 +33,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 
         [SerializeReference] private List<PowerCondition> _powerConditions = new List<PowerCondition>();
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 4; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;

@@ -24,6 +24,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
         [SerializeReference]
         private List<CivilizationCondition> _civilizationConditions = new List<CivilizationCondition>();
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 2; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;

@@ -22,6 +22,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 
         [SerializeReference] private List<CardCondition> _cardConditions = new List<CardCondition>();
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 0; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;
@@ -96,7 +105,7 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
         {
             return $"\nCard is{ToString()}";
         }
-
+        
 #endif
 
         public override string GetGameRepresentationString()

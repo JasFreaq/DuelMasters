@@ -18,4 +18,12 @@ public static class ReflectiveEnumerator
 
         return objects;
     }
+
+    public static List<T> GetComparableClassesOfType<T>(params object[] constructorArgs) where T : class, IComparable<T>
+    {
+        List<T> objects = GetClassesOfType<T>(constructorArgs);
+        objects.Sort();
+
+        return objects;
+    }
 }

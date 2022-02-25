@@ -66,8 +66,10 @@ namespace DuelMasters.Editor.Data
                     if (GUILayout.Button("End Edit"))
                     {
                         effect.isBeingEdited = false;
-                        /*TODO: Clear Unused EffectTargetingConditionParams
-                         Refactor Functionality and Condition under same base class */
+                        if (effect.EffectCondition) 
+                            effect.EffectCondition.TargetingCondition?.ClearUnassignedParams();
+
+                        //TODO: Refactor Functionality and Condition under same base class
                     }
                 }
                 else

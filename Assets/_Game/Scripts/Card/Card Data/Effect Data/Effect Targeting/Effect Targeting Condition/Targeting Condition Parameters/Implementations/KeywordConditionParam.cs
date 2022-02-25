@@ -23,6 +23,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 
         [SerializeReference] private List<KeywordCondition> _keywordConditions = new List<KeywordCondition>();
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 3; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;

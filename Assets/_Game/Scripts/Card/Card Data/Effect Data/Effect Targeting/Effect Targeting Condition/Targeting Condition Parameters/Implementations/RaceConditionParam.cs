@@ -21,6 +21,15 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 
         [SerializeReference] private List<RaceCondition> _raceConditions = new List<RaceCondition>();
 
+#if UNITY_EDITOR
+
+        public override int CompareValue
+        {
+            get { return 5; }
+        }
+
+#endif
+
         public override bool IsConditionSatisfied(CardInstance cardInstToCheck)
         {
             bool result = true;
