@@ -1,7 +1,15 @@
+using DuelMasters.Card.Data.Effects.Condition;
+using DuelMasters.Editor.Data.DataSetters;
+
 namespace DuelMasters.Editor.Data.Extensions
 {
     public static class EffectCondition_EditorExtension
     {
+        public static void AssignConditionParam(this EffectCondition condition)
+        {
+            EffectCondition_ParamSettingWrapper.AssignConditionParam(condition);
+        }
+
         public static string GetEditorRepresentationString(this EffectCondition condition)
         {
             string str = GetTypeRepresentation();
@@ -26,14 +34,14 @@ namespace DuelMasters.Editor.Data.Extensions
             {
                 switch (condition.Type)
                 {
-                    case EffectConditionType.WhileTapState:
-                        return $"While {condition.TapState}ped";
+                    //case EffectConditionType.WhileTapState:
+                    //    return $"While {condition.TapState}ped";
 
-                    case EffectConditionType.CheckFunction:
-                        string str1 = "Check if target ";
-                        str1 += condition.CheckHasFunction ? "has" : "doesn't have";
-                        str1 += $" function(s)\n\t{condition.SubFunctionality}";
-                        return str1;
+                    //case EffectConditionType.CheckFunction:
+                    //    string str1 = "Check if target ";
+                    //    str1 += condition.CheckHasFunction ? "has" : "doesn't have";
+                    //    str1 += $" function(s)\n\t{condition.SubFunctionality}";
+                    //    return str1;
 
                     default:
                         return condition.Type.ToString();

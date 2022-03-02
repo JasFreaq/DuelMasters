@@ -3,6 +3,7 @@ using DuelMasters.Card.Data.Effects.TargetingCondition.Parameters;
 using DuelMasters.Editor.Data.Extensions;
 using System;
 using System.Collections.Generic;
+using DuelMasters.Card.Data.Effects.Condition;
 using UnityEditor;
 using UnityEditor.DuelMasters;
 using UnityEngine;
@@ -171,20 +172,12 @@ namespace DuelMasters.Editor.Data
         private void DrawCondition(EffectCondition condition, string labelText)
         {
             GUILayout.BeginHorizontal();
-
             GUILayout.Label(labelText, EditorStyles.boldLabel);
-            condition.Type = EditorUtils.DrawFoldout(condition.Type);
 
-            switch (condition.Type)
-            {
-                case EffectConditionType.WhileTapState:
-                    condition.TapState = EditorUtils.DrawFoldout(condition.TapState);
-                    break;
-
-                case EffectConditionType.CheckFunction:
-                    condition.CheckHasFunction = GUILayout.Toggle(condition.CheckHasFunction, "Has Function");
-                    break;
-            }
+            condition.Type = EditorUtils.DrawFoldout(condition.Type, out bool changed);
+            if (changed) 
+                condition.AssignConditionParam();
+            condition.ConditionParam?.DrawInspector();
 
             condition.connectToSubCondition = (GUILayout.Toggle(condition.connectToSubCondition, "Connect"));
             if (condition.connectToSubCondition)

@@ -9,24 +9,24 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
     [System.Serializable]
     public class EffectTargetingCondition
     {
-        [SerializeReference] private List<EffectTargetingConditionParameter> _conditionParams;
-        [SerializeReference] private List<EffectTargetingConditionParameter> _cardIntrinsicConditionParams;
+        [SerializeReference] private List<EffectTargetingConditionParameter> _targetingConditionParams;
+        [SerializeReference] private List<EffectTargetingConditionParameter> _cardIntrinsicTargetingConditionParams;
 
-        public List<EffectTargetingConditionParameter> ConditionParams
+        public List<EffectTargetingConditionParameter> TargetingConditionParams
         {
-            get { return _conditionParams; }
+            get { return _targetingConditionParams; }
 
 #if UNITY_EDITOR
-            set { _conditionParams = value; }
+            set { _targetingConditionParams = value; }
 #endif
         }
 
-        public List<EffectTargetingConditionParameter> CardIntrinsicConditionParams
+        public List<EffectTargetingConditionParameter> CardIntrinsicTargetingConditionParams
         {
-            get { return _cardIntrinsicConditionParams; }
+            get { return _cardIntrinsicTargetingConditionParams; }
 
 #if UNITY_EDITOR
-            set { _cardIntrinsicConditionParams = value; }
+            set { _cardIntrinsicTargetingConditionParams = value; }
 #endif
         }
 
@@ -36,7 +36,7 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
         {
             string str = "";
 
-            foreach (EffectTargetingConditionParameter param in CardIntrinsicConditionParams)
+            foreach (EffectTargetingConditionParameter param in CardIntrinsicTargetingConditionParams)
                 str += param.GetGameRepresentationString();
 
             return str;

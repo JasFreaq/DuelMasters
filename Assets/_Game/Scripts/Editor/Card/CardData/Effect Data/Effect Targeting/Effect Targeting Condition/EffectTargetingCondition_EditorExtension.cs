@@ -26,12 +26,12 @@ namespace DuelMasters.Editor.Data.Extensions
 
         private static void AssignConditionParams(EffectTargetingCondition targetingCondition)
         {
-            EffectTargetingCondition_ParamSettingWrapper.AssignConditionParams(targetingCondition);
+            EffectTargetingCondition_ParamSettingWrapper.AssignTargetingConditionParams(targetingCondition);
         }
 
         private static void DrawConditionParamsLayout(EffectTargetingCondition targetingCondition)
         {
-            foreach (EffectTargetingConditionParameter param in targetingCondition.ConditionParams)
+            foreach (EffectTargetingConditionParameter param in targetingCondition.TargetingConditionParams)
             {
                 param.DrawInspector();
             }
@@ -46,7 +46,7 @@ namespace DuelMasters.Editor.Data.Extensions
         {
             string str = "";
 
-            foreach (EffectTargetingConditionParameter param in targetingCondition.ConditionParams)
+            foreach (EffectTargetingConditionParameter param in targetingCondition.TargetingConditionParams)
                 str += param.GetEditorRepresentationString();
 
             return str;

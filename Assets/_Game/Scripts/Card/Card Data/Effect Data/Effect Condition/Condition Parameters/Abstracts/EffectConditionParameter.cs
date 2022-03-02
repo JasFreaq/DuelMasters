@@ -1,19 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-[System.Serializable]
-public abstract class EffectConditionParameter
+namespace DuelMasters.Card.Data.Effects.Condition.Parameters
 {
-    protected EffectConditionType _conditionType;
-
+    [System.Serializable]
+    public abstract class EffectConditionParameter
+    {
 #if UNITY_EDITOR
 
-    public EffectConditionType ConditionType
-    {
-        get { return _conditionType; }
-    }
+        public abstract EffectConditionType ConditionType { get; }
+
+        public abstract void DrawInspector();
 
 #endif
+    }
 }

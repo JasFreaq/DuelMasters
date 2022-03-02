@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DuelMasters.Card.Data.Effects.Condition;
 using UnityEditor;
 using UnityEngine;
 
