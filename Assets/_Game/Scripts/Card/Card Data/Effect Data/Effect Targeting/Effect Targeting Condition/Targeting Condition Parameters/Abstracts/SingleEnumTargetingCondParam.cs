@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    public abstract class SingleEnumConditionParam : EffectTargetingConditionParameter
+    public abstract class SingleEnumTargetingCondParam : EffectTargetingConditionParameter
     {
 #if UNITY_EDITOR
 

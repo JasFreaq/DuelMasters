@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    public class RaceTargetingConditionParam : EffectTargetingConditionParameter, ICardIntrinsicParam
+    public class RaceTargetingCondParam : EffectTargetingConditionParameter, ICardIntrinsicParam
     {
         #region Helper Data Structure(s)
 

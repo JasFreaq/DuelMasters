@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    public class CardTypeTargetingConditionParam : SingleEnumConditionParam, ICardIntrinsicParam
+    public class CardTypeTargetingCondParam : SingleEnumTargetingCondParam, ICardIntrinsicParam
     {
         [SerializeReference] private CardParams.CardType _cardTypeCondition;
 

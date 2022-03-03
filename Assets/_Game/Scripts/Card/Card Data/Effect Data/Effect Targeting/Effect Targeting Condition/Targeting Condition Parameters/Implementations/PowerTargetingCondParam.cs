@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    public class PowerTargetingConditionParam : EffectTargetingConditionParameter, ICardIntrinsicParam
+    public class PowerTargetingCondParam : EffectTargetingConditionParameter, ICardIntrinsicParam
     {
         #region Helper Data Structure(s)
 

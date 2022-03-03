@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
 {
-    public class TapTargetingConditionParam : SingleEnumConditionParam, IFieldStateParam
+    public class TapTargetingCondParam : SingleEnumTargetingCondParam, IFieldStateParam
     {
         [SerializeReference] private TapStateType _tapCondition;
 

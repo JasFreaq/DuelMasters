@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DuelMasters.Card.Data.Effects.Functionality.Parameters;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Parameters;
 using UnityEngine;

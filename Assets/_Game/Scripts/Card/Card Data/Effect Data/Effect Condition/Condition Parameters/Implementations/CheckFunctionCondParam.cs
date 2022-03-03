@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Condition.Parameters
 {
-    public class CheckFunctionConditionParam : EffectConditionParameter
+    public class CheckFunctionCondParam : EffectConditionParameter
     {
         private bool _checkHasFunction = true;
 
@@ -20,10 +20,6 @@ namespace DuelMasters.Card.Data.Effects.Condition.Parameters
         public bool CheckHasFunction
         {
             get { return _checkHasFunction; }
-
-#if UNITY_EDITOR
-            set { _checkHasFunction = value; }
-#endif
         }
 
 #if UNITY_EDITOR

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Condition.Parameters
 {
-    public class TapStateConditionParam : EffectConditionParameter
+    public class TapStateCondParam : EffectConditionParameter
     {
         private TapStateType _tapState;
 
@@ -21,10 +21,6 @@ namespace DuelMasters.Card.Data.Effects.Condition.Parameters
         public TapStateType TapState
         {
             get { return _tapState; }
-
-#if UNITY_EDITOR
-            set { _tapState = value; }
-#endif
         }
 
 #if UNITY_EDITOR

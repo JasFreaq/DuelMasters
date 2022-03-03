@@ -1,118 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using DuelMasters.Card.Data.Effects.Functionality.Parameters;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Parameters;
 using UnityEngine;
-
-#region Helper Data Structures
-
-[System.Serializable]
-public enum DeckCardMoveType
-{
-    Top,
-    SearchShuffle
-}
-
-[System.Serializable]
-public class MovementZones
-{
-    public CardZoneType fromZone, toZone;
-    public DeckCardMoveType deckCardMove;
-    public bool showSearchedCard;
-
-    public CountQuantifierType countQuantifier;
-    public int moveCount = 1;
-}
-
-[System.Serializable]
-public class RaceHolder
-{
-    public CardParams.Race race;
-}
-
-[System.Serializable]
-public class DestroyParam
-{
-    public CardZoneType destroyZone;
-    public CountRangeType countRangeType;
-    public int destroyCount = 1;
-
-    public override string ToString()
-    {
-        string str = "Destroy ";
-        if (countRangeType == CountRangeType.All)
-            str += "all cards";
-        else
-        {
-            str += $"{destroyCount} card";
-            if (destroyCount > 1)
-                str += "s ";
-        }
-
-        return str;
-    }
-}
-
-[System.Serializable]
-public class DiscardParam
-{
-    public DiscardType discardType;
-    public CountRangeType countRangeType;
-    public int discardCount = 1;
-
-    public override string ToString()
-    {
-        string str = "discards ";
-        if (countRangeType == CountRangeType.All)
-            str += "all cards";
-        else
-        {
-            str += $"{discardCount} card";
-            if (discardCount > 1)
-                str += "s ";
-
-            switch (discardType)
-            {
-                case DiscardType.Random:
-                    str += "at random";
-                    break;
-                case DiscardType.PlayerChoose:
-                    str += "chosen by player";
-                    break;
-                case DiscardType.OpponentChoose:
-                    str += "chosen by opponent";
-                    break;
-            }
-        }
-
-        return str;
-    }
-}
-
-[System.Serializable]
-public class LookAtParam
-{
-    public CardZoneType lookAtZone;
-    public CountRangeType countRangeType;
-    public int lookCount = 1;
-
-    public override string ToString()
-    {
-        string str = "Look at ";
-        if (countRangeType == CountRangeType.All)
-            str += "all cards";
-        else
-        {
-            str += $"{lookCount} card";
-            if (lookCount > 1)
-                str += "s ";
-        }
-
-        return str;
-    }
-}
-
-#endregion
 
 public class EffectFunctionality : ScriptableObject
 {
@@ -120,9 +11,8 @@ public class EffectFunctionality : ScriptableObject
     [SerializeReference] private CardTargetType _targetCard;
     [SerializeReference] private PlayerTargetType _choosingPlayer;
     [SerializeReference] private PlayerTargetType _targetPlayer;
-    [SerializeReference] private bool _assignedCondition, _connectSubFunctionality;
     [SerializeReference] private EffectTargetingCriterion _targetingCriterion = new EffectTargetingCriterion();
-    [SerializeReference] private EffectTargetingCondition _targetingCondition = new EffectTargetingCondition();
+    [SerializeReference] private EffectTargetingCondition _targetingCondition;
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectFunctionality _subFunctionality;
 
@@ -181,24 +71,7 @@ public class EffectFunctionality : ScriptableObject
         set { _targetPlayer = value; }
 #endif
     }
-
-    public bool AssignedCondition
-    {
-        get { return _assignedCondition; }
-#if UNITY_EDITOR
-        set { _assignedCondition = value; }
-#endif
-    }
-
-    public bool ConnectSubFunctionality
-    {
-        get { return _connectSubFunctionality; }
-
-#if UNITY_EDITOR
-        set { _connectSubFunctionality = value; }
-#endif
-    }
-
+    
     public EffectTargetingCriterion TargetingCriterion
     {
         get { return _targetingCriterion; }
@@ -383,11 +256,11 @@ public class EffectFunctionality : ScriptableObject
         
         if (_targetCard == CardTargetType.TargetOther || _shouldMultiplyVal)
             str += $" {_targetingCriterion}";
-        
-        if (_assignedCondition)
+
+        if (_targetingCondition != null) 
             str += $" where{_targetingCondition}";
 
-        if (_connectSubFunctionality)
+        if (_connector != ConnectorType.None) 
             str += $" {_connector}";
 
         if (_subFunctionality)
