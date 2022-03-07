@@ -91,12 +91,13 @@ public class CardEffectsManager : MonoBehaviour
         bool playerChooses = functionality.TargetPlayer == PlayerTargetType.Player;
         bool affectPlayer = functionality.TargetPlayer == PlayerTargetType.Player;
         
-        if (mayUse)
-            return StartCoroutine(MayProcessRegionMovementRoutine(playerChooses, affectPlayer,
-                functionality.MovementZones, functionality.TargetPlayer, functionality.TargetingCondition));
+        //if (mayUse)
+        //    return StartCoroutine(MayProcessRegionMovementRoutine(playerChooses, affectPlayer,
+        //        functionality.MovementZones, functionality.TargetPlayer, functionality.TargetingCondition));
 
-        return StartCoroutine(AdjustMovementTargetRoutine(playerChooses, affectPlayer, functionality.MovementZones,
-            functionality.TargetPlayer, functionality.TargetingCondition, false));
+        //return StartCoroutine(AdjustMovementTargetRoutine(playerChooses, affectPlayer, functionality.MovementZones,
+        //    functionality.TargetPlayer, functionality.TargetingCondition, false));
+        return null;
     }
 
     public Coroutine ProcessRegionMovement(CardBehaviour card, CardZoneType fromZone, CardZoneType toZone)

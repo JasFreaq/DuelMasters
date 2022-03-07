@@ -110,16 +110,14 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
         {
             if (effectData.EffectFunctionality.Type == EffectFunctionalityType.Keyword)
             {
-                if (effectData.EffectFunctionality.Keyword == KeywordType.VortexEvolution)
+                KeywordFuncParam keywordParam = (KeywordFuncParam) effectData.EffectFunctionality.FunctionalityParam;
+                List<RaceHolder> raceHolders = keywordParam.VortexRaces;
+                foreach (RaceHolder raceHolder in raceHolders)
                 {
-                    List<RaceHolder> raceHolders = effectData.EffectFunctionality.VortexRaces;
-                    foreach (RaceHolder raceHolder in raceHolders)
-                    {
-                        races.Add(raceHolder.race);
-                    }
-                    
-                    break;
+                    races.Add(raceHolder.race);
                 }
+                
+                break;
             }
         }
 
@@ -129,11 +127,12 @@ public class CardData : ScriptableObject, ISerializationCallbackReceiver
     public void OnBeforeSerialize()
     {
         List<KeywordType> keywordTypes = new List<KeywordType>();
-        foreach (EffectData effect in ruleEffects)
+        foreach (EffectData effectData in ruleEffects)
         {
-            if (effect.EffectFunctionality.Type == EffectFunctionalityType.Keyword)
+            if (effectData.EffectFunctionality.Type == EffectFunctionalityType.Keyword)
             {
-                KeywordType keyword = effect.EffectFunctionality.Keyword;
+                KeywordFuncParam keywordParam = (KeywordFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                KeywordType keyword = keywordParam.Keyword;
                 if (!keywordTypes.Contains(keyword))
                     keywordTypes.Add(keyword);
                 else

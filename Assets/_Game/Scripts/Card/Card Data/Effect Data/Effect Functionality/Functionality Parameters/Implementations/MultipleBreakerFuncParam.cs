@@ -37,7 +37,10 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 
         public override bool ShouldAssignCriterion()
         {
-            throw new System.NotImplementedException();
+            if (_multipleBreaker == MultipleBreakerType.CrewBreaker)
+                return true;
+
+            return false;
         }
 
 #endif

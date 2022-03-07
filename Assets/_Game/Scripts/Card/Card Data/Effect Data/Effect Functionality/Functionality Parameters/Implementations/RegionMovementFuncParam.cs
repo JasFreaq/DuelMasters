@@ -28,7 +28,7 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 
     #endregion
 
-    public class RegionMovementFuncParam : EffectFunctionalityParameter
+    public class RegionMovementFuncParam : MultipliableFuncParam
     {
         private MovementZones _movementZones = new MovementZones();
 
@@ -69,7 +69,6 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
                 _movementZones.countQuantifier = EditorUtils.DrawFoldout(_movementZones.countQuantifier);
             if (int.TryParse(EditorGUILayout.TextField($"{_movementZones.moveCount}"), out int num))
                 _movementZones.moveCount = num;
-            //DrawMultiplyVal();
 
             GUILayout.Label("To");
             _movementZones.toZone = EditorUtils.DrawFoldout(_movementZones.toZone);
@@ -80,7 +79,7 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 
         public override bool ShouldAssignCriterion()
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
 #endif

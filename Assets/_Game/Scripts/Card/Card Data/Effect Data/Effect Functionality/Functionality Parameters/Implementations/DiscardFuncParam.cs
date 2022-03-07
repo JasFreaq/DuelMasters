@@ -83,7 +83,7 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 
         public override bool ShouldAssignCriterion()
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
 #endif

@@ -220,13 +220,13 @@ namespace DuelMasters.Editor.Data
             GUILayout.BeginHorizontal();
             GUILayout.Label(labelText, EditorStyles.boldLabel);
 
-            functionality.Type = EditorUtils.DrawFoldout(functionality.Type);
+            functionality.Type = EditorUtils.DrawFoldout(functionality.Type, out bool changed);
+            if (changed) 
+                functionality.AssignConditionParam();
+            functionality.FunctionalityParam?.DrawInspector();
 
-            bool showMultiplyVal = false;
-            DrawFunctionTypeSpecificParams();
-
-            functionality.TargetCard = EditorUtils.DrawFoldout(functionality.TargetCard);
-            switch (functionality.TargetCard)
+            functionality.TargetType = EditorUtils.DrawFoldout(functionality.TargetType);
+            switch (functionality.TargetType)
             {
                 case CardTargetType.AutoTarget:
                     if (functionality.TargetingCriterion.targetingType != ParameterTargetingType.Affect)
@@ -241,10 +241,11 @@ namespace DuelMasters.Editor.Data
                     break;
             }
 
-            if (showMultiplyVal)
+            MultipliableFuncParam multipliable = functionality.FunctionalityParam as MultipliableFuncParam;
+            if (multipliable != null) 
             {
-                functionality.ShouldMultiplyVal = GUILayout.Toggle(functionality.ShouldMultiplyVal, "Multiply val");
-                if (functionality.ShouldMultiplyVal &&
+                multipliable.DrawInspector();
+                if (multipliable.ShouldMultiplyVal &&
                     functionality.TargetingCriterion.targetingType != ParameterTargetingType.Count)
                     functionality.TargetingCriterion.targetingType = ParameterTargetingType.Count;
             }
@@ -253,8 +254,14 @@ namespace DuelMasters.Editor.Data
 
             GUILayout.EndHorizontal();
 
-            if (functionality.TargetUnspecified() && (functionality.ShouldMultiplyVal || functionality.TargetCard == CardTargetType.AutoTarget))
-                functionality.TargetingCriterion.DrawInspector(_cardData);
+            if (functionality.FunctionalityParam.ShouldAssignCriterion())
+            {
+                if ((multipliable != null && multipliable.ShouldMultiplyVal) ||
+                    functionality.TargetType == CardTargetType.AutoTarget) 
+                {
+                    functionality.TargetingCriterion.DrawInspector(_cardData);
+                }
+            }
 
             if (functionality.TargetingCondition != null)
             {
@@ -268,179 +275,6 @@ namespace DuelMasters.Editor.Data
             DrawSubFunctionality(functionality);
 
             EditorUtility.SetDirty(functionality);
-
-            #region Local Functions
-
-            void DrawFunctionTypeSpecificParams()
-            {
-                switch (functionality.Type)
-                {
-                    case EffectFunctionalityType.GrantFunction:
-                    case EffectFunctionalityType.DisableFunction:
-                        functionality.AlterFunctionUntilEndOfTurn = GUILayout.Toggle(functionality.AlterFunctionUntilEndOfTurn, "Until End Of Turn");
-                        break;
-
-                    case EffectFunctionalityType.RegionMovement:
-                        DrawMovementRegions();
-                        break;
-
-                    case EffectFunctionalityType.AttackTarget:
-                        functionality.AttackType = EditorUtils.DrawFoldout(functionality.AttackType);
-                        break;
-
-                    case EffectFunctionalityType.TargetBehaviour:
-                        functionality.TargetBehaviour = EditorUtils.DrawFoldout(functionality.TargetBehaviour);
-                        break;
-
-                    case EffectFunctionalityType.Keyword:
-                        functionality.Keyword = EditorUtils.DrawFoldout(functionality.Keyword);
-                        if (functionality.Keyword == KeywordType.VortexEvolution)
-                            DrawVortexRaces();
-                        break;
-
-                    case EffectFunctionalityType.MultipleBreaker:
-                        functionality.MultipleBreaker = EditorUtils.DrawFoldout(functionality.MultipleBreaker);
-                        break;
-
-                    case EffectFunctionalityType.ToggleTap:
-                        functionality.TapState = EditorUtils.DrawFoldout(functionality.TapState);
-                        break;
-
-                    case EffectFunctionalityType.Destroy:
-                        DrawDestroyParam();
-                        break;
-
-                    case EffectFunctionalityType.Discard:
-                        DrawDiscardParam();
-                        break;
-
-                    case EffectFunctionalityType.LookAtRegion:
-                        DrawLookAtParam();
-                        break;
-
-                    case EffectFunctionalityType.PowerAttacker:
-                    case EffectFunctionalityType.GrantPower:
-                        if (int.TryParse(EditorGUILayout.TextField($"{functionality.PowerBoost}"), out int num1))
-                            functionality.PowerBoost = num1;
-                        DrawMultiplyVal();
-                        break;
-
-                    case EffectFunctionalityType.CostAdjustment:
-                        if (int.TryParse(EditorGUILayout.TextField($"{functionality.CostAdjustmentAmount}"), out int num2))
-                            functionality.CostAdjustmentAmount = num2;
-                        break;
-                }
-            }
-
-            void DrawMovementRegions()
-            {
-                MovementZones movementZones = functionality.MovementZones;
-
-                GUILayout.Label("From");
-                movementZones.fromZone = EditorUtils.DrawFoldout(movementZones.fromZone);
-
-                if (movementZones.fromZone == CardZoneType.Deck)
-                {
-                    movementZones.deckCardMove = EditorUtils.DrawFoldout(movementZones.deckCardMove);
-                    if (movementZones.deckCardMove == DeckCardMoveType.SearchShuffle)
-                        movementZones.showSearchedCard = GUILayout.Toggle(movementZones.showSearchedCard, "Show Card");
-                }
-
-                if (movementZones.moveCount > 1)
-                    movementZones.countQuantifier = EditorUtils.DrawFoldout(movementZones.countQuantifier);
-                if (int.TryParse(EditorGUILayout.TextField($"{movementZones.moveCount}"), out int num))
-                    movementZones.moveCount = num;
-                DrawMultiplyVal();
-
-                GUILayout.Label("To");
-                movementZones.toZone = EditorUtils.DrawFoldout(movementZones.toZone);
-
-                if (movementZones.toZone == CardZoneType.Deck)
-                    movementZones.deckCardMove = EditorUtils.DrawFoldout(movementZones.deckCardMove);
-            }
-
-            void DrawVortexRaces()
-            {
-                GUILayout.BeginVertical();
-
-                if (functionality.VortexRaces.Count > 0)
-                {
-                    List<RaceHolder> removedConditions = new List<RaceHolder>();
-                    GUILayout.Label("Races:");
-
-                    for (int i = 0, n = functionality.VortexRaces.Count; i < n; i++)
-                    {
-                        RaceHolder raceHolder = functionality.VortexRaces[i];
-
-                        GUILayout.BeginHorizontal();
-
-                        raceHolder.race = EditorUtils.DrawFoldout(raceHolder.race, 1);
-
-                        GUILayout.EndHorizontal();
-
-                        if (GUILayout.Button("Remove Race"))
-                        {
-                            EditorGUILayout.Space(5);
-                            removedConditions.Add(raceHolder);
-                        }
-                    }
-
-                    foreach (RaceHolder raceHolder in removedConditions)
-                    {
-                        functionality.VortexRaces.Remove(raceHolder);
-                    }
-                }
-
-                if (GUILayout.Button("Add Race"))
-                {
-                    RaceHolder raceHolder = new RaceHolder();
-                    functionality.VortexRaces.Add(raceHolder);
-                }
-
-                GUILayout.EndVertical();
-            }
-
-            void DrawDestroyParam()
-            {
-                DestroyParam destroyParam = functionality.DestroyParam;
-                destroyParam.destroyZone = EditorUtils.DrawFoldout(destroyParam.destroyZone);
-                destroyParam.countRangeType = EditorUtils.DrawFoldout(destroyParam.countRangeType);
-                if (destroyParam.countRangeType == CountRangeType.Number)
-                {
-                    if (int.TryParse(EditorGUILayout.TextField($"{destroyParam.destroyCount}"), out int num))
-                        destroyParam.destroyCount = num;
-                }
-            }
-
-            void DrawDiscardParam()
-            {
-                DiscardParam discardParam = functionality.DiscardParam;
-                discardParam.countRangeType = EditorUtils.DrawFoldout(discardParam.countRangeType);
-                if (discardParam.countRangeType == CountRangeType.Number)
-                {
-                    if (int.TryParse(EditorGUILayout.TextField($"{discardParam.discardCount}"), out int num))
-                        discardParam.discardCount = num;
-                }
-            }
-
-            void DrawLookAtParam()
-            {
-                LookAtParam lookAtParam = functionality.LookAtParam;
-                lookAtParam.lookAtZone = EditorUtils.DrawFoldout(lookAtParam.lookAtZone);
-                lookAtParam.countRangeType = EditorUtils.DrawFoldout(lookAtParam.countRangeType);
-                if (lookAtParam.countRangeType == CountRangeType.Number)
-                {
-                    if (int.TryParse(EditorGUILayout.TextField($"{lookAtParam.lookCount}"), out int num))
-                        lookAtParam.lookCount = num;
-                }
-            }
-
-            void DrawMultiplyVal()
-            {
-                showMultiplyVal = true;
-            }
-
-            #endregion
         }
 
         private void DrawSubCondition(EffectCondition parentCondition)

@@ -8,33 +8,19 @@ using UnityEngine;
 public class EffectFunctionality : ScriptableObject
 {
     [SerializeReference] private EffectFunctionalityType _type;
-    [SerializeReference] private CardTargetType _targetCard;
+    [SerializeReference] private CardTargetType _targetType;
     [SerializeReference] private PlayerTargetType _choosingPlayer;
     [SerializeReference] private PlayerTargetType _targetPlayer;
+    [SerializeReference] private EffectFunctionalityParameter _functionalityParam;
     [SerializeReference] private EffectTargetingCriterion _targetingCriterion = new EffectTargetingCriterion();
     [SerializeReference] private EffectTargetingCondition _targetingCondition;
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectFunctionality _subFunctionality;
 
-    #region Type Specific Members
-
-    [SerializeReference] private MovementZones _movementZones = new MovementZones();
-    [SerializeReference] private AttackType _attackType;
-    [SerializeReference] private TargetBehaviourType _targetBehaviour;
-    [SerializeReference] private KeywordType _keyword;
-    [SerializeReference] private MultipleBreakerType _multipleBreaker;
-    [SerializeReference] private TapStateType _tapState;
-    [SerializeReference] private DestroyParam _destroyParam = new DestroyParam();
-    [SerializeReference] private DiscardParam _discardParam = new DiscardParam();
-    [SerializeReference] private LookAtParam _lookAtParam = new LookAtParam();
-    [SerializeReference] private int _powerBoost;
-    [SerializeReference] private int _costAdjustmentAmount;
-
-    [SerializeReference] private List<RaceHolder> _vortexRaces = new List<RaceHolder>();
-    [SerializeReference] private bool _shouldMultiplyVal;
-    [SerializeReference] private bool _alterFunctionUntilEndOfTurn = true;
-
-    #endregion
+    public EffectFunctionality()
+    {
+        _functionalityParam = new AlterFunctionFuncParam();
+    }
 
     public EffectFunctionalityType Type
     {
@@ -45,12 +31,12 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public CardTargetType TargetCard
+    public CardTargetType TargetType
     {
-        get { return _targetCard; }
+        get { return _targetType; }
 
 #if UNITY_EDITOR
-        set { _targetCard = value; }
+        set { _targetType = value; }
 #endif
     }
 
@@ -71,7 +57,16 @@ public class EffectFunctionality : ScriptableObject
         set { _targetPlayer = value; }
 #endif
     }
-    
+
+    public EffectFunctionalityParameter FunctionalityParam
+    {
+        get { return _functionalityParam; }
+
+#if UNITY_EDITOR
+        set { _functionalityParam = value; }
+#endif
+    }
+
     public EffectTargetingCriterion TargetingCriterion
     {
         get { return _targetingCriterion; }
@@ -106,264 +101,5 @@ public class EffectFunctionality : ScriptableObject
 #if UNITY_EDITOR
         set { _subFunctionality = value; }
 #endif
-    }
-
-    #region Type Specific Properties
-
-    public AttackType AttackType
-    {
-        get { return _attackType; }
-
-#if UNITY_EDITOR
-        set { _attackType = value; }
-#endif
-    }
-
-    public TargetBehaviourType TargetBehaviour
-    {
-        get { return _targetBehaviour; }
-
-#if UNITY_EDITOR
-        set { _targetBehaviour = value; }
-#endif
-    }
-
-    public MovementZones MovementZones
-    {
-        get { return _movementZones; }
-
-#if UNITY_EDITOR
-        set { _movementZones = value; }
-#endif
-    }
-
-    public KeywordType Keyword
-    {
-        get { return _keyword; }
-
-#if UNITY_EDITOR
-        set { _keyword = value; }
-#endif
-    }
-
-    public MultipleBreakerType MultipleBreaker
-    {
-        get { return _multipleBreaker; }
-
-#if UNITY_EDITOR
-        set { _multipleBreaker = value; }
-#endif
-    }
-
-    public TapStateType TapState
-    {
-        get { return _tapState; }
-
-#if UNITY_EDITOR
-        set { _tapState = value; }
-#endif
-    }
-
-    public DestroyParam DestroyParam
-    {
-        get { return _destroyParam; }
-
-#if UNITY_EDITOR
-        set { _destroyParam = value; }
-#endif
-    }
-    
-    public DiscardParam DiscardParam
-    {
-        get { return _discardParam; }
-
-#if UNITY_EDITOR
-        set { _discardParam = value; }
-#endif
-    }
-
-    public LookAtParam LookAtParam
-    {
-        get { return _lookAtParam; }
-
-#if UNITY_EDITOR
-        set { _lookAtParam = value; }
-#endif
-    }
-    
-    public int PowerBoost
-    {
-        get { return _powerBoost; }
-
-#if UNITY_EDITOR
-        set { _powerBoost = value; }
-#endif
-    }
-    
-    public int CostAdjustmentAmount
-    {
-        get { return _costAdjustmentAmount; }
-
-#if UNITY_EDITOR
-        set { _costAdjustmentAmount = value; }
-#endif
-    }
-
-    public List<RaceHolder> VortexRaces
-    {
-        get { return _vortexRaces; }
-    }
-
-    public bool ShouldMultiplyVal
-    {
-        get { return _shouldMultiplyVal; }
-
-#if UNITY_EDITOR
-        set { _shouldMultiplyVal = value; }
-#endif
-    }
-    
-    public bool AlterFunctionUntilEndOfTurn
-    {
-        get { return _alterFunctionUntilEndOfTurn; }
-
-#if UNITY_EDITOR
-        set { _alterFunctionUntilEndOfTurn = value; }
-#endif
-    }
-
-    #endregion
-
-    public bool TargetUnspecified()
-    {
-        switch (_type)
-        {
-            case EffectFunctionalityType.AttackTarget:
-            case EffectFunctionalityType.TargetBehaviour:
-            case EffectFunctionalityType.Keyword:
-            case EffectFunctionalityType.MultipleBreaker:
-                if (_multipleBreaker == MultipleBreakerType.CrewBreaker)
-                    return true;
-                return false;
-        }
-
-        return true;
-    }
-    
-    public override string ToString()
-    {
-        string str = GetTypeRepresentation();
-        
-        if (_targetCard == CardTargetType.TargetOther || _shouldMultiplyVal)
-            str += $" {_targetingCriterion}";
-
-        if (_targetingCondition != null) 
-            str += $" where{_targetingCondition}";
-
-        if (_connector != ConnectorType.None) 
-            str += $" {_connector}";
-
-        if (_subFunctionality)
-            str += $"\n\t{_subFunctionality}";
-
-        return str;
-
-        #region Local Functions
-
-        string GetTypeRepresentation()
-        {
-            switch (_type)
-            {
-                case EffectFunctionalityType.RegionMovement:
-                    return GetRegionMovementString();
-
-                case EffectFunctionalityType.AttackTarget:
-                        return _attackType.ToString();
-
-                case EffectFunctionalityType.TargetBehaviour:
-                        return _targetBehaviour.ToString();
-
-                case EffectFunctionalityType.Keyword:
-                    return _keyword.ToString();
-
-                case EffectFunctionalityType.MultipleBreaker:
-                    return _multipleBreaker.ToString();
-
-                case EffectFunctionalityType.ToggleTap:
-                    return _tapState.ToString();
-
-                case EffectFunctionalityType.Destroy:
-                    string str3 = "Destroy";
-                    if (_targetCard == CardTargetType.TargetSelf)
-                        str3 += " self";
-                    return str3;
-
-                case EffectFunctionalityType.Discard:
-                    return $"{_targetCard} {_discardParam}";
-
-                case EffectFunctionalityType.LookAtRegion:
-                    return $"{_lookAtParam} in {_targetCard}'s {_lookAtParam.lookAtZone}";
-
-                case EffectFunctionalityType.PowerAttacker:
-                    return $"Power Attacker +{_powerBoost}";
-
-                case EffectFunctionalityType.GrantPower:
-                    return $"Gets +{_powerBoost}";
-                
-                case EffectFunctionalityType.GrantFunction:
-                    string str2 = "Grant Function";
-                    if (_alterFunctionUntilEndOfTurn)
-                        str2 += " until the end of turn";
-                    return str2;
-
-                case EffectFunctionalityType.CostAdjustment:
-                    return $"Adjust cost by {_costAdjustmentAmount}";
-
-                default:
-                    return _type.ToString();
-            }
-        }
-
-        string GetRegionMovementString()
-        {
-            string str1 = "";
-
-            switch (_targetPlayer)
-            {
-                case PlayerTargetType.Player:
-                    str1 = "Player moves ";
-                    break;
-                case PlayerTargetType.Opponent:
-                    str1 = "Opponent moves ";
-                    break;
-            }
-
-            str1 += $"{_movementZones.moveCount} card ";
-            if (_movementZones.moveCount > 1)
-                str1 += "s ";
-
-            if (_movementZones.fromZone == CardZoneType.Deck)
-            {
-                if (_movementZones.deckCardMove == DeckCardMoveType.Top)
-                    return $"Draw {_movementZones.countQuantifier} {_movementZones.moveCount}";
-                
-                str1 += $"after searching deck to {_movementZones.toZone}";
-                if (_movementZones.showSearchedCard)
-                    str1 += " and show it to the opponent";
-            }
-            else if (_movementZones.toZone == CardZoneType.Deck)
-            {
-                str1 += $"from {_movementZones.fromZone} ";
-                if (_movementZones.deckCardMove == DeckCardMoveType.Top)
-                    str1 += "to top of Deck";
-                else
-                    str1 += "and shuffle into Deck";
-            }
-            else
-                str1 += $"from {_movementZones.fromZone} to {_movementZones.toZone}";
-            return str1;
-        }
-
-        #endregion
     }
 }

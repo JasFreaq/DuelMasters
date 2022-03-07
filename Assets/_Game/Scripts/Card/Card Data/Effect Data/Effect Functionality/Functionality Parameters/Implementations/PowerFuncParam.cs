@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
-    public class PowerFuncParam : EffectFunctionalityParameter
+    public class PowerFuncParam : MultipliableFuncParam
     {
         private int _powerBoost;
 
@@ -36,12 +36,11 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
         {
             if (int.TryParse(EditorGUILayout.TextField($"{_powerBoost}"), out int num))
                 _powerBoost = num;
-            //DrawMultiplyVal();
         }
 
         public override bool ShouldAssignCriterion()
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
 #endif
