@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using DuelMasters.Card.Data.Effects.Functionality.Parameters;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Parameters;
+using UnityEditor.DuelMasters;
 using UnityEngine;
 
 public class EffectFunctionality : ScriptableObject
 {
     [SerializeReference] private EffectFunctionalityType _type;
-    [SerializeReference] private CardTargetType _targetType;
-    [SerializeReference] private PlayerTargetType _choosingPlayer;
-    [SerializeReference] private PlayerTargetType _targetPlayer;
     [SerializeReference] private EffectFunctionalityParameter _functionalityParam;
-    [SerializeReference] private EffectTargetingCriterion _targetingCriterion = new EffectTargetingCriterion();
+    [SerializeReference] private CardTargetType _targetType;
+    [SerializeReference] private PlayerTargetsHolder _playerTargets;
+    [SerializeReference] private EffectTargetingCriterion _targetingCriterion;
     [SerializeReference] private EffectTargetingCondition _targetingCondition;
     [SerializeReference] private ConnectorType _connector;
     [SerializeReference] private EffectFunctionality _subFunctionality;
@@ -40,21 +40,12 @@ public class EffectFunctionality : ScriptableObject
 #endif
     }
 
-    public PlayerTargetType ChoosingPlayer
+    public PlayerTargetsHolder PlayerTargets
     {
-        get { return _choosingPlayer; }
+        get { return _playerTargets; }
 
 #if UNITY_EDITOR
-        set { _choosingPlayer = value; }
-#endif
-    }
-
-    public PlayerTargetType TargetPlayer
-    {
-        get { return _targetPlayer; }
-
-#if UNITY_EDITOR
-        set { _targetPlayer = value; }
+        set { _playerTargets = value; }
 #endif
     }
 

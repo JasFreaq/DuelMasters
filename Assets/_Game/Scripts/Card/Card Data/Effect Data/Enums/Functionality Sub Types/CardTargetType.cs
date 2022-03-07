@@ -5,7 +5,6 @@ using UnityEngine;
 public enum CardTargetType
 {
     AutoTarget,
-    NoTarget,
     TargetOther,
     TargetSelf
 }

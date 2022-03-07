@@ -7,7 +7,7 @@ namespace DuelMasters.Editor.Data.Extensions
 {
     public static class EffectFunctionality_EditorExtension
     {
-        public static void AssignConditionParam(this EffectFunctionality functionality)
+        public static void AssignFunctionalityParam(this EffectFunctionality functionality)
         {
             EffectFunctionality_ParamSettingWrapper.AssignFunctionalityParam(functionality);
         }

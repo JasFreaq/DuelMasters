@@ -13,9 +13,12 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
             get { return _shouldMultiplyVal; }
         }
 
-        public override void DrawInspector()
+        public bool DrawShouldMultiplyVal()
         {
+            bool initial = _shouldMultiplyVal;
             _shouldMultiplyVal = GUILayout.Toggle(_shouldMultiplyVal, "Multiply val");
+
+            return initial != _shouldMultiplyVal;
         }
     }
 }

@@ -455,7 +455,6 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetType)
         {
             case CardTargetType.AutoTarget:
-            case CardTargetType.NoTarget:
                 Debug.LogError($"{instanceEffect._cardInst.CardData.Name} has RegionMovement as functionality type with the wrong target type.");
                 break;
                 
@@ -475,7 +474,6 @@ public class CardInstanceEffectHandler
         switch (functionality.TargetType)
         {
             case CardTargetType.AutoTarget:
-            case CardTargetType.NoTarget:
                 Debug.LogError($"{instanceEffect._cardInst.CardData.Name} has Destroy as functionality type with the wrong target type.");
                 break;
                 
@@ -838,7 +836,7 @@ public class CardInstanceEffectHandler
 
     private static IEnumerator ProcessCardSelectionRoutine(EffectFunctionality functionality, Action<CardInstanceEffectHandler> callback)
     {
-        PlayerManager choosingPlayer = GameManager.Instance.GetManager(functionality.ChoosingPlayer == PlayerTargetType.Player);
+        PlayerManager choosingPlayer = GameManager.Instance.GetManager(functionality.PlayerTargets.choosingPlayer == PlayerTargetType.Player);
         choosingPlayer.IsSelecting = true;
 
         //Coroutine<List<CardBehaviour>> routine =

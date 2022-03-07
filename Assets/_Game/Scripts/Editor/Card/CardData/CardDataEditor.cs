@@ -219,34 +219,41 @@ namespace DuelMasters.Editor.Data
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(labelText, EditorStyles.boldLabel);
-
+            
             functionality.Type = EditorUtils.DrawFoldout(functionality.Type, out bool changed);
-            if (changed) 
-                functionality.AssignConditionParam();
+            if (changed)
+                functionality.AssignFunctionalityParam();
             functionality.FunctionalityParam?.DrawInspector();
 
-            functionality.TargetType = EditorUtils.DrawFoldout(functionality.TargetType);
-            switch (functionality.TargetType)
+            functionality.TargetType = EditorUtils.DrawFoldout(functionality.TargetType, out changed);
+            if (changed)
             {
-                case CardTargetType.AutoTarget:
-                    if (functionality.TargetingCriterion.targetingType != ParameterTargetingType.Affect)
-                        functionality.TargetingCriterion.targetingType = ParameterTargetingType.Affect;
-                    break;
+                switch (functionality.TargetType)
+                {
+                    case CardTargetType.AutoTarget:
+                        if (functionality.TargetingCriterion != null)
+                            functionality.TargetingCriterion.targetingType = ParameterTargetingType.Affect;
+                        functionality.PlayerTargets = null;
+                        break;
 
-                case CardTargetType.TargetOther:
-                    GUILayout.Label("Chooser:");
-                    functionality.ChoosingPlayer = EditorUtils.DrawFoldout(functionality.ChoosingPlayer);
-                    GUILayout.Label("Target:");
-                    functionality.TargetPlayer = EditorUtils.DrawFoldout(functionality.TargetPlayer);
-                    break;
+                    case CardTargetType.TargetOther:
+                        functionality.PlayerTargets = new PlayerTargetsHolder();
+                        break;
+
+                    case CardTargetType.TargetSelf:
+                        functionality.PlayerTargets = null;
+                        break;
+                }
             }
 
+            if (functionality.TargetType == CardTargetType.TargetOther)
+                functionality.PlayerTargets.DrawInspector();
+
             MultipliableFuncParam multipliable = functionality.FunctionalityParam as MultipliableFuncParam;
-            if (multipliable != null) 
+            if (multipliable != null)
             {
-                multipliable.DrawInspector();
-                if (multipliable.ShouldMultiplyVal &&
-                    functionality.TargetingCriterion.targetingType != ParameterTargetingType.Count)
+                changed = multipliable.DrawShouldMultiplyVal();
+                if (multipliable.ShouldMultiplyVal && changed)
                     functionality.TargetingCriterion.targetingType = ParameterTargetingType.Count;
             }
 
@@ -254,14 +261,25 @@ namespace DuelMasters.Editor.Data
 
             GUILayout.EndHorizontal();
 
-            if (functionality.FunctionalityParam.ShouldAssignCriterion())
+            bool funcParamValid = functionality.FunctionalityParam != null &&
+                                  functionality.FunctionalityParam.ShouldAssignCriterion();
+            bool multipliableValid = multipliable != null && multipliable.ShouldMultiplyVal;
+
+            if (funcParamValid &&
+                (multipliableValid || functionality.TargetType == CardTargetType.AutoTarget))
             {
-                if ((multipliable != null && multipliable.ShouldMultiplyVal) ||
-                    functionality.TargetType == CardTargetType.AutoTarget) 
+                if (functionality.TargetingCriterion == null)
                 {
-                    functionality.TargetingCriterion.DrawInspector(_cardData);
+                    functionality.TargetingCriterion = new EffectTargetingCriterion();
+                    
+                    if (functionality.TargetType == CardTargetType.AutoTarget)
+                        functionality.TargetingCriterion.targetingType = ParameterTargetingType.Affect;
                 }
+
+                functionality.TargetingCriterion.DrawInspector(_cardData);
             }
+            else if (functionality.TargetingCriterion != null)
+                functionality.TargetingCriterion = null;
 
             if (functionality.TargetingCondition != null)
             {
