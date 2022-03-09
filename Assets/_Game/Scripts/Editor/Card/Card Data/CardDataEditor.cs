@@ -141,6 +141,7 @@ namespace DuelMasters.Editor.Data
         {
             EffectFunctionality functionality = CreateInstance<EffectFunctionality>();
             functionality.name = functionalityName;
+
             AssetDatabase.AddObjectToAsset(functionality, _cardData);
             EditorUtility.SetDirty(functionality);
 
@@ -149,11 +150,8 @@ namespace DuelMasters.Editor.Data
 
         private void RemoveCondition(EffectCondition condition)
         {
-            if (condition)
-            {
-                if (condition.SubCondition)
-                    RemoveCondition(condition.SubCondition);
-            }
+            if (condition && condition.SubCondition)
+                RemoveCondition(condition.SubCondition);
 
             DestroyImmediate(condition, true);
         }

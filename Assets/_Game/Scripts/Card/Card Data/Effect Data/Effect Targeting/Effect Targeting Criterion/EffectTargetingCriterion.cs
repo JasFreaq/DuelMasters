@@ -9,19 +9,19 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Data
     [System.Serializable]
     public class EffectTargetingCriterion
     {
-        [SerializeReference] private CountRangeType _countRangeType;
-        [SerializeReference] private CountQuantifierType _countQuantifier;
-        [SerializeReference] private int _count;
-        [SerializeReference] private PlayerTargetType _owningPlayer;
-        [SerializeReference] public CardZoneType _zoneType;
-
-        [SerializeReference] private bool _includeSelf;
-        [SerializeReference] private bool _opponentChooses;
-
+        private CountRangeType _countRangeType;
+        private CountQuantifierType _countQuantifier;
+        private int _count;
+        private PlayerTargetType _owningPlayer;
+        private CardZoneType _zoneType;
+        
+        private bool _includeSelf;
+        private bool _opponentChooses;
+        
 #if UNITY_EDITOR
         #region Editor Only Members
-
-        [SerializeField] public ParameterTargetingType targetingType;
+        
+        public ParameterTargetingType targetingType;
 
         #endregion
 #endif

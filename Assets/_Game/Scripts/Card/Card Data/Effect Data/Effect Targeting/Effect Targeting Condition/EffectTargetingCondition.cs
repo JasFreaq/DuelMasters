@@ -9,8 +9,8 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Parameters
     [System.Serializable]
     public class EffectTargetingCondition
     {
-        [SerializeReference] private List<EffectTargetingConditionParameter> _targetingConditionParams;
-        [SerializeReference] private List<EffectTargetingConditionParameter> _cardIntrinsicTargetingConditionParams;
+        private List<EffectTargetingConditionParameter> _targetingConditionParams;
+        private List<EffectTargetingConditionParameter> _cardIntrinsicTargetingConditionParams;
 
         public List<EffectTargetingConditionParameter> TargetingConditionParams
         {
