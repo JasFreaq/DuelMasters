@@ -127,9 +127,8 @@ public class GameManager : MonoBehaviour
                 {
                     fromZone = CardZoneType.Hand,
                     toZone = CardZoneType.Shields,
-                    deckCardMove = DeckCardMoveType.SearchShuffle,
-                    countQuantifier = CountQuantifierType.Exactly,
-                    moveCount = 3
+                    numericParams = new NumericParamsHolder(CountRangeType.Number,
+                        CountQuantifierType.Exactly, 3)
                 };
 
                 //EffectTargetingCondition targetingCondition = new EffectTargetingCondition();
@@ -148,9 +147,8 @@ public class GameManager : MonoBehaviour
                 {
                     fromZone = CardZoneType.Shields,
                     toZone = CardZoneType.ManaZone,
-                    deckCardMove = DeckCardMoveType.SearchShuffle,
-                    countQuantifier = CountQuantifierType.Upto,
-                    moveCount = 3
+                    numericParams = new NumericParamsHolder(CountRangeType.Number,
+                        CountQuantifierType.Upto, 3)
                 };
 
                 //EffectTargetingCondition targetingCondition = new EffectTargetingCondition();

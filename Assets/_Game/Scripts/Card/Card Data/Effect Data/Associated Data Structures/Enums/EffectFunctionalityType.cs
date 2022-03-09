@@ -15,7 +15,7 @@ public enum EffectFunctionalityType
     ToggleTap,
     Destroy,
     Discard,
-    LookAtRegion,
+    Reveal,
     SearchAndShuffle,
     PowerAttacker,
     GrantPower,

@@ -12,18 +12,17 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
     public class DiscardParam
     {
         public DiscardType discardType;
-        public CountRangeType countRangeType;
-        public int discardCount = 1;
-
+        public NumericParamsHolder numericParams = new NumericParamsHolder();
+        
         public override string ToString()
         {
-            string str = "discards ";
-            if (countRangeType == CountRangeType.All)
+            string str = "discards " + numericParams.CountQuantifier.ToString().ToLower();
+            if (numericParams.CountRangeType == CountRangeType.All)
                 str += "all cards";
             else
             {
-                str += $"{discardCount} card";
-                if (discardCount > 1)
+                str += $"{numericParams.Count} card";
+                if (numericParams.Count > 1)
                     str += "s ";
 
                 switch (discardType)
@@ -73,12 +72,9 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 
         public override void DrawInspector()
         {
-            _discardParam.countRangeType = EditorUtils.DrawFoldout(_discardParam.countRangeType);
-            if (_discardParam.countRangeType == CountRangeType.Number)
-            {
-                if (int.TryParse(EditorGUILayout.TextField($"{_discardParam.discardCount}"), out int num))
-                    _discardParam.discardCount = num;
-            }
+            _discardParam.discardType = EditorUtils.DrawFoldout(_discardParam.discardType);
+
+            _discardParam.numericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

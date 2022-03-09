@@ -9,21 +9,12 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
     #region Helper Data Structures
 
     [System.Serializable]
-    public enum DeckCardMoveType
-    {
-        Top,
-        SearchShuffle
-    }
-
-    [System.Serializable]
     public class MovementZones
     {
         public CardZoneType fromZone, toZone;
-        public DeckCardMoveType deckCardMove;
         public bool showSearchedCard;
 
-        public CountQuantifierType countQuantifier;
-        public int moveCount = 1;
+        public NumericParamsHolder numericParams = new NumericParamsHolder();
     }
 
     #endregion
@@ -59,22 +50,12 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
             _movementZones.fromZone = EditorUtils.DrawFoldout(_movementZones.fromZone);
 
             if (_movementZones.fromZone == CardZoneType.Deck)
-            {
-                _movementZones.deckCardMove = EditorUtils.DrawFoldout(_movementZones.deckCardMove);
-                if (_movementZones.deckCardMove == DeckCardMoveType.SearchShuffle)
-                    _movementZones.showSearchedCard = GUILayout.Toggle(_movementZones.showSearchedCard, "Show Card");
-            }
-
-            if (_movementZones.moveCount > 1)
-                _movementZones.countQuantifier = EditorUtils.DrawFoldout(_movementZones.countQuantifier);
-            if (int.TryParse(EditorGUILayout.TextField($"{_movementZones.moveCount}"), out int num))
-                _movementZones.moveCount = num;
+                _movementZones.showSearchedCard = GUILayout.Toggle(_movementZones.showSearchedCard, "Show Card");
+            
+            _movementZones.numericParams.DrawInspector();
 
             GUILayout.Label("To");
             _movementZones.toZone = EditorUtils.DrawFoldout(_movementZones.toZone);
-
-            if (_movementZones.toZone == CardZoneType.Deck)
-                _movementZones.deckCardMove = EditorUtils.DrawFoldout(_movementZones.deckCardMove);
         }
 
         public override bool ShouldAssignCriterion()

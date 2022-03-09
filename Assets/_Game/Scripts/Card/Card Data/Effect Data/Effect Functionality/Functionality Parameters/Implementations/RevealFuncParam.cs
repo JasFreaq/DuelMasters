@@ -9,21 +9,25 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
     #region Helper Data Structures
 
     [System.Serializable]
-    public class LookAtParam
+    public class RevealParam
     {
         public CardZoneType lookAtZone;
-        public CountRangeType countRangeType;
-        public int lookCount = 1;
+        private NumericParamsHolder _numericParams = new NumericParamsHolder();
+
+        public NumericParamsHolder NumericParams
+        {
+            get { return _numericParams; }
+        }
 
         public override string ToString()
         {
-            string str = "Look at ";
-            if (countRangeType == CountRangeType.All)
+            string str = "Reveal " + _numericParams.CountQuantifier.ToString().ToLower();
+            if (_numericParams.CountRangeType == CountRangeType.All)
                 str += "all cards";
             else
             {
-                str += $"{lookCount} card";
-                if (lookCount > 1)
+                str += $"{_numericParams.Count} card";
+                if (_numericParams.Count > 1)
                     str += "s ";
             }
 
@@ -33,9 +37,9 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 
     #endregion
 
-    public class LookAtRegionFuncParam : EffectFunctionalityParameter
+    public class RevealFuncParam : EffectFunctionalityParameter
     {
-        private LookAtParam _lookAtParam = new LookAtParam();
+        private RevealParam _revealParam = new RevealParam();
 
 #if UNITY_EDITOR
 
@@ -45,28 +49,24 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
             {
                 return new List<EffectFunctionalityType>()
                 {
-                    EffectFunctionalityType.LookAtRegion
+                    EffectFunctionalityType.Reveal
                 };
             }
         }
 #endif
 
-        public LookAtParam LookAtParam
+        public RevealParam RevealParam
         {
-            get { return _lookAtParam; }
+            get { return _revealParam; }
         }
 
 #if UNITY_EDITOR
 
         public override void DrawInspector()
         {
-            _lookAtParam.lookAtZone = EditorUtils.DrawFoldout(_lookAtParam.lookAtZone);
-            _lookAtParam.countRangeType = EditorUtils.DrawFoldout(_lookAtParam.countRangeType);
-            if (_lookAtParam.countRangeType == CountRangeType.Number)
-            {
-                if (int.TryParse(EditorGUILayout.TextField($"{_lookAtParam.lookCount}"), out int num))
-                    _lookAtParam.lookCount = num;
-            }
+            _revealParam.lookAtZone = EditorUtils.DrawFoldout(_revealParam.lookAtZone);
+            
+            _revealParam.NumericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

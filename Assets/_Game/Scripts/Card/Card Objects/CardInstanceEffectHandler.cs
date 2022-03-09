@@ -801,10 +801,10 @@ public class CardInstanceEffectHandler
         }
 
         int count = 0, targetCount = 0;
-        if (targetingCriterion.CountRangeType == CountRangeType.All)
+        if (targetingCriterion.NumericParams.CountRangeType == CountRangeType.All)
             targetCount = cards.Count;
-        else if (targetingCriterion.CountRangeType == CountRangeType.Number)
-            targetCount = targetingCriterion.Count;
+        else if (targetingCriterion.NumericParams.CountRangeType == CountRangeType.Number)
+            targetCount = targetingCriterion.NumericParams.Count;
 
         foreach (CardBehaviour card in cards)
         {
@@ -816,9 +816,9 @@ public class CardInstanceEffectHandler
                 count++;
         }
 
-        if (targetingCriterion.CountRangeType == CountRangeType.Number)
+        if (targetingCriterion.NumericParams.CountRangeType == CountRangeType.Number)
         {
-            switch (targetingCriterion.CountQuantifier)
+            switch (targetingCriterion.NumericParams.CountQuantifier)
             {
                 case CountQuantifierType.Exactly:
                     return count == targetCount;

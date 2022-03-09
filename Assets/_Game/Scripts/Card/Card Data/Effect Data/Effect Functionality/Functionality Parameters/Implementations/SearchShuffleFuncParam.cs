@@ -8,9 +8,7 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
     public class SearchShuffleFuncParam : EffectFunctionalityParameter
     {
-        private CountRangeType _countRangeType;
-        private CountQuantifierType _countQuantifier;
-        private int _count;
+        private NumericParamsHolder _numericParams = new NumericParamsHolder();
         private SearchResultType _searchResult;
 
 #if UNITY_EDITOR
@@ -32,19 +30,9 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
             get { return _searchResult; }
         }
 
-        public CountRangeType CountRangeType
+        public NumericParamsHolder NumericParams
         {
-            get { return _countRangeType; }
-        }
-
-        public CountQuantifierType CountQuantifier
-        {
-            get { return _countQuantifier; }
-        }
-
-        public int Count
-        {
-            get { return _count; }
+            get { return _numericParams; }
         }
         
 #if UNITY_EDITOR
@@ -53,13 +41,7 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
         {
             _searchResult = EditorUtils.DrawFoldout(_searchResult);
 
-            _countRangeType = EditorUtils.DrawFoldout(_countRangeType);
-            if (_countRangeType == CountRangeType.Number)
-            {
-                _countQuantifier = EditorUtils.DrawFoldout(_countQuantifier);
-                if (int.TryParse(EditorGUILayout.TextField($"{_count}"), out int num))
-                    _count = num;
-            }
+            _numericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

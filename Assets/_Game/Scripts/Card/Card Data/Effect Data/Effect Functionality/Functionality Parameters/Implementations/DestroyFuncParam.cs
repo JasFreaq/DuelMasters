@@ -12,18 +12,17 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
     public class DestroyParam
     {
         public CardZoneType destroyZone;
-        public CountRangeType countRangeType;
-        public int destroyCount = 1;
-
+        public NumericParamsHolder numericParams = new NumericParamsHolder();
+        
         public override string ToString()
         {
-            string str = "Destroy ";
-            if (countRangeType == CountRangeType.All)
+            string str = "Destroy " + numericParams.CountQuantifier.ToString().ToLower();
+            if (numericParams.CountRangeType == CountRangeType.All)
                 str += "all cards";
             else
             {
-                str += $"{destroyCount} card";
-                if (destroyCount > 1)
+                str += $"{numericParams.Count} card";
+                if (numericParams.Count > 1)
                     str += "s ";
             }
 
@@ -61,12 +60,8 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
         public override void DrawInspector()
         {
             _destroyParam.destroyZone = EditorUtils.DrawFoldout(_destroyParam.destroyZone);
-            _destroyParam.countRangeType = EditorUtils.DrawFoldout(_destroyParam.countRangeType);
-            if (_destroyParam.countRangeType == CountRangeType.Number)
-            {
-                if (int.TryParse(EditorGUILayout.TextField($"{_destroyParam.destroyCount}"), out int num))
-                    _destroyParam.destroyCount = num;
-            }
+            
+            _destroyParam.numericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

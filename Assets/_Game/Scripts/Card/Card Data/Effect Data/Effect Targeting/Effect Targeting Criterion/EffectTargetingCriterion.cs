@@ -9,9 +9,7 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Data
     [System.Serializable]
     public class EffectTargetingCriterion
     {
-        private CountRangeType _countRangeType;
-        private CountQuantifierType _countQuantifier;
-        private int _count;
+        private NumericParamsHolder _numericParams = new NumericParamsHolder();
         private PlayerTargetType _owningPlayer;
         private CardZoneType _zoneType;
         
@@ -26,30 +24,12 @@ namespace DuelMasters.Card.Data.Effects.TargetingCondition.Data
         #endregion
 #endif
 
-        public CountRangeType CountRangeType
+        public NumericParamsHolder NumericParams
         {
-            get { return _countRangeType; }
+            get { return _numericParams; }
 
 #if UNITY_EDITOR
-            set { _countRangeType = value; }
-#endif
-        }
-
-        public CountQuantifierType CountQuantifier
-        {
-            get { return _countQuantifier; }
-
-#if UNITY_EDITOR
-            set { _countQuantifier = value; }
-#endif
-        }
-
-        public int Count
-        {
-            get { return _count; }
-
-#if UNITY_EDITOR
-            set { _count = value; }
+            set { _numericParams = value; }
 #endif
         }
 

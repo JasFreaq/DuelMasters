@@ -18,13 +18,7 @@ namespace DuelMasters.Editor.Data.Extensions
 
             if (targetingType != ParameterTargetingType.Count)
             {
-                targetingCriterion.CountRangeType = EditorUtils.DrawFoldout(targetingCriterion.CountRangeType);
-                if (targetingCriterion.CountRangeType == CountRangeType.Number)
-                {
-                    targetingCriterion.CountQuantifier = EditorUtils.DrawFoldout(targetingCriterion.CountQuantifier);
-                    if (int.TryParse(EditorGUILayout.TextField($"{targetingCriterion.Count}"), out int num))
-                        targetingCriterion.Count = num;
-                }
+                targetingCriterion.NumericParams.DrawInspector();
             }
 
             GUILayout.Label("In");
@@ -48,10 +42,10 @@ namespace DuelMasters.Editor.Data.Extensions
 
             if (targetingType != ParameterTargetingType.Count)
             {
-                if (targetingCriterion.CountRangeType == CountRangeType.Number)
-                    str += $"{targetingCriterion.CountQuantifier} {targetingCriterion.Count} ";
+                if (targetingCriterion.NumericParams.CountRangeType == CountRangeType.Number)
+                    str += $"{targetingCriterion.NumericParams.CountQuantifier} {targetingCriterion.NumericParams.Count} ";
                 else
-                    str += $"{targetingCriterion.CountRangeType} ";
+                    str += $"{targetingCriterion.NumericParams.CountRangeType} ";
             }
 
             PlayerTargetType owningPlayer = targetingCriterion.OwningPlayer;

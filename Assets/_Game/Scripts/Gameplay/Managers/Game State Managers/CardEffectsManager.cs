@@ -14,21 +14,17 @@ public class CardEffectsManager : MonoBehaviour
         public CardZoneType fromZone;
         public bool fromBothPlayers, searchAndShuffleDeck, showSearchedCard;
 
-        public CountRangeType CountRangeType;
-        public CountQuantifierType CountQuantifierType;
-        public int moveCount;
+        public NumericParamsHolder numericParams;
 
         public CardSelectionData(MovementZones movementZones, PlayerTargetType targetType)
         {
             fromZone = movementZones.fromZone;
 
             fromBothPlayers = targetType == PlayerTargetType.Both;
-            searchAndShuffleDeck = movementZones.deckCardMove != DeckCardMoveType.Top;
+            searchAndShuffleDeck = false;
             showSearchedCard = movementZones.showSearchedCard;
 
-            CountRangeType = CountRangeType.Number;
-            CountQuantifierType = movementZones.countQuantifier;
-            moveCount = movementZones.moveCount;
+            numericParams = new NumericParamsHolder(movementZones.numericParams);
         }
 
         public CardSelectionData(DestroyParam destroyParam, PlayerTargetType targetType)
@@ -39,9 +35,7 @@ public class CardEffectsManager : MonoBehaviour
             searchAndShuffleDeck = false;
             showSearchedCard = false;
 
-            CountRangeType = destroyParam.countRangeType;
-            CountQuantifierType = CountQuantifierType.Exactly;
-            moveCount = destroyParam.destroyCount;
+            numericParams = new NumericParamsHolder(destroyParam.numericParams);
         }
     }
 
@@ -114,17 +108,17 @@ public class CardEffectsManager : MonoBehaviour
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
 
         int lower = 1, upper = 0;
-        switch (selectionData.CountRangeType)
+        switch (selectionData.numericParams.CountRangeType)
         {
             case CountRangeType.All:
                 upper = GameDataHandler.Instance.GetZoneCards(affectPlayer, selectionData.fromZone).Count;
                 break;
 
             case CountRangeType.Number:
-                upper = selectionData.moveCount;
+                upper = selectionData.numericParams.Count;
                 break;
         }
-        if (selectionData.CountQuantifierType == CountQuantifierType.Exactly)
+        if (selectionData.numericParams.CountQuantifier == CountQuantifierType.Exactly)
             lower = upper;
 
         List<CardBehaviour> selectedCards = null;
@@ -260,16 +254,16 @@ public class CardEffectsManager : MonoBehaviour
 
         PlayerManager affectedPlayer = GameManager.Instance.GetManager(affectPlayer);
         
-        if (movementZones.fromZone == CardZoneType.Deck && movementZones.deckCardMove == DeckCardMoveType.Top)
+        if (movementZones.fromZone == CardZoneType.Deck)
         {
-            int lower = 1, upper = movementZones.moveCount;
-            if (movementZones.countQuantifier == CountQuantifierType.Exactly)
+            int lower = 1, upper = movementZones.numericParams.Count;
+            if (movementZones.numericParams.CountQuantifier == CountQuantifierType.Exactly)
                 lower = upper;
             
             int moveCount = 0;
-            if (movementZones.countQuantifier == CountQuantifierType.Exactly || movementZones.moveCount == 1)
-                moveCount = movementZones.moveCount;
-            else if (movementZones.countQuantifier == CountQuantifierType.Upto)
+            if (movementZones.numericParams.CountQuantifier == CountQuantifierType.Exactly || movementZones.numericParams.Count == 1)
+                moveCount = movementZones.numericParams.Count;
+            else if (movementZones.numericParams.CountQuantifier == CountQuantifierType.Upto)
             {
                 Coroutine<int> routine1 = choosingController.StartCoroutine<int>(choosingController.GetNumberSelectionRoutine(lower, upper));
                 yield return routine1.coroutine;
