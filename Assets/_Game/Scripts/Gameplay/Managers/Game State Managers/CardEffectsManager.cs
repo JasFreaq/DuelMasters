@@ -27,15 +27,15 @@ public class CardEffectsManager : MonoBehaviour
             numericParams = new NumericParamsHolder(movementZones.numericParams);
         }
 
-        public CardSelectionData(DestroyParam destroyParam, PlayerTargetType targetType)
+        public CardSelectionData(DestroyData destroyData, PlayerTargetType targetType)
         {
-            fromZone = destroyParam.destroyZone;
+            fromZone = destroyData.destroyZone;
 
             fromBothPlayers = targetType == PlayerTargetType.Both;
             searchAndShuffleDeck = false;
             showSearchedCard = false;
 
-            numericParams = new NumericParamsHolder(destroyParam.numericParams);
+            numericParams = new NumericParamsHolder(destroyData.numericParams);
         }
     }
 

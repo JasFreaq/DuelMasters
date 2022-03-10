@@ -6,16 +6,6 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
-    #region Helper Data Structures
-
-    [System.Serializable]
-    public class RaceHolder
-    {
-        public CardParams.Race race;
-    }
-
-    #endregion
-
     public class KeywordFuncParam : EffectFunctionalityParameter
     {
         private KeywordType _keyword;

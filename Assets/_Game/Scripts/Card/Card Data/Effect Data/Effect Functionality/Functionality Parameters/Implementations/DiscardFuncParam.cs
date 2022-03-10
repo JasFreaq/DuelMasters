@@ -6,48 +6,9 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
-    #region Helper Data Structures
-
-    [System.Serializable]
-    public class DiscardParam
-    {
-        public DiscardType discardType;
-        public NumericParamsHolder numericParams = new NumericParamsHolder();
-        
-        public override string ToString()
-        {
-            string str = "discards " + numericParams.CountQuantifier.ToString().ToLower();
-            if (numericParams.CountRangeType == CountRangeType.All)
-                str += "all cards";
-            else
-            {
-                str += $"{numericParams.Count} card";
-                if (numericParams.Count > 1)
-                    str += "s ";
-
-                switch (discardType)
-                {
-                    case DiscardType.Random:
-                        str += "at random";
-                        break;
-                    case DiscardType.PlayerChoose:
-                        str += "chosen by player";
-                        break;
-                    case DiscardType.OpponentChoose:
-                        str += "chosen by opponent";
-                        break;
-                }
-            }
-
-            return str;
-        }
-    }
-
-    #endregion
-
     public class DiscardFuncParam : EffectFunctionalityParameter
     {
-        private DiscardParam _discardParam = new DiscardParam();
+        private DiscardData _discardData = new DiscardData();
 
 #if UNITY_EDITOR
 
@@ -63,18 +24,18 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
         }
 #endif
 
-        public DiscardParam DiscardParam
+        public DiscardData DiscardData
         {
-            get { return _discardParam; }
+            get { return _discardData; }
         }
 
 #if UNITY_EDITOR
 
         public override void DrawInspector()
         {
-            _discardParam.discardType = EditorUtils.DrawFoldout(_discardParam.discardType);
+            _discardData.discardType = EditorUtils.DrawFoldout(_discardData.discardType);
 
-            _discardParam.numericParams.DrawInspector();
+            _discardData.numericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

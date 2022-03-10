@@ -6,40 +6,9 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
-    #region Helper Data Structures
-
-    [System.Serializable]
-    public class RevealParam
-    {
-        public CardZoneType lookAtZone;
-        private NumericParamsHolder _numericParams = new NumericParamsHolder();
-
-        public NumericParamsHolder NumericParams
-        {
-            get { return _numericParams; }
-        }
-
-        public override string ToString()
-        {
-            string str = "Reveal " + _numericParams.CountQuantifier.ToString().ToLower();
-            if (_numericParams.CountRangeType == CountRangeType.All)
-                str += "all cards";
-            else
-            {
-                str += $"{_numericParams.Count} card";
-                if (_numericParams.Count > 1)
-                    str += "s ";
-            }
-
-            return str;
-        }
-    }
-
-    #endregion
-
     public class RevealFuncParam : EffectFunctionalityParameter
     {
-        private RevealParam _revealParam = new RevealParam();
+        private RevealData _revealData = new RevealData();
 
 #if UNITY_EDITOR
 
@@ -55,18 +24,18 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
         }
 #endif
 
-        public RevealParam RevealParam
+        public RevealData RevealData
         {
-            get { return _revealParam; }
+            get { return _revealData; }
         }
 
 #if UNITY_EDITOR
 
         public override void DrawInspector()
         {
-            _revealParam.lookAtZone = EditorUtils.DrawFoldout(_revealParam.lookAtZone);
+            _revealData.lookAtZone = EditorUtils.DrawFoldout(_revealData.lookAtZone);
             
-            _revealParam.NumericParams.DrawInspector();
+            _revealData.numericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

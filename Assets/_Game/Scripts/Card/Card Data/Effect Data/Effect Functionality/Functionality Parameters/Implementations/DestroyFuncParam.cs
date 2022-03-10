@@ -6,35 +6,9 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
-    #region Helper Data Structures
-
-    [System.Serializable]
-    public class DestroyParam
-    {
-        public CardZoneType destroyZone;
-        public NumericParamsHolder numericParams = new NumericParamsHolder();
-        
-        public override string ToString()
-        {
-            string str = "Destroy " + numericParams.CountQuantifier.ToString().ToLower();
-            if (numericParams.CountRangeType == CountRangeType.All)
-                str += "all cards";
-            else
-            {
-                str += $"{numericParams.Count} card";
-                if (numericParams.Count > 1)
-                    str += "s ";
-            }
-
-            return str;
-        }
-    }
-
-    #endregion
-
     public class DestroyFuncParam : EffectFunctionalityParameter
     {
-        private DestroyParam _destroyParam = new DestroyParam();
+        private DestroyData _destroyData = new DestroyData();
 
 #if UNITY_EDITOR
 
@@ -50,18 +24,18 @@ namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
         }
 #endif
 
-        public DestroyParam DestroyParam
+        public DestroyData DestroyData
         {
-            get { return _destroyParam; }
+            get { return _destroyData; }
         }
 
 #if UNITY_EDITOR
 
         public override void DrawInspector()
         {
-            _destroyParam.destroyZone = EditorUtils.DrawFoldout(_destroyParam.destroyZone);
+            _destroyData.destroyZone = EditorUtils.DrawFoldout(_destroyData.destroyZone);
             
-            _destroyParam.numericParams.DrawInspector();
+            _destroyData.numericParams.DrawInspector();
         }
 
         public override bool ShouldAssignCriterion()

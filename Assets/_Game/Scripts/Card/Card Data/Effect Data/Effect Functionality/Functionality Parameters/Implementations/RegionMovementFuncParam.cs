@@ -6,19 +6,6 @@ using UnityEngine;
 
 namespace DuelMasters.Card.Data.Effects.Functionality.Parameters
 {
-    #region Helper Data Structures
-
-    [System.Serializable]
-    public class MovementZones
-    {
-        public CardZoneType fromZone, toZone;
-        public bool showSearchedCard;
-
-        public NumericParamsHolder numericParams = new NumericParamsHolder();
-    }
-
-    #endregion
-
     public class RegionMovementFuncParam : MultipliableFuncParam
     {
         private MovementZones _movementZones = new MovementZones();
