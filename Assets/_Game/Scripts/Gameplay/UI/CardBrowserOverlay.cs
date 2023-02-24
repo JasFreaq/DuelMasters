@@ -96,8 +96,8 @@ public class CardBrowserOverlay : MonoBehaviour
         _submitText.text = "Submit 0";
         _submitButton.interactable = false;
         _cancelButton.gameObject.SetActive(mayUse);
-        print(mayUse);
-        CheckAndArrangeValidCards(cardList, targetingCondition);
+
+        ArrangeCardsAndCheckValidity(cardList, targetingCondition);
         
         _layoutHolder.SetActive(true);
         
@@ -139,16 +139,18 @@ public class CardBrowserOverlay : MonoBehaviour
         yield return routine.returnVal;
     }
 
-    private void CheckAndArrangeValidCards(List<CardObject> cardList, EffectTargetingCondition targetingCondition)
+    private void ArrangeCardsAndCheckValidity(List<CardObject> cardList, EffectTargetingCondition targetingCondition)
     {
-        List<CardObject> validCards = CardData.GetValidCards(cardList, targetingCondition);
-
-        foreach (CardObject cardObj in validCards)
+        foreach (CardObject cardObj in cardList)
         {
             cardObj.PreviewLayoutHandler.SetActiveInBrowser();
-            cardList.Remove(cardObj);
         }
 
+        List<CardObject> validCards = CardData.GetValidCards(cardList, targetingCondition);
+        foreach (CardObject cardObj in validCards)
+        {
+            cardList.Remove(cardObj);
+        }
         cardList.AddRange(validCards);
     }
 
