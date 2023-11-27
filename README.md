@@ -6,7 +6,7 @@ For a brief devlog of the project, check out the [YouTube video](https://www.you
 Feel free to reach out if this project has been of any assistance to you as a reference or otherwise, if you would like to discuss game development and design with a fellow practitioner, or if you would like to just make a contact in the field.
 
 - [Portfolio](https://jasfiq-rahman.com/)
-- [LinkedIn](https://www.linkedin.com/in/jasfiq-rahman/),
+- [LinkedIn](https://www.linkedin.com/in/jasfiq-rahman/)
 - [GitHub](https://github.com/JasFreaq)
 
 The following are the links to the assets/resources used for and during the project,
