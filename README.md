@@ -1,9 +1,12 @@
 # DuelMasters
 This is the source code and resources for a personal project made using Unity. It aims to replicate the trading-card game [DuelMasters](https://en.wikipedia.org/wiki/Duel_Masters_Trading_Card_Game).
 
+For a brief devlog of the project, check out the [YouTube video](https://www.youtube.com/watch?v=ygRrbdPRLQg) where I delve into its key aspects. This video provides insights into the project's goals, development process, and some exciting highlights.
+
 Feel free to reach out if this project has been of any assistance to you as a reference or otherwise, if you would like to discuss game development and design with a fellow practitioner, or if you would like to just make a contact in the field.
 
-- [LinkedIn](https://www.linkedin.com/in/jasfiq-rahman/),
+- [Portfolio](https://jasfiq-rahman.com/)
+- [LinkedIn](https://www.linkedin.com/in/jasfiq-rahman/)
 - [GitHub](https://github.com/JasFreaq)
 
 The following are the links to the assets/resources used for and during the project,
