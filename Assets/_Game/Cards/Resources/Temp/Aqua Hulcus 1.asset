@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2344201293844984896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92f2a92b9a0180c469c75fe6eca57cb0, type: 3}
+  m_Name: Effect Data 1/Effect Cond
+  m_EditorClassIdentifier: 
+  _type: 0
+  _conditionParam:
+    rid: -2
+  _targetingCriterion:
+    rid: 1415225912872665091
+  _targetingCondition:
+    rid: -2
+  _connector: 0
+  _subCondition: {fileID: 0}
+  _subFunctionality: {fileID: 0}
+  connectToSubCondition: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1415225912872665091
+      type: {class: EffectTargetingCriterion, ns: DuelMasters.Card.Data.Effects.TargetingCondition.Data, asm: Assembly-CSharp}
+      data:
+        targetingType: 0
+--- !u!114 &-1453777738892544249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea42dcb84a76db24785ecdd21dcf6a58, type: 3}
+  m_Name: Effect Data 1/Effect Func
+  m_EditorClassIdentifier: 
+  _type: 2
+  _functionalityParam:
+    rid: 1415225912872665090
+  _targetType: 0
+  _playerTargets:
+    rid: -2
+  _targetingCriterion:
+    rid: -2
+  _targetingCondition:
+    rid: -2
+  _connector: 0
+  _subFunctionality: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1415225912872665090
+      type: {class: RegionMovementFuncParam, ns: DuelMasters.Card.Data.Effects.Functionality.Parameters, asm: Assembly-CSharp}
+      data: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332586dff50b3f4292661c55ef844d9, type: 3}
+  m_Name: Aqua Hulcus 1
+  m_EditorClassIdentifier: 
+  _name: Aqua Hulcus
+  _set: 1
+  _civilization: 05000000
+  _rarity: 1
+  _cardType: 2
+  _cost: 3
+  _artworkImage: {fileID: 21300000, guid: 330b618f57b62ba4f9c0a8063aff58ed, type: 3}
+  _rulesText: When you put this creature into the battle zone, you may draw a card.
+  _flavorText: Liquid People freely control liquid. For them, water is armor and
+    shield.
+  ruleEffects:
+  - {fileID: 8404944852018527137}
+  _keywords: 
+  _race: 37000000
+  _power: 2000
+--- !u!114 &8404944852018527137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8575307b26687444eb88a73df192f06b, type: 3}
+  m_Name: Effect Data 1
+  m_EditorClassIdentifier: 
+  _mayUseFunction: 0
+  _triggerPenaltyIfUsed: 0
+  _effectCondition: {fileID: -2344201293844984896}
+  _effectFunctionality: {fileID: -1453777738892544249}
+  isBeingEdited: 1

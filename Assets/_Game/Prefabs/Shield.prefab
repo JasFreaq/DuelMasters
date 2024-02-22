@@ -26,6 +26,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: -0, z: 0.025}
   m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4078082339459076264}
   m_RootOrder: 2
@@ -59,6 +60,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 12.5, y: 12.5, z: 12.5}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4544971204020417713}
   - {fileID: 4544971203445842000}
@@ -68,7 +70,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2158720421680086860
 Animator:
-  serializedVersion: 3
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -81,10 +83,11 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!65 &7932097453273564993
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -189,18 +192,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
---- !u!4 &4544971204020417713 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
-  m_PrefabInstance: {fileID: 4078082338191922010}
-  m_PrefabAsset: {fileID: 0}
 --- !u!23 &3411995577668063198 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
+  m_PrefabInstance: {fileID: 4078082338191922010}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4544971204020417713 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 017b1598dc559484a87b1b6265d7fa19, type: 3}
   m_PrefabInstance: {fileID: 4078082338191922010}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4078082338808498107

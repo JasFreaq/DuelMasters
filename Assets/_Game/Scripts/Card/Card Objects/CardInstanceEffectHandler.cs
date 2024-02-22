@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DuelMasters.Card.Data.Effects.Condition;
+using DuelMasters.Card.Data.Effects.Functionality.Parameters;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Data;
 using DuelMasters.Card.Data.Effects.TargetingCondition.Parameters;
 using UnityEngine;
@@ -10,6 +11,7 @@ using UnityEngine;
 public class CardInstanceEffectHandler
 {
     #region Helper Data Structures
+
     struct BoolActionHolder
     {
         public Action<bool> processFunction;
@@ -77,102 +79,105 @@ public class CardInstanceEffectHandler
 
                 case EffectFunctionalityType.RegionMovement:
                     break;
-                    
-                //case EffectFunctionalityType.Keyword:
-                //    switch (functionality.Keyword)
-                //    {
-                //        case KeywordType.ShieldTrigger:
-                //            _hasShieldTrigger = true;
-                //            break;
 
-                //        case KeywordType.Blocker:
-                //            _isBlocker = true;
-                //            break;
+                case EffectFunctionalityType.Keyword:
+                    KeywordFuncParam keywordParam = (KeywordFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                    switch (keywordParam.Keyword)
+                    {
+                        case KeywordType.ShieldTrigger:
+                            _hasShieldTrigger = true;
+                            break;
 
-                //        case KeywordType.Slayer:
-                //            _isSlayer = true;
-                //            break;
+                        case KeywordType.Blocker:
+                            _isBlocker = true;
+                            break;
 
-                //        case KeywordType.AttacksEachTurnIfAble:
-                //            _attacksEachTurnIfAble = true;
-                //            break;
+                        case KeywordType.Slayer:
+                            _isSlayer = true;
+                            break;
 
-                //        case KeywordType.AttackThisTurnAsThoughTapped:
-                //            _attackAsThoughTapped = true;
-                //            break;
-                //    }
-                //    break;
+                        case KeywordType.AttacksEachTurnIfAble:
+                            _attacksEachTurnIfAble = true;
+                            break;
 
-                //case EffectFunctionalityType.MultipleBreaker:
-                //    _isMultipleBreaker = true;
-                //    _multipleBreakerType = functionality.MultipleBreaker;
-                //    break;
+                        case KeywordType.AttackThisTurnAsThoughTapped:
+                            _attackAsThoughTapped = true;
+                            break;
+                    }
+                    break;
 
-                //case EffectFunctionalityType.AttackTarget:
-                //    switch (functionality.AttackType)
-                //    {
-                //        case AttackType.CanAttackUntapped:
-                //            _canAttackUntapped = true;
-                //            break;
+                case EffectFunctionalityType.MultipleBreaker:
+                    _isMultipleBreaker = true;
+                    MultipleBreakerFuncParam multipleBreakerParam = (MultipleBreakerFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                    _multipleBreakerType = multipleBreakerParam.MultipleBreaker;
+                    break;
 
-                //        case AttackType.CantAttack:
-                //            _cantAttack = true;
-                //            break;
+                case EffectFunctionalityType.AttackTarget:
+                    AttackTargetFuncParam attackTargetParam = (AttackTargetFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                    switch (attackTargetParam.AttackType)
+                    {
+                        case AttackType.CanAttackUntapped:
+                            _canAttackUntapped = true;
+                            break;
 
-                //        case AttackType.CantAttackCreatures:
-                //            _cantAttackCreatures = true;
-                //            break;
+                        case AttackType.CantAttack:
+                            _cantAttack = true;
+                            break;
 
-                //        case AttackType.CantAttackPlayer:
-                //            _cantAttackPlayer = true;
-                //            break;
-                //    }
-                //    break;
+                        case AttackType.CantAttackCreatures:
+                            _cantAttackCreatures = true;
+                            break;
 
-                //case EffectFunctionalityType.TargetBehaviour:
-                //    switch (functionality.TargetBehaviour)
-                //    {
-                //        case TargetBehaviourType.CantBeAttacked:
-                //            _cantBeAttacked = true;
-                //            break;
+                        case AttackType.CantAttackPlayer:
+                            _cantAttackPlayer = true;
+                            break;
+                    }
+                    break;
 
-                //        case TargetBehaviourType.CantBeBlocked:
-                //            _cantBeBlocked = true;
-                //            break;
-                //    }
-                //    break;
+                case EffectFunctionalityType.TargetBehaviour:
+                    TargetBehaviourFuncParam targetBehaviourParam = (TargetBehaviourFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                    switch (targetBehaviourParam.TargetBehaviour)
+                    {
+                        case TargetBehaviourType.CantBeAttacked:
+                            _cantBeAttacked = true;
+                            break;
 
-                //case EffectFunctionalityType.ToggleTap:
-                //    break;
+                        case TargetBehaviourType.CantBeBlocked:
+                            _cantBeBlocked = true;
+                            break;
+                    }
+                    break;
 
-                //case EffectFunctionalityType.Destroy:
-                //    break;
+                case EffectFunctionalityType.ToggleTap:
+                    break;
 
-                //case EffectFunctionalityType.Discard:
-                //    break;
+                case EffectFunctionalityType.Destroy:
+                    break;
 
-                //case EffectFunctionalityType.LookAtRegion:
-                //    break;
+                case EffectFunctionalityType.Discard:
+                    break;
 
-                //case EffectFunctionalityType.PowerAttacker:
-                //    _isPowerAttacker = true;
-                //    _multiplyPowerAttackValue = functionality.ShouldMultiplyVal;
-                //    _powerAttackBoost = functionality.PowerBoost;
-                //    if (_multiplyPowerAttackValue)
-                //    {
-                //        _multiplyPowerAttackCriterion = functionality.TargetingCriterion;
-                //        _multiplyPowerAttackCondition = functionality.TargetingCondition;
-                //    }
-                //    break;
-                
-                //case EffectFunctionalityType.GrantPower:
-                //    _multiplyGrantedPowerValue = functionality.ShouldMultiplyVal;
-                //    if (_multiplyGrantedPowerValue)
-                //    {
-                //        _multiplyGrantedPowerCriterion = functionality.TargetingCriterion;
-                //        _multiplyGrantedPowerCondition = functionality.TargetingCondition;
-                //    }
-                //    break;
+                case EffectFunctionalityType.PowerAttacker:
+                    _isPowerAttacker = true;
+                    PowerFuncParam powerAttackerParam = (PowerFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                    _multiplyPowerAttackValue = powerAttackerParam.ShouldMultiplyVal;
+                    _powerAttackBoost = powerAttackerParam.PowerBoost;
+                    if (_multiplyPowerAttackValue)
+                    {
+                        _multiplyPowerAttackCriterion = functionality.TargetingCriterion;
+                        _multiplyPowerAttackCondition = functionality.TargetingCondition;
+                    }
+                    break;
+
+                case EffectFunctionalityType.GrantPower:
+                    PowerFuncParam grantPowerParam = (PowerFuncParam)effectData.EffectFunctionality.FunctionalityParam;
+                    _multiplyGrantedPowerValue = grantPowerParam.ShouldMultiplyVal;
+                    if (_multiplyGrantedPowerValue)
+                    {
+                        _multiplyGrantedPowerCriterion = functionality.TargetingCriterion;
+                        _multiplyGrantedPowerCondition = functionality.TargetingCondition;
+                    }
+                    break;
 
                 case EffectFunctionalityType.CostAdjustment:
                     break;
@@ -294,9 +299,13 @@ public class CardInstanceEffectHandler
             case EffectFunctionalityType.Destroy:
                 return () => { ProcessDestroyFunctionality(this, functionality, mayUse); };
 
-            //case EffectFunctionalityType.GrantFunction:
-            //    return () => { ProcessGrantFunctionFunctionality(this, functionality, true,
-            //            functionality.AlterFunctionUntilEndOfTurn); };
+            case EffectFunctionalityType.GrantFunction:
+                return () =>
+                {
+                    AlterFunctionFuncParam alterFunctionParam = (AlterFunctionFuncParam)functionality.FunctionalityParam;
+                    ProcessGrantFunctionFunctionality(this, functionality, true,
+                        alterFunctionParam.AlterFunctionUntilEndOfTurn);
+                };
         }
         
         return null;
@@ -304,17 +313,23 @@ public class CardInstanceEffectHandler
     
     private Action<bool> SetupEffectFunctionality(EffectFunctionality functionality)
     {
+        AlterFunctionFuncParam alterFunctionParam = (AlterFunctionFuncParam)functionality.FunctionalityParam;
+
         switch (functionality.Type)
         {
-            //case EffectFunctionalityType.GrantFunction:
-            //    return activate => { ProcessGrantFunctionFunctionality(this, functionality, activate,
-            //            functionality.AlterFunctionUntilEndOfTurn);
-            //    };
+            case EffectFunctionalityType.GrantFunction:
+                return activate =>
+                {
+                    ProcessGrantFunctionFunctionality(this, functionality, activate,
+                        alterFunctionParam.AlterFunctionUntilEndOfTurn);
+                };
 
-            //case EffectFunctionalityType.GrantPower:
-            //    return activate => { ProcessGrantPowerFunctionality(this, functionality, activate,
-            //            functionality.AlterFunctionUntilEndOfTurn);
-            //    };
+            case EffectFunctionalityType.GrantPower:
+                return activate =>
+                {
+                    ProcessGrantPowerFunctionality(this, functionality, activate,
+                        alterFunctionParam.AlterFunctionUntilEndOfTurn);
+                };
         }
 
         return null;
@@ -461,11 +476,12 @@ public class CardInstanceEffectHandler
             case CardTargetType.TargetOther:
                 CardEffectsManager.Instance.ProcessRegionMovement(functionality, mayUse);
                 break;
-            
-            //case CardTargetType.TargetSelf:
-            //    CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardInst.CardObj,
-            //        functionality.MovementZones.fromZone, functionality.MovementZones.toZone);
-            //    break;
+
+            case CardTargetType.TargetSelf:
+                RegionMovementFuncParam regionMoveParam = (RegionMovementFuncParam)functionality.FunctionalityParam;
+                CardEffectsManager.Instance.ProcessRegionMovement(instanceEffect._cardInst.CardObj,
+                    regionMoveParam.MovementZones.fromZone, regionMoveParam.MovementZones.toZone);
+                break;
         }
     }
     
@@ -523,13 +539,17 @@ public class CardInstanceEffectHandler
             {
                 ActivateEffectFunctionality(instance, functionality.SubFunctionality);
                 if (untilEndOfTurn)
+                {
                     CardEffectsManager.Instance.RegisterOnEndOfTurn(() =>
                     {
                         DeactivateEffectFunctionality(instanceEffect, functionality.SubFunctionality);
                     });
+                }
             }
             else
+            {
                 DeactivateEffectFunctionality(instance, functionality.SubFunctionality);
+            }
         }
 
         #endregion
@@ -585,7 +605,8 @@ public class CardInstanceEffectHandler
     private static void ProcessGrantPowerFunctionality(CardInstanceEffectHandler instanceEffect,
         EffectFunctionality functionality, bool activate, bool untilEndOfTurn)
     {
-        int grantedPowerBoost = 0;//functionality.PowerBoost;
+        PowerFuncParam powerFuncParam = (PowerFuncParam)functionality.FunctionalityParam;
+        int grantedPowerBoost = powerFuncParam.PowerBoost;
 
         switch (functionality.TargetType)
         {
@@ -629,13 +650,14 @@ public class CardInstanceEffectHandler
                 creatureObj.UpdatePower(creatureObj.CardInst.Power);
 
                 if (untilEndOfTurn)
-                    CardEffectsManager.Instance.RegisterOnEndOfTurn(() =>
-                    {
-                        DeactivatePowerGrant(instance);
-                    });
+                {
+                    CardEffectsManager.Instance.RegisterOnEndOfTurn(() => { DeactivatePowerGrant(instance); });
+                }
             }
             else
+            {
                 DeactivatePowerGrant(instance);
+            }
         }
 
         void DeactivatePowerGrant(CardInstanceEffectHandler instance)
@@ -652,66 +674,71 @@ public class CardInstanceEffectHandler
     {
         switch (functionality.Type)
         {
-            //case EffectFunctionalityType.Keyword:
-            //    switch (functionality.Keyword)
-            //    {
-            //        case KeywordType.Slayer:
-            //            instanceEffect._isSlayer = true;
-            //            break;
+            case EffectFunctionalityType.Keyword:
+                KeywordFuncParam keywordParam = (KeywordFuncParam)functionality.FunctionalityParam;
+                switch (keywordParam.Keyword)
+                {
+                    case KeywordType.Slayer:
+                        instanceEffect._isSlayer = true;
+                        break;
 
-            //        case KeywordType.AttacksEachTurnIfAble:
-            //            instanceEffect._attacksEachTurnIfAble = true;
-            //            break;
+                    case KeywordType.AttacksEachTurnIfAble:
+                        instanceEffect._attacksEachTurnIfAble = true;
+                        break;
 
-            //        case KeywordType.AttackThisTurnAsThoughTapped:
-            //            instanceEffect._attackAsThoughTapped = true;
-            //            break;
-            //    }
-            //    break;
+                    case KeywordType.AttackThisTurnAsThoughTapped:
+                        instanceEffect._attackAsThoughTapped = true;
+                        break;
+                }
+                break;
 
-            //case EffectFunctionalityType.MultipleBreaker:
-            //    instanceEffect._isMultipleBreaker = true;
-            //    instanceEffect._multipleBreakerType = functionality.MultipleBreaker;
-            //    break;
+            case EffectFunctionalityType.MultipleBreaker:
+                instanceEffect._isMultipleBreaker = true;
+                MultipleBreakerFuncParam multipleBreakerParam = (MultipleBreakerFuncParam)functionality.FunctionalityParam;
+                instanceEffect._multipleBreakerType = multipleBreakerParam.MultipleBreaker;
+                break;
 
-            //case EffectFunctionalityType.AttackTarget:
-            //    switch (functionality.AttackType)
-            //    {
-            //        case AttackType.CanAttackUntapped:
-            //            instanceEffect._canAttackUntapped = true;
-            //            break;
+            case EffectFunctionalityType.AttackTarget:
+                AttackTargetFuncParam attackTargetParam = (AttackTargetFuncParam)functionality.FunctionalityParam;
+                switch (attackTargetParam.AttackType)
+                {
+                    case AttackType.CanAttackUntapped:
+                        instanceEffect._canAttackUntapped = true;
+                        break;
 
-            //        case AttackType.CantAttack:
-            //            instanceEffect._cantAttack = true;
-            //            break;
+                    case AttackType.CantAttack:
+                        instanceEffect._cantAttack = true;
+                        break;
 
-            //        case AttackType.CantAttackCreatures:
-            //            instanceEffect._cantAttackCreatures = true;
-            //            break;
+                    case AttackType.CantAttackCreatures:
+                        instanceEffect._cantAttackCreatures = true;
+                        break;
 
-            //        case AttackType.CantAttackPlayer:
-            //            instanceEffect._cantAttackPlayer = true;
-            //            break;
-            //    }
-            //    break;
+                    case AttackType.CantAttackPlayer:
+                        instanceEffect._cantAttackPlayer = true;
+                        break;
+                }
+                break;
 
-            //case EffectFunctionalityType.TargetBehaviour:
-            //    switch (functionality.TargetBehaviour)
-            //    {
-            //        case TargetBehaviourType.CantBeAttacked:
-            //            instanceEffect._cantBeAttacked = true;
-            //            break;
+            case EffectFunctionalityType.TargetBehaviour:
+                TargetBehaviourFuncParam targetBehaviourParam = (TargetBehaviourFuncParam)functionality.FunctionalityParam;
+                switch (targetBehaviourParam.TargetBehaviour)
+                {
+                    case TargetBehaviourType.CantBeAttacked:
+                        instanceEffect._cantBeAttacked = true;
+                        break;
 
-            //        case TargetBehaviourType.CantBeBlocked:
-            //            instanceEffect._cantBeBlocked = true;
-            //            break;
-            //    }
-            //    break;
+                    case TargetBehaviourType.CantBeBlocked:
+                        instanceEffect._cantBeBlocked = true;
+                        break;
+                }
+                break;
 
-            //case EffectFunctionalityType.PowerAttacker:
-            //    instanceEffect._isPowerAttacker = true;
-            //    instanceEffect._powerAttackBoost = functionality.PowerBoost;
-            //    break;
+            case EffectFunctionalityType.PowerAttacker:
+                instanceEffect._isPowerAttacker = true;
+                PowerFuncParam powerParam = (PowerFuncParam)functionality.FunctionalityParam;
+                instanceEffect._powerAttackBoost = powerParam.PowerBoost;
+                break;
         }
     }
     
@@ -719,60 +746,63 @@ public class CardInstanceEffectHandler
     {
         switch (functionality.Type)
         {
-            //case EffectFunctionalityType.Keyword:
-            //    switch (functionality.Keyword)
-            //    {
-            //        case KeywordType.Slayer:
-            //            instanceEffect._isSlayer = false;
-            //            break;
+            case EffectFunctionalityType.Keyword:
+                KeywordFuncParam keywordParam = (KeywordFuncParam)functionality.FunctionalityParam;
+                switch (keywordParam.Keyword)
+                {
+                    case KeywordType.Slayer:
+                        instanceEffect._isSlayer = false;
+                        break;
 
-            //        case KeywordType.AttacksEachTurnIfAble:
-            //            instanceEffect._attacksEachTurnIfAble = false;
-            //            break;
+                    case KeywordType.AttacksEachTurnIfAble:
+                        instanceEffect._attacksEachTurnIfAble = false;
+                        break;
 
-            //        case KeywordType.AttackThisTurnAsThoughTapped:
-            //            instanceEffect._attackAsThoughTapped = false;
-            //            break;
-            //    }
-            //    break;
+                    case KeywordType.AttackThisTurnAsThoughTapped:
+                        instanceEffect._attackAsThoughTapped = false;
+                        break;
+                }
+                break;
 
             case EffectFunctionalityType.MultipleBreaker:
                 instanceEffect._isMultipleBreaker = false;
                 break;
 
-            //case EffectFunctionalityType.AttackTarget:
-            //    switch (functionality.AttackType)
-            //    {
-            //        case AttackType.CanAttackUntapped:
-            //            instanceEffect._canAttackUntapped = false;
-            //            break;
+            case EffectFunctionalityType.AttackTarget:
+                AttackTargetFuncParam attackTargetParam = (AttackTargetFuncParam)functionality.FunctionalityParam;
+                switch (attackTargetParam.AttackType)
+                {
+                    case AttackType.CanAttackUntapped:
+                        instanceEffect._canAttackUntapped = false;
+                        break;
 
-            //        case AttackType.CantAttack:
-            //            instanceEffect._cantAttack = false;
-            //            break;
+                    case AttackType.CantAttack:
+                        instanceEffect._cantAttack = false;
+                        break;
 
-            //        case AttackType.CantAttackCreatures:
-            //            instanceEffect._cantAttackCreatures = false;
-            //            break;
+                    case AttackType.CantAttackCreatures:
+                        instanceEffect._cantAttackCreatures = false;
+                        break;
 
-            //        case AttackType.CantAttackPlayer:
-            //            instanceEffect._cantAttackPlayer = false;
-            //            break;
-            //    }
-            //    break;
+                    case AttackType.CantAttackPlayer:
+                        instanceEffect._cantAttackPlayer = false;
+                        break;
+                }
+                break;
 
-            //case EffectFunctionalityType.TargetBehaviour:
-            //    switch (functionality.TargetBehaviour)
-            //    {
-            //        case TargetBehaviourType.CantBeAttacked:
-            //            instanceEffect._cantBeAttacked = false;
-            //            break;
+            case EffectFunctionalityType.TargetBehaviour:
+                TargetBehaviourFuncParam targetBehaviourParam = (TargetBehaviourFuncParam)functionality.FunctionalityParam;
+                switch (targetBehaviourParam.TargetBehaviour)
+                {
+                    case TargetBehaviourType.CantBeAttacked:
+                        instanceEffect._cantBeAttacked = false;
+                        break;
 
-            //        case TargetBehaviourType.CantBeBlocked:
-            //            instanceEffect._cantBeBlocked = false;
-            //            break;
-            //    }
-            //    break;
+                    case TargetBehaviourType.CantBeBlocked:
+                        instanceEffect._cantBeBlocked = false;
+                        break;
+                }
+                break;
 
             case EffectFunctionalityType.PowerAttacker:
                 instanceEffect._isPowerAttacker = false;
@@ -839,29 +869,32 @@ public class CardInstanceEffectHandler
         PlayerManager choosingPlayer = GameManager.Instance.GetManager(functionality.PlayerTargets.choosingPlayer == PlayerTargetType.Player);
         choosingPlayer.IsSelecting = true;
 
-        //Coroutine<List<CardBehaviour>> routine =
-        //    CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
-        //        functionality.ChoosingPlayer == PlayerTargetType.Player,
-        //        functionality.TargetPlayer == PlayerTargetType.Player,
-        //        new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
-        //        functionality.TargetingCondition, false));
-        //yield return routine.coroutine;
-        //List<CardBehaviour> cards = routine.returnVal;
+        DestroyFuncParam destroyParam = (DestroyFuncParam)functionality.FunctionalityParam;
+        Coroutine <List<CardBehaviour>> routine =
+            CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
+                functionality.PlayerTargets.choosingPlayer == PlayerTargetType.Player,
+                functionality.PlayerTargets.targetPlayer == PlayerTargetType.Player,
+                new CardEffectsManager.CardSelectionData(destroyParam.DestroyData, functionality.PlayerTargets.targetPlayer),
+                functionality.TargetingCondition, false));
+        
+        yield return routine.coroutine;
+
+        List<CardBehaviour> cards = routine.returnVal;
 
         choosingPlayer.IsSelecting = false;
         while (!choosingPlayer.FinishedCasting)
             yield return new WaitForEndOfFrame();
 
-        //foreach (CardBehaviour card in cards)
-        //{
-        //    CardObject cardObj = card as CardObject;
-        //    if (!cardObj)
-        //        cardObj = ((ShieldObject)card).CardObj;
+        foreach (CardBehaviour card in cards)
+        {
+            CardObject cardObj = card as CardObject;
+            if (!cardObj)
+                cardObj = ((ShieldObject)card).CardObj;
 
-        //    callback.Invoke(cardObj.CardInst.InstanceEffectHandler);
-        //}
+            callback.Invoke(cardObj.CardInst.InstanceEffectHandler);
+        }
     }
-    
+
     //private static IEnumerator ProcessCardSelectionRoutine(EffectTargetingParameter targetingParameter, Action<CardInstanceEffectHandler> callback)
     //{
     //    bool playerChooses = true;
@@ -875,7 +908,7 @@ public class CardInstanceEffectHandler
     //    Coroutine<List<CardBehaviour>> routine =
     //        CardEffectsManager.Instance.StartCoroutine<List<CardBehaviour>>(CardEffectsManager.Instance.ProcessCardSelectionRoutine(
     //            playerChooses, affectPlayer,
-    //            new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer), 
+    //            new CardEffectsManager.CardSelectionData(functionality.DestroyParam, functionality.TargetPlayer),
     //            functionality.TargetingCondition, false));
     //    yield return routine.coroutine;
     //    List<CardBehaviour> cards = routine.returnVal;
